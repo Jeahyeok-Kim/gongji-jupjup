@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <title>KU 공지 수집기</title>
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <h1>KU 공지 수집기</h1>
+  <p id="site" class="muted"></p>
+
+  <section id="unsupported" hidden>
+    <p>학교 사이트 탭에서 열어 주세요.</p>
+    <div class="links">
+      <a href="https://www.kku.ac.kr/" target="_blank" rel="noopener">글로컬캠퍼스 홈페이지</a>
+      <a href="https://int.kku.ac.kr/" target="_blank" rel="noopener">국제교육원</a>
+      <a href="https://ids.kku.ac.kr/" target="_blank" rel="noopener">AX융합학부</a>
+    </div>
+  </section>
+
+  <section id="collect" hidden>
+    <div id="boards"></div>
+    <label class="opt"><input type="checkbox" id="full"> 처음부터 전부 다시 수집</label>
+    <label class="opt">투데이뉴스는 최근 <input type="number" id="newsLimit" value="300" min="50" step="50"> 건까지</label>
+    <div class="row">
+      <button id="start">수집 시작</button>
+      <button id="stop" hidden>중지</button>
+    </div>
+    <div id="status" class="status"></div>
+  </section>
+
+  <hr>
+
+  <!-- 학교 기본 정보: 학기마다 한 번 -->
+  <section id="reference">
+    <h2>학교 기본 정보 <span class="muted">(학기마다 한 번)</span></h2>
+    <p class="muted">학사일정·요람은 www.kku.ac.kr 탭에서, 학칙·규정은 <a href="https://rule.konkuk.ac.kr/lmxsrv/main/main.do" target="_blank" rel="noopener">규정정보시스템</a> 탭에서 받습니다.</p>
+    <div class="row">
+      <button id="refStart">이 사이트에서 기본 정보 받기</button>
+      <button id="refExport">기본 정보 내보내기</button>
+    </div>
+    <div id="refStatus" class="status"></div>
+    <p id="refSummary" class="muted"></p>
+  </section>
+
+  <hr>
+
+  <section id="data">
+    <div class="row">
+      <button id="export">JSON 내보내기</button>
+      <button id="clear" class="danger">저장 데이터 삭제</button>
+    </div>
+    <p id="summary" class="muted"></p>
+  </section>
+
+  <script src="../config.js"></script>
+  <script src="reference-popup.js"></script>
+  <script src="popup.js"></script>
+</body>
+</html>

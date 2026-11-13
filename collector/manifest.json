@@ -1,0 +1,45 @@
+{
+  "manifest_version": 3,
+  "name": "KU 공지 수집기",
+  "version": "0.3.0",
+  "description": "건국대 글로컬캠퍼스 공개 게시판의 공지와 학교 기본 정보(학사일정·요람·규정)를 내 브라우저에서 읽어 JSON 파일로 내보냅니다.",
+  "permissions": [
+    "storage",
+    "unlimitedStorage"
+  ],
+  "host_permissions": [
+    "https://www.kku.ac.kr/*",
+    "https://int.kku.ac.kr/*",
+    "https://ids.kku.ac.kr/*",
+    "https://rule.konkuk.ac.kr/*"
+  ],
+  "content_scripts": [
+    {
+      "matches": [
+        "https://www.kku.ac.kr/*",
+        "https://int.kku.ac.kr/*",
+        "https://ids.kku.ac.kr/*"
+      ],
+      "js": [
+        "config.js",
+        "crawler.js"
+      ],
+      "run_at": "document_idle"
+    },
+    {
+      "matches": [
+        "https://www.kku.ac.kr/*",
+        "https://rule.konkuk.ac.kr/*"
+      ],
+      "js": [
+        "config.js",
+        "reference.js"
+      ],
+      "run_at": "document_idle"
+    }
+  ],
+  "action": {
+    "default_popup": "popup/popup.html",
+    "default_title": "KU 공지 수집기"
+  }
+}

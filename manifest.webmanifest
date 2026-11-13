@@ -1,0 +1,17 @@
+{
+  "name": "공지 줍줍",
+  "short_name": "공지줍줍",
+  "description": "건국대학교 GLOCAL캠퍼스 공지를 모아 내 시간표와 시간에 맞게 골라 주는 서비스",
+  "lang": "ko",
+  "start_url": "./index.html#/home",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#f4f7f5",
+  "theme_color": "#17824a",
+  "icons": [
+    { "src": "icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "icons/icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}
