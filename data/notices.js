@@ -6,20 +6,21 @@
   const DATA = /*JSON-START*/{
  "meta": {
   "source": "pipeline",
-  "generatedAt": "2026-11-14 16:59",
+  "generatedAt": "2026-11-18 02:10",
   "model": "qwen3:8b",
   "note": "AI가 만든 요약·번역입니다. 근거 문장이 원문에 없는 값은 버렸습니다.",
   "stats": {
-   "collected": 1279,
-   "processed": 232,
-   "fromCache": 232,
+   "collected": 1299,
+   "processed": 237,
+   "fromCache": 237,
    "failed": 0,
    "imageOnly": 0,
-   "droppedValues": 394,
+   "droppedValues": 395,
    "summaryRetried": 6,
-   "summaryDraft": 5,
-   "summaryComposed": 7,
-   "translationLost": 8
+   "summaryDraft": 6,
+   "summaryComposed": 8,
+   "translationLost": 7,
+   "aiPending": 0
   }
  },
  "categories": [
@@ -107,11 +108,675 @@
  ],
  "notices": [
   {
+   "id": "2-27-120970",
+   "boardName": "외부행사/공모전",
+   "link": "https://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1850&CONTENTS_NO=&SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=27&BOARD_CATEGORY_NO=&BBS_SEQ=120970&pageNo=1",
+   "date": "2026-11-17",
+   "hits": 0,
+   "bodyStatus": "poster",
+   "title": "2026년 제13회 교육 ODA 컨퍼런스 개최 안내",
+   "titleTr": {
+    "en": "Notice of the 13th Education ODA Conference in 2026",
+    "zh": "2026年第13届教育ODA会议举办通知",
+    "ja": "2026年第13回教育ODAカンファレンス開催のお知らせ"
+   },
+   "category": "academic",
+   "deadline": "2026-11-24T23:59",
+   "benefit": null,
+   "eligibility": null,
+   "events": [],
+   "hours": null,
+   "evidence": {
+    "deadline": "2026. 11. 24.(화) 09:30~16:00"
+   },
+   "evidenceVerified": true,
+   "readFrom": [
+    {
+     "kind": "poster",
+     "name": "본문 이미지 1"
+    },
+    {
+     "kind": "poster",
+     "name": "본문 이미지 2"
+    }
+   ],
+   "summary": {
+    "ko": "2026년 11월 24일에 열리는 교육 ODA 컨퍼런스에 참석할 수 있으며, 교육 관련 전문가와의 네트워킹 기회를 얻을 수 있습니다.",
+    "en": "You can attend the Education ODA Conference held on November 24, 2026, and gain opportunities to network with education-related professionals.",
+    "zh": "您可参加于2026年11月24日举行的教育ODA会议，并有机会与教育相关专业人士进行 networking。",
+    "ja": "2026年11月24日に開催される教育ODAカンファレンスに参加でき、教育関連の専門家とのネットワーキングの機会を得られます。"
+   },
+   "terms": [],
+   "regulation": null
+  },
+  {
+   "id": "2-27-120969",
+   "boardName": "외부행사/공모전",
+   "link": "https://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1850&CONTENTS_NO=&SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=27&BOARD_CATEGORY_NO=&BBS_SEQ=120969&pageNo=1",
+   "date": "2026-11-17",
+   "hits": 0,
+   "bodyStatus": "poster",
+   "title": "위기아동 지원 기부마라톤 2026 허그런(HUG RUN)",
+   "titleTr": {
+    "en": "HUG RUN 2026 Crisis Children Support Charity Marathon",
+    "zh": "2026 帮助困境儿童慈善马拉松 HUG RUN",
+    "ja": "2026年 ヘッグラン クリスイチドントウ サポートチャリティマラソン"
+   },
+   "category": "contest",
+   "deadline": null,
+   "benefit": {
+    "text": {
+     "ko": "위기아동 지원 기부",
+     "en": "Charity donation for supporting crisis children",
+     "zh": "支持困境儿童的慈善捐款",
+     "ja": "困難な子ども支援チャリティーデポジット"
+    },
+    "points": null,
+    "won": null
+   },
+   "eligibility": null,
+   "events": [],
+   "hours": null,
+   "evidence": {
+    "benefit": "*참가비는 위기아동 지원을 위해 전액 기부 됩니다."
+   },
+   "evidenceVerified": true,
+   "readFrom": [
+    {
+     "kind": "poster",
+     "name": "본문 이미지 1"
+    },
+    {
+     "kind": "file",
+     "name": "(양식) 2026 허그런(HUG RUN) 단체참가신청서.xlsx"
+    }
+   ],
+   "summary": {
+    "ko": "위기아동을 지원하는 기부마라톤 참여자를 모집해요. 재학생이 10월 6일까지 신청하면 5만원의 참가비를 기부하게 되어요.",
+    "en": "We are recruiting participants for the charity marathon to support crisis children. If a current student applies by October 6th, they will donate 50,000 won as registration fee.",
+    "zh": "我们正在招募参与支持困境儿童的慈善马拉松活动的人士。如果在10月6日前申请，现役学生将捐赠5万韩元作为报名费。",
+    "ja": "困難な子どもを支援するためのチャリティーマラソンへの参加者を募っています。10月6日までに在学中の学生が申請すると、登録料として5万ウォンを寄付します。"
+   },
+   "terms": [
+    "개인정보"
+   ],
+   "regulation": null
+  },
+  {
+   "id": "2-27-120968",
+   "boardName": "외부행사/공모전",
+   "link": "https://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1850&CONTENTS_NO=&SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=27&BOARD_CATEGORY_NO=&BBS_SEQ=120968&pageNo=1",
+   "date": "2026-11-17",
+   "hits": 1,
+   "bodyStatus": "poster",
+   "title": "2026 대한민국 지방시대 엑스포 개최",
+   "titleTr": {
+    "en": "Expo for the Regional Era of Korea 2026",
+    "zh": "韩国地方时代博览会2026",
+    "ja": "韓国地域時代エキスポ2026"
+   },
+   "category": "contest",
+   "deadline": null,
+   "benefit": null,
+   "eligibility": null,
+   "events": [],
+   "hours": null,
+   "evidence": {},
+   "evidenceVerified": null,
+   "readFrom": [
+    {
+     "kind": "poster",
+     "name": "본문 이미지 1"
+    },
+    {
+     "kind": "file",
+     "name": "2026 지방시대 엑스포 기본계획(안) 안내용.hwpx"
+    }
+   ],
+   "summary": {
+    "ko": "2026 대한민국 지방시대 엑스포를 개최하는 공지예요. 재학생이 12월 10일까지 청주 오스코에서 행사에 참여해요.",
+    "en": "This is a notice about holding the Expo for the Regional Era of Korea 2026. Current students will participate in the event at Cheongju Osco until December 10th.",
+    "zh": "这是关于举办2026年韩国地方时代博览会的通知。在校生可在12月10日前于春川奥斯科参加活动。",
+    "ja": "2026年韓国地域時代エキスポを開催するお知らせです。在学中の学生は12月10日まで春川オスコでイベントに参加できます。"
+   },
+   "terms": [
+    "창업",
+    "전과"
+   ],
+   "regulation": null
+  },
+  {
+   "id": "2-27-120967",
+   "boardName": "외부행사/공모전",
+   "link": "https://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1850&CONTENTS_NO=&SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=27&BOARD_CATEGORY_NO=&BBS_SEQ=120967&pageNo=1",
+   "date": "2026-11-17",
+   "hits": 1,
+   "bodyStatus": "poster",
+   "title": "2026 청년 수출물류 도약 캠프 참가자 모집",
+   "titleTr": {
+    "en": "2026 Youth Export Logistics Leap Camp Participant Recruitment",
+    "zh": "2026 青年出口物流飞跃营参与者招募",
+    "ja": "2026年若者輸出物流飛躍キャンプ参加者募集"
+   },
+   "category": "career",
+   "deadline": "2026-11-27T23:59",
+   "benefit": null,
+   "eligibility": {
+    "ko": "물류분야 취업 및 직무 역량 강화를 희망하는 청년",
+    "en": "Youth who wish to pursue careers in the logistics field and enhance their job-related competencies",
+    "zh": "希望在物流领域就业并提升职业能力的青年",
+    "ja": "物流分野での就職および職務能力の強化を希望する若者"
+   },
+   "events": [
+    {
+     "date": "2026-11-27",
+     "start": "14:00",
+     "end": "17:00"
+    }
+   ],
+   "hours": 3.0,
+   "evidence": {
+    "deadline": "일시 | 2026.11.27.(금) 14:00-17:00",
+    "events": "일시 | 2026.11.27.(금) 14:00-17:00",
+    "eligibility": "모집대상 | 물류분야 취업 및 직무 역량 강화를"
+   },
+   "evidenceVerified": true,
+   "readFrom": [
+    {
+     "kind": "poster",
+     "name": "본문 이미지 1"
+    },
+    {
+     "kind": "poster",
+     "name": "본문 이미지 2"
+    }
+   ],
+   "summary": {
+    "ko": "청년 수출물류 도약캠프 참가자를 모집해요. 물류분야 취업을 원하는 청년이 11월 27일까지 신청하면 11월 27일 14시부터 17시까지 행사에 참여할 수 있어요.",
+    "en": "Young people who want to work in the logistics field can apply until November 27th and participate in the event from 14:00 to 17:00 on November 27th.",
+    "zh": "希望在物流领域就业的年轻人可在11月27日前申请，并于11月27日14时至17时期间参加活动。",
+    "ja": "物流分野での就職を目指す若者が11月27日までに申請すると、11月27日14時から17時までイベントに参加できます。"
+   },
+   "terms": [],
+   "regulation": null
+  },
+  {
+   "id": "2-27-120966",
+   "boardName": "외부행사/공모전",
+   "link": "https://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1850&CONTENTS_NO=&SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=27&BOARD_CATEGORY_NO=&BBS_SEQ=120966&pageNo=1",
+   "date": "2026-11-17",
+   "hits": 1,
+   "bodyStatus": "poster",
+   "title": "2026 문화다양성 기획영화제 안내",
+   "titleTr": {
+    "en": "2026 Cultural Diversity Planned Film Festival Information",
+    "zh": "2026 文化多样性计划电影展通知",
+    "ja": "2026 文化多様性計画映画祭案内"
+   },
+   "category": "event",
+   "deadline": "2026-11-20T23:59",
+   "benefit": null,
+   "eligibility": {
+    "ko": "문화다양성 및 영화 전문가ㆍ관계자, 일반 시민 등",
+    "en": "Cultural diversity and film professionals, related personnel, general citizens",
+    "zh": "文化多样性及电影专业人员、相关人员、普通市民等",
+    "ja": "文化多様性及び映画の専門家・関係者、一般市民など"
+   },
+   "events": [
+    {
+     "date": "2026-11-20",
+     "start": "15:00",
+     "end": "20:00"
+    }
+   ],
+   "hours": 5.0,
+   "evidence": {
+    "deadline": "ㅇ 일시장소: 2026년 11월 20일(금)~22일(일) / 인디스페이스(서울시 마포구)\n- 한국문화예술교육진흥원 누리집(www.arte.or.kr)내 게시글 확인",
+    "events": "ㅇ 추진일시: 2026년 11월 20일(금) 15:00~20:00\nㅇ 주요내용: 문화다양성 기획영화제 포럼 「문화다양성과 영화」 및 개막작 상영\nㅇ 세부일정",
+    "eligibility": "ㅇ 참여대상: 문화다양성 및 영화 전문가ㆍ관계자, 일반 시민 등"
+   },
+   "evidenceVerified": true,
+   "readFrom": [
+    {
+     "kind": "poster",
+     "name": "본문 이미지 1"
+    },
+    {
+     "kind": "file",
+     "name": "붙임1. 문화다양성 기획영화제 '영화의 발견' 개요.pdf"
+    }
+   ],
+   "summary": {
+    "ko": "문화다양성 기획영화제 참여자를 모집해요. 문화다양성 및 영화 전문가, 일반 시민이 11월 20일까지 신청하면 11월 20일 15시~20시 개막행사에 참여할 수 있어요.",
+    "en": "We are recruiting participants for the Cultural Diversity Planned Film Festival. Cultural diversity and film professionals, as well as general citizens, can participate in the opening ceremony on November 20th from 3:00 PM to 8:00 PM if they apply by November 20th.",
+    "zh": "文化多样性计划电影展正在招募参与者。文化多样性和电影专业人士以及普通市民，若在11月20日前申请，可参与11月20日15时至20时的开幕活动。",
+    "ja": "文化多様性計画映画祭の参加者を募っています。文化多様性および映画の専門家、一般市民が11月20日までに申請すれば、11月20日15時から20時までの開幕式に参加できます。"
+   },
+   "terms": [
+    "시간표"
+   ],
+   "regulation": null
+  },
+  {
+   "id": "2-27-120965",
+   "boardName": "외부행사/공모전",
+   "link": "https://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1850&CONTENTS_NO=&SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=27&BOARD_CATEGORY_NO=&BBS_SEQ=120965&pageNo=1",
+   "date": "2026-11-17",
+   "hits": 0,
+   "bodyStatus": "file",
+   "title": "'충청남도자치경찰위원회 교통안전 콘텐츠 공모전'",
+   "titleTr": {
+    "en": "'Chungcheongnamdo Metropolitan Police Committee Traffic Safety Content Contest'",
+    "zh": "'忠清南道自治警察委员会交通安全内容竞赛'",
+    "ja": "'忠清南道自治警察委員会交通安全コンテンツコンテスト'"
+   },
+   "category": "contest",
+   "deadline": null,
+   "benefit": {
+    "text": {
+     "ko": "상금(총 600만원)",
+     "en": "상금(총 600만원)",
+     "zh": "奖金（总计600万韩元）",
+     "ja": "賞金（合計600万ウォン）"
+    },
+    "points": null,
+    "won": null
+   },
+   "eligibility": {
+    "ko": "개인 또는 2인 이내 팀",
+    "en": "Individual or team of two people or less",
+    "zh": "个人或两人以下团队",
+    "ja": "個人または2人以内のチーム"
+   },
+   "events": [],
+   "hours": null,
+   "evidence": {
+    "benefit": "- [시상금(총 6백만원), 상장(대상·최우수상충남도지사/우수상자치경찰위원회)]\n※ 심사결과에 따라 입상 인원·시상금 조정될 수 있음. 제세공과금 발생 시 본인 부담",
+    "eligibility": "3. 응모자격(개인 또는 2인 이내 팀) ※ 출품 가능 수는 최대 2점"
+   },
+   "evidenceVerified": true,
+   "readFrom": [
+    {
+     "kind": "file",
+     "name": "2026 충청남도 자치경찰위원회 교통안전관련 포스터, 숏츠 공모전.hwpx"
+    }
+   ],
+   "summary": {
+    "ko": "충청남도 교통안전 콘텐츠 공모전 참여자를 모집해요.",
+    "en": "We are recruiting participants for the Chungcheongnamdo Traffic Safety Content Contest.",
+    "zh": "我们正在招募忠清南道交通安全内容竞赛的参与者。",
+    "ja": "忠清南道交通安全コンテンツコンテストの参加者を募集しています。"
+   },
+   "terms": [
+    "공모전",
+    "전과",
+    "성적이의신청",
+    "제출서류",
+    "접수",
+    "마감",
+    "개인정보",
+    "동의서",
+    "유의사항"
+   ],
+   "regulation": null
+  },
+  {
+   "id": "2-27-120964",
+   "boardName": "외부행사/공모전",
+   "link": "https://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1850&CONTENTS_NO=&SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=27&BOARD_CATEGORY_NO=&BBS_SEQ=120964&pageNo=1",
+   "date": "2026-11-17",
+   "hits": 1,
+   "bodyStatus": "poster",
+   "title": "Apple 디벨로퍼 아카데미 온오프라인 이벤트",
+   "titleTr": {
+    "en": "Apple Developer Academy Online and Offline Event",
+    "zh": "Apple 开发者学院线上线下活动",
+    "ja": "Apple デベロッパーアカデミー オンライン・オフラインイベント"
+   },
+   "category": "contest",
+   "deadline": "2026-11-21T23:59",
+   "benefit": null,
+   "eligibility": {
+    "ko": "만 19세 이상, 5km 이상 완주",
+    "en": "Over 19 years old, complete more than 5km",
+    "zh": "年满19岁，完成超过5公里",
+    "ja": "19歳以上、5km以上完走"
+   },
+   "events": [
+    {
+     "date": "2026-11-21",
+     "start": "09:00",
+     "end": "12:00"
+    }
+   ],
+   "hours": 3.0,
+   "evidence": {
+    "deadline": "11월 7일 - 11월 21일 @ 온·오프라인 동시 진행",
+    "events": "11.21.(토) 9:00~12:00 @ 포스텍",
+    "eligibility": "나이, 전공, 경력에 상관없이 만 19세 이상이면 누구나\n• 5km 이상 완주해야 응모가 가능해요."
+   },
+   "evidenceVerified": true,
+   "readFrom": [
+    {
+     "kind": "poster",
+     "name": "본문 이미지 1"
+    }
+   ],
+   "summary": {
+    "ko": "라이프롱 러닝 채널 참여자를 모집해요. 만 19세 이상이 11월 21일까지 신청하면 5km 이상 달리면 인스타 인증으로 응모권을 받을 수 있어요.",
+    "en": "We are recruiting participants for the LifeLong Running Channel. If you are over 19 years old and apply by November 21st, you can enter the draw by posting an Instagram certification after running more than 5km.",
+    "zh": "我们正在招募LifeLong Running频道的参与者。如果您年满19岁并在11月21日前申请，通过Instagram认证完成超过5公里跑步即可获得抽奖资格。",
+    "ja": "ライフロングランニングチャンネルの参加者を募っています。19歳以上で11月21日までに申請すると、インスタグラムでの認証により5km以上走ると抽選資格を得られます。"
+   },
+   "terms": [
+    "수료",
+    "장학",
+    "포트폴리오",
+    "선착순",
+    "마감"
+   ],
+   "regulation": null
+  },
+  {
+   "id": "2-27-120963",
+   "boardName": "외부행사/공모전",
+   "link": "https://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1850&CONTENTS_NO=&SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=27&BOARD_CATEGORY_NO=&BBS_SEQ=120963&pageNo=1",
+   "date": "2026-11-17",
+   "hits": 1,
+   "bodyStatus": "poster",
+   "title": "「IEF 2026 청주국제e스포츠 페스티벌」 개최 알림",
+   "titleTr": {
+    "en": "Notice of the 'IEF 2026 Cheongju International e-Sports Festival'",
+    "zh": "「IEF 2026 青州国际电子竞技节」举办通知",
+    "ja": "「IEF 2026 青州市国際eスポーツフェスティバル」開催のお知らせ"
+   },
+   "category": "event",
+   "deadline": null,
+   "benefit": null,
+   "eligibility": null,
+   "events": [],
+   "hours": null,
+   "evidence": {},
+   "evidenceVerified": null,
+   "readFrom": [
+    {
+     "kind": "poster",
+     "name": "본문 이미지 1"
+    }
+   ],
+   "summary": {
+    "ko": "청주국제e스포츠 페스티벌을 개최하는 공지예요. 재학생과 휴학생이 11월 27일 오후 4시부터 29일까지 청주대학교 석우문화체육관에서 무료로 참여해요.",
+    "en": "This is a notice about holding the Cheongju International e-Sports Festival. Current and suspended students can participate for free from 4:00 PM on November 27th to 29th at the Seokwoo Cultural Sports Hall of Cheongju University.",
+    "zh": "这是关于举办青州国际电子竞技节的通知。在校生和休学生可于11月27日下午4时至29日，在青州大学石우文化体育馆免费参与。",
+    "ja": "青州市国際eスポーツフェスティバルを開催するお知らせです。在籍学生と休学している学生は11月27日午後4時から29日まで、青州大学石宇文化体育館で無料で参加できます。"
+   },
+   "terms": [
+    "선착순"
+   ],
+   "regulation": null
+  },
+  {
+   "id": "2-27-120962",
+   "boardName": "외부행사/공모전",
+   "link": "https://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1850&CONTENTS_NO=&SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=27&BOARD_CATEGORY_NO=&BBS_SEQ=120962&pageNo=1",
+   "date": "2026-11-17",
+   "hits": 2,
+   "bodyStatus": "poster",
+   "title": "2026 Hermès Korea Retail Management Trainee 채용 (~12/06)",
+   "titleTr": {
+    "en": "2026 Hermès Korea Retail Management Trainee Recruitment (~12/06)",
+    "zh": "2026 Hermès Korea 零售管理培训生招聘 (~12/06)",
+    "ja": "2026 Hermès Korea リテールマネジメントトレーニング生採用 (~12/06)"
+   },
+   "category": "career",
+   "deadline": "2026-12-06T23:59",
+   "benefit": null,
+   "eligibility": {
+    "ko": "리테일 커리어에 열정이 있는 인재",
+    "en": "Talented individuals who are passionate about retail careers",
+    "zh": "对零售事业充满热情的人才",
+    "ja": "リテールキャリアに情熱を抱いている人材"
+   },
+   "events": [],
+   "hours": null,
+   "evidence": {
+    "deadline": "2026.11.16 (월) – 2026.12.06 (일)",
+    "eligibility": "리테일 커리어에 열정이 있는 인재를 발굴하여"
+   },
+   "evidenceVerified": true,
+   "readFrom": [
+    {
+     "kind": "poster",
+     "name": "본문 이미지 1"
+    }
+   ],
+   "summary": {
+    "ko": "취업·창업 관련 공지예요. 대상은 리테일 커리어에 열정이 있는 인재예요. 신청은 12월 6일까지예요.",
+    "en": "This is a notice related to employment and entrepreneurship. The target is talented individuals who are passionate about retail careers. Applications are due by December 6th.",
+    "zh": "这是关于就业和创业的通知。目标对象是对零售事业充满热情的人才。申请截止日期为12月6日。",
+    "ja": "就職・起業に関するお知らせです。対象はリテールキャリアに情熱を抱いている人材です。応募は12月6日までです。"
+   },
+   "terms": [],
+   "regulation": null
+  },
+  {
+   "id": "2-18-120247",
+   "boardName": "학사공지",
+   "link": "https://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1740&CONTENTS_NO=&SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=18&BOARD_CATEGORY_NO=&BBS_SEQ=120247&pageNo=1",
+   "date": "2026-11-17",
+   "hits": 48,
+   "bodyStatus": "text",
+   "title": "[교양교육센터] 2026학년도 2학기 성신의 토론대회 신청 안내",
+   "titleTr": {
+    "en": "[Center for Liberal Education] Application Notice for the Seongsin Debate Competition, Second Semester 2026",
+    "zh": "[通识教育中心] 2026学年第二学期成真辩论赛申请通知",
+    "ja": "[通識教育センター] 2026学年後期 成真討論コンテストの応募案内"
+   },
+   "category": "contest",
+   "deadline": "2026-11-27T23:59",
+   "benefit": {
+    "text": {
+     "ko": "다드림 포인트",
+     "en": "Dadream points",
+     "zh": "达德里姆积分",
+     "ja": "ダドリームポイント"
+    },
+    "points": null,
+    "won": null
+   },
+   "eligibility": {
+    "ko": "발표와토론 영역 4개 교과 2학기 수강생(1학년)",
+    "en": "Students who took four courses in the 'Presentation and Discussion' area during the second semester (first-year students)",
+    "zh": "在第二学期修读了‘发表与讨论’领域4门课程（一年级学生）",
+    "ja": "『発表と討論』領域の4科目を2学期に履修している1年生"
+   },
+   "events": [
+    {
+     "date": "2026-12-01",
+     "start": "18:30",
+     "end": "21:40"
+    }
+   ],
+   "hours": 3.0,
+   "evidence": {
+    "deadline": "11월 16일(월)~\n11월 27일(금) 24:00까지",
+    "events": "12월 1일(화)\n18:30 ~ 21:40 |\n- 선발: 본선 및 결승",
+    "benefit": "* 수상자(동상~대상)에게 KU글로컬혁신대학 학장상 수여.",
+    "eligibility": "▸ 발표와토론 영역 4개 교과 2학기 수강생(1학년)"
+   },
+   "evidenceVerified": true,
+   "readFrom": [
+    {
+     "kind": "file",
+     "name": "2026년_성신의토론대회_참가신청서.hwp"
+    }
+   ],
+   "summary": {
+    "ko": "성신의 토론대회 참가자를 모집해요. 발표와토론 영역 4개 교과 2학기 수강생(1학년)이 11월 27일까지 신청하면 다드림 포인트를 받고, 12월 1일 18:30~21:40에 토론해요.",
+    "en": "We are recruiting participants for the Seongsin Debate Competition. Students who took four courses in the 'Presentation and Discussion' area during the second semester (first-year students) can receive Dadream points if they apply by November 27th. The debate will take place on December 1st from 18:30 to 21:40.",
+    "zh": "我们正在招募成真辩论赛的参赛者。在第二学期修读了‘发表与讨论’领域4门课程（一年级学生）的学生，若于11月27日前申请可获得达德里姆积分，并于12月1日18:30至21:40进行辩论。",
+    "ja": "成真討論コンテストの参加者を募集しています。『発表と討論』領域の4科目を2学期に履修している1年生の学生は、11月27日までに応募するとダドリームポイントを受け取り、12月1日18時30分から21時40分まで討論を行います。"
+   },
+   "terms": [
+    "장학금",
+    "비교과",
+    "다드림 포인트",
+    "본선",
+    "건국대",
+    "이음교육시스템",
+    "학번",
+    "장학",
+    "접수",
+    "선발"
+   ],
+   "regulation": null
+  },
+  {
+   "id": "2-27-120961",
+   "boardName": "외부행사/공모전",
+   "link": "https://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1850&CONTENTS_NO=&SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=27&BOARD_CATEGORY_NO=&BBS_SEQ=120961&pageNo=1",
+   "date": "2026-11-16",
+   "hits": 4,
+   "bodyStatus": "poster",
+   "title": "2026 한국문화예술교육진흥원 미래세대 문화교류 프로그램 안내",
+   "titleTr": {
+    "en": "2026 Korea Cultural Content Education Promotion Institute Future Generation Cultural Exchange Program Notice",
+    "zh": "2026 韩国文化艺术教育振兴院未来世代文化交流项目通知",
+    "ja": "2026 韓国文化芸術教育振興院 フューチャーゲネレーション文化交流プログラム案内"
+   },
+   "category": "contest",
+   "deadline": "2026-11-18T23:59",
+   "benefit": {
+    "text": {
+     "ko": "무료 참여",
+     "en": "Free participation",
+     "zh": "免费参与",
+     "ja": "無料参加"
+    },
+    "points": null,
+    "won": null
+   },
+   "eligibility": {
+    "ko": "국내에 체류하는 만 18~39세 다국적 청년",
+    "en": "Domestic multi-national youth aged 18 to 39",
+    "zh": "在国内居住的年龄在18至39岁的多国籍青年",
+    "ja": "国内に居住する18歳〜39歳の多国籍青年"
+   },
+   "events": [
+    {
+     "date": "2026-11-24",
+     "start": "17:00",
+     "end": "20:00"
+    },
+    {
+     "date": "2026-11-27",
+     "start": "13:00",
+     "end": "16:00"
+    }
+   ],
+   "hours": 6.0,
+   "evidence": {
+    "deadline": "| 다국적 청년 | 서울·경남 고성 | 11.18(수) 까지 |",
+    "events": "1차 11.24(화) 17:00~20:00",
+    "benefit": "- 전체 프로그램은 무료이며, 체험 일정에 따라 간식·식사 및 이동수단 지원이 제공됩니다.",
+    "eligibility": "ㅇ 대상: 국내에 체류하는 만 18~39세 다국적 청년 / 프로그램별 20인 내외"
+   },
+   "evidenceVerified": true,
+   "readFrom": [
+    {
+     "kind": "poster",
+     "name": "본문 이미지 1"
+    },
+    {
+     "kind": "file",
+     "name": "[붙임1] 2026 미래세대 문화교류_모집안내문(서울)_261110.hwp"
+    }
+   ],
+   "summary": {
+    "ko": "문화교류 프로그램 참여자를 모집해요. 국내에 체류하는 만 18~39세 다국적 청년이 11월 18일까지 신청하면 무료로 11월 24일과 27일 행사에 참여할 수 있어요.",
+    "en": "We are recruiting participants for the cultural exchange program. Domestic multi-national youth aged 18 to 39 can participate for free in the events on November 24th and 27th if they apply by November 18th.",
+    "zh": "我们正在招募文化交流项目的参与者。在国内居住的年龄在18至39岁的多国籍青年，如果在11月18日前申请，可以免费参加11月24日和27日的活动。",
+    "ja": "文化交流プログラムの参加者を募っています。国内に居住する18歳〜39歳の多国籍青年は、11月18日までに申請すれば、無料で11月24日と27日のイベントに参加できます。"
+   },
+   "terms": [
+    "통역",
+    "선착순",
+    "접수기간",
+    "유의사항"
+   ],
+   "regulation": null
+  },
+  {
+   "id": "2-19-120037",
+   "boardName": "취업/창업",
+   "link": "https://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1770&CONTENTS_NO=&SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=19&BOARD_CATEGORY_NO=&BBS_SEQ=120037&pageNo=1",
+   "date": "2026-11-15",
+   "hits": 185,
+   "bodyStatus": "text",
+   "title": "「2026. 학생 창업 실전 도약 프로그램」 참가자 모집 (학생창업유망팀 300 대비)",
+   "titleTr": {
+    "en": "\"2026 Student Startup Practical Leap Program\" Participant Recruitment (300 Promising Student Startup Teams)",
+    "zh": "「2026 学生创业实战飞跃计划」参与者招募（300个学生创业潜力团队）",
+    "ja": "「2026 学生スタートアップ実戦飛躍プログラム」参加者募集（学生スタートアップ有望チーム300対応）"
+   },
+   "category": "contest",
+   "deadline": "2026-11-17T23:59",
+   "benefit": {
+    "text": {
+     "ko": "교육 수료증 발급 / 창업마일리지 · 공결증 지급",
+     "en": "Certificate of Completion / Payment of Startup Mileage · Leave of Absence Certificate",
+     "zh": "颁发结业证书 / 发放创业里程 · 请假证明",
+     "ja": "修了証明書発行 / スタートアップマイル・欠席証明書支給"
+    },
+    "points": null,
+    "won": null
+   },
+   "eligibility": {
+    "ko": "개인 또는 팀 단위 신청 가능(최대 10명 /팀)",
+    "en": "Individual or team application is possible (maximum 10 people/team)",
+    "zh": "个人或团队均可申请（每队最多10人）",
+    "ja": "個人またはチームでの申請が可能です（最大10名／チーム）"
+   },
+   "events": [
+    {
+     "date": "2026-11-23",
+     "start": "13:00",
+     "end": "16:00"
+    }
+   ],
+   "hours": 3.0,
+   "evidence": {
+    "deadline": "■ 신청기간: ~ 2026. 11. 17.(화)까지",
+    "events": "■ 실전 집중교육: 2026. 11. 23.(월) 13:00~16:00(3H)",
+    "benefit": "※ 참가혜택: 교육 수료증 발급 / 창업마일리지 · 공결증 지급",
+    "eligibility": "■ 신청대상: 개인 또는 팀 단위 신청 가능(최대 10명 /팀)"
+   },
+   "evidenceVerified": true,
+   "readFrom": [],
+   "summary": {
+    "ko": "학생창업 실전 도약 프로그램 참가자를 모집해요. 재학생과 팀은 11월 17일까지 신청하면 교육 수료증과 창업마일리지, 공결증을 받을 수 있어요.",
+    "en": "We are recruiting participants for the Student Startup Practical Leap Program. Current students and teams can receive a certificate of completion, startup mileage, and a leave of absence certificate if they apply by November 17th.",
+    "zh": "我们正在招募『学生创业实战飞跃计划』的参与者。在校生及团队如果在11月17日之前申请，可以获得结业证书、创业里程和请假证明。",
+    "ja": "学生スタートアップ実戦飛躍プログラムの参加者を募っています。在学中の学生とチームは11月17日までに申請すると、修了証明書やスタートアップマイル、欠席証明書を受け取ることができます。"
+   },
+   "terms": [
+    "창업",
+    "건국대",
+    "공결",
+    "수료",
+    "재학생",
+    "동아리",
+    "멘토링",
+    "접수기간"
+   ],
+   "regulation": null
+  },
+  {
    "id": "2-26-119689",
    "boardName": "아르바이트",
    "link": "https://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1840&CONTENTS_NO=&SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=26&BOARD_CATEGORY_NO=&BBS_SEQ=119689&pageNo=1",
    "date": "2026-11-13",
-   "hits": 4,
+   "hits": 11,
    "bodyStatus": "text",
    "title": "[그린서비스] 2026 K-Brand GLOW WEEK 통역사 모집",
    "titleTr": {
@@ -163,11 +828,101 @@
    "regulation": null
   },
   {
+   "id": "7-1-36315",
+   "boardName": "국제교육원 공지사항",
+   "link": "https://int.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=80&CONTENTS_NO=&SITE_NO=7&P_TAB_NO=&TAB_NO=&BOARD_SEQ=1&BOARD_CATEGORY_NO=&BBS_SEQ=36315&pageNo=1",
+   "date": "2026-11-13",
+   "hits": 26,
+   "bodyStatus": "file",
+   "title": "2027-2028 이스라엘 정부초청 장학생 선발 안내",
+   "titleTr": {
+    "en": "2027-2028 Israeli Government Scholarship Selection Notice",
+    "zh": "2027-2028以色列政府奖学金选拔通知",
+    "ja": "2027-2028イスラエル政府奨学生選考案内"
+   },
+   "category": "scholarship",
+   "deadline": "2027-01-15T23:59",
+   "benefit": {
+    "text": {
+     "ko": "학비의 50% (최대 USD 6,000), 생활비(USD $1,000/월, 8개월간), 하계어학과정 수업료 전액, 기숙사, 기초의료보험, 소정의 생활비",
+     "en": "50% of tuition fees (up to USD 6,000), living expenses (USD $1,000/month for 8 months), full payment for summer language course tuition, accommodation, basic medical insurance, and some additional living expenses",
+     "zh": "学费的50%（最高达6,000美元）、生活费（每月1,000美元，共8个月）、暑期语言课程学费全免、住宿、基础医疗保险以及一定数额的生活补助",
+     "ja": "授業料の50％（最大6,000ドル）、生活費（月額1,000ドル、8か月間）、夏期語学コースの授業料全額免除、寮、基礎医療保険、一部の生活費"
+    },
+    "points": null,
+    "won": null
+   },
+   "eligibility": {
+    "ko": "한국 국적자(학업 개시일 기준 만 35세 이하), 영어 또는 히브리어 실력 보유, 지원 대학의 학업 요건 충족, 학사 이상 학위 소지자, 이스라엘 대학교 등록 또는 재학 중인 자(2027년 10월 기준), 학사 학위 소지자 또는 잔여 학기 2개 이하인 자(2027년 7월 기준)",
+    "en": "South Korean nationals (under 35 years old as of the start of studies), with English or Hebrew proficiency, meeting the academic requirements of the supporting university, holders of a bachelor's degree or higher, students currently enrolled or studying at an Israeli university (as of October 2027), holders of a bachelor's degree or those with no more than two remaining semesters (as of July 2027)",
+    "zh": "韩国国籍者（以学习开始日期为准，年龄不超过35岁）、具备英语或希伯来语能力、满足申请大学的学业要求、持有学士学位或以上、在2027年10月时正在以色列大学注册或就读的学生、持有学士学位者或剩余学期不超过2个（以2027年7月为准）",
+    "ja": "韓国国籍者（学習開始日をもとに35歳以下）、英語またはヘブライ語の実力を持つ者、応募大学の学業要件を満たす者、学士以上の学位を持つ者、2027年10月時点でのイスラエル大学への登録または在籍している者、学士号を持ち、または2027年7月時点での残り学期が2学期以内の者"
+   },
+   "events": [],
+   "hours": null,
+   "evidence": {
+    "deadline": "• 지원마감일: 2027 년 1 월 15 일 금요일 (1 월 15 일 도착분 까지 접수)",
+    "benefit": "지원조건 • 2027-2028 학년 (1 년) 학비의 50%\n• 생활비 – 매월 USD $1,000 (8 개월간 지원)\n• 하계어학과정 수업료 전액",
+    "eligibility": "자격요건 • 한국국적 소지자로서 만 35 세 이하인 자 (학업 개시일 기준)\n• 영어 또는 히브리어 실력을 갖춘 자\n• 지원하는 이스라엘 대학이 요구하는 학업요건을 갖춘 자"
+   },
+   "evidenceVerified": true,
+   "readFrom": [
+    {
+     "kind": "file",
+     "name": "2027-2028 이스라엘 정부장학금 안내.pdf"
+    },
+    {
+     "kind": "file",
+     "name": "지원서 양식.pdf"
+    }
+   ],
+   "summary": {
+    "ko": "이스라엘 정부 장학금 지원자를 모집해요. 재학생이 2027년 1월 15일까지 신청하면 학비의 50%와 생활비, 기숙사 등 혜택을 받을 수 있어요.",
+    "en": "We are recruiting applicants for the Israeli government scholarship. Current students who apply by January 15, 2027, can receive benefits including 50% of tuition fees, living expenses, accommodation, and more.",
+    "zh": "我们正在招募以色列政府奖学金申请者。在2027年1月15日之前申请的在校生可获得学费的50%、生活费、住宿等福利。",
+    "ja": "イスラエル政府奨学金の応募者を募集しています。2027年1月15日までに申請した在籍生は、授業料の50％や生活費、寮などの特典を受けられます。"
+   },
+   "terms": [
+    "장학",
+    "선발",
+    "장학금",
+    "학사지도교수",
+    "증명서",
+    "기숙사",
+    "인성",
+    "면접",
+    "이력서",
+    "제출서류"
+   ],
+   "regulation": {
+    "id": "scholarship",
+    "title": {
+     "ko": "장학생 자격 제한",
+     "en": "Scholarship eligibility limits",
+     "zh": "奖学金资格限制",
+     "ja": "奨学生の資格制限"
+    },
+    "rule": {
+     "law": "GLOCAL(글로컬)캠퍼스 장학규정",
+     "no": "8",
+     "article": "자격 제한",
+     "quote": "① 다음 각 호의 1에 해당되는 자는 장학생 선발에서 제외한다. 1. 학칙에 의거하여 징계를 받은 자 2. 8학기를 초과한 자. 다만, 복수학위 프로그램, 프로그램성 장학에 선발된 자, 성인·재직자 전형은 예외로 한다. 3. 장학금 지급 목적을 달성할 수 없다고 판단되는 자",
+     "tr": {
+      "en": "① Students who fall under any of the following categories are excluded from scholarship selection: 1. Those who have been disciplined according to the Student Regulations 2. Those who have exceeded eight semesters. However, students selected for dual-degree programs, program-specific scholarships, adult/reemployed applicant programs are exceptions. 3. Those whose purpose of receiving a scholarship cannot be fulfilled.",
+      "zh": "① 符合以下任一情况的学生不得参与奖学金选拔：1. 根据学生规章受到处分者；2. 超过8学期者。但双学位项目、项目型奖学金及成人/在职人员招生者除外；3. 判定无法实现奖学金发放目的者。",
+      "ja": "① 以下の各号の1に該当する者は奨学金選考から除外される。1. 学則に基づき処分を受けた者 2. 8学期を超えた者。ただし、双学位プログラム、プログラム性奨学金に選ばれた者、成人・再職者入試は例外とする。3. 奨学金支給の目的を達成することができないと判断される者"
+     },
+     "url": "https://rule.konkuk.ac.kr/lmxsrv/law/lawDetail.do?SEQ=371&LAWGROUP=1&PAGE=1",
+     "checked": "2026-11-13"
+    }
+   }
+  },
+  {
    "id": "2-27-120960",
    "boardName": "외부행사/공모전",
    "link": "https://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1850&CONTENTS_NO=&SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=27&BOARD_CATEGORY_NO=&BBS_SEQ=120960&pageNo=1",
    "date": "2026-11-12",
-   "hits": 6,
+   "hits": 16,
    "bodyStatus": "poster",
    "title": "「2026 세계투자자주간」",
    "titleTr": {
@@ -241,7 +996,7 @@
    "boardName": "취업/창업",
    "link": "https://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1770&CONTENTS_NO=&SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=19&BOARD_CATEGORY_NO=&BBS_SEQ=120035&pageNo=1",
    "date": "2026-11-12",
-   "hits": 26,
+   "hits": 71,
    "bodyStatus": "text",
    "title": "[채용정보] 2026. 11월 2주차 공공기관 및 중소기업 채용정보",
    "titleTr": {
@@ -315,7 +1070,7 @@
    "boardName": "취업/창업",
    "link": "https://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1770&CONTENTS_NO=&SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=19&BOARD_CATEGORY_NO=&BBS_SEQ=120034&pageNo=1",
    "date": "2026-11-12",
-   "hits": 20,
+   "hits": 49,
    "bodyStatus": "text",
    "title": "[채용정보] 2026. 11월 2주차 취업 관련 대외활동 정보 안내",
    "titleTr": {
@@ -362,7 +1117,7 @@
    "boardName": "외부행사/공모전",
    "link": "https://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1850&CONTENTS_NO=&SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=27&BOARD_CATEGORY_NO=&BBS_SEQ=120959&pageNo=1",
    "date": "2026-11-11",
-   "hits": 12,
+   "hits": 19,
    "bodyStatus": "poster",
    "title": "[성균관대-POSTECH 공동주최] 「AI 시대의 대학행정」 포럼 개최 및 참여 안내",
    "titleTr": {
@@ -408,7 +1163,7 @@
    "boardName": "일반공지",
    "link": "https://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1790&CONTENTS_NO=&SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=22&BOARD_CATEGORY_NO=&BBS_SEQ=119928&pageNo=1",
    "date": "2026-11-11",
-   "hits": 21,
+   "hits": 33,
    "bodyStatus": "text",
    "title": "2026년도 지역혁신중신 대학지원체계(RISE) -2026년 2차 푸드테크 기기장비 활용 비교과 운영 공고-",
    "titleTr": {
@@ -497,7 +1252,7 @@
    "boardName": "일반공지",
    "link": "https://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1790&CONTENTS_NO=&SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=22&BOARD_CATEGORY_NO=&BBS_SEQ=119927&pageNo=1",
    "date": "2026-11-11",
-   "hits": 51,
+   "hits": 70,
    "bodyStatus": "text",
    "title": "2026학년도 재학생 교육서비스 만족도 조사 실시 안내",
    "titleTr": {
@@ -556,7 +1311,7 @@
    "boardName": "아르바이트",
    "link": "https://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1840&CONTENTS_NO=&SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=26&BOARD_CATEGORY_NO=&BBS_SEQ=119688&pageNo=1",
    "date": "2026-11-11",
-   "hits": 3,
+   "hits": 4,
    "bodyStatus": "text",
    "title": "📢[재택근무] '설탭'과 함께 학생들의 자기효능감을 성장 시킬 건국대 의예과/의학과 선생님 찾습니다!🍀",
    "titleTr": {
@@ -596,7 +1351,7 @@
    "boardName": "외부행사/공모전",
    "link": "https://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1850&CONTENTS_NO=&SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=27&BOARD_CATEGORY_NO=&BBS_SEQ=120958&pageNo=1",
    "date": "2026-11-10",
-   "hits": 12,
+   "hits": 20,
    "bodyStatus": "text",
    "title": "제4회 충북특허유니버시아드(CBPU)",
    "titleTr": {
@@ -650,7 +1405,7 @@
    "boardName": "외부행사/공모전",
    "link": "https://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1850&CONTENTS_NO=&SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=27&BOARD_CATEGORY_NO=&BBS_SEQ=120957&pageNo=1",
    "date": "2026-11-10",
-   "hits": 13,
+   "hits": 22,
    "bodyStatus": "poster",
    "title": "2027년도 UN 청소년 대표단 모집",
    "titleTr": {
@@ -731,7 +1486,7 @@
    "boardName": "외부행사/공모전",
    "link": "https://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1850&CONTENTS_NO=&SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=27&BOARD_CATEGORY_NO=&BBS_SEQ=120956&pageNo=1",
    "date": "2026-11-10",
-   "hits": 5,
+   "hits": 7,
    "bodyStatus": "poster",
    "title": "University of Wisconsin-Stout 2027 Winter 글로벌 리더십 프로그램 안내",
    "titleTr": {
@@ -819,7 +1574,7 @@
    "boardName": "학사공지",
    "link": "https://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1740&CONTENTS_NO=&SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=18&BOARD_CATEGORY_NO=&BBS_SEQ=120246&pageNo=1",
    "date": "2026-11-10",
-   "hits": 152,
+   "hits": 278,
    "bodyStatus": "text",
    "title": "[AIX대학교육혁신원] 2026학년도 2학기 K-MOOC 강좌 수기 이벤트 공모전 신청 안내(전 교직원 대상)",
    "titleTr": {
@@ -892,7 +1647,7 @@
    "boardName": "학사공지",
    "link": "https://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1740&CONTENTS_NO=&SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=18&BOARD_CATEGORY_NO=&BBS_SEQ=120245&pageNo=1",
    "date": "2026-11-10",
-   "hits": 570,
+   "hits": 1282,
    "bodyStatus": "text",
    "title": "2026학년도 동계 계절학기 본수강신청 안내",
    "titleTr": {
@@ -973,7 +1728,7 @@
    "boardName": "학사공지",
    "link": "https://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1740&CONTENTS_NO=&SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=18&BOARD_CATEGORY_NO=&BBS_SEQ=120244&pageNo=1",
    "date": "2026-11-10",
-   "hits": 53,
+   "hits": 81,
    "bodyStatus": "text",
    "title": "2026 학생상담센터 상담 프로그램 참여수기 공모전",
    "titleTr": {
@@ -1030,7 +1785,7 @@
    "boardName": "행사안내",
    "link": "https://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1820&CONTENTS_NO=&SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=24&BOARD_CATEGORY_NO=&BBS_SEQ=119522&pageNo=1",
    "date": "2026-11-10",
-   "hits": 10,
+   "hits": 19,
    "bodyStatus": "text",
    "title": "[AIX대학교육혁신원] 2026학년도 2학기 K-MOOC 강좌 홍보 아이디어 공모전",
    "titleTr": {
@@ -1086,7 +1841,7 @@
    "boardName": "외부행사/공모전",
    "link": "https://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1850&CONTENTS_NO=&SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=27&BOARD_CATEGORY_NO=&BBS_SEQ=120955&pageNo=1",
    "date": "2026-11-09",
-   "hits": 15,
+   "hits": 18,
    "bodyStatus": "text",
    "title": "사물놀이 몰개 <용의 나루>",
    "titleTr": {
@@ -1134,7 +1889,7 @@
    "boardName": "외부행사/공모전",
    "link": "https://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1850&CONTENTS_NO=&SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=27&BOARD_CATEGORY_NO=&BBS_SEQ=120954&pageNo=1",
    "date": "2026-11-09",
-   "hits": 10,
+   "hits": 12,
    "bodyStatus": "poster",
    "title": "2026년 잠실청소년센터 '잠실산타 이즈 커밍' 청소년산타(대학생) 모집",
    "titleTr": {
@@ -1262,7 +2017,7 @@
    "boardName": "학사공지",
    "link": "https://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1740&CONTENTS_NO=&SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=18&BOARD_CATEGORY_NO=&BBS_SEQ=120243&pageNo=1",
    "date": "2026-11-09",
-   "hits": 106,
+   "hits": 127,
    "bodyStatus": "text",
    "title": "[AIX대학교육혁신원 무크선도대학사업단] 2026학년도 2학기 K-MOOC 수업 사례 공모전 수상자 안내",
    "titleTr": {
@@ -1317,7 +2072,7 @@
    "boardName": "일반공지",
    "link": "https://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1790&CONTENTS_NO=&SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=22&BOARD_CATEGORY_NO=&BBS_SEQ=119926&pageNo=1",
    "date": "2026-11-09",
-   "hits": 19,
+   "hits": 32,
    "bodyStatus": "text",
    "title": "충북 PRIDE 공유대학 뷰티케어 현장실무역량 강화프로그램(헤어·네일) 수강생 모집(세명대학교)",
    "titleTr": {
@@ -1358,7 +2113,7 @@
    "boardName": "일반공지",
    "link": "https://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1790&CONTENTS_NO=&SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=22&BOARD_CATEGORY_NO=&BBS_SEQ=119925&pageNo=1",
    "date": "2026-11-09",
-   "hits": 23,
+   "hits": 29,
    "bodyStatus": "text",
    "title": "충북 PRIDE 공유대학  학습·취업 준비를 위한 생성형 AI 실무 프로그램(온라인) 수강생 모집(세명대학교)",
    "titleTr": {
@@ -1417,7 +2172,7 @@
    "boardName": "사회봉사",
    "link": "https://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1830&CONTENTS_NO=&SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=25&BOARD_CATEGORY_NO=&BBS_SEQ=119740&pageNo=1",
    "date": "2026-11-09",
-   "hits": 37,
+   "hits": 62,
    "bodyStatus": "poster",
    "title": "굿네이버스 대학생 대외활동 프로그램 해외봉사 해vol래 2기 모집",
    "titleTr": {
@@ -1477,7 +2232,7 @@
    "boardName": "학사공지",
    "link": "https://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1740&CONTENTS_NO=&SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=18&BOARD_CATEGORY_NO=&BBS_SEQ=120242&pageNo=1",
    "date": "2026-11-06",
-   "hits": 168,
+   "hits": 178,
    "bodyStatus": "text",
    "title": "2026학년도 2학기 교직 적성 및 인성 재검사 결과 공지",
    "titleTr": {
@@ -1525,7 +2280,7 @@
    "boardName": "외부행사/공모전",
    "link": "https://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1850&CONTENTS_NO=&SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=27&BOARD_CATEGORY_NO=&BBS_SEQ=120952&pageNo=1",
    "date": "2026-11-05",
-   "hits": 25,
+   "hits": 27,
    "bodyStatus": "poster",
    "title": "11월 충주아카데미 개최 알림",
    "titleTr": {
@@ -1563,7 +2318,7 @@
    "boardName": "외부행사/공모전",
    "link": "https://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1850&CONTENTS_NO=&SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=27&BOARD_CATEGORY_NO=&BBS_SEQ=120951&pageNo=1",
    "date": "2026-11-05",
-   "hits": 12,
+   "hits": 13,
    "bodyStatus": "poster",
    "title": "충북안전체험관 체험교육 프로그램 안내",
    "titleTr": {
@@ -1610,7 +2365,7 @@
    "boardName": "외부행사/공모전",
    "link": "https://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1850&CONTENTS_NO=&SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=27&BOARD_CATEGORY_NO=&BBS_SEQ=120950&pageNo=1",
    "date": "2026-11-05",
-   "hits": 14,
+   "hits": 15,
    "bodyStatus": "poster",
    "title": "「2027 충청 유니버시아드대회」 성화봉송 주자 공개모집 알림",
    "titleTr": {
@@ -1674,7 +2429,7 @@
    "boardName": "학사공지",
    "link": "https://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1740&CONTENTS_NO=&SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=18&BOARD_CATEGORY_NO=&BBS_SEQ=120241&pageNo=1",
    "date": "2026-11-05",
-   "hits": 90,
+   "hits": 97,
    "bodyStatus": "poster",
    "title": "[AIX대학교육혁신원] 2026학년도 2학기 K-MOOC 강좌 홍보 아이디어 공모전 신청 안내",
    "titleTr": {
@@ -1736,7 +2491,7 @@
    "boardName": "취업/창업",
    "link": "https://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1770&CONTENTS_NO=&SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=19&BOARD_CATEGORY_NO=&BBS_SEQ=120033&pageNo=1",
    "date": "2026-11-05",
-   "hits": 74,
+   "hits": 94,
    "bodyStatus": "text",
    "title": "[채용정보] 2026. 11월 1주차 공공기관 및 중소기업 채용정보",
    "titleTr": {
@@ -1803,7 +2558,7 @@
    "boardName": "취업/창업",
    "link": "https://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1770&CONTENTS_NO=&SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=19&BOARD_CATEGORY_NO=&BBS_SEQ=120032&pageNo=1",
    "date": "2026-11-05",
-   "hits": 46,
+   "hits": 54,
    "bodyStatus": "text",
    "title": "[채용정보] 2026. 11월 1주차 취업 관련 대외활동 정보 안내",
    "titleTr": {
@@ -1908,7 +2663,7 @@
    "boardName": "외부행사/공모전",
    "link": "https://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1850&CONTENTS_NO=&SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=27&BOARD_CATEGORY_NO=&BBS_SEQ=120948&pageNo=1",
    "date": "2026-11-04",
-   "hits": 7,
+   "hits": 9,
    "bodyStatus": "poster",
    "title": "경산 AI 미디어 콘텐츠 공모전 2026 「AI·스마트도시·YOUR STORY」",
    "titleTr": {
@@ -2183,7 +2938,7 @@
    "boardName": "취업/창업",
    "link": "https://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1770&CONTENTS_NO=&SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=19&BOARD_CATEGORY_NO=&BBS_SEQ=120031&pageNo=1",
    "date": "2026-11-04",
-   "hits": 275,
+   "hits": 298,
    "bodyStatus": "text",
    "title": "2026. 충북북부권대학 연합캠프 참가자 모집",
    "titleTr": {
@@ -2278,7 +3033,7 @@
    "boardName": "학사공지",
    "link": "https://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1740&CONTENTS_NO=&SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=18&BOARD_CATEGORY_NO=&BBS_SEQ=120240&pageNo=1",
    "date": "2026-11-03",
-   "hits": 124,
+   "hits": 135,
    "bodyStatus": "text",
    "title": "<2026학년도 MD / LC  교육과정 수요 설문조사 실시>",
    "titleTr": {
@@ -2333,7 +3088,7 @@
    "boardName": "학사공지",
    "link": "https://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1740&CONTENTS_NO=&SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=18&BOARD_CATEGORY_NO=&BBS_SEQ=120239&pageNo=1",
    "date": "2026-11-03",
-   "hits": 247,
+   "hits": 277,
    "bodyStatus": "text",
    "title": "2026학년도 2학기 졸업대상자 예비졸업사정 결과 확인 안내",
    "titleTr": {
@@ -2375,7 +3130,7 @@
    "boardName": "학사공지",
    "link": "https://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1740&CONTENTS_NO=&SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=18&BOARD_CATEGORY_NO=&BBS_SEQ=120238&pageNo=1",
    "date": "2026-11-03",
-   "hits": 207,
+   "hits": 221,
    "bodyStatus": "text",
    "title": "[AIX대학교육혁신원] 2026학년도 2학기 K-MOOC 강좌 수기 공모전 수상자 안내",
    "titleTr": {
@@ -2430,7 +3185,7 @@
    "boardName": "취업/창업",
    "link": "https://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1770&CONTENTS_NO=&SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=19&BOARD_CATEGORY_NO=&BBS_SEQ=120030&pageNo=1",
    "date": "2026-11-03",
-   "hits": 154,
+   "hits": 161,
    "bodyStatus": "text",
    "title": "[대학일자리+] 2026학년도 글로컬 잡 페어(GLOCAL JOB FAIR) 개최 안내",
    "titleTr": {
@@ -2492,7 +3247,7 @@
    "boardName": "일반공지",
    "link": "https://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1790&CONTENTS_NO=&SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=22&BOARD_CATEGORY_NO=&BBS_SEQ=119924&pageNo=1",
    "date": "2026-11-03",
-   "hits": 63,
+   "hits": 69,
    "bodyStatus": "poster",
    "title": "2027학년도 1학기 평생교육원 KU아카데미 신규강좌 공개모집 안내",
    "titleTr": {
@@ -2554,7 +3309,7 @@
    "boardName": "일반공지",
    "link": "https://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1790&CONTENTS_NO=&SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=22&BOARD_CATEGORY_NO=&BBS_SEQ=119923&pageNo=1",
    "date": "2026-11-03",
-   "hits": 310,
+   "hits": 326,
    "bodyStatus": "text",
    "title": "학사정보시스템 2차 인증 의무화 시행 및 사전 등록 안내(대상: 교직원)",
    "titleTr": {
@@ -2635,7 +3390,7 @@
    "boardName": "AX융합학부 공지사항",
    "link": "https://ids.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=950&CONTENTS_NO=&SITE_NO=45&P_TAB_NO=&TAB_NO=&BOARD_SEQ=1&BOARD_CATEGORY_NO=&BBS_SEQ=36595&pageNo=1",
    "date": "2026-11-03",
-   "hits": 48,
+   "hits": 50,
    "bodyStatus": "text",
    "title": "[(서울)수강신청 관련] 2027학년도 1학기 학부 수강신청 운영 절차 변경 및 관련 일정 안내",
    "titleTr": {
@@ -2704,7 +3459,7 @@
    "boardName": "외부행사/공모전",
    "link": "https://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1850&CONTENTS_NO=&SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=27&BOARD_CATEGORY_NO=&BBS_SEQ=120944&pageNo=1",
    "date": "2026-11-02",
-   "hits": 8,
+   "hits": 9,
    "bodyStatus": "poster",
    "title": "서울미래인재재단 대표 캐릭터 공모전",
    "titleTr": {
@@ -2768,7 +3523,7 @@
    "boardName": "외부행사/공모전",
    "link": "https://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1850&CONTENTS_NO=&SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=27&BOARD_CATEGORY_NO=&BBS_SEQ=120943&pageNo=1",
    "date": "2026-11-02",
-   "hits": 5,
+   "hits": 6,
    "bodyStatus": "poster",
    "title": "‘청년 사장님 소개 도민영상 공모전’ 시청자 참여 평가 참여",
    "titleTr": {
@@ -2824,7 +3579,7 @@
    "boardName": "외부행사/공모전",
    "link": "https://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1850&CONTENTS_NO=&SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=27&BOARD_CATEGORY_NO=&BBS_SEQ=120942&pageNo=1",
    "date": "2026-11-02",
-   "hits": 6,
+   "hits": 7,
    "bodyStatus": "poster",
    "title": "2026년 4분기 대학 안전사고 예방 포스터 배포 안내",
    "titleTr": {
@@ -2869,7 +3624,7 @@
    "boardName": "외부행사/공모전",
    "link": "https://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1850&CONTENTS_NO=&SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=27&BOARD_CATEGORY_NO=&BBS_SEQ=120941&pageNo=1",
    "date": "2026-11-02",
-   "hits": 4,
+   "hits": 5,
    "bodyStatus": "poster",
    "title": "「국제 배터리 엑스포 2026 포항」",
    "titleTr": {
@@ -2971,7 +3726,7 @@
    "boardName": "외부행사/공모전",
    "link": "https://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1850&CONTENTS_NO=&SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=27&BOARD_CATEGORY_NO=&BBS_SEQ=120939&pageNo=1",
    "date": "2026-11-02",
-   "hits": 2,
+   "hits": 3,
    "bodyStatus": "poster",
    "title": "2026년 재난안전 AI 데이터 활용 해커톤 공고 안내",
    "titleTr": {
@@ -3191,7 +3946,7 @@
    "boardName": "외부행사/공모전",
    "link": "https://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1850&CONTENTS_NO=&SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=27&BOARD_CATEGORY_NO=&BBS_SEQ=120936&pageNo=1",
    "date": "2026-11-02",
-   "hits": 2,
+   "hits": 3,
    "bodyStatus": "poster",
    "title": "「이런(e-Learn) 한 컷, 영상 공모전」",
    "titleTr": {
@@ -3452,7 +4207,7 @@
    "boardName": "학사공지",
    "link": "https://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1740&CONTENTS_NO=&SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=18&BOARD_CATEGORY_NO=&BBS_SEQ=120237&pageNo=1",
    "date": "2026-11-02",
-   "hits": 95,
+   "hits": 107,
    "bodyStatus": "text",
    "title": "[대학교육혁신원] 2026학년 2학기 KU STAR 학습워크숍(3) AI 200% 로드맵: 발표·과제부터 취업까지 신청 안내",
    "titleTr": {
@@ -3499,7 +4254,7 @@
    "boardName": "학사공지",
    "link": "https://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1740&CONTENTS_NO=&SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=18&BOARD_CATEGORY_NO=&BBS_SEQ=120236&pageNo=1",
    "date": "2026-11-02",
-   "hits": 36,
+   "hits": 37,
    "bodyStatus": "poster",
    "title": "[AIX대학교육혁신원] 강의우수 교수 수업나눔 포럼 신청 안내(교수 대상)",
    "titleTr": {
@@ -3563,7 +4318,7 @@
    "boardName": "일반공지",
    "link": "https://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1790&CONTENTS_NO=&SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=22&BOARD_CATEGORY_NO=&BBS_SEQ=119920&pageNo=1",
    "date": "2026-11-02",
-   "hits": 62,
+   "hits": 68,
    "bodyStatus": "text",
    "title": "2026학년도 재학생 인권 실태조사 (응답선착순 커피쿠폰 증정)",
    "titleTr": {
@@ -3615,7 +4370,7 @@
    "boardName": "아르바이트",
    "link": "https://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1840&CONTENTS_NO=&SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=26&BOARD_CATEGORY_NO=&BBS_SEQ=119686&pageNo=1",
    "date": "2026-11-01",
-   "hits": 13,
+   "hits": 16,
    "bodyStatus": "text",
    "title": "[구인] 맥도날드 충주교현DT점에서 함께 할 크루를 모집합니다.",
    "titleTr": {
@@ -3655,7 +4410,7 @@
    "boardName": "학사공지",
    "link": "https://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1740&CONTENTS_NO=&SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=18&BOARD_CATEGORY_NO=&BBS_SEQ=120235&pageNo=1",
    "date": "2026-10-30",
-   "hits": 113,
+   "hits": 115,
    "bodyStatus": "poster",
    "title": "[AIX대학교육혁신원] 2026학년도 2학기 K-MOOC 성과 공유 워크숍 신청 안내",
    "titleTr": {
@@ -3804,7 +4559,7 @@
    "boardName": "학사공지",
    "link": "https://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1740&CONTENTS_NO=&SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=18&BOARD_CATEGORY_NO=&BBS_SEQ=120232&pageNo=1",
    "date": "2026-10-30",
-   "hits": 18,
+   "hits": 19,
    "bodyStatus": "poster",
    "title": "2026학년도 2학기 [혁신] KU STAR 학습클리닉 A반 (AIX대학교육혁신원)",
    "titleTr": {
@@ -3866,7 +4621,7 @@
    "boardName": "취업/창업",
    "link": "https://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1770&CONTENTS_NO=&SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=19&BOARD_CATEGORY_NO=&BBS_SEQ=120029&pageNo=1",
    "date": "2026-10-30",
-   "hits": 257,
+   "hits": 262,
    "bodyStatus": "text",
    "title": "「2026 모두의 창업 RE: START DAY」 재도전 멘토링 참가자 모집 안내",
    "titleTr": {
@@ -3926,7 +4681,7 @@
    "boardName": "장학공지",
    "link": "https://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1750&CONTENTS_NO=&SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=1&BOARD_CATEGORY_NO=&BBS_SEQ=119921&pageNo=1",
    "date": "2026-10-30",
-   "hits": 78,
+   "hits": 85,
    "bodyStatus": "poster",
    "title": "[교외]  2026년도 하반기 강화군 대학생 등록금 지원 사업 안내(~11/9 18:00)",
    "titleTr": {
@@ -3990,7 +4745,7 @@
    "boardName": "행사안내",
    "link": "https://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1820&CONTENTS_NO=&SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=24&BOARD_CATEGORY_NO=&BBS_SEQ=119521&pageNo=1",
    "date": "2026-10-30",
-   "hits": 35,
+   "hits": 42,
    "bodyStatus": "text",
    "title": "[AIX대학교육혁신원] 2026학년도 2학기 K-MOOC 성과 공유 워크숍",
    "titleTr": {
@@ -4125,7 +4880,7 @@
    "boardName": "취업/창업",
    "link": "https://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1770&CONTENTS_NO=&SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=19&BOARD_CATEGORY_NO=&BBS_SEQ=120028&pageNo=1",
    "date": "2026-10-29",
-   "hits": 68,
+   "hits": 70,
    "bodyStatus": "text",
    "title": "[채용정보] 2026. 10월 4주차 공공기관 및 중소기업 채용정보",
    "titleTr": {
@@ -4167,7 +4922,7 @@
    "boardName": "취업/창업",
    "link": "https://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1770&CONTENTS_NO=&SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=19&BOARD_CATEGORY_NO=&BBS_SEQ=120027&pageNo=1",
    "date": "2026-10-29",
-   "hits": 44,
+   "hits": 49,
    "bodyStatus": "text",
    "title": "[채용정보] 2026. 10월 4주차 취업 관련 대외활동 정보 안내",
    "titleTr": {
@@ -4225,7 +4980,7 @@
    "boardName": "장학공지",
    "link": "https://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1750&CONTENTS_NO=&SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=1&BOARD_CATEGORY_NO=&BBS_SEQ=119920&pageNo=1",
    "date": "2026-10-29",
-   "hits": 787,
+   "hits": 845,
    "bodyStatus": "text",
    "title": "[국가근로] 2026학년도 동계방학 집중근로 희망근로지 신청 안내(10/30~11/12 18:00)",
    "titleTr": {
@@ -4323,7 +5078,7 @@
    "boardName": "일반공지",
    "link": "https://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1790&CONTENTS_NO=&SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=22&BOARD_CATEGORY_NO=&BBS_SEQ=119919&pageNo=1",
    "date": "2026-10-29",
-   "hits": 101,
+   "hits": 118,
    "bodyStatus": "text",
    "title": "2026학년도 MD/ LC 교육과정 수요 설문조사 실시 안내",
    "titleTr": {
@@ -4379,7 +5134,7 @@
    "boardName": "장학공지",
    "link": "https://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1750&CONTENTS_NO=&SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=1&BOARD_CATEGORY_NO=&BBS_SEQ=119919&pageNo=1",
    "date": "2026-10-29",
-   "hits": 495,
+   "hits": 538,
    "bodyStatus": "text",
    "title": "[국가근로] 2026학년도 동계방학 국가근로장학금 희망근로지 신청 안내(교내)(10/30~11/12)",
    "titleTr": {
@@ -4557,7 +5312,7 @@
    "boardName": "학사공지",
    "link": "https://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1740&CONTENTS_NO=&SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=18&BOARD_CATEGORY_NO=&BBS_SEQ=120231&pageNo=1",
    "date": "2026-10-28",
-   "hits": 238,
+   "hits": 248,
    "bodyStatus": "text",
    "title": "2027학년도 학교현장실습(교육실습) 설명회 안내",
    "titleTr": {
@@ -4602,7 +5357,7 @@
    "boardName": "일반공지",
    "link": "https://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1790&CONTENTS_NO=&SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=22&BOARD_CATEGORY_NO=&BBS_SEQ=119917&pageNo=1",
    "date": "2026-10-28",
-   "hits": 54,
+   "hits": 60,
    "bodyStatus": "poster",
    "title": "(기간연장) 2026-2 고민게시판(이런 내마음을 말해도 될까요?) 안내",
    "titleTr": {
@@ -4660,7 +5415,7 @@
    "boardName": "일반공지",
    "link": "https://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1790&CONTENTS_NO=&SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=22&BOARD_CATEGORY_NO=&BBS_SEQ=119916&pageNo=1",
    "date": "2026-10-28",
-   "hits": 79,
+   "hits": 84,
    "bodyStatus": "text",
    "title": "2026학년도 컴퓨터공학과 제26회 졸업작품 전시회",
    "titleTr": {
@@ -4707,7 +5462,7 @@
    "boardName": "행사안내",
    "link": "https://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1820&CONTENTS_NO=&SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=24&BOARD_CATEGORY_NO=&BBS_SEQ=119520&pageNo=1",
    "date": "2026-10-28",
-   "hits": 72,
+   "hits": 81,
    "bodyStatus": "text",
    "title": "[조형예술학과] 데이비드 호크니 드로우 프로젝트",
    "titleTr": {
@@ -4931,7 +5686,7 @@
    "boardName": "학사공지",
    "link": "https://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1740&CONTENTS_NO=&SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=18&BOARD_CATEGORY_NO=&BBS_SEQ=120230&pageNo=1",
    "date": "2026-10-27",
-   "hits": 170,
+   "hits": 172,
    "bodyStatus": "text",
    "title": "2026학년도 2학기 교직 특강 시행 안내",
    "titleTr": {
@@ -4976,7 +5731,7 @@
    "boardName": "학사공지",
    "link": "https://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1740&CONTENTS_NO=&SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=18&BOARD_CATEGORY_NO=&BBS_SEQ=120229&pageNo=1",
    "date": "2026-10-27",
-   "hits": 178,
+   "hits": 179,
    "bodyStatus": "text",
    "title": "2026학년도 2학기 교원양성과정 성인지교육 시행 안내(대면 강의 강사 변경)",
    "titleTr": {
@@ -5021,7 +5776,7 @@
    "boardName": "장학공지",
    "link": "https://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1750&CONTENTS_NO=&SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=1&BOARD_CATEGORY_NO=&BBS_SEQ=119918&pageNo=1",
    "date": "2026-10-27",
-   "hits": 164,
+   "hits": 169,
    "bodyStatus": "text",
    "title": "[희망사다리] 희망사다리 1유형 장학생 대상 삼성 청년 SW·AI 아카데미(SSAFY) 17기 교육생 모집 안내",
    "titleTr": {
@@ -5707,7 +6462,7 @@
    "boardName": "학사공지",
    "link": "https://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1740&CONTENTS_NO=&SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=18&BOARD_CATEGORY_NO=&BBS_SEQ=120228&pageNo=1",
    "date": "2026-10-26",
-   "hits": 163,
+   "hits": 166,
    "bodyStatus": "text",
    "title": "[대학교육혁신원] 2026학년 2학기 학습역량강화 공모전(2) 나의 대학생활 공유 공모전 신청 안내",
    "titleTr": {
@@ -5755,7 +6510,7 @@
    "boardName": "일반공지",
    "link": "https://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1790&CONTENTS_NO=&SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=22&BOARD_CATEGORY_NO=&BBS_SEQ=119915&pageNo=1",
    "date": "2026-10-26",
-   "hits": 60,
+   "hits": 61,
    "bodyStatus": "text",
    "title": "인권작품 공모전 참가 안내",
    "titleTr": {
@@ -5802,7 +6557,7 @@
    "boardName": "일반공지",
    "link": "https://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1790&CONTENTS_NO=&SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=22&BOARD_CATEGORY_NO=&BBS_SEQ=119914&pageNo=1",
    "date": "2026-10-26",
-   "hits": 46,
+   "hits": 54,
    "bodyStatus": "poster",
    "title": "학생상담센터 프로그램 안내",
    "titleTr": {
@@ -5858,7 +6613,7 @@
    "boardName": "행사안내",
    "link": "https://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1820&CONTENTS_NO=&SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=24&BOARD_CATEGORY_NO=&BBS_SEQ=119519&pageNo=1",
    "date": "2026-10-26",
-   "hits": 103,
+   "hits": 112,
    "bodyStatus": "text",
    "title": "[중원도서관] 중원역사문화탐방",
    "titleTr": {
@@ -5904,7 +6659,7 @@
    "boardName": "장학공지",
    "link": "https://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1750&CONTENTS_NO=&SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=1&BOARD_CATEGORY_NO=&BBS_SEQ=119917&pageNo=1",
    "date": "2026-10-23",
-   "hits": 3008,
+   "hits": 3028,
    "bodyStatus": "poster",
    "title": "2026학년도 제2기 성신의해외봉사(인도네시아) 선발 공고 안내",
    "titleTr": {
@@ -5988,7 +6743,7 @@
    "boardName": "일반공지",
    "link": "https://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1790&CONTENTS_NO=&SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=22&BOARD_CATEGORY_NO=&BBS_SEQ=119913&pageNo=1",
    "date": "2026-10-23",
-   "hits": 247,
+   "hits": 283,
    "bodyStatus": "text",
    "title": "2027학년도 1학기 모시래ㆍ해오름 관생모집",
    "titleTr": {
@@ -6439,7 +7194,7 @@
    "boardName": "취업/창업",
    "link": "https://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1770&CONTENTS_NO=&SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=19&BOARD_CATEGORY_NO=&BBS_SEQ=120026&pageNo=1",
    "date": "2026-10-22",
-   "hits": 601,
+   "hits": 605,
    "bodyStatus": "text",
    "title": "2026학년도 제13회 K.U.(Keep Up) ESG 창업 경진대회 참가자 모집 공고",
    "titleTr": {
@@ -6516,7 +7271,7 @@
    "boardName": "취업/창업",
    "link": "https://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1770&CONTENTS_NO=&SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=19&BOARD_CATEGORY_NO=&BBS_SEQ=120025&pageNo=1",
    "date": "2026-10-22",
-   "hits": 291,
+   "hits": 293,
    "bodyStatus": "text",
    "title": "2026. 창업특강 「KU 창업 Knock & Talk!」\"이재승 카카오 지역협력 부사장\",\"이현재 예스퓨처대표(현 대통령 스타트업정책자문, 전 우아한형제들 이사)",
    "titleTr": {
@@ -6583,7 +7338,7 @@
    "boardName": "취업/창업",
    "link": "https://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1770&CONTENTS_NO=&SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=19&BOARD_CATEGORY_NO=&BBS_SEQ=120024&pageNo=1",
    "date": "2026-10-22",
-   "hits": 179,
+   "hits": 182,
    "bodyStatus": "text",
    "title": "[현장실습-동계+2027년 1학기-별도모집]샘표식품 모집 안내",
    "titleTr": {
@@ -6683,7 +7438,7 @@
    "boardName": "취업/창업",
    "link": "https://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1770&CONTENTS_NO=&SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=19&BOARD_CATEGORY_NO=&BBS_SEQ=120023&pageNo=1",
    "date": "2026-10-22",
-   "hits": 65,
+   "hits": 68,
    "bodyStatus": "text",
    "title": "[채용정보] 2026. 10월 3주차 공공기관 및 중소기업 채용정보",
    "titleTr": {
@@ -6746,7 +7501,7 @@
    "boardName": "취업/창업",
    "link": "https://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1770&CONTENTS_NO=&SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=19&BOARD_CATEGORY_NO=&BBS_SEQ=120022&pageNo=1",
    "date": "2026-10-22",
-   "hits": 48,
+   "hits": 49,
    "bodyStatus": "text",
    "title": "[채용정보] 2026. 10월 3주차 취업 관련 대외활동 정보 안내",
    "titleTr": {
@@ -6811,7 +7566,7 @@
    "boardName": "사회봉사",
    "link": "https://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1830&CONTENTS_NO=&SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=25&BOARD_CATEGORY_NO=&BBS_SEQ=119739&pageNo=1",
    "date": "2026-10-22",
-   "hits": 31,
+   "hits": 32,
    "bodyStatus": "poster",
    "title": "2026년 시립서울청소년센터 찾아가는 서울시 특수학급 예능발표회 및 청소년 어울림 한마당 자원봉사자 모집",
    "titleTr": {
@@ -6867,7 +7622,7 @@
    "boardName": "행사안내",
    "link": "https://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1820&CONTENTS_NO=&SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=24&BOARD_CATEGORY_NO=&BBS_SEQ=119518&pageNo=1",
    "date": "2026-10-22",
-   "hits": 31,
+   "hits": 34,
    "bodyStatus": "text",
    "title": "[AIX대학교육혁신원] 2026학년도 2학기 K-MOOC 강좌 홍보 포스터 공모전",
    "titleTr": {
@@ -6926,7 +7681,7 @@
    "boardName": "학사공지",
    "link": "https://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1740&CONTENTS_NO=&SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=18&BOARD_CATEGORY_NO=&BBS_SEQ=120227&pageNo=1",
    "date": "2026-10-21",
-   "hits": 246,
+   "hits": 249,
    "bodyStatus": "poster",
    "title": "[AIX대학교육혁신원] AI  교과 연계 프로젝트 공모전",
    "titleTr": {
@@ -6991,7 +7746,7 @@
    "boardName": "학사공지",
    "link": "https://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1740&CONTENTS_NO=&SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=18&BOARD_CATEGORY_NO=&BBS_SEQ=120226&pageNo=1",
    "date": "2026-10-21",
-   "hits": 151,
+   "hits": 193,
    "bodyStatus": "text",
    "title": "2027년 2월 교원자격 무시험검정 신청 안내",
    "titleTr": {
@@ -7037,7 +7792,7 @@
    "boardName": "장학공지",
    "link": "https://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1750&CONTENTS_NO=&SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=1&BOARD_CATEGORY_NO=&BBS_SEQ=119916&pageNo=1",
    "date": "2026-10-21",
-   "hits": 131,
+   "hits": 136,
    "bodyStatus": "text",
    "title": "[희망사다리] 2026학년도 2학기 희망사다리 Ⅰ유형 신규장학생 추천 자체선발기준 안내",
    "titleTr": {
@@ -7117,7 +7872,7 @@
    "boardName": "일반공지",
    "link": "https://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1790&CONTENTS_NO=&SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=22&BOARD_CATEGORY_NO=&BBS_SEQ=119912&pageNo=1",
    "date": "2026-10-21",
-   "hits": 36,
+   "hits": 42,
    "bodyStatus": "text",
    "title": "2026 첨단산업 PRIDE 공유대학 실무역량 경진대회 참가 모집",
    "titleTr": {
@@ -7176,7 +7931,7 @@
    "boardName": "행사안내",
    "link": "https://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1820&CONTENTS_NO=&SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=24&BOARD_CATEGORY_NO=&BBS_SEQ=119517&pageNo=1",
    "date": "2026-10-21",
-   "hits": 99,
+   "hits": 102,
    "bodyStatus": "text",
    "title": "[RISE] 청년이 빛나는 봉방 공모전(사진/영상)",
    "titleTr": {
@@ -7293,7 +8048,7 @@
    "boardName": "장학공지",
    "link": "https://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1750&CONTENTS_NO=&SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=1&BOARD_CATEGORY_NO=&BBS_SEQ=119915&pageNo=1",
    "date": "2026-10-20",
-   "hits": 458,
+   "hits": 469,
    "bodyStatus": "text",
    "title": "[교외] 2027년도 한국지도자육성장학재단 장학생 선발 안내(~10/27)",
    "titleTr": {
@@ -7407,7 +8162,7 @@
    "boardName": "일반공지",
    "link": "https://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1790&CONTENTS_NO=&SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=22&BOARD_CATEGORY_NO=&BBS_SEQ=119911&pageNo=1",
    "date": "2026-10-20",
-   "hits": 47,
+   "hits": 48,
    "bodyStatus": "poster",
    "title": "2026학년도 오픈상담실 운영 안내",
    "titleTr": {
@@ -7505,7 +8260,7 @@
    "boardName": "일반공지",
    "link": "https://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1790&CONTENTS_NO=&SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=22&BOARD_CATEGORY_NO=&BBS_SEQ=119910&pageNo=1",
    "date": "2026-10-19",
-   "hits": 67,
+   "hits": 70,
    "bodyStatus": "text",
    "title": "2027년 2월말 퇴직교원 정부포상 추천후보자 공개검증",
    "titleTr": {
@@ -7557,7 +8312,7 @@
    "boardName": "장학공지",
    "link": "https://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1750&CONTENTS_NO=&SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=1&BOARD_CATEGORY_NO=&BBS_SEQ=119913&pageNo=1",
    "date": "2026-10-17",
-   "hits": 136,
+   "hits": 138,
    "bodyStatus": "text",
    "title": "[희망사다리] 희망사다리 장학생 대상 기업탐방 프로그램 참여자 모집(모집기간 연장)",
    "titleTr": {
@@ -7635,7 +8390,7 @@
    "boardName": "학사공지",
    "link": "https://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1740&CONTENTS_NO=&SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=18&BOARD_CATEGORY_NO=&BBS_SEQ=120223&pageNo=1",
    "date": "2026-10-16",
-   "hits": 296,
+   "hits": 303,
    "bodyStatus": "poster",
    "title": "[대학교육혁신원] 2026학년 2학기 학습역량강화 공모전(1) 비교과 프로그램 후기 공모전 수상자 안내",
    "titleTr": {
@@ -7696,7 +8451,7 @@
    "boardName": "일반공지",
    "link": "https://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1790&CONTENTS_NO=&SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=22&BOARD_CATEGORY_NO=&BBS_SEQ=119909&pageNo=1",
    "date": "2026-10-16",
-   "hits": 80,
+   "hits": 83,
    "bodyStatus": "text",
    "title": "충북 PRIDE 공유대학 2026 해외선진 학생연수 프로그램 학생 모집",
    "titleTr": {
@@ -7800,7 +8555,7 @@
    "boardName": "행사안내",
    "link": "https://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1820&CONTENTS_NO=&SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=24&BOARD_CATEGORY_NO=&BBS_SEQ=119516&pageNo=1",
    "date": "2026-10-16",
-   "hits": 31,
+   "hits": 33,
    "bodyStatus": "text",
    "title": "[AIX대학교육혁신원] 2026학년도 2학기 E-포트폴리오 공모전",
    "titleTr": {
@@ -7898,7 +8653,7 @@
    "boardName": "AX융합학부 공지사항",
    "link": "https://ids.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=950&CONTENTS_NO=&SITE_NO=45&P_TAB_NO=&TAB_NO=&BOARD_SEQ=1&BOARD_CATEGORY_NO=&BBS_SEQ=36594&pageNo=1",
    "date": "2026-10-16",
-   "hits": 161,
+   "hits": 164,
    "bodyStatus": "text",
    "title": "[AI기본교육]2026학년도 2학기 AI 교과 연계 프로젝트 공모전 홍보",
    "titleTr": {
@@ -7946,7 +8701,7 @@
    "boardName": "AX융합학부 공지사항",
    "link": "https://ids.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=950&CONTENTS_NO=&SITE_NO=45&P_TAB_NO=&TAB_NO=&BOARD_SEQ=1&BOARD_CATEGORY_NO=&BBS_SEQ=36593&pageNo=1",
    "date": "2026-10-16",
-   "hits": 276,
+   "hits": 282,
    "bodyStatus": "text",
    "title": "[졸업]2026년 2학기 졸업시험(논문) 일정 및 신청서 제출 안내(27.2월 졸업대상자: Lego, 연합전공, 자기설계)",
    "titleTr": {
@@ -8247,7 +9002,7 @@
    "boardName": "취업/창업",
    "link": "https://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1770&CONTENTS_NO=&SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=19&BOARD_CATEGORY_NO=&BBS_SEQ=120021&pageNo=1",
    "date": "2026-10-15",
-   "hits": 362,
+   "hits": 374,
    "bodyStatus": "text",
    "title": "[현장실습지원센터]2026. 동계 현장실습학기제 프로그램 안내",
    "titleTr": {
@@ -8376,7 +9131,7 @@
    "boardName": "취업/창업",
    "link": "https://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1770&CONTENTS_NO=&SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=19&BOARD_CATEGORY_NO=&BBS_SEQ=120019&pageNo=1",
    "date": "2026-10-15",
-   "hits": 45,
+   "hits": 47,
    "bodyStatus": "text",
    "title": "[채용정보] 2026. 10월 2주차 취업 관련 대외활동 정보 안내",
    "titleTr": {
@@ -8419,7 +9174,7 @@
    "boardName": "일반공지",
    "link": "https://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1790&CONTENTS_NO=&SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=22&BOARD_CATEGORY_NO=&BBS_SEQ=119908&pageNo=1",
    "date": "2026-10-15",
-   "hits": 203,
+   "hits": 210,
    "bodyStatus": "poster",
    "title": "충주반값여행",
    "titleTr": {
@@ -8478,7 +9233,7 @@
    "boardName": "사회봉사",
    "link": "https://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1830&CONTENTS_NO=&SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=25&BOARD_CATEGORY_NO=&BBS_SEQ=119738&pageNo=1",
    "date": "2026-10-15",
-   "hits": 91,
+   "hits": 101,
    "bodyStatus": "poster",
    "title": "(한국국제협력단) 2026년 KOICA 해외봉사단 정기설명회 개최",
    "titleTr": {
@@ -8522,7 +9277,7 @@
    "boardName": "아르바이트",
    "link": "https://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1840&CONTENTS_NO=&SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=26&BOARD_CATEGORY_NO=&BBS_SEQ=119685&pageNo=1",
    "date": "2026-10-15",
-   "hits": 38,
+   "hits": 40,
    "bodyStatus": "text",
    "title": "초중등 수학사고력 동화수업 강사 모집합니다.",
    "titleTr": {
@@ -8572,7 +9327,7 @@
    "boardName": "행사안내",
    "link": "https://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1820&CONTENTS_NO=&SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=24&BOARD_CATEGORY_NO=&BBS_SEQ=119515&pageNo=1",
    "date": "2026-10-15",
-   "hits": 49,
+   "hits": 50,
    "bodyStatus": "text",
    "title": "[중원도서관] 북!톡Talk 6탄_경계와 욕망",
    "titleTr": {
@@ -9035,7 +9790,7 @@
    "boardName": "학사공지",
    "link": "https://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1740&CONTENTS_NO=&SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=18&BOARD_CATEGORY_NO=&BBS_SEQ=120222&pageNo=1",
    "date": "2026-10-14",
-   "hits": 1387,
+   "hits": 1409,
    "bodyStatus": "text",
    "title": "2026학년도 동계 계절학기 예비수강신청 안내",
    "titleTr": {
@@ -9112,7 +9867,7 @@
    "boardName": "학사공지",
    "link": "https://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1740&CONTENTS_NO=&SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=18&BOARD_CATEGORY_NO=&BBS_SEQ=120221&pageNo=1",
    "date": "2026-10-14",
-   "hits": 141,
+   "hits": 143,
    "bodyStatus": "poster",
    "title": "[교양교육센터] ESG 아이디어 공모전 안내",
    "titleTr": {
@@ -9174,7 +9929,7 @@
    "boardName": "취업/창업",
    "link": "https://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1770&CONTENTS_NO=&SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=19&BOARD_CATEGORY_NO=&BBS_SEQ=120018&pageNo=1",
    "date": "2026-10-14",
-   "hits": 143,
+   "hits": 147,
    "bodyStatus": "text",
    "title": "2026학년도 PASS 학생창업 시제품 제작 지원사업 참가팀 모집 공고",
    "titleTr": {
@@ -9234,7 +9989,7 @@
    "boardName": "취업/창업",
    "link": "https://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1770&CONTENTS_NO=&SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=19&BOARD_CATEGORY_NO=&BBS_SEQ=120017&pageNo=1",
    "date": "2026-10-14",
-   "hits": 79,
+   "hits": 80,
    "bodyStatus": "text",
    "title": "2026년 대학일자리플러스센터 만족도 및 취업역량 향상도 조사[설문종료]",
    "titleTr": {
@@ -9276,7 +10031,7 @@
    "boardName": "장학공지",
    "link": "https://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1750&CONTENTS_NO=&SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=1&BOARD_CATEGORY_NO=&BBS_SEQ=119912&pageNo=1",
    "date": "2026-10-14",
-   "hits": 838,
+   "hits": 843,
    "bodyStatus": "text",
    "title": "[교외] 2026년도 신한은행 충북장학회 장학생 선발 안내(~10/19)",
    "titleTr": {
@@ -9751,7 +10506,7 @@
    "boardName": "장학공지",
    "link": "https://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1750&CONTENTS_NO=&SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=1&BOARD_CATEGORY_NO=&BBS_SEQ=119911&pageNo=1",
    "date": "2026-10-13",
-   "hits": 444,
+   "hits": 449,
    "bodyStatus": "text",
    "title": "[국가근로] 2026학년도 2학기 국가근로장학금 일반유형 추가신청 기간 안내(10/21~10/29)",
    "titleTr": {
@@ -9822,7 +10577,7 @@
    "boardName": "국제교육원 공지사항",
    "link": "https://int.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=80&CONTENTS_NO=&SITE_NO=7&P_TAB_NO=&TAB_NO=&BOARD_SEQ=1&BOARD_CATEGORY_NO=&BBS_SEQ=36314&pageNo=1",
    "date": "2026-10-13",
-   "hits": 242,
+   "hits": 254,
    "bodyStatus": "text",
    "title": "11월 단기 교내 영어특강 모집 안내",
    "titleTr": {
@@ -9884,7 +10639,7 @@
    "boardName": "아르바이트",
    "link": "https://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1840&CONTENTS_NO=&SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=26&BOARD_CATEGORY_NO=&BBS_SEQ=119683&pageNo=1",
    "date": "2026-10-13",
-   "hits": 22,
+   "hits": 24,
    "bodyStatus": "text",
    "title": "홀서빙및주방아르바이트구합니다~",
    "titleTr": {
@@ -9934,7 +10689,7 @@
    "boardName": "아르바이트",
    "link": "https://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1840&CONTENTS_NO=&SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=26&BOARD_CATEGORY_NO=&BBS_SEQ=119682&pageNo=1",
    "date": "2026-10-13",
-   "hits": 25,
+   "hits": 29,
    "bodyStatus": "text",
    "title": "2026년 국립청소년인터넷드림마을 19기 캠프 멘토 모집",
    "titleTr": {
@@ -10102,7 +10857,7 @@
    "boardName": "학사공지",
    "link": "https://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1740&CONTENTS_NO=&SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=18&BOARD_CATEGORY_NO=&BBS_SEQ=120218&pageNo=1",
    "date": "2026-10-12",
-   "hits": 797,
+   "hits": 840,
    "bodyStatus": "poster",
    "title": "2026학년도 동계 계절학기 운영 계획 안내",
    "titleTr": {
@@ -10179,7 +10934,7 @@
    "boardName": "국제교육원 공지사항",
    "link": "https://int.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=80&CONTENTS_NO=&SITE_NO=7&P_TAB_NO=&TAB_NO=&BOARD_SEQ=1&BOARD_CATEGORY_NO=&BBS_SEQ=36312&pageNo=1",
    "date": "2026-10-12",
-   "hits": 320,
+   "hits": 337,
    "bodyStatus": "poster",
    "title": "풀브라이트 미국 유학 장학금 설명회",
    "titleTr": {
@@ -10319,7 +11074,7 @@
    "boardName": "취업/창업",
    "link": "https://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1770&CONTENTS_NO=&SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=19&BOARD_CATEGORY_NO=&BBS_SEQ=120016&pageNo=1",
    "date": "2026-10-08",
-   "hits": 123,
+   "hits": 125,
    "bodyStatus": "text",
    "title": "[채용정보] 2026. 10월 1주차 공공기관 및 중소기업 채용정보",
    "titleTr": {
@@ -10448,7 +11203,7 @@
    "boardName": "행사안내",
    "link": "https://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1820&CONTENTS_NO=&SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=24&BOARD_CATEGORY_NO=&BBS_SEQ=119514&pageNo=1",
    "date": "2026-10-08",
-   "hits": 87,
+   "hits": 88,
    "bodyStatus": "text",
    "title": "[AIX대학교육혁신원] K-MOOC 해드림 서포터즈 모집 안내",
    "titleTr": {
@@ -10738,7 +11493,7 @@
    "boardName": "학사공지",
    "link": "https://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1740&CONTENTS_NO=&SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=18&BOARD_CATEGORY_NO=&BBS_SEQ=120216&pageNo=1",
    "date": "2026-10-06",
-   "hits": 162,
+   "hits": 164,
    "bodyStatus": "poster",
    "title": "[교양교육센터] 2026학년도 2학기 A+리포트클리닉 신청 안내",
    "titleTr": {
@@ -10877,7 +11632,7 @@
    "boardName": "학사공지",
    "link": "https://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1740&CONTENTS_NO=&SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=18&BOARD_CATEGORY_NO=&BBS_SEQ=120214&pageNo=1",
    "date": "2026-10-06",
-   "hits": 423,
+   "hits": 425,
    "bodyStatus": "poster",
    "title": "[AIX대학교육혁신원] 2026학년도 2학기 중간 강의평가 실시 안내",
    "titleTr": {
@@ -10925,7 +11680,7 @@
    "boardName": "학사공지",
    "link": "https://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1740&CONTENTS_NO=&SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=18&BOARD_CATEGORY_NO=&BBS_SEQ=120213&pageNo=1",
    "date": "2026-10-06",
-   "hits": 375,
+   "hits": 389,
    "bodyStatus": "text",
    "title": "2026학년도 2학기 응급처치 및 심폐소생술 교육 시행 안내",
    "titleTr": {
@@ -10981,7 +11736,7 @@
    "boardName": "학사공지",
    "link": "https://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1740&CONTENTS_NO=&SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=18&BOARD_CATEGORY_NO=&BBS_SEQ=120212&pageNo=1",
    "date": "2026-10-06",
-   "hits": 539,
+   "hits": 554,
    "bodyStatus": "text",
    "title": "2026학년도 2학기 취득학점포기 시행(1차) 안내",
    "titleTr": {
@@ -11058,7 +11813,7 @@
    "boardName": "취업/창업",
    "link": "https://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1770&CONTENTS_NO=&SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=19&BOARD_CATEGORY_NO=&BBS_SEQ=120014&pageNo=1",
    "date": "2026-10-06",
-   "hits": 129,
+   "hits": 130,
    "bodyStatus": "text",
    "title": "청년일자리 강소기업 채용정보 안내",
    "titleTr": {
@@ -11096,7 +11851,7 @@
    "boardName": "취업/창업",
    "link": "https://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1770&CONTENTS_NO=&SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=19&BOARD_CATEGORY_NO=&BBS_SEQ=120013&pageNo=1",
    "date": "2026-10-06",
-   "hits": 313,
+   "hits": 317,
    "bodyStatus": "text",
    "title": "[한국고용정보원 X 건국대 글로컬] 직속 선배(26.2 졸업) 농심 현직자 멘토링 & 면접 특강 참여자 모집",
    "titleTr": {
@@ -11160,7 +11915,7 @@
    "boardName": "아르바이트",
    "link": "https://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1840&CONTENTS_NO=&SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=26&BOARD_CATEGORY_NO=&BBS_SEQ=119681&pageNo=1",
    "date": "2026-10-06",
-   "hits": 85,
+   "hits": 86,
    "bodyStatus": "text",
    "title": "시그마수학학원 초.중등 수학강사 모집합니다.",
    "titleTr": {
@@ -11479,7 +12234,7 @@
    "boardName": "학사공지",
    "link": "https://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1740&CONTENTS_NO=&SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=18&BOARD_CATEGORY_NO=&BBS_SEQ=120211&pageNo=1",
    "date": "2026-10-02",
-   "hits": 88,
+   "hits": 91,
    "bodyStatus": "text",
    "title": "2026학년도 Cogito 재학생 핵심역량 진단 참여 안내",
    "titleTr": {
@@ -11572,7 +12327,7 @@
    "boardName": "학사공지",
    "link": "https://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1740&CONTENTS_NO=&SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=18&BOARD_CATEGORY_NO=&BBS_SEQ=120209&pageNo=1",
    "date": "2026-10-02",
-   "hits": 816,
+   "hits": 821,
    "bodyStatus": "text",
    "title": "2026학년도 2학기 중간고사 및 성적처리 일정 안내",
    "titleTr": {
@@ -11638,7 +12393,7 @@
    "boardName": "장학공지",
    "link": "https://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1750&CONTENTS_NO=&SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=1&BOARD_CATEGORY_NO=&BBS_SEQ=119908&pageNo=1",
    "date": "2026-10-02",
-   "hits": 454,
+   "hits": 456,
    "bodyStatus": "text",
    "title": "2026학년도 2학기 위대한부모장학 신청 안내",
    "titleTr": {
@@ -11719,7 +12474,7 @@
    "boardName": "장학공지",
    "link": "https://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1750&CONTENTS_NO=&SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=1&BOARD_CATEGORY_NO=&BBS_SEQ=119907&pageNo=1",
    "date": "2026-10-02",
-   "hits": 283,
+   "hits": 284,
    "bodyStatus": "text",
    "title": "2026학년도 2학기 가날지기장학금 신청 안내(장애)",
    "titleTr": {
@@ -11800,7 +12555,7 @@
    "boardName": "장학공지",
    "link": "https://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1750&CONTENTS_NO=&SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=1&BOARD_CATEGORY_NO=&BBS_SEQ=119906&pageNo=1",
    "date": "2026-10-02",
-   "hits": 158,
+   "hits": 163,
    "bodyStatus": "text",
    "title": "2026학년도 2학기 다문화장학금 신청 안내",
    "titleTr": {
@@ -11881,7 +12636,7 @@
    "boardName": "장학공지",
    "link": "https://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1750&CONTENTS_NO=&SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=1&BOARD_CATEGORY_NO=&BBS_SEQ=119905&pageNo=1",
    "date": "2026-10-02",
-   "hits": 607,
+   "hits": 641,
    "bodyStatus": "text",
    "title": "2026학년도 2학기 다자녀장학 신청 안내",
    "titleTr": {
@@ -11962,7 +12717,7 @@
    "boardName": "장학공지",
    "link": "https://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1750&CONTENTS_NO=&SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=1&BOARD_CATEGORY_NO=&BBS_SEQ=119904&pageNo=1",
    "date": "2026-10-02",
-   "hits": 446,
+   "hits": 453,
    "bodyStatus": "text",
    "title": "2026학년도 2학기 건국가족장학생 선발 안내",
    "titleTr": {
@@ -12171,7 +12926,7 @@
    "boardName": "학사공지",
    "link": "https://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1740&CONTENTS_NO=&SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=18&BOARD_CATEGORY_NO=&BBS_SEQ=120208&pageNo=1",
    "date": "2026-10-01",
-   "hits": 256,
+   "hits": 257,
    "bodyStatus": "text",
    "title": "2026학년도 2학기 교직 적성 및 인성 검사 결과 공지 및 재검사 대상 안내",
    "titleTr": {
@@ -12294,7 +13049,7 @@
    "boardName": "일반공지",
    "link": "https://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1790&CONTENTS_NO=&SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=22&BOARD_CATEGORY_NO=&BBS_SEQ=119904&pageNo=1",
    "date": "2026-10-01",
-   "hits": 270,
+   "hits": 277,
    "bodyStatus": "text",
    "title": "일반직원 인사발령(2026.10.1.자 겸무)",
    "titleTr": {
@@ -12543,7 +13298,7 @@
    "boardName": "아르바이트",
    "link": "https://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1840&CONTENTS_NO=&SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=26&BOARD_CATEGORY_NO=&BBS_SEQ=119679&pageNo=1",
    "date": "2026-09-30",
-   "hits": 60,
+   "hits": 61,
    "bodyStatus": "text",
    "title": "성실한 외국인 학생(대리석 바닥광택 청소)",
    "titleTr": {
@@ -12593,7 +13348,7 @@
    "boardName": "행사안내",
    "link": "https://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1820&CONTENTS_NO=&SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=24&BOARD_CATEGORY_NO=&BBS_SEQ=119513&pageNo=1",
    "date": "2026-09-30",
-   "hits": 104,
+   "hits": 106,
    "bodyStatus": "text",
    "title": "[메카트로닉스공학과] '변화하는 북극: 기후변화와 해양 부이 관측' 초청세미나",
    "titleTr": {
@@ -12626,7 +13381,7 @@
    "boardName": "유학생 공지 (留学生公告栏)",
    "link": "https://int.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=230&CONTENTS_NO=&SITE_NO=7&P_TAB_NO=&TAB_NO=&BOARD_SEQ=5&BOARD_CATEGORY_NO=&BBS_SEQ=36217&pageNo=1",
    "date": "2026-09-30",
-   "hits": 664,
+   "hits": 685,
    "bodyStatus": "file",
    "title": "[중요 공지] TOPIK 성적표 제출처 일원화 및 장학금 신청 안내 [重要通知] TOPIK成绩单提交处一元化及奖学金申请说明 [Important Notice] Single Submission Office for TOPIK Score Reports and Scholarship Application Guide",
    "titleTr": {
@@ -13143,7 +13898,7 @@
    "boardName": "취업/창업",
    "link": "https://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1770&CONTENTS_NO=&SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=19&BOARD_CATEGORY_NO=&BBS_SEQ=120012&pageNo=1",
    "date": "2026-09-29",
-   "hits": 228,
+   "hits": 236,
    "bodyStatus": "text",
    "title": "[채용정보] 2026. 9월 5주차 공공기관 및 중소기업 채용정보",
    "titleTr": {
@@ -13478,7 +14233,7 @@
    "boardName": "학사공지",
    "link": "https://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1740&CONTENTS_NO=&SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=18&BOARD_CATEGORY_NO=&BBS_SEQ=120203&pageNo=1",
    "date": "2026-09-28",
-   "hits": 268,
+   "hits": 269,
    "bodyStatus": "text",
    "title": "[대학교육혁신원] 2026학년 2학기 KU STAR 학습워크숍(2) AI 200% 통찰: 의사결정부터 정보 검증까지 신청 안내",
    "titleTr": {
@@ -13534,7 +14289,7 @@
    "boardName": "취업/창업",
    "link": "https://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1770&CONTENTS_NO=&SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=19&BOARD_CATEGORY_NO=&BBS_SEQ=120010&pageNo=1",
    "date": "2026-09-28",
-   "hits": 397,
+   "hits": 398,
    "bodyStatus": "text",
    "title": "[국립한국교통대학교] 공공기관·중견·대기업 All in one 과정 참여자 모집 안내",
    "titleTr": {
@@ -13591,7 +14346,7 @@
    "boardName": "취업/창업",
    "link": "https://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1770&CONTENTS_NO=&SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=19&BOARD_CATEGORY_NO=&BBS_SEQ=120009&pageNo=1",
    "date": "2026-09-28",
-   "hits": 162,
+   "hits": 163,
    "bodyStatus": "text",
    "title": "「2026 랜선으로 만나는 릴레이 글로벌 취·창업 톡톡톡(talk)」",
    "titleTr": {
@@ -13737,7 +14492,7 @@
    "boardName": "아르바이트",
    "link": "https://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1840&CONTENTS_NO=&SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=26&BOARD_CATEGORY_NO=&BBS_SEQ=119678&pageNo=1",
    "date": "2026-09-23",
-   "hits": 146,
+   "hits": 153,
    "bodyStatus": "text",
    "title": "[한국교육과정평가원] 10월 채점 아르바이트 모집",
    "titleTr": {
@@ -13904,7 +14659,7 @@
    "boardName": "외부행사/공모전",
    "link": "https://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1850&CONTENTS_NO=&SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=27&BOARD_CATEGORY_NO=&BBS_SEQ=120864&pageNo=1",
    "date": "2026-09-22",
-   "hits": 152,
+   "hits": 153,
    "bodyStatus": "poster",
    "title": "2026년 한국수목원정원관리원 지역공부방 참여 대학생 지원 프로그램(Koagi-Friends 2기) 모집",
    "titleTr": {
@@ -14056,7 +14811,7 @@
    "boardName": "사회봉사",
    "link": "https://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1830&CONTENTS_NO=&SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=25&BOARD_CATEGORY_NO=&BBS_SEQ=119737&pageNo=1",
    "date": "2026-09-22",
-   "hits": 211,
+   "hits": 214,
    "bodyStatus": "poster",
    "title": "'2026 충청남도 드론 페스타' 행사운영 자원봉사자 모집",
    "titleTr": {
@@ -14101,455 +14856,6 @@
     "도서관"
    ],
    "regulation": null
-  },
-  {
-   "id": "2-27-120857",
-   "boardName": "외부행사/공모전",
-   "link": "https://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1850&CONTENTS_NO=&SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=27&BOARD_CATEGORY_NO=&BBS_SEQ=120857&pageNo=1",
-   "date": "2026-09-18",
-   "hits": 87,
-   "bodyStatus": "poster",
-   "title": "2026 KF 청년공공외교데이 참가 안내",
-   "titleTr": {
-    "en": "Notice for Participation in 2026 KF Youth Public Diplomacy Day",
-    "zh": "2026 KF 青年公共外交日 参加指南",
-    "ja": "2026 KF ユースパブリックディプロマシー・デーへの参加案内"
-   },
-   "category": "contest",
-   "deadline": null,
-   "benefit": null,
-   "eligibility": {
-    "ko": "대학생",
-    "en": "University students",
-    "zh": "大学生",
-    "ja": "大学生"
-   },
-   "events": [],
-   "hours": null,
-   "evidence": {
-    "eligibility": "13:00 | 대학생으로서 공공외교 실천방안 | KF 공공외교 역량강화대학 수강생 대표들의 아이디어 공유회(전국 14개 대학 참여)"
-   },
-   "evidenceVerified": true,
-   "readFrom": [
-    {
-     "kind": "poster",
-     "name": "본문 이미지 1"
-    }
-   ],
-   "summary": {
-    "ko": "2026 KF 청년공공외교데이에 참가할 수 있어요.",
-    "en": "You can participate in the 2026 KF Youth Public Diplomacy Day.",
-    "zh": "您可以参加2026 KF青年公共外交日。",
-    "ja": "2026 KFユースパブリックディプロマシー・デーに参加できます。"
-   },
-   "terms": [
-    "인턴",
-    "국제교류"
-   ],
-   "regulation": null
-  },
-  {
-   "id": "2-27-120856",
-   "boardName": "외부행사/공모전",
-   "link": "https://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1850&CONTENTS_NO=&SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=27&BOARD_CATEGORY_NO=&BBS_SEQ=120856&pageNo=1",
-   "date": "2026-09-18",
-   "hits": 89,
-   "bodyStatus": "poster",
-   "title": "[한신대학교/미디어영상광고홍보학] 제31회 HIF 한신영상광고제",
-   "titleTr": {
-    "en": "[Kansai Gaidai University/Media Visual Advertising and Promotion] 31st HIF Kansai Visual Advertising Contest",
-    "zh": "[关西大学/媒体视觉广告宣传学] 第31届HIF关西影像广告大赛",
-    "ja": "[関西大学/メディアビジュアル広告宣伝学] 第31回HIF関西映像広告コンテスト"
-   },
-   "category": "contest",
-   "deadline": "2026-11-02T23:59",
-   "benefit": {
-    "text": {
-     "ko": "75만원, 50만원, 30만원, 10만원",
-     "en": "750,000 won, 500,000 won, 300,000 won, 100,000 won",
-     "zh": "75万韩元, 50万韩元, 30万韩元, 10万韩元",
-     "ja": "75万ウォン, 50万ウォン, 30万ウォン, 10万ウォン"
-    },
-    "points": null,
-    "won": null
-   },
-   "eligibility": {
-    "ko": "전국 고등학생 및 대학생(재학생·휴학생), 개인 또는 팀",
-    "en": "National high school and college students (enrolled students and those on leave of absence), individuals or teams",
-    "zh": "全国高中生及大学生（在籍生·休学），个人或团队",
-    "ja": "全国の高校生および大学生（在籍者・休学者）、個人またはチーム"
-   },
-   "events": [],
-   "hours": null,
-   "evidence": {
-    "deadline": "접수기간: 9월 14일 ~ 11월 2일 23:59",
-    "benefit": "구분 | 대학생 기획서 | 대학생 영상 | 고등학생 영상",
-    "eligibility": "전국 고등학생 및 대학생(재학생·휴학생), 개인 또는 팀"
-   },
-   "evidenceVerified": true,
-   "readFrom": [
-    {
-     "kind": "poster",
-     "name": "본문 이미지 1"
-    }
-   ],
-   "summary": {
-    "ko": "한신영상광고제 참가자를 모집해요. 전국 고등학생과 대학생이 11월 2일까지 신청하면 75만원, 50만원, 30만원 등 혜택을 받을 수 있어요.",
-    "en": "We are recruiting participants for the Kansai Visual Advertising Contest.",
-    "zh": "我们正在招募参加关西影像广告大赛的参赛者。",
-    "ja": "関西映像広告コンテストの参加者を募っています。"
-   },
-   "terms": [
-    "휴학",
-    "본선",
-    "재학생",
-    "휴학생",
-    "공모전",
-    "접수",
-    "접수기간",
-    "유의사항"
-   ],
-   "regulation": null
-  },
-  {
-   "id": "2-18-120198",
-   "boardName": "학사공지",
-   "link": "https://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1740&CONTENTS_NO=&SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=18&BOARD_CATEGORY_NO=&BBS_SEQ=120198&pageNo=1",
-   "date": "2026-09-16",
-   "hits": 249,
-   "bodyStatus": "poster",
-   "title": "[대학교육혁신원] 2026학년 2학기 전공학습 멘토링 최종 선발 및 오리엔테이션 일정 안내",
-   "titleTr": {
-    "en": "[University Education Innovation Office] Final Selection and Orientation Schedule for Major Learning Mentoring in the 2026 Academic Year, Second Semester",
-    "zh": "[大学教育创新院] 2026学年第二学期专业学习导师制最终选拔及导引日程通知",
-    "ja": "[大学教育革新院] 2026学年第二学期専門分野学習メンタリングの最終選考およびオリエンテーション日程のお知らせ"
-   },
-   "category": "academic",
-   "deadline": null,
-   "benefit": null,
-   "eligibility": {
-    "ko": "전공학습 멘토링에 선발된 학생",
-    "en": "Students selected for major learning mentoring",
-    "zh": "被选为专业学习导师制的学生",
-    "ja": "専門分野学習メンタリングに選ばれた学生"
-   },
-   "events": [],
-   "hours": null,
-   "evidence": {
-    "eligibility": "[대학교육혁신원] 2026학년 2학기 전공학습 멘토링 최종 선발 및 오리엔테이션 일정 안내"
-   },
-   "evidenceVerified": true,
-   "readFrom": [
-    {
-     "kind": "poster",
-     "name": "본문 이미지 1"
-    }
-   ],
-   "summary": {
-    "ko": "전공학습 멘토링 오리엔테이션 일정을 안내해요.",
-    "en": "The orientation schedule for major learning mentoring is announced.",
-    "zh": "专业学习导师制导引日程进行公告。",
-    "ja": "専門分野学習メンタリングのオリエンテーション日程についてお知らせします。"
-   },
-   "terms": [
-    "오리엔테이션",
-    "멘토링",
-    "선발",
-    "도서관"
-   ],
-   "regulation": null
-  },
-  {
-   "id": "2-18-120197",
-   "boardName": "학사공지",
-   "link": "https://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1740&CONTENTS_NO=&SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=18&BOARD_CATEGORY_NO=&BBS_SEQ=120197&pageNo=1",
-   "date": "2026-09-16",
-   "hits": 179,
-   "bodyStatus": "poster",
-   "title": "[대학교육혁신원] 2026학년 2학기 사제이음공동체 최종 선발 및 오리엔테이션 일정 안내",
-   "titleTr": {
-    "en": "[University Education Innovation Office] Final Selection and Orientation Schedule for the 2nd Semester of 2026 Academic Year",
-    "zh": "[大学教育创新院] 2026学年第二学期师徒共同体最终选拔及导览日程通知",
-    "ja": "[大学教育革新院] 2026学年第二学期の師弟共体最終選抜およびオリエンテーション日程のお知らせ"
-   },
-   "category": "event",
-   "deadline": null,
-   "benefit": null,
-   "eligibility": null,
-   "events": [],
-   "hours": null,
-   "evidence": {},
-   "evidenceVerified": null,
-   "readFrom": [
-    {
-     "kind": "poster",
-     "name": "본문 이미지 1"
-    }
-   ],
-   "summary": {
-    "ko": "사제이음공동체 오리엔테이션 일정을 안내해요.",
-    "en": "The orientation schedule for the Sajeeum Community is announced.",
-    "zh": "师徒共同体的导览日程进行公告。",
-    "ja": "師弟共体のオリエンテーション日程についてお知らせします。"
-   },
-   "terms": [
-    "이음교육시스템",
-    "오리엔테이션",
-    "선발",
-    "TOPIK",
-    "도서관"
-   ],
-   "regulation": null
-  },
-  {
-   "id": "2-27-120852",
-   "boardName": "외부행사/공모전",
-   "link": "https://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1850&CONTENTS_NO=&SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=27&BOARD_CATEGORY_NO=&BBS_SEQ=120852&pageNo=1",
-   "date": "2026-09-15",
-   "hits": 36,
-   "bodyStatus": "poster",
-   "title": "국세통계센터 대학생 견학 프로그램 신청 안내",
-   "titleTr": {
-    "en": "Notice for Applying to the National Tax Statistics Center University Tour Program",
-    "zh": "国家税务统计中心大学生参观项目申请指南",
-    "ja": "国税統計センター大学見学プログラムの申請案内"
-   },
-   "category": "contest",
-   "deadline": null,
-   "benefit": null,
-   "eligibility": {
-    "ko": "국세데이터에 관심있는 대학생",
-    "en": "University students interested in tax data",
-    "zh": "对税务数据感兴趣的大专生",
-    "ja": "国税データに興味のある大学生"
-   },
-   "events": [],
-   "hours": null,
-   "evidence": {
-    "eligibility": "대상 국세데이터에 관심있는 대학생"
-   },
-   "evidenceVerified": true,
-   "readFrom": [
-    {
-     "kind": "poster",
-     "name": "본문 이미지 1"
-    },
-    {
-     "kind": "poster",
-     "name": "첨부 국세통계센터 홍보 리플릿.pdf 이미지"
-    },
-    {
-     "kind": "poster",
-     "name": "첨부 국세통계센터 홍보 리플릿.pdf 이미지"
-    }
-   ],
-   "summary": {
-    "ko": "국세통계센터 견학 프로그램 참여자를 모집해요.",
-    "en": "We are recruiting participants for the National Tax Statistics Center tour program.",
-    "zh": "我们正在招募国家税务统计中心参观项目的参与者。",
-    "ja": "国税統計センター見学プログラムの参加者を募集しています。"
-   },
-   "terms": [
-    "개인정보"
-   ],
-   "regulation": null
-  },
-  {
-   "id": "2-27-120851",
-   "boardName": "외부행사/공모전",
-   "link": "https://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1850&CONTENTS_NO=&SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=27&BOARD_CATEGORY_NO=&BBS_SEQ=120851&pageNo=1",
-   "date": "2026-09-15",
-   "hits": 27,
-   "bodyStatus": "poster",
-   "title": "2026년도 스마트폰 과의존 예방교육 우수사례 공모전 안내-대학교",
-   "titleTr": {
-    "en": "Notice for the 2026 Smart Phone Over-Dependence Prevention Education Excellence Case Competition - University",
-    "zh": "2026年度智能手机过度依赖预防教育优秀案例征集竞赛-大学",
-    "ja": "2026年度スマートフォン過度依存防止教育優秀事例募集コンテスト－大学"
-   },
-   "category": "contest",
-   "deadline": null,
-   "benefit": {
-    "text": {
-     "ko": "100만원, 50만원, 30만원, 커피 교환권(100명)",
-     "en": "1,000,000 won, 500,000 won, 300,000 won, coffee exchange coupons (for 100 people)",
-     "zh": "100万韩元, 50万韩元, 30万韩元, 咖啡兑换券(100名)",
-     "ja": "100万ウォン, 50万ウォン, 30万ウォン, コーヒー交換券(100名)"
-    },
-    "points": null,
-    "won": null,
-    "prize": 1000000
-   },
-   "eligibility": {
-    "ko": "어린이집, 유치원, 초·중·고등학교, 대학교 및 공공기관 등",
-    "en": "Kindergartens, nurseries, elementary and secondary schools, universities, public institutions, etc.",
-    "zh": "幼儿园、托儿所、小学及中学、大学以及公共机构等",
-    "ja": "幼稚園、保育所、小中学校、大学および公共機関など"
-   },
-   "events": [],
-   "hours": null,
-   "evidence": {
-    "benefit": "대상 | 과학기술정보통신부장관상 | 3점 | 100만원\n우수상 | 한국지능정보사회진흥원장상 | 4점 | 50만원\n장려상 | 한국지능정보사회진흥원장상 | 5점 | 30만원",
-    "eligibility": "참가대상 | 어린이집, 유치원, 초·중·고등학교, 대학교 및 공공기관 등"
-   },
-   "evidenceVerified": true,
-   "readFrom": [
-    {
-     "kind": "poster",
-     "name": "본문 이미지 1"
-    },
-    {
-     "kind": "file",
-     "name": "(작성양식) 참가신청서 및 우수사례 작성양식.hwp"
-    },
-    {
-     "kind": "file",
-     "name": "(안내문) 2026년도 스마트폰 과의존 예방 교육 우수사례 공모전 안내.pdf"
-    }
-   ],
-   "summary": {
-    "ko": "스마트폰 과의존 예방교육 우수사례 공모전 참여자를 모집해요. 어린이집 등은 9월 9일부터 10월 21일까지 이메일로 신청하면 100만원 상금이나 커피 교환권을 받을 수 있어요.",
-    "en": "We are recruiting participants for the Excellence Case Competition on Smart Phone Over-Dependence Prevention Education. Kindergartens can apply via email from September 9th to October 21st and receive a prize of 1,000,000 won or coffee exchange coupons.",
-    "zh": "我们正在招募参与智能手机过度依赖预防教育优秀案例征集竞赛的人员。幼儿园等从9月9日到10月21日可通过电子邮件申请，可获得100万韩元奖金或咖啡兑换券。",
-    "ja": "スマートフォン過度依存防止教育優秀事例募集コンテストに参加者を募っています。幼稚園等は9月9日から10月21日までメールで申請すると、100万ウォンの賞金またはコーヒー交換券を受け取ることができます。"
-   },
-   "terms": [
-    "공모전",
-    "특강",
-    "제출서류",
-    "접수",
-    "개인정보",
-    "유의사항"
-   ],
-   "regulation": null
-  },
-  {
-   "id": "2-27-120848",
-   "boardName": "외부행사/공모전",
-   "link": "https://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1850&CONTENTS_NO=&SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=27&BOARD_CATEGORY_NO=&BBS_SEQ=120848&pageNo=1",
-   "date": "2026-09-15",
-   "hits": 10,
-   "bodyStatus": "poster",
-   "title": "전국민 AI 경진대회 「AI 달인 100」챌린지",
-   "titleTr": {
-    "en": "National AI Competition 'AI Master 100' Challenge",
-    "zh": "全民AI竞赛「AI大师100」挑战",
-    "ja": "全国AIコンテスト「AIマスター100」チャレンジ"
-   },
-   "category": "contest",
-   "deadline": "2026-11-05T23:59",
-   "benefit": {
-    "text": {
-     "ko": "모바일 기프트 카드 20만원권, LG 스탠바이미TV",
-     "en": "Mobile gift card worth 200,000 won, LG Stanby Mi TV",
-     "zh": "价值20万韩元的移动礼品卡, LG斯坦拜米电视",
-     "ja": "モバイルギフトカード20万ウォン分、LG スタンバイミーテレビ"
-    },
-    "points": null,
-    "won": null,
-    "prize": 200000
-   },
-   "eligibility": {
-    "ko": "AI 활용에 자신있는 누구나 (개인 또는 팀)",
-    "en": "Anyone confident in using AI (individual or team)",
-    "zh": "任何自信使用AI的人（个人或团队）",
-    "ja": "AIを活用できると自認する誰でも（個人またはチーム）"
-   },
-   "events": [],
-   "hours": null,
-   "evidence": {
-    "deadline": "2026.8.12.(수) ~ 11.5.(목)\n- 시즌4 취미·창작 | 취향을 완성하는 AI 크리에이터 | 10.15~11.5",
-    "benefit": "- AI 달인 100 총 100명 시즌 25명 선정 및 모바일 기프트 카드 20만원권 제공\n- 인기상 총 4명 시즌별 최다 '좋아요' 획득자 특별 상품 제공 (특별상품: LG 스탠바이미TV)",
-    "eligibility": "AI 활용에 자신있는 누구나 ※개인 또는 팀"
-   },
-   "evidenceVerified": true,
-   "readFrom": [
-    {
-     "kind": "poster",
-     "name": "본문 이미지 1"
-    }
-   ],
-   "summary": {
-    "ko": "전국민 AI 경진대회에 참여할 수 있어요. AI 활용에 자신있는 누구나 11월 5일까지 신청하면 모바일 기프트 카드 20만원권과 LG 스탠바이미TV를 받을 수 있어요.",
-    "en": "You can participate in the National AI Competition. Anyone confident in using AI can apply by November 5th and receive a mobile gift card worth 200,000 won and an LG Stanby Mi TV.",
-    "zh": "您可以参加全国AI竞赛。任何自信使用AI的人，于11月5日前申请可获得价值20万韩元的移动礼品卡和LG斯坦拜米电视。",
-    "ja": "全国AIコンテストに参加できます。AIを活用できると自認する誰でも11月5日までに申請すると、モバイルギフトカード20万ウォン分とLG スタンバイミーテレビを受け取ることができます。"
-   },
-   "terms": [
-    "제적",
-    "접수",
-    "개인정보"
-   ],
-   "regulation": null
-  },
-  {
-   "id": "2-18-120196",
-   "boardName": "학사공지",
-   "link": "https://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1740&CONTENTS_NO=&SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=18&BOARD_CATEGORY_NO=&BBS_SEQ=120196&pageNo=1",
-   "date": "2026-09-15",
-   "hits": 115,
-   "bodyStatus": "text",
-   "title": "[Cogito대학교육혁신원] 2026학년도 2학기 K-MOOC 러닝 커뮤니티 모집 안내",
-   "titleTr": {
-    "en": "[Cogito大学教育创新院] 2026 Academic Year Second Semester K-MOOC Running Community Recruitment Notice",
-    "zh": "[Cogito大学教育创新院] 2026学年第二学期K-MOOC运行社群招募通知",
-    "ja": "[Cogito大学教育創新院] 2026学年第二学期K-MOOCランニングコミュニティ募集案内"
-   },
-   "category": "academic",
-   "deadline": null,
-   "benefit": {
-    "text": {
-     "ko": "K-MOOC 강좌 수강 기회, TLS 활동보고서 제출 시 이수증 선택적 발급",
-     "en": "Opportunity to enroll in K-MOOC courses, optional certificate issuance upon submission of TLS activity report",
-     "zh": "有机会修读K-MOOC课程，提交TLS活动报告可选择获得结业证书",
-     "ja": "K-MOOC講座の受講機会、TLS活動報告書を提出すると修了証明書の選択的発行"
-    },
-    "points": null,
-    "won": null
-   },
-   "eligibility": null,
-   "events": [],
-   "hours": null,
-   "evidence": {
-    "benefit": "여러분의 모든 관심사를 내 방에서 배우고 공부할 수 있습니다. 바로 K-MOOC 강좌를 통해서요!\n러닝 커뮤니티는 비슷한 관심사를 가진 4명이 한 팀이 되어, 하나의 K-MOOC 강좌를 선택해 공동 학습 활동을 하는 프로그램입니다.\n★ TLS에 회차별 활동보고서 7회 +최종보고서 1회 업로드(중간고사 기간 제외)"
-   },
-   "evidenceVerified": true,
-   "readFrom": [],
-   "summary": {
-    "ko": "K-MOOC 러닝 커뮤니티 모집 공지예요.",
-    "en": "K-MOOC Running Community recruitment notice.",
-    "zh": "K-MOOC运行社群招募通知。",
-    "ja": "K-MOOCランニングコミュニティの募集案内です。"
-   },
-   "terms": [
-    "K-MOOC",
-    "건국대",
-    "이음교육시스템",
-    "중간고사",
-    "선발"
-   ],
-   "regulation": {
-    "id": "kmooc",
-    "title": {
-     "ko": "K-MOOC 학점 인정",
-     "en": "K-MOOC credit recognition",
-     "zh": "K-MOOC学分认定",
-     "ja": "K-MOOCの単位認定"
-    },
-    "rule": {
-     "law": "GLOCAL(글로컬)캠퍼스 K-MOOC강좌 학점인정 시행내규",
-     "no": "6",
-     "article": "학점인정 범위",
-     "quote": "① 매학기 지정된 교과목 내에서 재학 중 4학점 이내로 인정한다.",
-     "tr": {
-      "en": "① The credit hours recognized per semester are limited to four credits or less within the designated courses.",
-      "zh": "① 每学期在指定课程内最多承认4个学分。",
-      "ja": "① 各学期に指定された科目内で在籍中は、4単位以内で認められる。"
-     },
-     "url": "https://rule.konkuk.ac.kr/lmxsrv/law/lawDetail.do?SEQ=137&LAWGROUP=1&PAGE=1",
-     "checked": "2026-11-13"
-    }
-   }
   }
  ]
 }/*JSON-END*/;

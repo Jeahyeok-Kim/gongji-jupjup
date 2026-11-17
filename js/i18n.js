@@ -23,7 +23,7 @@
       sort: '정렬', sortDeadline: '마감 임박순', sortLatest: '최신순', sortHits: '조회수순',
       sortBenefit: '혜택 큰 순', sortHours: '시간 적게 드는 순',
       field: '분야', allFields: '전체 분야', kindFilter: '받는 것',
-      groups: { money: '금전', points: '포인트·학점', goods: '물품', growth: '경험·스펙', info: '안내(혜택 없음)', unknown: '확인 필요' },
+      groups: { money: '장학금', points: '포인트·학점', goods: '물품', growth: '경험·스펙', info: '안내(혜택 없음)', unknown: '확인 필요' },
       subs: { scholarship: '장학금', support: '지원금·비용지원', prize: '상금·시상', pay: '급여·활동비', dadream: '다드림 포인트', credit: '학점·이수·공결', coupon: '쿠폰·상품권', gift: '기념품·간식', edu: '교육·특강', career: '인턴·취업·진로', activity: '봉사·대외활동', contest: '공모전·대회', event: '행사·전시·포럼', admin: '학사·행정', survey: '설문·조사', jobinfo: '채용·구인 정보', result: '결과·발표', etc: '기타 안내', unknown: '확인 필요' },
       allSubs: '전체', subKindFilter: '받는 것 (세부)',
       syncAsOf: (s) => `데이터 기준 ${s}`, syncRefresh: '새로고침', syncChecking: '서버 확인 중…',
