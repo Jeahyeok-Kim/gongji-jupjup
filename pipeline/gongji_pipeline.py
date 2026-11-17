@@ -386,12 +386,14 @@ def is_excluded(title: str) -> bool:
     return any(w in (title or '') for w in EXCLUDE_TITLE_WORDS)
 
 
-def skip_reason(raw: dict, with_news: bool = False) -> str | None:
+def skip_reason(raw: dict, with_news: bool = False, with_private: bool = False) -> str | None:
     """처리하지 않을 공지면 이유를, 처리할 공지면 None"""
     board = (raw.get('boardName') or '').strip()
     title = (raw.get('subject') or raw.get('title') or '').strip()
     if is_excluded(title):
         return '개인정보 가능성'
+    if raw.get('private') and not with_private:
+        return '로그인해야 보이는 글(공개 데이터에서 제외)'
     if board in EXCLUDE_BOARDS:
         return '학생 대상 아님'
     if board in NEWS_BOARDS and not with_news:
@@ -420,9 +422,17 @@ def load_regulations(path: Path | None = None) -> dict:
     return json.loads(Path(path or PIPELINE_DIR / 'regulations.json').read_text(encoding='utf-8'))
 
 
-def find_terms(title: str, text: str, glossary: dict, limit: int = 6) -> list[str]:
-    hay = squash(title) + squash(text)
-    return [k for k in glossary if squash(k) in hay][:limit]
+def find_terms(title: str, text: str, glossary: dict, limit: int = 10) -> list[str]:
+    """공지 제목·본문에 나온 용어 찾기. 용어 이름이나 'alt'(같이 찾을 다른 표현)가 들어 있으면 찾은 것으로 본다.
+    제목에 나온 용어를 먼저 보여 준다."""
+    head, hay = squash(title).lower(), (squash(title) + squash(text)).lower()
+
+    def names(k):
+        return [k] + list((glossary.get(k) or {}).get('alt') or [])
+
+    found = [k for k in glossary if any(squash(n).lower() in hay for n in names(k))]
+    found.sort(key=lambda k: 0 if any(squash(n).lower() in head for n in names(k)) else 1)
+    return found[:limit]
 
 
 def _usable(it: dict) -> bool:
@@ -580,6 +590,50 @@ class Ollama:
             except json.JSONDecodeError as e:
                 last = f'AI 답을 JSON으로 읽지 못했습니다: {e}'
         raise OllamaError(last, 'bad')
+
+
+class NoAI:
+    """AI를 부르지 않는 자리표시: 저장된 AI 답이 있으면 그것만 쓰고, 없으면 'skip' 오류를 낸다.
+    (Ollama가 꺼져 있거나 이번 실행의 시간 예산을 다 썼을 때. 저장된 답이 없는 공지는 규칙 정리(rules.py)로 넘어간다)"""
+    model = ''
+    host = ''
+    calls = 0
+    seconds = 0.0
+
+    def __init__(self, model: str = ''):
+        self.model = model
+
+    def chat_json(self, *a, **kw):
+        raise OllamaError('AI를 쓰지 않는 중', 'skip')
+
+    def chat_text(self, *a, **kw):
+        raise OllamaError('AI를 쓰지 않는 중', 'skip')
+
+
+# 원하는 모델이 없을 때 대신 쓸 글 모델 (앞쪽일수록 우선). 비전·임베딩 전용 모델은 고르지 않는다.
+PREFERRED_MODELS = ('qwen3:8b', 'qwen3:14b', 'qwen3:4b', 'qwen2.5:7b', 'qwen2.5:14b', 'gemma3:12b', 'exaone3.5:7.8b',
+                    'llama3.1:8b', 'gemma3:4b', 'qwen3:1.7b')
+NOT_TEXT_MODEL = re.compile(r'(vl|vision|llava|embed|minicpm-v|moondream|bge|nomic)', re.I)
+
+
+def pick_model(wanted: str, installed: list[str]) -> str | None:
+    """설치된 모델 중에서 쓸 글 모델: 원하는 모델 → 같은 계열 → 추천 목록 → 아무 글 모델 (없으면 None)"""
+    names = [n for n in installed if n]
+    norm = {n if ':' in n else n + ':latest': n for n in names}
+    want = wanted if ':' in wanted else wanted + ':latest'
+    if want in norm:
+        return norm[want]
+    if wanted in names:
+        return wanted
+    family = wanted.split(':')[0]
+    text = [n for n in names if not NOT_TEXT_MODEL.search(n)]
+    same = [n for n in text if n.split(':')[0] == family]
+    if same:
+        return same[0]
+    for p in PREFERRED_MODELS:
+        if p in norm and not NOT_TEXT_MODEL.search(p):
+            return norm[p]
+    return text[0] if text else None
 
 
 # ------------------------------------------------------------------
@@ -865,6 +919,7 @@ def fix_translation(ask, tr: dict, items: dict, terms: list[str], glossary: dict
 # ------------------------------------------------------------------
 def call_key(model: str, system: str, schema: dict, user: str) -> str:
     """같은 모델·같은 지시·같은 입력이면 같은 키 → 저장해 둔 AI 답을 다시 쓴다"""
+    model = model if ':' in model else model + ':latest'     # 'qwen3' 과 'qwen3:latest' 는 같은 모델
     return hashlib.sha1(json.dumps([model, system, schema, user], ensure_ascii=False).encode('utf-8')).hexdigest()
 
 

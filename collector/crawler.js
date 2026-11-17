@@ -1,4 +1,4 @@
-// KU 공지 수집기 - 콘텐츠 스크립트
+// 공지 줍줍 수집기 - 콘텐츠 스크립트
 // 학교 사이트 탭 안에서 실행됩니다. 사용자의 브라우저가 평소 게시판을 볼 때와 같은 요청으로
 // 공개 게시글을 읽어 chrome.storage.local 에 저장합니다. (로그인 필요한 게시판은 대상이 아닙니다.)
 (() => {
@@ -221,6 +221,7 @@
       running = false;
       await setState({ running: false, current: null });
     }
+    return results;
   }
 
   chrome.runtime.onMessage.addListener((msg, _sender, sendResponse) => {
@@ -239,6 +240,20 @@
     }
     return false;
   });
+
+
+  // 서비스 워커(background.js)에 "이 탭이 준비됐다"고 알린다. 자동 수집 차례면(백그라운드로 연 탭이거나, 수집할 때가 된 평소 방문)
+  // 워커가 run 을 돌려주고, 이 탭에서 새 글만 받는다. 끝나면 워커가 결과를 내 컴퓨터로 전달한다.
+  async function hello() {
+    if (window !== window.top || running || BOARDS.length === 0) return;
+    try {
+      const res = await chrome.runtime.sendMessage({ type: 'hello', host: location.host });
+      if (res?.run && !running) await run(BOARDS.filter((b) => !b.off).map((b) => b.menu), { full: false, newsLimit: Number(res.newsLimit) || 300 });
+    } catch {
+      /* 확장을 다시 불러온 직후 등: 다음 방문 때 다시 시도 */
+    }
+  }
+  setTimeout(hello, 1500);
 
   // 테스트용 노출 (확장 환경에서는 격리된 월드라 페이지에서 접근할 수 없음)
   globalThis.__kkuCrawler = { crawlBoard, parseBody, toNotice, run };

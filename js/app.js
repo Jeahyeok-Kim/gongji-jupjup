@@ -16,6 +16,7 @@
   const P = window.GongjiPersonal;
   const C = window.GongjiCal;
   const TH = window.GongjiTheme;
+  const CU = window.GongjiCurriculum;
   const PAGE = 30;                                   // 목록은 30건씩 보여 주고 '더 보기'로 늘린다
   const $ = (sel) => document.querySelector(sel);
 
@@ -70,6 +71,8 @@
     grouped: store.get('grouped', false),
     timetable: (store.get('timetable', []) || []).filter(L.isValidClass),
     hideConflicts: store.get('hideConflicts', false),
+    dept: store.get('dept', ''),                       // 내 학과 (요람의 학과 이름)
+    currTab: store.get('currTab', ''),                 // '1'~'4' 학년, '0' 학년 무관, 'gen' 교양
     budgetHours: store.get('budgetHours', 4),
     budgetWindow: store.get('budgetWindow', 7),
     budgetSelective: store.get('budgetSelective', true),
@@ -86,6 +89,7 @@
     seenAlerts: P.cleanIds(store.get('seenAlerts', []), 300),
     mineOnly: false,
     unreadOnly: false,
+    due: '',                                           // 오늘 화면의 숫자 버튼에서 넘어온 조건: 'today' 오늘 마감 · 'soon' 3일 안 마감 · 'new' 새 공지
     limit: PAGE,
     sig: '',
     cal: { year: now.getFullYear(), month0: now.getMonth(), sel: X.ymd(now) }
@@ -240,6 +244,15 @@
     if (state.savedOnly) { const keep = new Set(state.saved); base = base.filter((n) => keep.has(n.id)); }
     if (state.mineOnly) base = base.filter((n) => mineOf(n).any);
     if (state.unreadOnly) base = base.filter((n) => !isRead(n.id));
+    if (state.due) {
+      // 오늘 화면의 숫자(오늘 마감·3일 안 마감·새 공지)와 목록이 같은 공지를 가리키게 한다
+      base = base.filter((n) => {
+        if (state.due === 'new') return X.isNew(n, since);
+        if (L.isExpired(n, now)) return false;
+        const d = L.daysLeft(n.deadline, now);
+        return d !== null && d >= 0 && d <= (state.due === 'today' ? 0 : 3);
+      });
+    }
     const counts = L.countByGroup(base);
     const inGroup = state.group ? base.filter((n) => L.classifyBenefit(n).groups.includes(state.group)) : base;
     const subCounts = L.countBySub(inGroup);
@@ -379,6 +392,7 @@
         n.pinned ? h('span', { class: 'pin-badge' }, t().pinnedBadge) : null,
         isApplied(n.id) ? h('span', { class: 'applied-badge' }, t().appliedBadge) : null,
         mine.any ? h('span', { class: 'mine-badge', title: mine.keywords.join(', ') }, t().mineBadge) : null,
+        n.aiPending ? h('span', { class: 'pending-badge', title: t().aiPendingNote }, t().aiPendingBadge) : null,
         ...L.classifyBenefit(n).subs.slice(0, 2).map((sb) => subTag(n, sb)),
         h('span', { class: 'board' }, `${catLabel(n.category)} · ${boardsOf(n)}`),
         ddayBadge(n),
@@ -396,9 +410,9 @@
     );
   }
 
-  const filtersActive = () => !!(state.query || state.board || state.category || state.group || state.sub || state.savedOnly || state.mineOnly || state.unreadOnly || state.status !== 'open');
+  const filtersActive = () => !!(state.query || state.board || state.category || state.group || state.sub || state.savedOnly || state.mineOnly || state.unreadOnly || state.due || state.status !== 'open');
   function resetFilters() {
-    Object.assign(state, { query: '', board: '', category: '', group: '', sub: '', savedOnly: false, mineOnly: false, unreadOnly: false, status: 'open' });
+    Object.assign(state, { query: '', board: '', category: '', group: '', sub: '', savedOnly: false, mineOnly: false, unreadOnly: false, due: '', status: 'open' });
     $('#q').value = '';
     applyStaticText();
     renderList();
@@ -414,12 +428,33 @@
     if (chk) chk.checked = state.savedOnly;
     const btn = $('#reset-filters');
     if (btn) btn.hidden = !filtersActive();
+    // 오늘 화면에서 넘어온 조건은 목록 위에 한 줄로 보여 주고, 눌러서 바로 풀 수 있게 한다
+    const note = $('#due-note');
+    if (note) {
+      note.hidden = !state.due;
+      if (state.due) {
+        fill(note, h('span', null, t().dueNote[state.due]),
+          h('button', { type: 'button', class: 'link-btn', onclick: () => {
+            // 조건을 풀면 정렬도 내가 골라 둔 순서로 되돌린다
+            state.due = ''; state.sort = store.get('sort', 'deadline'); $('#sort').value = state.sort; renderList();
+          } }, t().dueClear));
+      }
+    }
+    // 휴대폰의 '필터·정렬' 버튼: 지금 걸려 있는 조건 수를 숫자로 보여 준다
+    const ft = $('#filter-toggle');
+    if (ft) {
+      const n = [state.board, state.category, state.status !== 'open', state.sort !== 'deadline', state.savedOnly, state.mineOnly, state.unreadOnly, state.grouped].filter(Boolean).length;
+      const cnt = ft.querySelector('.ft-count');
+      cnt.textContent = n ? String(n) : '';
+      cnt.hidden = !n;
+      ft.setAttribute('aria-label', t().filterToggleAria(n));
+    }
   }
 
   function renderList() {
     // 조건(검색·분류·정렬 …)이 바뀌면 처음 30건부터 다시 보여 준다
     const sig = JSON.stringify([state.query, state.board, state.category, state.status, state.sort, state.group, state.sub,
-      state.savedOnly, state.mineOnly, state.unreadOnly, state.grouped, state.hideConflicts, state.lang]);
+      state.savedOnly, state.mineOnly, state.unreadOnly, state.due, state.grouped, state.hideConflicts, state.lang]);
     if (sig !== state.sig) { state.sig = sig; state.limit = PAGE; }
     const { base, counts, subCounts, list: full, hidden } = computeVisible();
     const list = full.slice(0, state.limit);
@@ -473,6 +508,7 @@
         n.overrides ? h('span', { class: 'badge ok' }, T.overriddenBadge) : null));
     }
     if (n.opNote) parts.push(h('p', { class: 'op-note' }, `${T.opNoteLabel}: ${n.opNote}`));
+    if (n.aiPending) parts.push(h('p', { class: 'ai-note pending-note' }, T.aiPendingNote));
     if (state.lang !== 'ko') parts.push(h('p', { class: 'card-orig' }, `${T.originalTitle}: `, h('span', { lang: 'ko' }, n.title)));
     if (n.bodyStatus === 'image') parts.push(h('p', { class: 'badges' }, h('span', { class: 'badge warn' }, T.imageOnly)));
     if (fromMedia(n)) {
@@ -484,7 +520,7 @@
     const sm = S.pick(n, state.lang);
     parts.push(h('section', { class: 'd-section' },
       h('h3', null, T.summary),
-      sm.text ? [h('p', null, sm.text), h('p', { class: 'ai-note' }, T.aiNote)] : h('p', { class: 'summary-none' }, T.summaryNone)));
+      sm.text ? [h('p', null, sm.text), n.aiPending ? null : h('p', { class: 'ai-note' }, T.aiNote)] : h('p', { class: 'summary-none' }, T.summaryNone)));
 
     if (n.bodyStatus !== 'image') {
       const eventsNode = n.events && n.events.length
@@ -549,10 +585,13 @@
         ] : null
       ] : h('p', { class: 'missing' }, T.regulationNone)));
 
-    const terms = (n.terms || []).filter((k) => GLOSSARY[k]);
+    // 파이프라인이 붙여 둔 용어에 더해, 지금 용어집에서 제목·요약·근거 문장에 나온 용어를 바로 찾는다 (용어집만 갱신해도 예전 공지에 풀이가 붙는다).
+    const terms = glossaryTermsFor(n);
     if (terms.length) {
-      parts.push(h('section', { class: 'd-section' },
-        h('h3', null, T.glossaryTitle),
+      // 용어가 많으면 접어 두고(한국어 화면), 유학생 언어에서는 처음부터 펼쳐 둔다. 한 번 펼치거나 접으면 그 공지를 보는 동안 유지
+      const open = glossFold.id === n.id ? glossFold.open : (state.lang !== 'ko' || terms.length <= 3);
+      parts.push(h('details', { class: 'd-section d-fold', open, ontoggle: (e) => { glossFold.id = n.id; glossFold.open = e.currentTarget.open; } },
+        h('summary', null, h('h3', null, T.glossaryTitle), h('span', { class: 'group-count' }, String(terms.length))),
         h('dl', { class: 'glossary' }, terms.map((k) => {
           const g = GLOSSARY[k];
           return [
@@ -562,10 +601,7 @@
         }))));
     }
 
-    const saved = isSaved(n.id);
     parts.push(h('div', { class: 'd-actions' },
-      h('button', { type: 'button', class: 'btn small' + (saved ? ' is-on' : ''), 'aria-pressed': String(saved), onclick: () => toggleSave(n.id) },
-        (saved ? '★ ' : '☆ ') + (saved ? T.savedNotice : T.saveNotice)),
       h('button', {
         type: 'button', class: 'btn small' + (isApplied(n.id) ? ' is-on' : ''), 'aria-pressed': String(isApplied(n.id)),
         title: isApplied(n.id) ? T.appliedUnmark : T.appliedMark, 'aria-label': isApplied(n.id) ? T.appliedUnmark : T.appliedMark,
@@ -574,12 +610,21 @@
       h('button', { type: 'button', class: 'btn small', onclick: () => exportCalendar([n], 'gongji-' + n.id) }, T.addToCalendar),
       h('button', { type: 'button', class: 'btn small', onclick: () => shareNotice(n) }, navigator.share ? T.share : T.copyLink)));
 
-    parts.push(h('p', { class: 'original' },
-      n.link
-        ? h('a', { href: n.link, target: '_blank', rel: 'noopener noreferrer', class: 'btn' }, T.original + ' ↗')
-        : h('span', { class: 'fine' }, T.noOriginal)));
+    if (!n.link) parts.push(h('p', { class: 'original' }, h('span', { class: 'fine' }, T.noOriginal)));
 
     return parts;
+  }
+
+  // 상세 창 아래 고정 줄: 어디까지 내려 읽었든 저장과 원문 보기를 바로 누를 수 있게 한다
+  const glossFold = { id: null, open: false };
+  function detailFoot(n) {
+    const T = t();
+    const saved = isSaved(n.id);
+    return [
+      h('button', { type: 'button', class: 'btn' + (saved ? ' is-on' : ''), 'aria-pressed': String(saved), onclick: () => toggleSave(n.id) },
+        (saved ? '★ ' : '☆ ') + (saved ? T.savedNotice : T.saveNotice)),
+      n.link ? h('a', { href: n.link, target: '_blank', rel: 'noopener noreferrer', class: 'btn primary' }, T.original + ' ↗') : null
+    ];
   }
 
   function openDetail(id, keepScroll) {
@@ -589,6 +634,7 @@
     const body = $('#detail-body');
     const top = body.scrollTop;
     fill(body, ...detailContent(n));
+    fill($('#detail-foot'), ...detailFoot(n));
     const dlg = $('#detail');
     if (!dlg.open) {
       dlg.showModal();
@@ -667,6 +713,55 @@
     return CLASS_COLORS[hsh % CLASS_COLORS.length];
   }
 
+  // ---------- 내 학과 교육과정: 학과를 고르면 요람의 과목이 학년별로 나오고, 과목을 누르면 수업 추가 창에 이름이 들어간다 ----------
+  function renderCurriculum() {
+    const body = $('#curr-body');
+    if (!body || !CU) return;
+    const T = t();
+    const hasData = !!(window.GONGJI_COURSES && window.GONGJI_COURSES.colleges);
+    $('#curr').hidden = !hasData;
+    if (!hasData) return;
+    // 과목명 자동완성 후보 (내 학과 과목 먼저, 그다음 교양)
+    courseList = CU.suggestions(state.dept);
+    const sel = h('select', { id: 'dept-select', 'aria-label': T.deptLabel, onchange: (e) => {
+      state.dept = e.target.value; store.set('dept', state.dept); renderCurriculum();
+    } }, h('option', { value: '' }, T.deptPick),
+    ...CU.colleges().map((c) => h('optgroup', { label: c.name }, c.depts.map((d) => h('option', { value: d }, d)))));
+    sel.value = state.dept;
+    const parts = [h('p', { class: 'help' }, T.currHelp), h('label', { class: 'curr-dept' }, h('span', null, T.deptLabel), sel)];
+    if (!state.dept || !CU.findDept(state.dept)) {
+      parts.push(h('p', { class: 'help' }, T.currEmpty));
+    } else {
+      const g = CU.byGrade(state.dept);
+      const tabs = [1, 2, 3, 4].filter((n) => g[n].length).map((n) => ({ key: String(n), label: T.gradeN(n), n: g[n].length }));
+      if (g[0].length) tabs.push({ key: '0', label: T.gradeAny, n: g[0].length });
+      tabs.push({ key: 'gen', label: T.gradeGeneral, n: CU.general().reduce((a, x) => a + x.courses.length, 0) });
+      if (!tabs.some((x) => x.key === state.currTab)) state.currTab = tabs[0].key;
+      parts.push(h('div', { class: 'curr-tabs', role: 'group' }, tabs.map((x) => h('button', {
+        type: 'button', class: 'chip small', 'aria-pressed': String(x.key === state.currTab),
+        onclick: () => { state.currTab = x.key; store.set('currTab', x.key); renderCurriculum(); }
+      }, x.label, h('span', { class: 'chip-count' }, ` ${x.n}`)))));
+      const chip = (c) => h('button', {
+        type: 'button', class: 'course-chip' + (c.kind === '전필' ? ' req' : ''),
+        title: [c.kind, c.term, c.credit ? T.creditN(c.credit) : ''].filter(Boolean).join(' · '),
+        onclick: () => openClassDialog({ name: c.name })
+      }, c.name, c.kind === '전필' ? h('span', { class: 'req-mark' }, T.reqMark) : null);
+      if (state.currTab === 'gen') {
+        parts.push(CU.general().map((grp) => h('div', { class: 'curr-group' },
+          h('h4', null, `${grp.kind === '소양' ? 'KU소양' : grp.kind + '교양'} · ${grp.area}`),
+          h('div', { class: 'course-chips' }, grp.courses.map(chip)))));
+      } else {
+        const list = g[Number(state.currTab)] || [];
+        const terms = [...new Set(list.map((c) => c.term))];
+        parts.push(terms.map((term) => h('div', { class: 'curr-group' },
+          h('h4', null, term.replace(/^전체/, T.gradeAny)),
+          h('div', { class: 'course-chips' }, list.filter((c) => c.term === term).map(chip)))));
+      }
+    }
+    parts.push(h('p', { class: 'help small' }, T.currNote));
+    fill(body, ...parts);
+  }
+
   function renderTimetable() {
     renderCalendar();
     const badge = $('#badge-timetable');
@@ -699,7 +794,8 @@
           style: `top:${pct(s)};height:${pct(e - s + base)};--c:${classColor(c.name)}`,
           'aria-label': `${dayName(d)} ${c.start}~${c.end} ${name}`,
           onclick: (ev) => { ev.stopPropagation(); openClassDialog({ cls: c }); }
-        }, h('span', { class: 'tt-name' }, name), h('span', { class: 'tt-time' }, `${c.start}~\u200b${c.end}`));
+        }, h('span', { class: 'tt-name' }, name), h('span', { class: 'tt-time' }, `${c.start}~\u200b${c.end}`),
+          c.room ? h('span', { class: 'tt-room' }, c.room) : null);
       });
       return h('div', {
         class: 'tt-col', 'data-day': String(d),
@@ -743,12 +839,13 @@
   function timetableChanged() {
     renderTimetable();
     renderList();
+    renderHome();
     if (state.budgetResult) runBudget();
     if ($('#detail').open && state.openId) openDetail(state.openId);
   }
 
   // 수업 넣기·고치기 창
-  const classEdit = { id: null, days: new Set() };
+  const classEdit = { id: null, days: new Set(), extra: [], rooms: {} };   // rooms: 강의 시간표에서 고른 수업의 '요일|시작' → 강의실
 
   function fillTimeSelects() {
     const hoursOpts = () => Array.from({ length: TT_HOURS.last - TT_HOURS.first + 1 },
@@ -803,41 +900,171 @@
     $('#class-form').classList.toggle('show-time-error', !!msg);
   }
 
-  function openClassDialog({ cls = null, day = 1, start = 9 * 60 } = {}) {
+  // 과목명 자동완성: 휴대폰 브라우저는 datalist를 제대로 보여주지 않아서 직접 만든 목록을 쓴다.
+  // 강의 시간표(data/timetable.js)가 있으면 분반별 요일·시간이 담긴 후보를 먼저 보여 준다.
+  let courseList = [];
+  const normName = (x) => String(x).replace(/\s+/g, '').toLowerCase();
+  const toMin = (hm) => L.toMinutes(hm);
+
+  // 같은 시작·끝 시간인 요일끼리 묶는다: [{days:[1,4], start:'10:00', end:'11:30'}...]
+  function groupSlots(slots) {
+    const groups = [];
+    for (const [day, start, end] of slots) {
+      const g = groups.find((x) => x.start === start && x.end === end);
+      if (g) g.days.push(day); else groups.push({ days: [day], start, end });
+    }
+    return groups;
+  }
+  const slotText = (slots) => slots.map(([d, a, b]) => `${dayName(d)} ${a}–${b}`).join(', ');
+
+  function lectureHits(q) {
+    const T = window.GONGJI_TIMETABLE;
+    if (!q || !T || !Array.isArray(T.courses)) return [];
+    const hits = T.courses.filter((c) => normName(c.n).includes(q));
+    const mine = (c) => (state.dept && c.d && (c.d.includes(state.dept) || state.dept.includes(c.d)) ? 0 : 1);
+    hits.sort((a, b) => (normName(a.n).startsWith(q) ? 0 : 1) - (normName(b.n).startsWith(q) ? 0 : 1) || mine(a) - mine(b) || a.n.localeCompare(b.n) || a.s.localeCompare(b.s));
+    return hits.slice(0, 6).map((c) => ({
+      name: c.n, slots: c.t,
+      label: [c.s ? `${c.s}분반` : '', slotText(c.t), c.d, c.k].filter(Boolean).join(' · ')
+    }));
+  }
+
+  function pickLecture(item) {
+    const groups = groupSlots(item.slots);
+    const first = groups[0];
+    classEdit.days = new Set(first.days);
+    setTime('start', toMin(first.start));
+    setTime('end', toMin(first.end));
+    // 나머지 시간(요일마다 시간이 다른 경우)은 저장할 때 함께 넣는다.
+    classEdit.extra = groups.slice(1).flatMap((g) => g.days.map((d) => ({ day: d, start: g.start, end: g.end })));
+    classEdit.rooms = {};
+    for (const [d, a, , room] of item.slots) if (room) classEdit.rooms[`${d}|${a}`] = room;
+    renderDayPicks();
+    renderDurations();
+    showClassError('');
+    renderExtraNote();
+  }
+
+  function renderExtraNote() {
+    const box = $('#class-extra');
+    box.hidden = classEdit.extra.length === 0;
+    box.textContent = classEdit.extra.length
+      ? t().extraNote(classEdit.extra.map((x) => `${dayName(x.day)} ${x.start}–${x.end}`).join(', '))
+      : '';
+  }
+
+  function showSuggest() {
+    const box = $('#course-suggest');
+    const input = $('#class-name');
+    const q = normName(input.value.trim());
+    const lectures = lectureHits(q);
+    const taken = new Set(lectures.map((x) => normName(x.name)));
+    const plain = q
+      ? [...courseList.filter((c) => normName(c.name).startsWith(q)), ...courseList.filter((c) => !normName(c.name).startsWith(q) && normName(c.name).includes(q))]
+          .filter((c) => !taken.has(normName(c.name)) && c.name !== input.value.trim())
+      : [];
+    const shown = [...lectures, ...plain.slice(0, Math.max(0, 8 - lectures.length))];
+    box.replaceChildren(...shown.map((c) => h('li', { role: 'option' },
+      h('button', { type: 'button', onpointerdown: (e) => e.preventDefault(), onclick: () => {
+        input.value = c.name;
+        classEdit.extra = [];
+        classEdit.rooms = {};
+        renderExtraNote();
+        if (c.slots) pickLecture(c);
+        hideSuggest(); input.focus();
+      } }, h('span', {}, c.name), h('small', {}, c.label || '')))));
+    box.hidden = shown.length === 0;
+    input.setAttribute('aria-expanded', String(shown.length > 0));
+  }
+  function hideSuggest() {
+    $('#course-suggest').hidden = true;
+    $('#class-name').setAttribute('aria-expanded', 'false');
+  }
+
+  // 공지에 나온 어려운 용어 찾기: 제목에 나온 것을 먼저, 최대 10개
+  function glossaryTermsFor(n) {
+    const sq = (x) => String(x || '').replace(/\s+/g, '').toLowerCase();
+    const parts = [n.title, n.summary && n.summary.ko, n.eligibility && n.eligibility.ko, n.benefit && n.benefit.text && n.benefit.text.ko];
+    if (n.evidence) parts.push(...Object.values(n.evidence));
+    const hay = sq(parts.filter(Boolean).join(' '));
+    const head = sq(n.title);
+    const names = (k) => [k, ...((GLOSSARY[k] && GLOSSARY[k].alt) || [])].map(sq).filter(Boolean);
+    const set = new Set((n.terms || []).filter((k) => GLOSSARY[k]));
+    for (const k of Object.keys(GLOSSARY)) if (names(k).some((x) => hay.includes(x))) set.add(k);
+    return [...set].sort((a, b) => (names(a).some((x) => head.includes(x)) ? 0 : 1) - (names(b).some((x) => head.includes(x)) ? 0 : 1)).slice(0, 10);
+  }
+
+  function openClassDialog({ cls = null, day = 1, start = 9 * 60, name = '' } = {}) {
     classEdit.id = cls ? cls.id : null;
     classEdit.days = new Set([cls ? cls.day : day]);
+    classEdit.extra = [];
+    classEdit.rooms = {};
+    renderExtraNote();
     $('#class-dialog-title').textContent = cls ? t().editClass : t().addClass;
-    $('#class-name').value = cls ? cls.name || '' : '';
+    $('#class-name').value = cls ? cls.name || '' : name;
     const s = cls ? L.toMinutes(cls.start) : start;
     setTime('start', s);
     setTime('end', cls ? L.toMinutes(cls.end) : s + 90);
     $('#class-delete').hidden = !cls;
     $('#class-delete').setAttribute('aria-label', cls ? t().removeClass(cls) : '');
+    // 같은 이름의 칸이 여러 개면(월·목 수업 등) 삭제가 모두 지운다는 것을 버튼에 적어 둔다
+    const sib = cls && classKey(cls) ? state.timetable.filter((c) => classKey(c) === classKey(cls)).length : 1;
+    $('#class-delete').textContent = sib > 1 ? t().removeAll(sib) : t().remove;
     $('#class-dialog').classList.toggle('editing', !!cls);
     renderDayPicks();
     renderDurations();
     showClassError('');
+    hideSuggest();
     $('#class-dialog').showModal();
-    if (!cls) $('#class-name').focus();
+    if (name && !cls) showSuggest();   // 교육과정에서 과목을 눌러 들어온 경우 분반·시간 후보를 바로 보여 준다.
+    else if (!cls) $('#class-name').focus();
   }
 
-  function saveClass() {
+  const classKey = (c) => String((c && c.name) || '').trim().toLowerCase();
+  function saveClass(more = false) {
     const s = getTime('start');
     const e = getTime('end');
     if (e <= s) return showClassError(t().timeError);
     if (!classEdit.days.size) return showClassError(t().pickDay);
     const name = $('#class-name').value.trim();
-    const others = state.timetable.filter((c) => c.id !== classEdit.id);
+    const orig = classEdit.id ? state.timetable.find((c) => c.id === classEdit.id) : null;
+    let others = state.timetable.filter((c) => c.id !== classEdit.id);
+    // 수업 이름을 고치면 같은 수업의 다른 요일 칸도 같은 이름으로 바꾼다 (월·목 수업이 둘로 갈라지지 않게)
+    if (orig && classKey(orig) && name && name !== orig.name) {
+      others = others.map((c) => (classKey(c) === classKey(orig) ? Object.assign({}, c, { name }) : c));
+    }
+    const withRoom = (c, room) => (room ? Object.assign(c, { room }) : c);
     for (const d of classEdit.days) {
       const hit = others.find((c) => c.day === d && L.overlaps(s, e, L.toMinutes(c.start), L.toMinutes(c.end)));
       if (hit) return showClassError(t().overlapError(dayName(d), hit));
     }
-    const made = [...classEdit.days].map((d, i) => ({
+    const made = [...classEdit.days].map((d, i) => withRoom({
       id: classEdit.id || 'c' + Date.now().toString(36) + i + Math.random().toString(36).slice(2, 5),
       day: d, start: fromMinutes(s), end: fromMinutes(e), name
-    })).filter(L.isValidClass);
-    state.timetable = others.concat(made);
+    }, orig ? orig.room : classEdit.rooms[`${d}|${fromMinutes(s)}`])).filter(L.isValidClass);
+    // 강의 시간표에서 고른 수업의 다른 요일·시간
+    const extras = classEdit.id ? [] : classEdit.extra.map((x, i) => withRoom({
+      id: 'c' + Date.now().toString(36) + 'x' + i + Math.random().toString(36).slice(2, 5),
+      day: x.day, start: x.start, end: x.end, name
+    }, classEdit.rooms[`${x.day}|${x.start}`])).filter(L.isValidClass);
+    for (const x of extras) {
+      const hit = others.concat(made).find((c) => c.day === x.day && L.overlaps(toMin(x.start), toMin(x.end), toMin(c.start), toMin(c.end)));
+      if (hit) return showClassError(t().overlapError(dayName(x.day), hit));
+    }
+    state.timetable = others.concat(made, extras);
     saveTimetable();
+    if (more) {
+      // 같은 과목의 다른 요일·시간을 이어서 넣는다: 이름·시간은 그대로 두고 요일만 비운다.
+      classEdit.days = new Set();
+      classEdit.extra = [];
+      renderExtraNote();
+      renderDayPicks();
+      renderDurations();
+      showClassError('');
+      timetableChanged();
+      $('#class-dialog').querySelector('.day-picks button')?.focus();
+      return;
+    }
     $('#class-dialog').close();
     timetableChanged();
   }
@@ -879,8 +1106,7 @@
 
   // ---------- 오늘 (홈) ----------
   function goList(patch) {
-    Object.assign(state, { query: '', board: '', category: '', group: '', sub: '', savedOnly: false, mineOnly: false, unreadOnly: false, status: 'open' }, patch);
-    if (patch.sort) store.set('sort', state.sort);
+    Object.assign(state, { query: '', board: '', category: '', group: '', sub: '', savedOnly: false, mineOnly: false, unreadOnly: false, due: '', status: 'open' }, patch);
     $('#q').value = '';
     applyStaticText();
     renderList();
@@ -906,6 +1132,46 @@
       moreAction && items.length > limit ? h('button', { type: 'button', class: 'link-btn', onclick: moreAction }, t().homeMore) : null);
   }
 
+  // 오늘 내 수업: 시간표를 넣었으면 오늘 수업을 시간순으로, 수업 사이 빈 시간(공강)과 함께 보여 준다
+  function todayClassCard() {
+    const tt = state.timetable;
+    if (!tt.length) return null;
+    const T = t();
+    const dow = now.getDay();
+    const cur = now.getHours() * 60 + now.getMinutes();
+    const byStart = (a, b) => toMin(a.start) - toMin(b.start);
+    const today = tt.filter((c) => c.day === dow).sort(byStart);
+    const rows = [];
+    let nextMarked = false;
+    today.forEach((c, i) => {
+      const s = toMin(c.start);
+      const e = toMin(c.end);
+      if (i > 0 && s - toMin(today[i - 1].end) >= 30) {
+        rows.push(h('li', { class: 'home-row tc-gap' }, T.freeGap(today[i - 1].end, c.start)));
+      }
+      const st = cur >= e ? 'done' : cur >= s ? 'now' : (!nextMarked ? 'next' : '');
+      if (st === 'next' || st === 'now') nextMarked = true;
+      rows.push(h('li', { class: 'home-row tc-row' + (st ? ' ' + st : '') },
+        h('span', { class: 'tc-time' }, `${c.start}–${c.end}`),
+        h('span', { class: 'tc-name' }, c.name || T.classFallback, c.room ? h('small', null, c.room) : null),
+        st === 'now' ? h('span', { class: 'tc-badge now' }, T.classNow) : st === 'next' ? h('span', { class: 'tc-badge' }, T.classNext) : null));
+    });
+    // 오늘 남은 수업이 없으면 다음 수업이 언제인지 알려 준다
+    let foot = '';
+    if (!today.some((c) => toMin(c.end) > cur)) {
+      for (let i = 1; i <= 7 && !foot; i++) {
+        const d = (dow + i) % 7;
+        const first = tt.filter((c) => c.day === d).sort(byStart)[0];
+        if (first) foot = T.nextClass(dayName(d), first.start, first.name || T.classFallback);
+      }
+    }
+    return h('section', { class: 'home-card today-classes' },
+      h('h3', null, T.todayClasses, today.length ? h('span', { class: 'group-count' }, ` ${today.length}`) : null),
+      today.length ? h('ul', { class: 'home-list' }, rows) : h('p', { class: 'fine' }, T.todayNoClass),
+      foot ? h('p', { class: 'fine' }, foot) : null,
+      h('button', { type: 'button', class: 'link-btn', onclick: () => { location.hash = '#/timetable'; setTab('timetable', true); } }, T.seeTimetable));
+  }
+
   function renderHome() {
     const box = $('#home-body');
     if (!box) return;
@@ -918,22 +1184,26 @@
       h('strong', null, String(n)), h('span', null, label));
     const labels = { ko: ['오늘 마감', '3일 안 마감', '새 공지'], en: ['Due today', 'Due in 3 days', 'New'], zh: ['今天截止', '3天内截止', '新公告'], ja: ['今日締切', '3日以内', '新着'] }[state.lang] || [];
     const parts = [h('div', { class: 'home-pills', role: 'group', 'aria-label': T.homeSummary({ today: s.today.length, soon: s.soon.length, fresh: s.fresh.length }) },
-      pill(labels[0], s.today.length, () => goList({ status: 'week', sort: 'deadline' }), true),
-      pill(labels[1], s.soon.length, () => goList({ status: 'week', sort: 'deadline' }), true),
-      pill(labels[2], s.fresh.length, () => goList({ sort: 'latest' }), false))];
+      pill(labels[0], s.today.length, () => goList({ due: 'today', sort: 'deadline' }), true),
+      pill(labels[1], s.soon.length, () => goList({ due: 'soon', sort: 'deadline' }), true),
+      pill(labels[2], s.fresh.length, () => goList({ due: 'new', sort: 'latest' }), false))];
 
     if (!state.timetable.length) {
       parts.push(h('div', { class: 'home-tip' },
         h('p', null, T.homeTimetableTip),
-        h('button', { type: 'button', class: 'btn small primary', onclick: () => { location.hash = '#/timetable'; setTab('timetable', true); } }, T.homeTimetableBtn)));
+        h('button', { type: 'button', class: 'btn small primary', onclick: () => {
+          location.hash = '#/timetable'; setTab('timetable', true);
+          if (window.matchMedia && window.matchMedia('(min-width: 900px)').matches) openClassDialog();
+        } }, T.homeTimetableBtn)));
     }
 
     const cards = [
+      todayClassCard(),
       homeSection(T.homePinned, s.pinned, 5, null),
-      homeSection(T.homeSoon, s.soon, 5, () => goList({ status: 'week', sort: 'deadline' })),
+      homeSection(T.homeSoon, s.soon, 5, () => goList({ due: 'soon', sort: 'deadline' })),
       homeSection(T.homeSaved, sAll.saved, 5, () => goList({ savedOnly: true, status: 'all' })),
       homeSection(T.homeMine, mineFresh, 5, () => goList({ mineOnly: true, sort: 'latest' })),
-      homeSection(T.homeNew, s.fresh, 5, () => goList({ sort: 'latest' }))
+      homeSection(T.homeNew, s.fresh, 5, () => goList({ due: 'new', sort: 'latest' }))
     ];
     // 이번 주 추천 (추천 탭에서 쓰는 시간·기간 설정 그대로)
     const rec = L.recommend(activeNotices(), state.budgetHours, {
@@ -1108,9 +1378,13 @@
     });
     // 추천 탭을 처음 열면 저장된 시간으로 바로 계산해 보여 줌
     if (tab === 'budget' && !state.budgetResult) runBudget();
-    if (scrollTop) window.scrollTo(0, 0);
+    if (scrollTop) scrollToTab(tab);
   }
 
+  // PC(왼쪽 내비게이션)와 휴대폰(아래 탭) 모두 화면을 통째로 바꾸므로, 화면을 옮기면 맨 위에서 시작한다
+  function scrollToTab() {
+    window.scrollTo(0, 0);
+  }
 
   // ---------- 알림 센터 (종 모양 버튼) ----------
   // 알려 줄 것: 저장한 공지의 3일 안 마감 / 새로 올라온 공지 중 내 키워드·관심 분야. 지원 완료한 공지는 제외
@@ -1348,7 +1622,7 @@
         e.id ? h('button', { type: 'button', class: 'link', 'aria-haspopup': 'dialog', onclick: () => openDetail(e.id) }, e.title) : h('span', { style: 'flex:1;min-width:0' }, e.title),
         e.time ? h('span', { class: 'mcal-time' }, e.time) : null)))
         : h('p', { class: 'fine' }, T.calDayEmpty));
-    return h('section', { class: 'home-card cal-card' }, head, grid, legend, dayBox);
+    return h('section', { class: 'home-card cal-card' }, head, h('div', { class: 'mcal-cols' }, h('div', { class: 'mcal-main' }, grid, legend), dayBox));
   }
 
   // ---------- 불러오기 화면 (처음 열었을 때 · 공지가 비었을 때 · 새 데이터를 받을 때) ----------
@@ -1499,6 +1773,7 @@
     applyStaticText();
     renderList();
     renderTimetable();
+    renderCurriculum();
     renderBudget();
     renderHome();
     renderAlerts();
@@ -1562,12 +1837,25 @@
     fillTimeSelects();
     $('#add-class-btn').addEventListener('click', () => openClassDialog());
     $('#class-form').addEventListener('submit', (e) => { e.preventDefault(); saveClass(); });
+    $('#class-more').addEventListener('click', () => saveClass(true));
+    $('#class-name').addEventListener('input', () => { classEdit.extra = []; classEdit.rooms = {}; renderExtraNote(); showSuggest(); });
+    $('#class-name').addEventListener('focus', showSuggest);
+    $('#class-name').addEventListener('blur', () => setTimeout(hideSuggest, 120));
     $('#class-cancel').addEventListener('click', () => $('#class-dialog').close());
     $('#class-delete').addEventListener('click', () => {
-      state.timetable = state.timetable.filter((c) => c.id !== classEdit.id);
+      // 월·목처럼 요일마다 칸이 따로 저장되는 같은 수업(이름이 같은 칸)은 한꺼번에 지운다.
+      const key = (c) => String(c.name || '').trim().toLowerCase();
+      const me = state.timetable.find((c) => c.id === classEdit.id);
+      const gone = me ? state.timetable.filter((c) => c.id === me.id || (key(me) && key(c) === key(me))) : [];
+      const before = state.timetable;
+      state.timetable = before.filter((c) => !gone.includes(c));
       saveTimetable();
       $('#class-dialog').close();
       timetableChanged();
+      if (gone.length > 1) {
+        toast(({ ko: `'${me.name}' ${gone.length}칸을 모두 지웠어요`, en: `Removed all ${gone.length} slots of '${me.name}'`, zh: `已删除“${me.name}”的全部 ${gone.length} 个时段`, ja: `「${me.name}」の${gone.length}コマをすべて削除しました` })[state.lang] || `'${me.name}' ×${gone.length}`,
+          { label: t().undo, run: () => { state.timetable = before; saveTimetable(); timetableChanged(); } });
+      }
     });
     // 시작 시각을 바꾸면 수업 길이는 그대로 두고 끝 시각을 같이 옮김
     let lastLen = 90;
@@ -1584,9 +1872,29 @@
     }
     $('#example-tt').addEventListener('click', loadExampleTimetable);
     $('#clear-tt').addEventListener('click', () => {
+      const before = state.timetable;
+      if (!before.length) return;
       state.timetable = [];
       saveTimetable();
       timetableChanged();
+      // 실수로 눌러도 되돌릴 수 있게
+      toast(t().clearedTimetable(before.length), { label: t().undo, run: () => { state.timetable = before; saveTimetable(); timetableChanged(); } });
+    });
+
+    // 휴대폰: 검색 옆 '필터·정렬' 버튼으로 선택 상자와 체크 항목을 펼치고 접는다
+    $('#filter-toggle').addEventListener('click', (e) => {
+      const open = !document.querySelector('.content').classList.contains('filters-open');
+      document.querySelector('.content').classList.toggle('filters-open', open);
+      e.currentTarget.setAttribute('aria-expanded', String(open));
+    });
+    // 길게 내려갔을 때 맨 위로
+    const toTop = $('#to-top');
+    const onScroll = () => { toTop.hidden = window.scrollY < 900; };
+    window.addEventListener('scroll', onScroll, { passive: true });
+    onScroll();
+    toTop.addEventListener('click', () => {
+      const reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      window.scrollTo({ top: 0, behavior: reduce ? 'auto' : 'smooth' });
     });
 
     $('#budget-form').addEventListener('submit', (e) => { e.preventDefault(); runBudget(); });

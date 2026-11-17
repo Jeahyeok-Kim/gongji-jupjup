@@ -29,7 +29,7 @@ from gongji_pipeline import load_marked_json  # noqa: E402
 
 ROOT = Path(__file__).resolve().parent.parent
 DATA_DIR = ROOT / 'data'
-FILES = ['notices.js', 'notices.json', 'calendar.js', 'calendar.json', 'glossary.json', 'gongji.ics', 'overrides.json', 'version.json']
+FILES = ['notices.js', 'notices.json', 'calendar.js', 'calendar.json', 'glossary.json', 'gongji.ics', 'overrides.json', 'version.json', 'timetable.js', 'courses.js']
 
 
 def _dump(path: Path, obj) -> None:

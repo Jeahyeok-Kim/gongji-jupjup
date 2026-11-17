@@ -428,10 +428,15 @@ def read_notice_media(raw: dict, vision=None, want_images: bool = True, want_fil
     def read_image(p: Path, label: str):
         if is_tiny_image(p):
             return
-        key = f'img:{p.name}:{file_hash(p)}:{vkey}'
-        if key not in memo:
-            if not vision:
+        h = file_hash(p)
+        key = f'img:{p.name}:{h}:{vkey}'
+        if key not in memo and not vision:
+            # 이미지 모델 없이 도는 때: 예전에 다른(또는 같은) 모델로 읽어 둔 글자가 있으면 그것을 쓴다
+            old = next((k for k in memo if k.startswith(f'img:{p.name}:{h}:') and memo[k]), None)
+            if old is None:
                 return
+            key = old
+        if key not in memo:
             memo[key] = tidy(ocr_image(vision, p), 3000)
             remember()
         if memo[key] and memo[key] not in seen_text:

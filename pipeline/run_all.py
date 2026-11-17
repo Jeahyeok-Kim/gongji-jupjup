@@ -2,6 +2,7 @@
 """한 번에 실행: run_pipeline.bat 이 부르는 파일
 
 1) 새로 내보낸 학교 기본 정보(kku-reference-*.json)가 있으면 → 저장소에 합치고 학사일정·요람 쪽수·규정 조문 갱신
+1-2) 새로 내보낸 강의 시간표(kku-lectures-*.json)가 있으면 → data/timetable.js 갱신 (웹앱 과목 자동완성의 요일·시간)
 2) 새로 내보낸 공지(kku-notices-*.json)를 게시판별 저장소에 합치고(중복 확인, 새 공지만 추가, 바뀐 공지 갱신)
    → 포스터·첨부 읽기 → 로컬 AI 해독·번역 → data/notices.js → 기간 지난 공지 정리
 3) settings.json 의 remote.overrides 에 구글 문서(docx) 같은 보정표 주소가 있으면 받아서 data/overrides.json 으로 만듦
@@ -21,6 +22,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 import backup  # noqa: E402
 import build_notices  # noqa: E402
 import build_reference  # noqa: E402
+import build_timetable  # noqa: E402
 import publish  # noqa: E402
 import remote  # noqa: E402
 import store as st  # noqa: E402
@@ -34,7 +36,7 @@ def main(argv=None) -> int:
     rest = []
     for a in argv:
         p = Path(a)
-        if p.suffix.lower() == '.json' and p.is_file() and p.name.startswith(('kku-notices-', 'kku-reference-')):
+        if p.suffix.lower() == '.json' and p.is_file() and p.name.startswith(('kku-notices-', 'kku-reference-', 'kku-lectures-')):
             st.STORE_DIR.mkdir(parents=True, exist_ok=True)
             dest = st.STORE_DIR / p.name
             if p.resolve() != dest.resolve():
@@ -52,6 +54,13 @@ def main(argv=None) -> int:
     if refs:
         print('=== 1. 학교 기본 정보 갱신 ===')
         build_reference.main([])
+        print()
+    if st.find_exports('lectures'):
+        print('=== 1-2. 강의 시간표 갱신 ===')
+        try:
+            build_timetable.main([])
+        except Exception as e:  # noqa: BLE001  시간표는 부가 기능이라 오류가 나도 공지 처리를 막지 않는다
+            print(f'  강의 시간표를 건너뜁니다: {e}')
         print()
     print('=== 2. 보정표 가져오기 ===')
     try:

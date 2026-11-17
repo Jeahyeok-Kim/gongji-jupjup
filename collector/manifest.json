@@ -1,18 +1,33 @@
 {
   "manifest_version": 3,
-  "name": "KU 공지 수집기",
-  "version": "0.3.0",
-  "description": "건국대 글로컬캠퍼스 공개 게시판의 공지와 학교 기본 정보(학사일정·요람·규정)를 내 브라우저에서 읽어 JSON 파일로 내보냅니다.",
+  "name": "공지 줍줍 수집기",
+  "version": "1.0.0",
+  "description": "건국대 글로컬캠퍼스 공개 게시판의 공지를 내 브라우저에서 정해진 간격으로 모아, 내 컴퓨터의 공지 줍줍 서버로 전달합니다.",
+  "icons": {
+    "16": "icons/icon-16.png",
+    "32": "icons/icon-32.png",
+    "48": "icons/icon-48.png",
+    "128": "icons/icon-128.png"
+  },
   "permissions": [
     "storage",
-    "unlimitedStorage"
+    "unlimitedStorage",
+    "alarms",
+    "downloads"
   ],
   "host_permissions": [
     "https://www.kku.ac.kr/*",
     "https://int.kku.ac.kr/*",
     "https://ids.kku.ac.kr/*",
-    "https://rule.konkuk.ac.kr/*"
+    "https://rule.konkuk.ac.kr/*",
+    "https://im.kku.ac.kr/*",
+    "https://kis.kku.ac.kr/*",
+    "http://127.0.0.1/*",
+    "http://localhost/*"
   ],
+  "background": {
+    "service_worker": "background.js"
+  },
   "content_scripts": [
     {
       "matches": [
@@ -28,6 +43,16 @@
     },
     {
       "matches": [
+        "https://im.kku.ac.kr/*"
+      ],
+      "js": [
+        "config.js",
+        "im-crawler.js"
+      ],
+      "run_at": "document_idle"
+    },
+    {
+      "matches": [
         "https://www.kku.ac.kr/*",
         "https://rule.konkuk.ac.kr/*"
       ],
@@ -36,10 +61,36 @@
         "reference.js"
       ],
       "run_at": "document_idle"
+    },
+    {
+      "matches": [
+        "https://kis.kku.ac.kr/*"
+      ],
+      "js": [
+        "kis-hook.js"
+      ],
+      "run_at": "document_start",
+      "world": "MAIN",
+      "all_frames": true
+    },
+    {
+      "matches": [
+        "https://kis.kku.ac.kr/*"
+      ],
+      "js": [
+        "config.js",
+        "kis-bridge.js"
+      ],
+      "run_at": "document_start",
+      "all_frames": true
     }
   ],
   "action": {
     "default_popup": "popup/popup.html",
-    "default_title": "KU 공지 수집기"
+    "default_title": "공지 줍줍 수집기",
+    "default_icon": {
+      "16": "icons/icon-16.png",
+      "32": "icons/icon-32.png"
+    }
   }
 }

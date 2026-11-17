@@ -28,6 +28,7 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 import gongji_pipeline as gp  # noqa: E402
 import media as md  # noqa: E402
+import rules  # noqa: E402
 import store as st  # noqa: E402
 
 
@@ -47,8 +48,10 @@ def parse_args(argv=None):
                     help='포스터 이미지를 읽을 Ollama 비전 모델 (기본 qwen2.5vl:7b)')
     ap.add_argument('--no-media', action='store_true', help='포스터 이미지·첨부파일을 읽지 않음')
     ap.add_argument('--with-news', action='store_true', help='투데이뉴스(보도 기사)도 처리')
+    ap.add_argument('--with-private', action='store_true', help='이음교육시스템처럼 로그인해야 보이는 글도 처리 (공개 사이트에 올리면 로그인 없이 누구나 보게 되니 주의)')
     ap.add_argument('--timeout', type=int, default=240, help='AI 답 한 번을 기다리는 최대 시간(초, 기본 240)')
     ap.add_argument('--think', action='store_true', help='모델의 생각(thinking) 모드를 켬 (더 느림)')
+    ap.add_argument('--max-minutes', type=float, default=0, help='AI를 쓰는 시간 상한(분). 넘으면 남은 새 공지는 규칙으로 먼저 정리하고 다음 실행에서 AI로 처리 (0이면 제한 없음)')
     ap.add_argument('--today', default=None, help='기준 날짜 YYYY-MM-DD (시험용)')
     return ap.parse_args(argv)
 
@@ -66,12 +69,13 @@ def needs_media(raw: dict) -> bool:
     return bool(md.file_list(raw)) and (len(text) < 400 or '첨부' in text)
 
 
-def read_all_media(targets: list[dict], args, ai) -> dict:
+def read_all_media(targets: list[dict], args, ai, use_vision: bool = True) -> dict:
+    """use_vision=False: 이미지 모델을 부르지 않는다 (예전에 읽어 둔 포스터 글자와 첨부파일 글자는 그대로 씀)"""
     todo = [r for r in targets if needs_media(r)]
     if not todo:
         return {}
     vision = None
-    if not args.offline:
+    if not args.offline and use_vision:
         v = gp.Ollama(args.vision_model, host=args.host, think=None, timeout=args.timeout)
         try:
             if v.has_model():
@@ -188,7 +192,7 @@ def main(argv=None) -> int:
     targets = []
     since = today - timedelta(days=args.days) if args.days > 0 else None
     for raw in collected:
-        reason = gp.skip_reason(raw, with_news=args.with_news)
+        reason = gp.skip_reason(raw, with_news=args.with_news, with_private=args.with_private)
         if reason:
             skipped[reason] = skipped.get(reason, 0) + 1
             continue
@@ -213,23 +217,31 @@ def main(argv=None) -> int:
         print('처리할 공지가 없습니다. --days 값을 늘려 보세요.')
         return 1
 
-    # 2) Ollama 확인
+    # 2) Ollama 확인: 꺼져 있거나 모델이 없어도 멈추지 않는다. 저장된 AI 답 → 직전 결과 → 규칙 정리 순서로 채운다.
     ai = gp.Ollama(args.model, host=args.host, think=True if args.think else False, timeout=args.timeout)
-    try:
-        if args.offline:
-            pass
-        elif not ai.has_model():
-            print(f'Ollama에 모델 {args.model} 이(가) 없습니다. 먼저 실행하세요:  ollama pull {args.model}')
-            return 2
-    except gp.OllamaError as e:
-        print(e)
-        return 2
-    print(f'모델: {args.model} @ {ai.host}')
+    ai_on = not args.offline
+    if ai_on:
+        try:
+            model = gp.pick_model(args.model, ai.installed_models())
+            if model is None:
+                print(f'Ollama에 쓸 수 있는 글 모델이 없습니다. 먼저 실행하세요:  ollama pull {args.model}')
+                ai_on = False
+            elif model != args.model:
+                print(f'Ollama에 {args.model} 이(가) 없어 {model} 을(를) 대신 씁니다. (원래 모델을 쓰려면: ollama pull {args.model})')
+                ai.model = model
+        except gp.OllamaError as e:
+            print(e)
+            ai_on = False
+        if not ai_on:
+            print('→ AI 없이 진행합니다: 저장된 AI 답과 직전 결과를 쓰고, 새 공지는 규칙으로 먼저 정리합니다 (aiPending).')
+    if ai_on:
+        print(f'모델: {ai.model} @ {ai.host}' + (f' · AI 시간 상한 {args.max_minutes:g}분' if args.max_minutes > 0 else ''))
+    no_ai = gp.NoAI(ai.model)
 
     # 3) 포스터 이미지·첨부파일 읽기 (먼저 몰아서 한다: 비전 모델과 글 모델을 번갈아 올리면 그래픽 메모리가 모자라 느려짐)
     media_by_id = {}
     if not args.no_media:
-        media_by_id = read_all_media(targets, args, ai)
+        media_by_id = read_all_media(targets, args, ai, use_vision=ai_on)
 
     # 직전 결과: 실패한 공지는 직전에 만든 결과를 그대로 유지
     previous = {}
@@ -238,6 +250,8 @@ def main(argv=None) -> int:
     except (OSError, ValueError, KeyError):
         pass
     kept_previous = 0
+    by_rules = 0                 # AI 없이 규칙으로 먼저 정리한 새 공지
+    budget_note = False
 
     # 4) 한 건씩 처리 (저장해 둔 AI 답이 있으면 재사용)
     gp.CACHE_DIR.mkdir(parents=True, exist_ok=True)
@@ -252,6 +266,13 @@ def main(argv=None) -> int:
         quality['translationLost'] += bool(checks.get('translationLost'))
 
     t_start = time.time()
+
+    def rule_notice(raw):
+        n = rules.build_notice(raw, glossary, regs, today, media=media_by_id.get(raw['id']))
+        if raw.get('alsoIn'):
+            n['alsoIn'] = [b for b in raw['alsoIn'] if b and b != n['boardName']]
+        return n
+
     for i, raw in enumerate(targets, 1):
         title = (raw.get('subject') or '').strip()
         cache_file = gp.CACHE_DIR / (safe_name(str(raw['id'])) + '.json')
@@ -265,24 +286,29 @@ def main(argv=None) -> int:
             except (OSError, json.JSONDecodeError):
                 cache = {}
         t0 = time.time()
+        if ai_on and args.max_minutes > 0 and t0 - t_start > args.max_minutes * 60:
+            ai_on = False
+            budget_note = True
+            print(f'AI 시간 상한({args.max_minutes:g}분)이 지나 남은 새 공지는 규칙으로 먼저 정리합니다.')
         try:
-            notice, checks = gp.process_notice(raw, ai, glossary, regs, today, cache=cache,
+            notice, checks = gp.process_notice(raw, ai if ai_on else no_ai, glossary, regs, today, cache=cache,
                                                media=media_by_id.get(raw['id']))
         except gp.OllamaError as e:
             old = previous.get(raw['id'])
-            if args.offline and old:
+            usable_old = old if old and not (ai_on and old.get('aiPending')) else None
+            if e.kind != 'skip':
+                print(f'{label}  실패: {e}' + (' → 직전 결과 유지' if usable_old else ' → 규칙으로 정리'))
+                failed.append(raw['id'])
+            if usable_old or (old and not ai_on):
                 out_notices.append(old)
                 kept_previous += 1
-                continue
-            print(f'{label}  실패: {e}' + (' → 직전 결과 유지' if old else ''))
-            failed.append(raw['id'])
-            if old:
-                out_notices.append(old)
-                kept_previous += 1
-            if e.kind == 'down' and not args.offline:
-                print('Ollama 서버가 응답하지 않아 중단합니다. 지금까지 처리한 결과는 저장합니다.')
-                print('Ollama를 다시 켠 뒤 같은 파일로 다시 실행하면 처리한 곳 다음부터 이어서 합니다.')
-                break
+            else:
+                out_notices.append(rule_notice(raw))
+                by_rules += 1
+            if e.kind == 'down' and ai_on:
+                ai_on = False
+                print('Ollama 서버가 응답하지 않아 남은 공지는 저장된 AI 답·직전 결과·규칙 정리로 채웁니다.')
+                print('Ollama를 다시 켠 뒤 다시 실행하면 처리하지 못한 공지만 AI로 처리합니다.')
             continue
         finally:
             if cache:
@@ -316,13 +342,13 @@ def main(argv=None) -> int:
         'meta': {
             'source': 'pipeline',
             'generatedAt': datetime.now().strftime('%Y-%m-%d %H:%M'),
-            'model': args.model,
+            'model': ai.model if ai.calls else (args.model if args.offline else ai.model),
             'note': 'AI가 만든 요약·번역입니다. 근거 문장이 원문에 없는 값은 버렸습니다.',
             'stats': {
                 'collected': len(collected), 'processed': len(out_notices), 'fromCache': from_cache,
                 'failed': len(failed), 'imageOnly': image_only, 'droppedValues': dropped_total,
                 'summaryRetried': quality['retried'], 'summaryDraft': quality['draft'], 'summaryComposed': quality['composed'],
-                'translationLost': quality['translationLost'],
+                'translationLost': quality['translationLost'], 'aiPending': by_rules,
             },
         },
         'categories': gp.CATEGORIES,
@@ -351,6 +377,8 @@ def main(argv=None) -> int:
     print(f'  요약 품질 검사: 다시 써서 통과 {quality["retried"]}건 · 초안으로 대체 {quality["draft"]}건 · 확인된 정보로 직접 만든 요약 {quality["composed"]}건 · 번역에서 날짜·금액이 빠져 숨겨질 요약 {quality["translationLost"]}건')
     if kept_previous:
         print(f'  AI 답이 없어 직전 결과를 그대로 쓴 공지 {kept_previous}건' + (' (Ollama를 켜고 실행하면 새로 처리)' if args.offline else ''))
+    if by_rules:
+        print(f'  AI 없이 규칙으로 먼저 정리한 새 공지 {by_rules}건 (다음 실행에서 AI가 정밀 해독' + (', 시간 상한 때문' if budget_note else '') + ')')
     if failed:
         print(f'  실패한 {len(failed)}건은 같은 명령을 한 번 더 실행하면 다시 시도합니다.')
     if backup:

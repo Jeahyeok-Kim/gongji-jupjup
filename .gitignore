@@ -14,3 +14,5 @@ pipeline/reference/files/
 logs/
 backups/
 settings.json
+
+_site/

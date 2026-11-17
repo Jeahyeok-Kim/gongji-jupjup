@@ -25,19 +25,9 @@ function renderRefState(st) {
   box.textContent = st.running ? `받는 중: ${st.current ?? ''}` : (st.finished ? '받았습니다.' : '');
 }
 
+// 파일로 저장: 서비스 워커가 다운로드 폴더에 kku-reference-날짜.json 으로 저장한다
 async function exportReference() {
-  const { 'ref:kku': kku, 'ref:rule': rule } = await chrome.storage.local.get(['ref:kku', 'ref:rule']);
-  const payload = {
-    schema: 1, kind: 'kku-reference', generator: 'kku-collector 0.3.0', generatedAt: new Date().toISOString(),
-    calendar: kku?.calendar ?? [], yoram: kku?.yoram ?? [], pages: kku?.pages ?? [],
-    rules: rule?.rules ?? [], collected: { kku: kku?.collectedAt ?? null, rule: rule?.collectedAt ?? null }
-  };
-  const url = URL.createObjectURL(new Blob([JSON.stringify(payload)], { type: 'application/json' }));
-  const a = document.createElement('a');
-  a.href = url;
-  a.download = `kku-reference-${new Date().toISOString().slice(0, 10)}.json`;
-  a.click();
-  setTimeout(() => URL.revokeObjectURL(url), 10_000);
+  await chrome.runtime.sendMessage({ type: 'export', kind: 'reference' });
 }
 
 async function initReference(tab, host) {

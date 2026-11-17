@@ -190,7 +190,9 @@ class FakeOllama(BaseHTTPRequestHandler):
                     'done': True})
 
 
-class PipelineTest(unittest.TestCase):
+class PipelineBase(unittest.TestCase):
+    """가짜 Ollama 서버와 임시 폴더 준비 (시험 묶음들이 함께 씀)"""
+
     @classmethod
     def setUpClass(cls):
         cls.server = HTTPServer(('127.0.0.1', 0), FakeOllama)
@@ -230,6 +232,8 @@ class PipelineTest(unittest.TestCase):
                                        '--out', str(self.out), '--today', '2026-11-12'])
         return code, buf.getvalue()
 
+
+class PipelineTest(PipelineBase):
     def test_end_to_end(self):
         code, log = self.run_build()
         self.assertEqual(code, 0, log)
@@ -404,8 +408,10 @@ class PipelineTest(unittest.TestCase):
         log = buf.getvalue()
         self.assertEqual(code, 0, log)
         self.assertIn('느린 공지 안내  실패: 응답 시간 초과', log)
-        ids = {n['id'] for n in gp.read_notices_js(self.out)['notices']}
-        self.assertEqual(ids, {'www.kku.ac.kr-1-101', 'www.kku.ac.kr-2-202', 'www.kku.ac.kr-3-303'})
+        by = {n['id']: n for n in gp.read_notices_js(self.out)['notices']}
+        self.assertEqual(set(by), {'www.kku.ac.kr-1-101', 'www.kku.ac.kr-2-202', 'www.kku.ac.kr-3-303', 'slow-1'})
+        self.assertTrue(by['slow-1'].get('aiPending'), '멈춘 공지는 빠지지 않고 규칙 정리로 먼저 보임')
+        self.assertFalse(by['www.kku.ac.kr-1-101'].get('aiPending'))
 
     def test_answer_key(self):
         self.run_build()
@@ -751,5 +757,120 @@ class TranslationFixTest(unittest.TestCase):
         self.assertEqual((ask.calls, checks), ([], {}))
 
 
+class PrivateNoticeTest(unittest.TestCase):
+    def test_private_notice_skipped_by_default(self):
+        raw = {'boardName': '이음교육시스템 공지', 'subject': '장학 안내', 'private': True}
+        self.assertIsNotNone(gp.skip_reason(raw))
+        self.assertIsNone(gp.skip_reason(raw, with_private=True))
+
+
 if __name__ == '__main__':
     unittest.main()
+
+
+class NoAITest(PipelineBase):
+    """AI(Ollama)가 꺼져 있거나 시간 상한을 넘겨도 새 공지가 규칙 정리로 바로 보이고, AI가 돌아오면 정밀 해독으로 바뀐다"""
+
+    def build(self, *extra, host=None):
+        buf = io.StringIO()
+        with contextlib.redirect_stdout(buf):
+            code = build_notices.main([str(self.input), '--model', 'fake', '--host', host or self.host,
+                                       '--out', str(self.out), '--today', '2026-11-12', '--no-archive', *extra])
+        return code, buf.getvalue()
+
+    def test_ollama_down_uses_rules_then_ai_replaces(self):
+        code, log = self.build(host='http://127.0.0.1:9')          # 아무도 듣지 않는 포트
+        self.assertEqual(code, 0, log)
+        self.assertIn('AI 없이 진행합니다', log)
+        data = gp.read_notices_js(self.out)
+        by = {n['id']: n for n in data['notices']}
+        self.assertEqual(set(by), {'www.kku.ac.kr-1-101', 'www.kku.ac.kr-2-202', 'www.kku.ac.kr-3-303'})
+        self.assertTrue(all(n.get('aiPending') for n in by.values()))
+        self.assertEqual(data['meta']['stats']['aiPending'], 3)
+        a, b, c = by['www.kku.ac.kr-1-101'], by['www.kku.ac.kr-2-202'], by['www.kku.ac.kr-3-303']
+        self.assertEqual(a['deadline'], '2026-11-27T17:00', '줄이 나뉜 기간의 끝 날짜')
+        self.assertTrue(gp.verify_evidence(COLLECTED['notices'][0]['text'], a['evidence']['deadline']))
+        self.assertEqual(b['deadline'], '2026-11-16T23:59')
+        self.assertEqual(b['benefit']['points'], 20)
+        self.assertEqual(b['category'], 'dadream')
+        self.assertIn('11월 16일', b['summary']['ko'])
+        self.assertEqual(c['bodyStatus'], 'image', 'AI가 없으면 포스터를 읽지 않음')
+        self.assertEqual(c['category'], 'contest')
+        self.assertEqual(FakeOllama.requests, [])
+        # AI가 돌아오면 규칙 결과를 정밀 해독으로 바꾼다
+        code, log = self.build()
+        self.assertEqual(code, 0, log)
+        by = {n['id']: n for n in gp.read_notices_js(self.out)['notices']}
+        self.assertFalse(any(n.get('aiPending') for n in by.values()))
+        self.assertTrue(by['www.kku.ac.kr-2-202']['titleTr']['en'].startswith('[en] '))
+
+    def test_time_budget_rules_rest(self):
+        code, log = self.build('--max-minutes', '0.00001', '--no-media')
+        self.assertEqual(code, 0, log)
+        self.assertIn('AI 시간 상한', log)
+        ns = gp.read_notices_js(self.out)['notices']
+        self.assertEqual(len(ns), 3)
+        self.assertEqual(sum(1 for n in ns if n.get('aiPending')), 2, '첫 공지만 AI, 나머지는 규칙')
+
+    def test_missing_model_falls_back(self):
+        buf = io.StringIO()
+        with contextlib.redirect_stdout(buf):
+            code = build_notices.main([str(self.input), '--model', 'qwen3:8b', '--host', self.host, '--no-media',
+                                       '--out', str(self.out), '--today', '2026-11-12', '--no-archive'])
+        log = buf.getvalue()
+        self.assertEqual(code, 0, log)
+        self.assertIn('fake:latest 을(를) 대신 씁니다', log)
+        self.assertEqual(gp.read_notices_js(self.out)['meta']['model'], 'fake:latest')
+
+
+class PickModelTest(unittest.TestCase):
+    def test_choices(self):
+        self.assertEqual(gp.pick_model('qwen3:8b', ['qwen3:8b', 'gemma3:4b']), 'qwen3:8b')
+        self.assertEqual(gp.pick_model('qwen3', ['qwen3:latest']), 'qwen3:latest')
+        self.assertEqual(gp.pick_model('qwen3:8b', ['qwen2.5vl:7b', 'qwen3:4b']), 'qwen3:4b', '같은 계열')
+        self.assertEqual(gp.pick_model('qwen3:8b', ['qwen2.5vl:7b', 'llama3.1:8b', 'gemma3:12b']), 'gemma3:12b', '추천 순서')
+        self.assertEqual(gp.pick_model('qwen3:8b', ['qwen2.5vl:7b', 'nomic-embed-text:latest']), None, '비전·임베딩 모델은 고르지 않음')
+        self.assertEqual(gp.pick_model('qwen3:8b', []), None)
+
+
+class RulesTest(unittest.TestCase):
+    def test_deadline_patterns(self):
+        import rules
+        f = rules.find_deadline
+        self.assertEqual(f('신청 마감: 11월 16일(월)', '2026-11-10')[0], '2026-11-16T23:59')
+        self.assertEqual(f('접수기간 : 2026. 11. 3.(화) ~ 11. 20.(금) 18:00까지', '2026-11-02')[0], '2026-11-20T18:00')
+        self.assertEqual(f('모집기간: 12/20 ~ 1/5', '2026-12-15')[0], '2027-01-05T23:59', '해를 넘기는 기간')
+        self.assertEqual(f('일시: 2026. 11. 18.(수) 13:00~15:00\n장소: 학생회관', '2026-11-10')[0], None, '행사 일시는 마감이 아님')
+        self.assertEqual(f('2024. 3. 2.까지 제출', '2026-11-10')[0], None, '작성일과 너무 먼 날짜')
+
+    def test_benefit_patterns(self):
+        import rules
+        b = rules.find_benefit('참여자 전원 다드림 포인트 20점 지급')
+        self.assertEqual((b['points'], b['won'], b['prize']), (20, 0, 0))
+        b = rules.find_benefit('3. 시상: 대상 상금 100만원')
+        self.assertEqual((b['ko'], b['prize']), ('대상 상금 100만원', 1000000))
+        b = rules.find_benefit('※ 장학금 300,000원 지급')
+        self.assertEqual(b['won'], 300000)
+        self.assertIsNone(rules.find_benefit('혜택: 수료증 발급'), '숫자가 없으면 지어내지 않음')
+
+
+class MediaReuseTest(PipelineBase):
+    def test_poster_text_reused_without_vision(self):
+        # 이미지 모델로 한 번 읽어 둔 포스터 글자는 Ollama가 꺼져 있어도 다시 쓴다 → 저장된 AI 답도 그대로 맞아떨어진다
+        code, log = self.run_build()
+        self.assertEqual(code, 0, log)
+        buf = io.StringIO()
+        with contextlib.redirect_stdout(buf):
+            code = build_notices.main([str(self.input), '--model', 'fake', '--host', 'http://127.0.0.1:9',
+                                       '--out', str(self.out), '--today', '2026-11-12', '--no-archive'])
+        self.assertEqual(code, 0, buf.getvalue())
+        by = {n['id']: n for n in gp.read_notices_js(self.out)['notices']}
+        c = by['www.kku.ac.kr-3-303']
+        self.assertEqual(c['bodyStatus'], 'poster')
+        self.assertFalse(c.get('aiPending'), '저장된 AI 답으로 처리')
+        self.assertIn('저장된 AI 답 사용', buf.getvalue())
+
+    def test_typo_amount_not_scored(self):
+        import rules
+        b = rules.find_benefit('지원금액: 3,000,000만원(1명 기준)')
+        self.assertEqual((b['ko'], b['won']), ('지원금액: 3,000,000만원(1명 기준)', 0))

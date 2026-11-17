@@ -28,6 +28,9 @@
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-title" content="공지 줍줍">
+  <!-- 글꼴: Pretendard (받지 못하면 기기 글꼴로 보임) -->
+  <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
   <link rel="stylesheet" href="css/style.css">
 </head>
 <body data-tab="notices">
@@ -88,6 +91,10 @@
           <input type="search" id="q" autocomplete="off" enterkeyhint="search" list="recent-list" data-i18n-placeholder="searchPlaceholder">
           <datalist id="recent-list"></datalist>
         </label>
+        <button type="button" class="btn filter-toggle" id="filter-toggle" aria-expanded="false">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h9M17 7h3M4 17h3M11 17h9M15 5v4M9 15v4"/></svg>
+          <span data-i18n="filterToggle"></span><span class="ft-count" hidden></span>
+        </button>
         <label class="field">
           <span data-i18n="board"></span>
           <select id="board"></select>
@@ -118,6 +125,8 @@
 
       <div class="chips" id="chips" role="group" data-i18n-aria="kindFilter"></div>
       <div class="chips subchips" id="subchips" role="group" data-i18n-aria="subKindFilter" hidden></div>
+
+      <p class="due-note" id="due-note" hidden></p>
 
       <div class="list-head">
         <p id="count" aria-live="polite"></p>
@@ -164,6 +173,11 @@
           <input type="checkbox" class="hide-control">
           <span data-i18n="hideConflicts"></span>
         </label>
+        <!-- 내 학과 교육과정: 학과를 고르면 요람의 과목이 학년별로 나오고, 누르면 수업 추가 창에 이름이 들어감 -->
+        <details class="curr" id="curr">
+          <summary data-i18n="currTitle"></summary>
+          <div class="curr-body" id="curr-body"></div>
+        </details>
       </section>
 
       <!-- 시간 예산 추천 (휴대폰: '추천' 탭) -->
@@ -271,8 +285,9 @@
 
   <dialog id="detail" aria-labelledby="detail-title" closedby="any">
     <div class="dialog-body" id="detail-body"></div>
-    <form method="dialog" class="dialog-actions">
-      <button class="btn primary" value="close" autofocus data-i18n="close"></button>
+    <form method="dialog" class="dialog-actions detail-actions">
+      <span class="detail-foot" id="detail-foot"></span>
+      <button class="btn" value="close" autofocus data-i18n="close"></button>
     </form>
   </dialog>
 
@@ -282,8 +297,10 @@
       <h2 id="class-dialog-title"></h2>
       <label class="wide">
         <span data-i18n="className"></span>
-        <input type="text" name="name" id="class-name" maxlength="30" autocomplete="off" data-i18n-placeholder="classPlaceholder">
+        <input type="text" name="name" id="class-name" maxlength="30" autocomplete="off" role="combobox" aria-expanded="false" aria-controls="course-suggest" data-i18n-placeholder="classPlaceholder">
       </label>
+      <ul class="wide course-suggest" id="course-suggest" role="listbox" hidden></ul>
+      <p class="wide fine class-extra" id="class-extra" hidden></p>
       <fieldset class="wide day-field">
         <legend><span data-i18n="day"></span> <span class="day-hint" data-i18n="daysHint"></span></legend>
         <div class="day-picks" id="class-days"></div>
@@ -304,6 +321,7 @@
     </form>
     <div class="dialog-actions class-actions">
       <button type="button" class="btn danger" id="class-delete" hidden data-i18n="remove"></button>
+      <button type="button" class="btn" id="class-more" data-i18n="saveMore"></button>
       <button type="button" class="btn" id="class-cancel" data-i18n="cancel"></button>
       <button type="submit" form="class-form" class="btn primary" data-i18n="save"></button>
     </div>
@@ -336,6 +354,10 @@
     <button type="button" class="toast-action" id="toast-action" hidden></button>
   </div>
 
+  <button type="button" class="to-top" id="to-top" hidden data-i18n-aria="toTop">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 19V6M6 12l6-6 6 6"/></svg>
+  </button>
+
   <footer class="footer">
     <p data-i18n="footer"></p>
     <p class="fine"><span data-i18n="footerNote"></span> <span class="data-info"></span></p>
@@ -346,6 +368,8 @@
   <script src="data/glossary.js" onerror="this.remove()"></script>
   <script src="data/calendar.js" onerror="this.remove()"></script>
   <script src="data/config.js" onerror="this.remove()"></script>
+  <script src="data/courses.js" onerror="this.remove()"></script>
+  <script src="data/timetable.js" onerror="this.remove()"></script>
   <script src="js/benefit.js"></script>
   <script src="js/sync.js"></script>
   <script src="js/logic.js"></script>
@@ -356,6 +380,8 @@
   <script src="js/cal.js"></script>
   <script src="js/i18n.js"></script>
   <script src="js/i18n2.js"></script>
+  <script src="js/i18n3.js"></script>
+  <script src="js/curriculum.js"></script>
   <script src="js/theme.js"></script>
   <script src="js/app.js"></script>
 </body>

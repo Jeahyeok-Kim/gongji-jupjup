@@ -10,40 +10,18 @@ X-WR-CALDESC:건국대 GLOCAL캠퍼스 공지의 마감·행사와 학사
 REFRESH-INTERVAL;VALUE=DURATION:PT6H
 X-PUBLISHED-TTL:PT6H
 BEGIN:VEVENT
-UID:2-1-119917-deadline@gongji-jupjup
-DTSTAMP:20261113T062400Z
-DTSTART:20261030T080000Z
-DTEND:20261030T083000Z
-SUMMARY:[마감] 2026학년도 제2기 성신의해외봉사(인도네시
- 아) 선발 공고 안내
-DESCRIPTION:2026년 12월 인도네시아 해외봉사 프로그램에 참
- 여할 수 있는 기회입니다. 마감일은 10월 30일이며\, 자기
- 부담금 약 90만원이 필요합니다.\nhttps://www.kku.ac.kr/cms/FR_C
- ON/BoardView.do?MENU_ID=1750&CONTENTS_NO=&SITE_NO=2&P_TAB_NO=&TAB_NO=&BOAR
- D_SEQ=1&BOARD_CATEGORY_NO=&BBS_SEQ=119917&pageNo=1
-URL:https://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1750&CONTENTS_NO=
- &SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=1&BOARD_CATEGORY_NO=&BBS_SEQ=119917
- &pageNo=1
-CATEGORIES:공모전·대외활동
-BEGIN:VALARM
-ACTION:DISPLAY
-DESCRIPTION:[마감] 2026학년도 제2기 성신의해외봉사(인도네
- 시아) 선발 공고 안내
-TRIGGER:-PT1440M
-END:VALARM
-END:VEVENT
-BEGIN:VEVENT
 UID:2-1-119918-deadline@gongji-jupjup
-DTSTAMP:20261113T062400Z
+DTSTAMP:20261114T075900Z
 DTSTART:20261109T145900Z
 DTEND:20261109T152900Z
 SUMMARY:[마감] [희망사다리] 희망사다리 1유형 장학생 대상
   삼성 청년 SW·AI 아카데미(SSAFY) 17기 교육생 모집 안내
-DESCRIPTION:[희망사다리] 희망사다리 1유형 장학생 대상 삼
- 성 청년 SW·AI 아카데미(SSAFY) 17기 교육생 모집 안내\nhttps
- ://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1750&CONTENTS_NO=&SITE_NO
- =2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=1&BOARD_CATEGORY_NO=&BBS_SEQ=119918&pageNo=
- 1
+DESCRIPTION:삼성 청년 SW·AI 아카데미 17기 교육생을 모집해
+ 요. 4년제 대학 졸업(예정)자가 11월 9일까지 신청하면 ’
+ 26년 2학기 직무기초교육 이수 인정을 받을 수 있어요.\nh
+ ttps://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1750&CONTENTS_NO=&SIT
+ E_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=1&BOARD_CATEGORY_NO=&BBS_SEQ=119918&pag
+ eNo=1
 URL:https://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1750&CONTENTS_NO=
  &SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=1&BOARD_CATEGORY_NO=&BBS_SEQ=119918
  &pageNo=1
@@ -58,16 +36,17 @@ END:VALARM
 END:VEVENT
 BEGIN:VEVENT
 UID:2-1-119919-deadline@gongji-jupjup
-DTSTAMP:20261113T062400Z
+DTSTAMP:20261114T075900Z
 DTSTART:20261112T145900Z
 DTEND:20261112T152900Z
 SUMMARY:[마감] [국가근로] 2026학년도 동계방학 국가근로장
  학금 희망근로지 신청 안내(교내)(10/30~11/12)
-DESCRIPTION:동계방학 국가근로장학금을 지원받고 싶다면 10
- 월 30일부터 11월 12일까지 희망근로지를 신청하세요. 시
- 간당 10\,320원의 장학금이 지급됩니다.\nhttps://www.kku.ac.kr/
- cms/FR_CON/BoardView.do?MENU_ID=1750&CONTENTS_NO=&SITE_NO=2&P_TAB_NO=&TAB_
- NO=&BOARD_SEQ=1&BOARD_CATEGORY_NO=&BBS_SEQ=119919&pageNo=1
+DESCRIPTION:2026학년도 동계방학 국가근로장학금 신청을 안
+ 내해요. 재학생이 10월 30일부터 11월 12일까지 신청하면 
+ 시간당 10\,320원의 장학금을 받고\, 12월 21일부터 2월 22일
+ 까지 근로할 수 있어요.\nhttps://www.kku.ac.kr/cms/FR_CON/BoardVie
+ w.do?MENU_ID=1750&CONTENTS_NO=&SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=1&BOA
+ RD_CATEGORY_NO=&BBS_SEQ=119919&pageNo=1
 URL:https://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1750&CONTENTS_NO=
  &SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=1&BOARD_CATEGORY_NO=&BBS_SEQ=119919
  &pageNo=1
@@ -81,15 +60,16 @@ END:VALARM
 END:VEVENT
 BEGIN:VEVENT
 UID:2-1-119920-deadline@gongji-jupjup
-DTSTAMP:20261113T062400Z
+DTSTAMP:20261114T075900Z
 DTSTART:20261112T090000Z
 DTEND:20261112T093000Z
 SUMMARY:[마감] [국가근로] 2026학년도 동계방학 집중근로 희
  망근로지 신청 안내(10/30~11/12 18:00)
-DESCRIPTION:[국가근로] 2026학년도 동계방학 집중근로 희망
- 근로지 신청 안내(10/30~11/12 18:00)\nhttps://www.kku.ac.kr/cms/FR_C
- ON/BoardView.do?MENU_ID=1750&CONTENTS_NO=&SITE_NO=2&P_TAB_NO=&TAB_NO=&BOAR
- D_SEQ=1&BOARD_CATEGORY_NO=&BBS_SEQ=119920&pageNo=1
+DESCRIPTION:국가근로 희망근로지 신청을 안내해요. 재학생
+ 이 10월 30일부터 11월 12일까지 신청하면 시간당 12\,790원
+ 의 장학금을 받을 수 있어요.\nhttps://www.kku.ac.kr/cms/FR_CON/B
+ oardView.do?MENU_ID=1750&CONTENTS_NO=&SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SE
+ Q=1&BOARD_CATEGORY_NO=&BBS_SEQ=119920&pageNo=1
 URL:https://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1750&CONTENTS_NO=
  &SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=1&BOARD_CATEGORY_NO=&BBS_SEQ=119920
  &pageNo=1
@@ -103,17 +83,16 @@ END:VALARM
 END:VEVENT
 BEGIN:VEVENT
 UID:2-1-119921-deadline@gongji-jupjup
-DTSTAMP:20261113T062400Z
+DTSTAMP:20261114T075900Z
 DTSTART:20261109T090000Z
 DTEND:20261109T093000Z
 SUMMARY:[마감] [교외]  2026년도 하반기 강화군 대학생 등록
  금 지원 사업 안내(~11/9 18:00)
-DESCRIPTION:2026년 하반기 강화군 대학생 등록금 지원 사업
- 이 11월 9일까지 신청 가능하며\, 소득구간에 따라 최대 1
- 00% 등록금을 지원받을 수 있습니다. 지원 대상은 강화군
-  출신 대학생입니다.\nhttps://www.kku.ac.kr/cms/FR_CON/BoardView.do
- ?MENU_ID=1750&CONTENTS_NO=&SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=1&BOARD_C
- ATEGORY_NO=&BBS_SEQ=119921&pageNo=1
+DESCRIPTION:강화군 대학생 등록금 지원 사업 참여자를 모집
+ 해요. 강화군 출신 재학생이 11월 9일까지 신청하면 등록
+ 금의 40~100%를 지원받을 수 있어요.\nhttps://www.kku.ac.kr/cms/F
+ R_CON/BoardView.do?MENU_ID=1750&CONTENTS_NO=&SITE_NO=2&P_TAB_NO=&TAB_NO=&B
+ OARD_SEQ=1&BOARD_CATEGORY_NO=&BBS_SEQ=119921&pageNo=1
 URL:https://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1750&CONTENTS_NO=
  &SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=1&BOARD_CATEGORY_NO=&BBS_SEQ=119921
  &pageNo=1
@@ -126,39 +105,17 @@ TRIGGER:-PT1440M
 END:VALARM
 END:VEVENT
 BEGIN:VEVENT
-UID:2-18-120205-deadline@gongji-jupjup
-DTSTAMP:20261113T062400Z
-DTSTART:20261030T145900Z
-DTEND:20261030T152900Z
-SUMMARY:[마감] 2026학년도 2학기 [혁신] 신입생대상 학습컨
- 설팅 (Cogito대학교육혁신원)
-DESCRIPTION:2026학년도 2학기 신입생 대상 학습컨설팅이 10월
-  30일까지 신청 가능하며\, 다드림 20포인트와 학습유형 
- 검사 결과를 제공합니다.\nhttps://www.kku.ac.kr/cms/FR_CON/BoardV
- iew.do?MENU_ID=1740&CONTENTS_NO=&SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=18&
- BOARD_CATEGORY_NO=&BBS_SEQ=120205&pageNo=1
-URL:https://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1740&CONTENTS_NO=
- &SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=18&BOARD_CATEGORY_NO=&BBS_SEQ=12020
- 5&pageNo=1
-CATEGORIES:다드림 포인트
-BEGIN:VALARM
-ACTION:DISPLAY
-DESCRIPTION:[마감] 2026학년도 2학기 [혁신] 신입생대상 학습
- 컨설팅 (Cogito대학교육혁신원)
-TRIGGER:-PT1440M
-END:VALARM
-END:VEVENT
-BEGIN:VEVENT
 UID:2-18-120208-deadline@gongji-jupjup
-DTSTAMP:20261113T062400Z
+DTSTAMP:20261114T075900Z
 DTSTART:20261105T145900Z
 DTEND:20261105T152900Z
 SUMMARY:[마감] 2026학년도 2학기 교직 적성 및 인성 검사 결
  과 공지 및 재검사 대상 안내
-DESCRIPTION:2026학년도 2학기 교직 적성 및 인성 검사 결과 
- 공지 및 재검사 대상 안내\nhttps://www.kku.ac.kr/cms/FR_CON/Board
- View.do?MENU_ID=1740&CONTENTS_NO=&SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=18
- &BOARD_CATEGORY_NO=&BBS_SEQ=120208&pageNo=1
+DESCRIPTION:학사 관련 공지예요. 대상은 2026학년도 2학기 교
+ 직 적성 및 인성 검사 응시 결과 불합격자 (결시자 제외)
+ 예요. 신청은 11월 5일까지예요.\nhttps://www.kku.ac.kr/cms/FR_CO
+ N/BoardView.do?MENU_ID=1740&CONTENTS_NO=&SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD
+ _SEQ=18&BOARD_CATEGORY_NO=&BBS_SEQ=120208&pageNo=1
 URL:https://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1740&CONTENTS_NO=
  &SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=18&BOARD_CATEGORY_NO=&BBS_SEQ=12020
  8&pageNo=1
@@ -171,40 +128,17 @@ TRIGGER:-PT1440M
 END:VALARM
 END:VEVENT
 BEGIN:VEVENT
-UID:2-18-120209-deadline@gongji-jupjup
-DTSTAMP:20261113T062400Z
-DTSTART:20261030T145900Z
-DTEND:20261030T152900Z
-SUMMARY:[마감] 2026학년도 2학기 중간고사 및 성적처리 일정
-  안내
-DESCRIPTION:중간고사는 10월 19일부터 23일까지 진행되며\, 
- 성적입력은 10월 19일 10시부터 10월 30일 24시까지입니다. 
- 성적에 이의가 있는 경우 11월 2일 10시부터 11월 3일 17시
- 까지 이의신청이 가능합니다.\nhttps://www.kku.ac.kr/cms/FR_CON/
- BoardView.do?MENU_ID=1740&CONTENTS_NO=&SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_S
- EQ=18&BOARD_CATEGORY_NO=&BBS_SEQ=120209&pageNo=1
-URL:https://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1740&CONTENTS_NO=
- &SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=18&BOARD_CATEGORY_NO=&BBS_SEQ=12020
- 9&pageNo=1
-CATEGORIES:학사
-BEGIN:VALARM
-ACTION:DISPLAY
-DESCRIPTION:[마감] 2026학년도 2학기 중간고사 및 성적처리 
- 일정 안내
-TRIGGER:-PT1440M
-END:VALARM
-END:VEVENT
-BEGIN:VEVENT
 UID:2-18-120211-deadline@gongji-jupjup
-DTSTAMP:20261113T062400Z
+DTSTAMP:20261114T075900Z
 DTSTART:20261031T145900Z
 DTEND:20261031T152900Z
 SUMMARY:[마감] 2026학년도 Cogito 재학생 핵심역량 진단 참여 
  안내
-DESCRIPTION:2026년 10월 31일까지 핵심역량 진단을 완료하면 
- 다드림 40dp를 받을 수 있습니다.\nhttps://www.kku.ac.kr/cms/FR_C
- ON/BoardView.do?MENU_ID=1740&CONTENTS_NO=&SITE_NO=2&P_TAB_NO=&TAB_NO=&BOAR
- D_SEQ=18&BOARD_CATEGORY_NO=&BBS_SEQ=120211&pageNo=1
+DESCRIPTION:재학생 핵심역량 진단 참여를 안내해요. 재학생
+ \, 편입생\, 졸업유예자\, 휴학생 등이 10월 31일까지 참여
+ 하면 다드림 40dp를 받을 수 있어요.\nhttps://www.kku.ac.kr/cms/
+ FR_CON/BoardView.do?MENU_ID=1740&CONTENTS_NO=&SITE_NO=2&P_TAB_NO=&TAB_NO=&
+ BOARD_SEQ=18&BOARD_CATEGORY_NO=&BBS_SEQ=120211&pageNo=1
 URL:https://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1740&CONTENTS_NO=
  &SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=18&BOARD_CATEGORY_NO=&BBS_SEQ=12021
  1&pageNo=1
@@ -218,15 +152,16 @@ END:VALARM
 END:VEVENT
 BEGIN:VEVENT
 UID:2-18-120215-deadline@gongji-jupjup
-DTSTAMP:20261113T062400Z
+DTSTAMP:20261114T075900Z
 DTSTART:20261231T145900Z
 DTEND:20261231T152900Z
 SUMMARY:[마감] 2026학년도 KINO교육과정 우수사례 UCC 공모전 
  안내
-DESCRIPTION:최우수상은 100만원\, 우수상은 80만원의 상금을 
- 받을 수 있습니다.\nhttps://www.kku.ac.kr/cms/FR_CON/BoardView.do?ME
- NU_ID=1740&CONTENTS_NO=&SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=18&BOARD_CAT
- EGORY_NO=&BBS_SEQ=120215&pageNo=1
+DESCRIPTION:KINO교육과정 우수사례 UCC 공모전 참여자를 모집
+ 해요. 재학생이 12월 1일부터 12월 31일까지 신청하면 학
+ 점 추가 기회를 가질 수 있어요.\nhttps://www.kku.ac.kr/cms/FR_C
+ ON/BoardView.do?MENU_ID=1740&CONTENTS_NO=&SITE_NO=2&P_TAB_NO=&TAB_NO=&BOAR
+ D_SEQ=18&BOARD_CATEGORY_NO=&BBS_SEQ=120215&pageNo=1
 URL:https://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1740&CONTENTS_NO=
  &SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=18&BOARD_CATEGORY_NO=&BBS_SEQ=12021
  5&pageNo=1
@@ -240,15 +175,16 @@ END:VALARM
 END:VEVENT
 BEGIN:VEVENT
 UID:2-18-120216-deadline@gongji-jupjup
-DTSTAMP:20261113T062400Z
+DTSTAMP:20261114T075900Z
 DTSTART:20261127T145900Z
 DTEND:20261127T152900Z
 SUMMARY:[마감] [교양교육센터] 2026학년도 2학기 A+리포트클
  리닉 신청 안내
-DESCRIPTION:A+리포트클리닉 신청 마감일은 2026년 11월 27일입
- 니다. 다드림포인트 20DP를 받을 수 있습니다.\nhttps://www.k
- ku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1740&CONTENTS_NO=&SITE_NO=2&P_TAB
- _NO=&TAB_NO=&BOARD_SEQ=18&BOARD_CATEGORY_NO=&BBS_SEQ=120216&pageNo=1
+DESCRIPTION:A+리포트클리닉 참여자를 모집해요. 재학생이 11
+ 월 27일까지 신청하면 다드림포인트 20점을 받아요.\nhttps
+ ://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1740&CONTENTS_NO=&SITE_NO
+ =2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=18&BOARD_CATEGORY_NO=&BBS_SEQ=120216&pageNo
+ =1
 URL:https://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1740&CONTENTS_NO=
  &SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=18&BOARD_CATEGORY_NO=&BBS_SEQ=12021
  6&pageNo=1
@@ -261,38 +197,19 @@ TRIGGER:-PT1440M
 END:VALARM
 END:VEVENT
 BEGIN:VEVENT
-UID:2-18-120218-deadline@gongji-jupjup
-DTSTAMP:20261113T062400Z
-DTSTART:20261030T070000Z
-DTEND:20261030T073000Z
-SUMMARY:[마감] 2026학년도 동계 계절학기 운영 계획 안내
-DESCRIPTION:2026년 동계 계절학기 수강 신청 마감일은 10월 30
- 일이며\, 학부 재학생 및 휴학생이 최대 6학점까지 수강
- 할 수 있습니다.\nhttps://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_
- ID=1740&CONTENTS_NO=&SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=18&BOARD_CATEGO
- RY_NO=&BBS_SEQ=120218&pageNo=1
-URL:https://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1740&CONTENTS_NO=
- &SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=18&BOARD_CATEGORY_NO=&BBS_SEQ=12021
- 8&pageNo=1
-CATEGORIES:학사
-BEGIN:VALARM
-ACTION:DISPLAY
-DESCRIPTION:[마감] 2026학년도 동계 계절학기 운영 계획 안내
-TRIGGER:-PT1440M
-END:VALARM
-END:VEVENT
-BEGIN:VEVENT
 UID:2-18-120219-deadline@gongji-jupjup
-DTSTAMP:20261113T062400Z
+DTSTAMP:20261114T075900Z
 DTSTART:20261101T145900Z
 DTEND:20261101T152900Z
 SUMMARY:[마감] 2026학년도 2학기 [혁신] 혁신교수법 워크숍 (
  2차) 학생의 참여와 몰입을 높이는 학습자 중심 수업 설
  계: ARCS 기반 실전 교수전략 (AIX대학교육혁신원)
-DESCRIPTION:혁신교수법 워크숍에 참여하면 교수법을 배울 
- 수 있어요.\nhttps://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1740
- &CONTENTS_NO=&SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=18&BOARD_CATEGORY_NO=&
- BBS_SEQ=120219&pageNo=1
+DESCRIPTION:혁신교수법 워크숍 참여자를 모집해요. 2학기 
+ 수업하는 전임 및 비전임교수가 11월 1일까지 신청하면 A
+ RCS 기반 교수전략을 배우고 12점의 다드림 포인트를 받
+ 을 수 있어요.\nhttps://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=
+ 1740&CONTENTS_NO=&SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=18&BOARD_CATEGORY_
+ NO=&BBS_SEQ=120219&pageNo=1
 URL:https://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1740&CONTENTS_NO=
  &SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=18&BOARD_CATEGORY_NO=&BBS_SEQ=12021
  9&pageNo=1
@@ -307,16 +224,18 @@ END:VALARM
 END:VEVENT
 BEGIN:VEVENT
 UID:2-18-120220-deadline@gongji-jupjup
-DTSTAMP:20261113T062400Z
+DTSTAMP:20261114T075900Z
 DTSTART:20261122T145900Z
 DTEND:20261122T152900Z
 SUMMARY:[마감] 2026학년도 2학기 [혁신] 혁신교수법워크숍 (3
  차) 참여가 살아나는 수업 : 게이미피케이션 기반 수업 
  설계 및 적용 실습 (AIX대학교육혁신원)
-DESCRIPTION:11월 25일에 진행되는 혁신교수법 워크숍에 참여
- 하면 다드림 포인트 3시간을 받을 수 있어요.\nhttps://www.k
- ku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1740&CONTENTS_NO=&SITE_NO=2&P_TAB
- _NO=&TAB_NO=&BOARD_SEQ=18&BOARD_CATEGORY_NO=&BBS_SEQ=120220&pageNo=1
+DESCRIPTION:혁신교수법 워크숍 참여자를 모집해요. 2학기 
+ 수업하는 전임 및 비전임교수는 11월 22일까지 신청하면 
+ 다드림 포인트 3시간과 수업참여 인정을 받고\, 11월 25일
+  12시~2시에 글로컬이음관에서 참여해요.\nhttps://www.kku.ac.
+ kr/cms/FR_CON/BoardView.do?MENU_ID=1740&CONTENTS_NO=&SITE_NO=2&P_TAB_NO=&T
+ AB_NO=&BOARD_SEQ=18&BOARD_CATEGORY_NO=&BBS_SEQ=120220&pageNo=1
 URL:https://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1740&CONTENTS_NO=
  &SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=18&BOARD_CATEGORY_NO=&BBS_SEQ=12022
  0&pageNo=1
@@ -331,16 +250,18 @@ END:VALARM
 END:VEVENT
 BEGIN:VEVENT
 UID:2-18-120220-event0@gongji-jupjup
-DTSTAMP:20261113T062400Z
+DTSTAMP:20261114T075900Z
 DTSTART:20261125T030000Z
 DTEND:20261125T050000Z
 SUMMARY:2026학년도 2학기 [혁신] 혁신교수법워크숍 (3차) 참
  여가 살아나는 수업 : 게이미피케이션 기반 수업 설계 
  및 적용 실습 (AIX대학교육혁신원)
-DESCRIPTION:11월 25일에 진행되는 혁신교수법 워크숍에 참여
- 하면 다드림 포인트 3시간을 받을 수 있어요.\nhttps://www.k
- ku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1740&CONTENTS_NO=&SITE_NO=2&P_TAB
- _NO=&TAB_NO=&BOARD_SEQ=18&BOARD_CATEGORY_NO=&BBS_SEQ=120220&pageNo=1
+DESCRIPTION:혁신교수법 워크숍 참여자를 모집해요. 2학기 
+ 수업하는 전임 및 비전임교수는 11월 22일까지 신청하면 
+ 다드림 포인트 3시간과 수업참여 인정을 받고\, 11월 25일
+  12시~2시에 글로컬이음관에서 참여해요.\nhttps://www.kku.ac.
+ kr/cms/FR_CON/BoardView.do?MENU_ID=1740&CONTENTS_NO=&SITE_NO=2&P_TAB_NO=&T
+ AB_NO=&BOARD_SEQ=18&BOARD_CATEGORY_NO=&BBS_SEQ=120220&pageNo=1
 URL:https://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1740&CONTENTS_NO=
  &SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=18&BOARD_CATEGORY_NO=&BBS_SEQ=12022
  0&pageNo=1
@@ -354,38 +275,17 @@ TRIGGER:-PT60M
 END:VALARM
 END:VEVENT
 BEGIN:VEVENT
-UID:2-18-120222-deadline@gongji-jupjup
-DTSTAMP:20261113T062400Z
-DTSTART:20261030T070000Z
-DTEND:20261030T073000Z
-SUMMARY:[마감] 2026학년도 동계 계절학기 예비수강신청 안
- 내
-DESCRIPTION:2026학년도 동계 계절학기 예비수강신청은 10월 2
- 6일부터 30일까지 진행됩니다. 전공/교직 교과목은 학과
- 에 이메일로 신청해야 합니다.\nhttps://www.kku.ac.kr/cms/FR_CON
- /BoardView.do?MENU_ID=1740&CONTENTS_NO=&SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_
- SEQ=18&BOARD_CATEGORY_NO=&BBS_SEQ=120222&pageNo=1
-URL:https://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1740&CONTENTS_NO=
- &SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=18&BOARD_CATEGORY_NO=&BBS_SEQ=12022
- 2&pageNo=1
-CATEGORIES:학사
-BEGIN:VALARM
-ACTION:DISPLAY
-DESCRIPTION:[마감] 2026학년도 동계 계절학기 예비수강신청 
- 안내
-TRIGGER:-PT1440M
-END:VALARM
-END:VEVENT
-BEGIN:VEVENT
 UID:2-18-120226-deadline@gongji-jupjup
-DTSTAMP:20261113T062400Z
+DTSTAMP:20261114T075900Z
 DTSTART:20261204T145900Z
 DTEND:20261204T152900Z
 SUMMARY:[마감] 2027년 2월 교원자격 무시험검정 신청 안내
-DESCRIPTION:서류 제출이 완료되지 않으면 2027년 2월 자격증 
- 발급이 불가능합니다.\nhttps://www.kku.ac.kr/cms/FR_CON/BoardView.
- do?MENU_ID=1740&CONTENTS_NO=&SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=18&BOAR
- D_CATEGORY_NO=&BBS_SEQ=120226&pageNo=1
+DESCRIPTION:교원자격증 발급 신청을 안내해요. 유아교육과 
+ 학생 및 교직과정 이수자가 2026년 11월 18일부터 12월 4일
+ 까지 서류를 제출하면 2027년 2월에 자격증이 발급됩니다
+ .\nhttps://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1740&CONTENTS_NO=
+ &SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=18&BOARD_CATEGORY_NO=&BBS_SEQ=12022
+ 6&pageNo=1
 URL:https://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1740&CONTENTS_NO=
  &SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=18&BOARD_CATEGORY_NO=&BBS_SEQ=12022
  6&pageNo=1
@@ -399,16 +299,17 @@ END:VALARM
 END:VEVENT
 BEGIN:VEVENT
 UID:2-18-120227-deadline@gongji-jupjup
-DTSTAMP:20261113T062400Z
+DTSTAMP:20261114T075900Z
 DTSTART:20261120T145900Z
 DTEND:20261120T152900Z
 SUMMARY:[마감] [AIX대학교육혁신원] AI  교과 연계 프로젝트 
  공모전
-DESCRIPTION:AI 프로젝트 공모전에 참여하면 최대 50만원의 
- 장학금을 받을 수 있어요. 마감일은 2026년 11월 20일입니
- 다.\nhttps://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1740&CONTENTS_
- NO=&SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=18&BOARD_CATEGORY_NO=&BBS_SEQ=12
- 0227&pageNo=1
+DESCRIPTION:AI 교과 연계 프로젝트 공모전 참여자를 모집해
+ 요. 재학생 및 AI 수강생이 11월 20일까지 이음교육시스템
+ 에서 신청하면 최대 50만원의 장학금을 받을 수 있어요.\
+ nhttps://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1740&CONTENTS_NO=&S
+ ITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=18&BOARD_CATEGORY_NO=&BBS_SEQ=120227&
+ pageNo=1
 URL:https://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1740&CONTENTS_NO=
  &SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=18&BOARD_CATEGORY_NO=&BBS_SEQ=12022
  7&pageNo=1
@@ -422,16 +323,17 @@ END:VALARM
 END:VEVENT
 BEGIN:VEVENT
 UID:2-18-120229-deadline@gongji-jupjup
-DTSTAMP:20261113T062400Z
+DTSTAMP:20261114T075900Z
 DTSTART:20261109T145900Z
 DTEND:20261109T152900Z
 SUMMARY:[마감] 2026학년도 2학기 교원양성과정 성인지교육 
  시행 안내(대면 강의 강사 변경)
-DESCRIPTION:2026학년도 2학기 성인지 교육을 이수해야 하며\,
-  대면 및 비대면 강의 모두 이수해야 인정됩니다. 마감
- 일은 11월 9일입니다.\nhttps://www.kku.ac.kr/cms/FR_CON/BoardView.do
- ?MENU_ID=1740&CONTENTS_NO=&SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=18&BOARD_
- CATEGORY_NO=&BBS_SEQ=120229&pageNo=1
+DESCRIPTION:성인지교육 이수를 안내하는 공지예요. 교원양
+ 성과정 재학생이 11월 9일까지 신청하면 대면 강의와 비
+ 대면 강의 모두 이수해야 하며\, 각 주제별 동영상 진행
+ 률 90% 이상이 있어야 해요.\nhttps://www.kku.ac.kr/cms/FR_CON/Boar
+ dView.do?MENU_ID=1740&CONTENTS_NO=&SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=1
+ 8&BOARD_CATEGORY_NO=&BBS_SEQ=120229&pageNo=1
 URL:https://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1740&CONTENTS_NO=
  &SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=18&BOARD_CATEGORY_NO=&BBS_SEQ=12022
  9&pageNo=1
@@ -445,15 +347,16 @@ END:VALARM
 END:VEVENT
 BEGIN:VEVENT
 UID:2-18-120230-deadline@gongji-jupjup
-DTSTAMP:20261113T062400Z
+DTSTAMP:20261114T075900Z
 DTSTART:20261211T145900Z
 DTEND:20261211T152900Z
 SUMMARY:[마감] 2026학년도 2학기 교직 특강 시행 안내
-DESCRIPTION:2026학년도 2학기 교직 특강이 11월 2일부터 시작
- 됩니다. 교원양성과정을 이수하는 학생이라면 참여할 
- 수 있습니다.\nhttps://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1
- 740&CONTENTS_NO=&SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=18&BOARD_CATEGORY_N
- O=&BBS_SEQ=120230&pageNo=1
+DESCRIPTION:교직 특강 수강자를 모집하는 공지예요. 교원양
+ 성과정을 이수중인 학생이 12월 11일까지 신청하면 동영
+ 상 강의를 시청하고\, 90% 이상 진행해야 인정받아요.\nhtt
+ ps://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1740&CONTENTS_NO=&SITE_
+ NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=18&BOARD_CATEGORY_NO=&BBS_SEQ=120230&page
+ No=1
 URL:https://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1740&CONTENTS_NO=
  &SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=18&BOARD_CATEGORY_NO=&BBS_SEQ=12023
  0&pageNo=1
@@ -466,16 +369,17 @@ END:VALARM
 END:VEVENT
 BEGIN:VEVENT
 UID:2-18-120231-deadline@gongji-jupjup
-DTSTAMP:20261113T062400Z
+DTSTAMP:20261114T075900Z
 DTSTART:20261113T145900Z
 DTEND:20261113T152900Z
 SUMMARY:[마감] 2027학년도 학교현장실습(교육실습) 설명회 
  안내
-DESCRIPTION:2027학년도 학교현장실습 설명회에 참여할 수 있
- 으며\, 11월 13일까지 교직과 메일로 신청해야 합니다.\nht
- tps://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1740&CONTENTS_NO=&SITE
- _NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=18&BOARD_CATEGORY_NO=&BBS_SEQ=120231&pag
- eNo=1
+DESCRIPTION:학교현장실습 설명회 참여자를 모집해요. 2027학
+ 년도 신청 예정자인 일반교직과정 이수자와 교육대학원
+ 생이 11월 13일까지 교직과 메일로 신청하면 11월 23일에 
+ 온라인으로 참여할 수 있어요.\nhttps://www.kku.ac.kr/cms/FR_CON
+ /BoardView.do?MENU_ID=1740&CONTENTS_NO=&SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_
+ SEQ=18&BOARD_CATEGORY_NO=&BBS_SEQ=120231&pageNo=1
 URL:https://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1740&CONTENTS_NO=
  &SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=18&BOARD_CATEGORY_NO=&BBS_SEQ=12023
  1&pageNo=1
@@ -489,16 +393,16 @@ END:VALARM
 END:VEVENT
 BEGIN:VEVENT
 UID:2-18-120232-deadline@gongji-jupjup
-DTSTAMP:20261113T062400Z
+DTSTAMP:20261114T075900Z
 DTSTART:20261103T145900Z
 DTEND:20261103T152900Z
 SUMMARY:[마감] 2026학년도 2학기 [혁신] KU STAR 학습클리닉 A
  반 (AIX대학교육혁신원)
-DESCRIPTION:11월 3일까지 신청하면 다드림 20포인트와 학습
- 전략검사 결과를 제공받을 수 있는 학습클리닉 A반 참여
-  기회입니다.\nhttps://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1
- 740&CONTENTS_NO=&SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=18&BOARD_CATEGORY_N
- O=&BBS_SEQ=120232&pageNo=1
+DESCRIPTION:학습클리닉 A반 참여자를 모집해요. 재학생이 11
+ 월 3일까지 신청하면 다드림 20포인트와 MLST-II 검사 결과
+ 를 제공받아요.\nhttps://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_I
+ D=1740&CONTENTS_NO=&SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=18&BOARD_CATEGOR
+ Y_NO=&BBS_SEQ=120232&pageNo=1
 URL:https://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1740&CONTENTS_NO=
  &SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=18&BOARD_CATEGORY_NO=&BBS_SEQ=12023
  2&pageNo=1
@@ -512,16 +416,17 @@ END:VALARM
 END:VEVENT
 BEGIN:VEVENT
 UID:2-18-120233-deadline@gongji-jupjup
-DTSTAMP:20261113T062400Z
+DTSTAMP:20261114T075900Z
 DTSTART:20261103T145900Z
 DTEND:20261103T152900Z
 SUMMARY:[마감] 2026학년도 2학기 [혁신] KU STAR 학습클리닉 B
  반 (AIX대학교육혁신원)
-DESCRIPTION:2026년 11월 3일까지 신청 가능하며\, 총 3회 상담
- 에 참여하면 다드림 60포인트를 받을 수 있는 학습클리
- 닉 프로그램입니다.\nhttps://www.kku.ac.kr/cms/FR_CON/BoardView.do?
- MENU_ID=1740&CONTENTS_NO=&SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=18&BOARD_C
- ATEGORY_NO=&BBS_SEQ=120233&pageNo=1
+DESCRIPTION:학습클리닉 B반 참여자를 모집해요. 2026-1학기 
+ 학사경과자와 휴학 전 학사경고자가 11월 3일까지 신청
+ 하면 다드림60p를 받고\, 11월 3일부터 12월 11일까지 운영
+ 되요.\nhttps://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1740&CONTEN
+ TS_NO=&SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=18&BOARD_CATEGORY_NO=&BBS_SEQ
+ =120233&pageNo=1
 URL:https://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1740&CONTENTS_NO=
  &SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=18&BOARD_CATEGORY_NO=&BBS_SEQ=12023
  3&pageNo=1
@@ -535,16 +440,16 @@ END:VALARM
 END:VEVENT
 BEGIN:VEVENT
 UID:2-18-120235-deadline@gongji-jupjup
-DTSTAMP:20261113T062400Z
+DTSTAMP:20261114T075900Z
 DTSTART:20261127T145900Z
 DTEND:20261127T152900Z
 SUMMARY:[마감] [AIX대학교육혁신원] 2026학년도 2학기 K-MOOC 
  성과 공유 워크숍 신청 안내
-DESCRIPTION:2026년 12월 10일에 열리는 K-MOOC 성과 공유 워크숍
- 에 참여하면 다드림포인트 15DP와 도시락을 받을 수 있습
- 니다. 마감은 11월 27일입니다.\nhttps://www.kku.ac.kr/cms/FR_CON/
- BoardView.do?MENU_ID=1740&CONTENTS_NO=&SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_S
- EQ=18&BOARD_CATEGORY_NO=&BBS_SEQ=120235&pageNo=1
+DESCRIPTION:K-MOOC 성과 공유 워크숍 참여자를 모집해요. 본
+ 교 재학생이 11월 27일까지 신청하면 다드림포인트 15DP와
+  도시락을 제공받아요.\nhttps://www.kku.ac.kr/cms/FR_CON/BoardView
+ .do?MENU_ID=1740&CONTENTS_NO=&SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=18&BOA
+ RD_CATEGORY_NO=&BBS_SEQ=120235&pageNo=1
 URL:https://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1740&CONTENTS_NO=
  &SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=18&BOARD_CATEGORY_NO=&BBS_SEQ=12023
  5&pageNo=1
@@ -558,15 +463,15 @@ END:VALARM
 END:VEVENT
 BEGIN:VEVENT
 UID:2-18-120236-deadline@gongji-jupjup
-DTSTAMP:20261113T062400Z
+DTSTAMP:20261114T075900Z
 DTSTART:20261108T145900Z
 DTEND:20261108T152900Z
 SUMMARY:[마감] [AIX대학교육혁신원] 강의우수 교수 수업나
  눔 포럼 신청 안내(교수 대상)
-DESCRIPTION:[AIX대학교육혁신원] 강의우수 교수 수업나눔 포
- 럼 신청 안내(교수 대상)\nhttps://www.kku.ac.kr/cms/FR_CON/BoardVi
- ew.do?MENU_ID=1740&CONTENTS_NO=&SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=18&B
- OARD_CATEGORY_NO=&BBS_SEQ=120236&pageNo=1
+DESCRIPTION:학사 관련 공지예요. 혜택은 다드림 포인트 50점
+ \, 수료증 발급이에요. 신청은 11월 8일까지예요.\nhttps://w
+ ww.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1740&CONTENTS_NO=&SITE_NO=2&P
+ _TAB_NO=&TAB_NO=&BOARD_SEQ=18&BOARD_CATEGORY_NO=&BBS_SEQ=120236&pageNo=1
 URL:https://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1740&CONTENTS_NO=
  &SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=18&BOARD_CATEGORY_NO=&BBS_SEQ=12023
  6&pageNo=1
@@ -580,16 +485,16 @@ END:VALARM
 END:VEVENT
 BEGIN:VEVENT
 UID:2-18-120239-deadline@gongji-jupjup
-DTSTAMP:20261113T062400Z
+DTSTAMP:20261114T075900Z
 DTSTART:20261120T145900Z
 DTEND:20261120T152900Z
 SUMMARY:[마감] 2026학년도 2학기 졸업대상자 예비졸업사정 
  결과 확인 안내
-DESCRIPTION:2026학년도 2학기 졸업대상자는 11월 9일부터 11월
-  20일까지 예비졸업사정 결과를 확인해야 합니다. 합격 
- 여부와 학과 코멘트를 확인해 주세요.\nhttps://www.kku.ac.kr/
- cms/FR_CON/BoardView.do?MENU_ID=1740&CONTENTS_NO=&SITE_NO=2&P_TAB_NO=&TAB_
- NO=&BOARD_SEQ=18&BOARD_CATEGORY_NO=&BBS_SEQ=120239&pageNo=1
+DESCRIPTION:2026학년도 2학기 졸업대상자 예비졸업사정 결과
+ 를 확인할 수 있는 안내예요. 졸업대상자가 11월 9일부터
+  20일까지 학사정보시스템에서 결과를 확인해요.\nhttps://
+ www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1740&CONTENTS_NO=&SITE_NO=2&
+ P_TAB_NO=&TAB_NO=&BOARD_SEQ=18&BOARD_CATEGORY_NO=&BBS_SEQ=120239&pageNo=1
 URL:https://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1740&CONTENTS_NO=
  &SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=18&BOARD_CATEGORY_NO=&BBS_SEQ=12023
  9&pageNo=1
@@ -603,16 +508,16 @@ END:VALARM
 END:VEVENT
 BEGIN:VEVENT
 UID:2-18-120241-deadline@gongji-jupjup
-DTSTAMP:20261113T062400Z
+DTSTAMP:20261114T075900Z
 DTSTART:20261129T145900Z
 DTEND:20261129T152900Z
 SUMMARY:[마감] [AIX대학교육혁신원] 2026학년도 2학기 K-MOOC 
  강좌 홍보 아이디어 공모전 신청 안내
-DESCRIPTION:2026년 11월 29일까지 K-MOOC 강좌 홍보 아이디어 공
- 모전에 참여하면 최대 25만 원 상금을 받을 수 있습니다.
- \nhttps://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1740&CONTENTS_NO=&
- SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=18&BOARD_CATEGORY_NO=&BBS_SEQ=120241
- &pageNo=1
+DESCRIPTION:K-MOOC 강좌 홍보 아이디어 공모전 참여자를 모집
+ 해요. 재학생이 11월 29일까지 신청하면 시상금을 받을 
+ 수 있어요.\nhttps://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1740
+ &CONTENTS_NO=&SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=18&BOARD_CATEGORY_NO=&
+ BBS_SEQ=120241&pageNo=1
 URL:https://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1740&CONTENTS_NO=
  &SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=18&BOARD_CATEGORY_NO=&BBS_SEQ=12024
  1&pageNo=1
@@ -626,15 +531,16 @@ END:VALARM
 END:VEVENT
 BEGIN:VEVENT
 UID:2-18-120244-deadline@gongji-jupjup
-DTSTAMP:20261113T062400Z
+DTSTAMP:20261114T075900Z
 DTSTART:20261120T145900Z
 DTEND:20261120T152900Z
 SUMMARY:[마감] 2026 학생상담센터 상담 프로그램 참여수기 
  공모전
-DESCRIPTION:2026년 11월 20일까지 상담 경험을 공모전에 제출
- 하면 다드림 포인트와 기념품을 받을 수 있어요.\nhttps://
- www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1740&CONTENTS_NO=&SITE_NO=2&
- P_TAB_NO=&TAB_NO=&BOARD_SEQ=18&BOARD_CATEGORY_NO=&BBS_SEQ=120244&pageNo=1
+DESCRIPTION:다드림 포인트 관련 공지예요. 혜택은 다드림 
+ 포인트 및 기념품 제공이에요. 신청은 11월 20일까지예요
+ .\nhttps://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1740&CONTENTS_NO=
+ &SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=18&BOARD_CATEGORY_NO=&BBS_SEQ=12024
+ 4&pageNo=1
 URL:https://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1740&CONTENTS_NO=
  &SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=18&BOARD_CATEGORY_NO=&BBS_SEQ=12024
  4&pageNo=1
@@ -648,15 +554,15 @@ END:VALARM
 END:VEVENT
 BEGIN:VEVENT
 UID:2-18-120245-deadline@gongji-jupjup
-DTSTAMP:20261113T062400Z
+DTSTAMP:20261114T075900Z
 DTSTART:20261120T145900Z
 DTEND:20261120T152900Z
 SUMMARY:[마감] 2026학년도 동계 계절학기 본수강신청 안내
-DESCRIPTION:2026학년도 동계 계절학기 수강신청은 11월 16일
- 부터 20일까지 진행되며\, 최대 6학점까지 신청할 수 있
- 습니다. 수업료는 학점당 95\,000원입니다.\nhttps://www.kku.ac
- .kr/cms/FR_CON/BoardView.do?MENU_ID=1740&CONTENTS_NO=&SITE_NO=2&P_TAB_NO=&
- TAB_NO=&BOARD_SEQ=18&BOARD_CATEGORY_NO=&BBS_SEQ=120245&pageNo=1
+DESCRIPTION:2026학년도 동계 계절학기 수강신청을 안내해요.
+  재학생과 휴학생이 11월 20일까지 신청하면 수업료를 학
+ 점당 95\,000원 내고 12월 21일부터 개강해요.\nhttps://www.kku.
+ ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1740&CONTENTS_NO=&SITE_NO=2&P_TAB_NO
+ =&TAB_NO=&BOARD_SEQ=18&BOARD_CATEGORY_NO=&BBS_SEQ=120245&pageNo=1
 URL:https://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1740&CONTENTS_NO=
  &SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=18&BOARD_CATEGORY_NO=&BBS_SEQ=12024
  5&pageNo=1
@@ -670,14 +576,16 @@ END:VALARM
 END:VEVENT
 BEGIN:VEVENT
 UID:2-19-120009-deadline@gongji-jupjup
-DTSTAMP:20261113T062400Z
+DTSTAMP:20261114T075900Z
 DTSTART:20261126T145900Z
 DTEND:20261126T152900Z
 SUMMARY:[마감] 「2026 랜선으로 만나는 릴레이 글로벌 취·
  창업 톡톡톡(talk)」
-DESCRIPTION:참여 대상은 참여대학 재학생이에요.\nhttps://www.
- kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1770&CONTENTS_NO=&SITE_NO=2&P_TA
- B_NO=&TAB_NO=&BOARD_SEQ=19&BOARD_CATEGORY_NO=&BBS_SEQ=120009&pageNo=1
+DESCRIPTION:글로벌 취창업 특강 참여자를 모집해요. 재학생
+ 이 11월 26일까지 신청하면 선착순 300명에게 특강을 제공
+ 해요.\nhttps://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1770&CONTEN
+ TS_NO=&SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=19&BOARD_CATEGORY_NO=&BBS_SEQ
+ =120009&pageNo=1
 URL:https://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1770&CONTENTS_NO=
  &SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=19&BOARD_CATEGORY_NO=&BBS_SEQ=12000
  9&pageNo=1
@@ -691,16 +599,18 @@ END:VALARM
 END:VEVENT
 BEGIN:VEVENT
 UID:2-19-120013-deadline@gongji-jupjup
-DTSTAMP:20261113T062400Z
+DTSTAMP:20261114T075900Z
 DTSTART:20261103T145900Z
 DTEND:20261103T152900Z
 SUMMARY:[마감] [한국고용정보원 X 건국대 글로컬] 직속 선
  배(26.2 졸업) 농심 현직자 멘토링 & 면접 특강 참여자 모
  집
-DESCRIPTION:2026년 11월 3일 농심 현직자 멘토링 & 면접 특강
- 에 참여할 수 있습니다. 공결증이 발급됩니다.\nhttps://www
- .kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1770&CONTENTS_NO=&SITE_NO=2&P_T
- AB_NO=&TAB_NO=&BOARD_SEQ=19&BOARD_CATEGORY_NO=&BBS_SEQ=120013&pageNo=1
+DESCRIPTION:직속 선배 멘토링 및 면접 특강 참여자를 모집
+ 해요. 글로컬캠 재학생과 지역 청년이 11월 3일까지 신청
+ 하면 공결증 발급 가능하고\, 11월 3일 14시부터 17시까지 
+ 이승진홀에서 진행해요.\nhttps://www.kku.ac.kr/cms/FR_CON/BoardVi
+ ew.do?MENU_ID=1770&CONTENTS_NO=&SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=19&B
+ OARD_CATEGORY_NO=&BBS_SEQ=120013&pageNo=1
 URL:https://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1770&CONTENTS_NO=
  &SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=19&BOARD_CATEGORY_NO=&BBS_SEQ=12001
  3&pageNo=1
@@ -715,15 +625,17 @@ END:VALARM
 END:VEVENT
 BEGIN:VEVENT
 UID:2-19-120013-event0@gongji-jupjup
-DTSTAMP:20261113T062400Z
+DTSTAMP:20261114T075900Z
 DTSTART:20261103T050000Z
 DTEND:20261103T080000Z
 SUMMARY:[한국고용정보원 X 건국대 글로컬] 직속 선배(26.2 
  졸업) 농심 현직자 멘토링 & 면접 특강 참여자 모집
-DESCRIPTION:2026년 11월 3일 농심 현직자 멘토링 & 면접 특강
- 에 참여할 수 있습니다. 공결증이 발급됩니다.\nhttps://www
- .kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1770&CONTENTS_NO=&SITE_NO=2&P_T
- AB_NO=&TAB_NO=&BOARD_SEQ=19&BOARD_CATEGORY_NO=&BBS_SEQ=120013&pageNo=1
+DESCRIPTION:직속 선배 멘토링 및 면접 특강 참여자를 모집
+ 해요. 글로컬캠 재학생과 지역 청년이 11월 3일까지 신청
+ 하면 공결증 발급 가능하고\, 11월 3일 14시부터 17시까지 
+ 이승진홀에서 진행해요.\nhttps://www.kku.ac.kr/cms/FR_CON/BoardVi
+ ew.do?MENU_ID=1770&CONTENTS_NO=&SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=19&B
+ OARD_CATEGORY_NO=&BBS_SEQ=120013&pageNo=1
 URL:https://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1770&CONTENTS_NO=
  &SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=19&BOARD_CATEGORY_NO=&BBS_SEQ=12001
  3&pageNo=1
@@ -737,16 +649,18 @@ END:VALARM
 END:VEVENT
 BEGIN:VEVENT
 UID:2-19-120015-event0@gongji-jupjup
-DTSTAMP:20261113T062400Z
+DTSTAMP:20261114T075900Z
 DTSTART:20261119T100000Z
 DTEND:20261119T130000Z
 SUMMARY:[채용정보] 2026. 10월 1주차 취업 관련 대외활동 정
  보 안내
-DESCRIPTION:2026년 10월 26일까지 신청하면 기프티콘을 받을 
- 수 있는 이벤트와 교육공무원 준비반\, 동남권 직무역량
-  강화 프로그램에 참여할 수 있어요.\nhttps://www.kku.ac.kr/cm
- s/FR_CON/BoardView.do?MENU_ID=1770&CONTENTS_NO=&SITE_NO=2&P_TAB_NO=&TAB_NO
- =&BOARD_SEQ=19&BOARD_CATEGORY_NO=&BBS_SEQ=120015&pageNo=1
+DESCRIPTION:취업 관련 대외활동 참여 기회를 안내해요. 대
+ 학 또는 고등학교 졸업자(졸업예정자)\, 만 18세~34세 미
+ 취업 청년이 10월 26일까지 신청하면 기프티콘 증정하고\
+ , 11월 19일부터 12월 17일까지 다양한 프로그램 참여 가능
+ 해요.\nhttps://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1770&CONTEN
+ TS_NO=&SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=19&BOARD_CATEGORY_NO=&BBS_SEQ
+ =120015&pageNo=1
 URL:https://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1770&CONTENTS_NO=
  &SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=19&BOARD_CATEGORY_NO=&BBS_SEQ=12001
  5&pageNo=1
@@ -760,16 +674,18 @@ END:VALARM
 END:VEVENT
 BEGIN:VEVENT
 UID:2-19-120015-event1@gongji-jupjup
-DTSTAMP:20261113T062400Z
+DTSTAMP:20261114T075900Z
 DTSTART:20261203T100000Z
 DTEND:20261203T130000Z
 SUMMARY:[채용정보] 2026. 10월 1주차 취업 관련 대외활동 정
  보 안내
-DESCRIPTION:2026년 10월 26일까지 신청하면 기프티콘을 받을 
- 수 있는 이벤트와 교육공무원 준비반\, 동남권 직무역량
-  강화 프로그램에 참여할 수 있어요.\nhttps://www.kku.ac.kr/cm
- s/FR_CON/BoardView.do?MENU_ID=1770&CONTENTS_NO=&SITE_NO=2&P_TAB_NO=&TAB_NO
- =&BOARD_SEQ=19&BOARD_CATEGORY_NO=&BBS_SEQ=120015&pageNo=1
+DESCRIPTION:취업 관련 대외활동 참여 기회를 안내해요. 대
+ 학 또는 고등학교 졸업자(졸업예정자)\, 만 18세~34세 미
+ 취업 청년이 10월 26일까지 신청하면 기프티콘 증정하고\
+ , 11월 19일부터 12월 17일까지 다양한 프로그램 참여 가능
+ 해요.\nhttps://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1770&CONTEN
+ TS_NO=&SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=19&BOARD_CATEGORY_NO=&BBS_SEQ
+ =120015&pageNo=1
 URL:https://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1770&CONTENTS_NO=
  &SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=19&BOARD_CATEGORY_NO=&BBS_SEQ=12001
  5&pageNo=1
@@ -783,16 +699,18 @@ END:VALARM
 END:VEVENT
 BEGIN:VEVENT
 UID:2-19-120015-event2@gongji-jupjup
-DTSTAMP:20261113T062400Z
+DTSTAMP:20261114T075900Z
 DTSTART:20261210T100000Z
 DTEND:20261210T130000Z
 SUMMARY:[채용정보] 2026. 10월 1주차 취업 관련 대외활동 정
  보 안내
-DESCRIPTION:2026년 10월 26일까지 신청하면 기프티콘을 받을 
- 수 있는 이벤트와 교육공무원 준비반\, 동남권 직무역량
-  강화 프로그램에 참여할 수 있어요.\nhttps://www.kku.ac.kr/cm
- s/FR_CON/BoardView.do?MENU_ID=1770&CONTENTS_NO=&SITE_NO=2&P_TAB_NO=&TAB_NO
- =&BOARD_SEQ=19&BOARD_CATEGORY_NO=&BBS_SEQ=120015&pageNo=1
+DESCRIPTION:취업 관련 대외활동 참여 기회를 안내해요. 대
+ 학 또는 고등학교 졸업자(졸업예정자)\, 만 18세~34세 미
+ 취업 청년이 10월 26일까지 신청하면 기프티콘 증정하고\
+ , 11월 19일부터 12월 17일까지 다양한 프로그램 참여 가능
+ 해요.\nhttps://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1770&CONTEN
+ TS_NO=&SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=19&BOARD_CATEGORY_NO=&BBS_SEQ
+ =120015&pageNo=1
 URL:https://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1770&CONTENTS_NO=
  &SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=19&BOARD_CATEGORY_NO=&BBS_SEQ=12001
  5&pageNo=1
@@ -806,16 +724,18 @@ END:VALARM
 END:VEVENT
 BEGIN:VEVENT
 UID:2-19-120015-event3@gongji-jupjup
-DTSTAMP:20261113T062400Z
+DTSTAMP:20261114T075900Z
 DTSTART:20261217T100000Z
 DTEND:20261217T130000Z
 SUMMARY:[채용정보] 2026. 10월 1주차 취업 관련 대외활동 정
  보 안내
-DESCRIPTION:2026년 10월 26일까지 신청하면 기프티콘을 받을 
- 수 있는 이벤트와 교육공무원 준비반\, 동남권 직무역량
-  강화 프로그램에 참여할 수 있어요.\nhttps://www.kku.ac.kr/cm
- s/FR_CON/BoardView.do?MENU_ID=1770&CONTENTS_NO=&SITE_NO=2&P_TAB_NO=&TAB_NO
- =&BOARD_SEQ=19&BOARD_CATEGORY_NO=&BBS_SEQ=120015&pageNo=1
+DESCRIPTION:취업 관련 대외활동 참여 기회를 안내해요. 대
+ 학 또는 고등학교 졸업자(졸업예정자)\, 만 18세~34세 미
+ 취업 청년이 10월 26일까지 신청하면 기프티콘 증정하고\
+ , 11월 19일부터 12월 17일까지 다양한 프로그램 참여 가능
+ 해요.\nhttps://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1770&CONTEN
+ TS_NO=&SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=19&BOARD_CATEGORY_NO=&BBS_SEQ
+ =120015&pageNo=1
 URL:https://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1770&CONTENTS_NO=
  &SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=19&BOARD_CATEGORY_NO=&BBS_SEQ=12001
  5&pageNo=1
@@ -828,39 +748,17 @@ TRIGGER:-PT60M
 END:VALARM
 END:VEVENT
 BEGIN:VEVENT
-UID:2-19-120017-deadline@gongji-jupjup
-DTSTAMP:20261113T062400Z
-DTSTART:20261030T145900Z
-DTEND:20261030T152900Z
-SUMMARY:[마감] 2026년 대학일자리플러스센터 만족도 및 취
- 업역량 향상도 조사[설문종료]
-DESCRIPTION:2026년 10월 30일까지 대학일자리플러스센터 만족
- 도 조사에 참여하면 경품을 받을 수 있습니다. 설문은 
- 약 10분 소요됩니다.\nhttps://www.kku.ac.kr/cms/FR_CON/BoardView.do?
- MENU_ID=1770&CONTENTS_NO=&SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=19&BOARD_C
- ATEGORY_NO=&BBS_SEQ=120017&pageNo=1
-URL:https://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1770&CONTENTS_NO=
- &SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=19&BOARD_CATEGORY_NO=&BBS_SEQ=12001
- 7&pageNo=1
-CATEGORIES:공모전·대외활동
-BEGIN:VALARM
-ACTION:DISPLAY
-DESCRIPTION:[마감] 2026년 대학일자리플러스센터 만족도 및 
- 취업역량 향상도 조사[설문종료]
-TRIGGER:-PT1440M
-END:VALARM
-END:VEVENT
-BEGIN:VEVENT
 UID:2-19-120021-deadline@gongji-jupjup
-DTSTAMP:20261113T062400Z
+DTSTAMP:20261114T075900Z
 DTSTART:20261102T145900Z
 DTEND:20261102T152900Z
 SUMMARY:[마감] [현장실습지원센터]2026. 동계 현장실습학기
  제 프로그램 안내
-DESCRIPTION:[현장실습지원센터]2026. 동계 현장실습학기제 
- 프로그램 안내\nhttps://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID
- =1770&CONTENTS_NO=&SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=19&BOARD_CATEGORY
- _NO=&BBS_SEQ=120021&pageNo=1
+DESCRIPTION:동계 현장실습학기제 참여자를 모집합니다. 4학
+ 기 이상 수료한 재학생이 11월 2일까지 신청하면 충북지
+ 역 기업체 실습 시 장학금을 받을 수 있어요.\nhttps://www.k
+ ku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1770&CONTENTS_NO=&SITE_NO=2&P_TAB
+ _NO=&TAB_NO=&BOARD_SEQ=19&BOARD_CATEGORY_NO=&BBS_SEQ=120021&pageNo=1
 URL:https://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1770&CONTENTS_NO=
  &SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=19&BOARD_CATEGORY_NO=&BBS_SEQ=12002
  1&pageNo=1
@@ -873,39 +771,18 @@ TRIGGER:-PT1440M
 END:VALARM
 END:VEVENT
 BEGIN:VEVENT
-UID:2-19-120023-deadline@gongji-jupjup
-DTSTAMP:20261113T062400Z
-DTSTART:20261030T145900Z
-DTEND:20261030T152900Z
-SUMMARY:[마감] [채용정보] 2026. 10월 3주차 공공기관 및 중소
- 기업 채용정보
-DESCRIPTION:2026년 10월 30일까지 장애인을 대상으로 한 채용
- 공고입니다. 다양한 기업에서 근무시간과 급여가 명시
- 되어 있습니다.\nhttps://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_I
- D=1770&CONTENTS_NO=&SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=19&BOARD_CATEGOR
- Y_NO=&BBS_SEQ=120023&pageNo=1
-URL:https://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1770&CONTENTS_NO=
- &SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=19&BOARD_CATEGORY_NO=&BBS_SEQ=12002
- 3&pageNo=1
-CATEGORIES:공모전·대외활동
-BEGIN:VALARM
-ACTION:DISPLAY
-DESCRIPTION:[마감] [채용정보] 2026. 10월 3주차 공공기관 및 
- 중소기업 채용정보
-TRIGGER:-PT1440M
-END:VALARM
-END:VEVENT
-BEGIN:VEVENT
 UID:2-19-120024-deadline@gongji-jupjup
-DTSTAMP:20261113T062400Z
+DTSTAMP:20261114T075900Z
 DTSTART:20261105T145900Z
 DTEND:20261105T152900Z
 SUMMARY:[마감] [현장실습-동계+2027년 1학기-별도모집]샘표
  식품 모집 안내
-DESCRIPTION:[현장실습-동계+2027년 1학기-별도모집]샘표식품 
- 모집 안내\nhttps://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1770&
- CONTENTS_NO=&SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=19&BOARD_CATEGORY_NO=&B
- BS_SEQ=120024&pageNo=1
+DESCRIPTION:샘표식품 현장실습생을 모집해요. 졸업까지 남
+ 은 이수학점이 인정되는 학생이 11월 5일까지 신청하면 
+ 현장실습 기회를 제공하고\, 12월 7일에 최종합격자를 발
+ 표할 예정이에요.\nhttps://www.kku.ac.kr/cms/FR_CON/BoardView.do?MEN
+ U_ID=1770&CONTENTS_NO=&SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=19&BOARD_CATE
+ GORY_NO=&BBS_SEQ=120024&pageNo=1
 URL:https://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1770&CONTENTS_NO=
  &SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=19&BOARD_CATEGORY_NO=&BBS_SEQ=12002
  4&pageNo=1
@@ -919,16 +796,17 @@ END:VALARM
 END:VEVENT
 BEGIN:VEVENT
 UID:2-19-120025-deadline@gongji-jupjup
-DTSTAMP:20261113T062400Z
+DTSTAMP:20261114T075900Z
 DTSTART:20261101T145900Z
 DTEND:20261101T152900Z
 SUMMARY:[마감] 2026. 창업특강 「KU 창업 Knock & Talk!」"이재승
   카카오 지역협력 부사장"\,"이현재 예스퓨처대표(현 대
  통령 스타트업정책자문\, 전 우아한형제들 이사)
-DESCRIPTION:창업 특강에 참여하면 창업 마일리지 100점을 받
- 을 수 있어요.\nhttps://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=
- 1770&CONTENTS_NO=&SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=19&BOARD_CATEGORY_
- NO=&BBS_SEQ=120025&pageNo=1
+DESCRIPTION:취업·창업 관련 공지예요. 혜택은 창업 마일리
+ 지 100점\, 공결증 발급 가능이에요. 신청은 11월 1일까지
+ 예요.\nhttps://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1770&CONTEN
+ TS_NO=&SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=19&BOARD_CATEGORY_NO=&BBS_SEQ
+ =120025&pageNo=1
 URL:https://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1770&CONTENTS_NO=
  &SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=19&BOARD_CATEGORY_NO=&BBS_SEQ=12002
  5&pageNo=1
@@ -943,16 +821,17 @@ END:VALARM
 END:VEVENT
 BEGIN:VEVENT
 UID:2-19-120025-event0@gongji-jupjup
-DTSTAMP:20261113T062400Z
+DTSTAMP:20261114T075900Z
 DTSTART:20261112T010000Z
 DTEND:20261112T033000Z
 SUMMARY:2026. 창업특강 「KU 창업 Knock & Talk!」"이재승 카카
  오 지역협력 부사장"\,"이현재 예스퓨처대표(현 대통령 
  스타트업정책자문\, 전 우아한형제들 이사)
-DESCRIPTION:창업 특강에 참여하면 창업 마일리지 100점을 받
- 을 수 있어요.\nhttps://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=
- 1770&CONTENTS_NO=&SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=19&BOARD_CATEGORY_
- NO=&BBS_SEQ=120025&pageNo=1
+DESCRIPTION:취업·창업 관련 공지예요. 혜택은 창업 마일리
+ 지 100점\, 공결증 발급 가능이에요. 신청은 11월 1일까지
+ 예요.\nhttps://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1770&CONTEN
+ TS_NO=&SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=19&BOARD_CATEGORY_NO=&BBS_SEQ
+ =120025&pageNo=1
 URL:https://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1770&CONTENTS_NO=
  &SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=19&BOARD_CATEGORY_NO=&BBS_SEQ=12002
  5&pageNo=1
@@ -966,38 +845,17 @@ TRIGGER:-PT60M
 END:VALARM
 END:VEVENT
 BEGIN:VEVENT
-UID:2-19-120026-deadline@gongji-jupjup
-DTSTAMP:20261113T062400Z
-DTSTART:20261030T145900Z
-DTEND:20261030T152900Z
-SUMMARY:[마감] 2026학년도 제13회 K.U.(Keep Up) ESG 창업 경진대
- 회 참가자 모집 공고
-DESCRIPTION:ESG 창업 경진대회 참가 신청 마감일은 2026년 10
- 월 30일입니다. 대상 상금은 1\,200\,000원입니다.\nhttps://www
- .kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1770&CONTENTS_NO=&SITE_NO=2&P_T
- AB_NO=&TAB_NO=&BOARD_SEQ=19&BOARD_CATEGORY_NO=&BBS_SEQ=120026&pageNo=1
-URL:https://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1770&CONTENTS_NO=
- &SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=19&BOARD_CATEGORY_NO=&BBS_SEQ=12002
- 6&pageNo=1
-CATEGORIES:공모전·대외활동
-BEGIN:VALARM
-ACTION:DISPLAY
-DESCRIPTION:[마감] 2026학년도 제13회 K.U.(Keep Up) ESG 창업 경진
- 대회 참가자 모집 공고
-TRIGGER:-PT1440M
-END:VALARM
-END:VEVENT
-BEGIN:VEVENT
 UID:2-19-120026-event0@gongji-jupjup
-DTSTAMP:20261113T062400Z
+DTSTAMP:20261114T075900Z
 DTSTART:20261112T050000Z
 DTEND:20261112T080000Z
 SUMMARY:2026학년도 제13회 K.U.(Keep Up) ESG 창업 경진대회 참가
  자 모집 공고
-DESCRIPTION:ESG 창업 경진대회 참가 신청 마감일은 2026년 10
- 월 30일입니다. 대상 상금은 1\,200\,000원입니다.\nhttps://www
- .kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1770&CONTENTS_NO=&SITE_NO=2&P_T
- AB_NO=&TAB_NO=&BOARD_SEQ=19&BOARD_CATEGORY_NO=&BBS_SEQ=120026&pageNo=1
+DESCRIPTION:ESG 창업 경진대회 참가자를 모집해요. 재학생이
+  10월 30일까지 신청하면 상금을 받고\, 11월 12일에 본선 
+ 심사를 해요.\nhttps://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1
+ 770&CONTENTS_NO=&SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=19&BOARD_CATEGORY_N
+ O=&BBS_SEQ=120026&pageNo=1
 URL:https://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1770&CONTENTS_NO=
  &SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=19&BOARD_CATEGORY_NO=&BBS_SEQ=12002
  6&pageNo=1
@@ -1011,16 +869,16 @@ END:VALARM
 END:VEVENT
 BEGIN:VEVENT
 UID:2-19-120027-event0@gongji-jupjup
-DTSTAMP:20261113T062400Z
+DTSTAMP:20261114T075900Z
 DTSTART:20261109T010000Z
 DTEND:20261109T080000Z
 SUMMARY:[채용정보] 2026. 10월 4주차 취업 관련 대외활동 정
  보 안내
-DESCRIPTION:11월 9일 서울시 일자리 박람회에 참여할 수 있
- 으며\, 마감일은 10월 28일입니다. 혜택은 없습니다.\nhttps
- ://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1770&CONTENTS_NO=&SITE_NO
- =2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=19&BOARD_CATEGORY_NO=&BBS_SEQ=120027&pageNo
- =1
+DESCRIPTION:취업 관련 대외활동 일정을 안내해요. 건국대학
+ 교 글로컬캠퍼스 재학생이 10월 28일까지 신청하면 11월 9
+ 일 10시~17시에 행사에 참여할 수 있어요.\nhttps://www.kku.ac.
+ kr/cms/FR_CON/BoardView.do?MENU_ID=1770&CONTENTS_NO=&SITE_NO=2&P_TAB_NO=&T
+ AB_NO=&BOARD_SEQ=19&BOARD_CATEGORY_NO=&BBS_SEQ=120027&pageNo=1
 URL:https://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1770&CONTENTS_NO=
  &SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=19&BOARD_CATEGORY_NO=&BBS_SEQ=12002
  7&pageNo=1
@@ -1034,15 +892,16 @@ END:VALARM
 END:VEVENT
 BEGIN:VEVENT
 UID:2-19-120028-deadline@gongji-jupjup
-DTSTAMP:20261113T062400Z
+DTSTAMP:20261114T075900Z
 DTSTART:20261105T145900Z
 DTEND:20261105T152900Z
 SUMMARY:[마감] [채용정보] 2026. 10월 4주차 공공기관 및 중소
  기업 채용정보
-DESCRIPTION:2026년 10월 4주차 공공기관 및 중소기업 채용 정
- 보입니다. 마감일은 2026년 11월 5일까지입니다.\nhttps://www
- .kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1770&CONTENTS_NO=&SITE_NO=2&P_T
- AB_NO=&TAB_NO=&BOARD_SEQ=19&BOARD_CATEGORY_NO=&BBS_SEQ=120028&pageNo=1
+DESCRIPTION:2026년 10월 4주차 공공기관 및 중소기업 채용정
+ 보를 안내해요. 대상자는 11월 5일까지 지원하면 관련 기
+ 관에서 채용을 진행해요.\nhttps://www.kku.ac.kr/cms/FR_CON/BoardV
+ iew.do?MENU_ID=1770&CONTENTS_NO=&SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=19&
+ BOARD_CATEGORY_NO=&BBS_SEQ=120028&pageNo=1
 URL:https://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1770&CONTENTS_NO=
  &SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=19&BOARD_CATEGORY_NO=&BBS_SEQ=12002
  8&pageNo=1
@@ -1056,16 +915,18 @@ END:VALARM
 END:VEVENT
 BEGIN:VEVENT
 UID:2-19-120029-deadline@gongji-jupjup
-DTSTAMP:20261113T062400Z
+DTSTAMP:20261114T075900Z
 DTSTART:20261106T145900Z
 DTEND:20261106T152900Z
 SUMMARY:[마감] 「2026 모두의 창업 RE: START DAY」 재도전 멘토
  링 참가자 모집 안내
-DESCRIPTION:2026년 11월 6일까지 신청하면 창업 멘토링에 참
- 여할 수 있어요. 참가 시 배달의민족 모바일상품권 2만
- 원을 받을 수 있어요.\nhttps://www.kku.ac.kr/cms/FR_CON/BoardView.d
- o?MENU_ID=1770&CONTENTS_NO=&SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=19&BOARD
- _CATEGORY_NO=&BBS_SEQ=120029&pageNo=1
+DESCRIPTION:창업 멘토링 프로그램 참가자를 모집합니다. 「
+ 모두의 창업」 미선정자 및 아이디어 구체화 희망자가 1
+ 1월 6일까지 신청하면 배달의민족 모바일상품권 2만원과
+  기념품을 받고\, 11월 12일에 멘토링 참여가 가능해요.\nh
+ ttps://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1770&CONTENTS_NO=&SIT
+ E_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=19&BOARD_CATEGORY_NO=&BBS_SEQ=120029&pa
+ geNo=1
 URL:https://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1770&CONTENTS_NO=
  &SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=19&BOARD_CATEGORY_NO=&BBS_SEQ=12002
  9&pageNo=1
@@ -1079,16 +940,17 @@ END:VALARM
 END:VEVENT
 BEGIN:VEVENT
 UID:2-19-120030-deadline@gongji-jupjup
-DTSTAMP:20261113T062400Z
+DTSTAMP:20261114T075900Z
 DTSTART:20261110T145900Z
 DTEND:20261110T152900Z
 SUMMARY:[마감] [대학일자리+] 2026학년도 글로컬 잡 페어(GLOC
  AL JOB FAIR) 개최 안내
-DESCRIPTION:11월 11일에 열리는 글로컬 잡 페어에 참여하면 
- 다양한 기업과 1:1 상담이 가능하며\, 이력서 체험도 할 
- 수 있어요. 마감은 11월 10일입니다.\nhttps://www.kku.ac.kr/cms/
- FR_CON/BoardView.do?MENU_ID=1770&CONTENTS_NO=&SITE_NO=2&P_TAB_NO=&TAB_NO=&
- BOARD_SEQ=19&BOARD_CATEGORY_NO=&BBS_SEQ=120030&pageNo=1
+DESCRIPTION:글로컬 잡 페어에 참여할 수 있는 공지예요. 건
+ 국대학교 GLOCAL캠퍼스 학생이 11월 10일까지 신청하면 11
+ 월 11일 13시~17시 행사에서 이력서 사진\, 퍼스널 컬러·
+ 타로 등 체험할 수 있어요.\nhttps://www.kku.ac.kr/cms/FR_CON/Boar
+ dView.do?MENU_ID=1770&CONTENTS_NO=&SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=1
+ 9&BOARD_CATEGORY_NO=&BBS_SEQ=120030&pageNo=1
 URL:https://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1770&CONTENTS_NO=
  &SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=19&BOARD_CATEGORY_NO=&BBS_SEQ=12003
  0&pageNo=1
@@ -1102,16 +964,17 @@ END:VALARM
 END:VEVENT
 BEGIN:VEVENT
 UID:2-19-120030-event0@gongji-jupjup
-DTSTAMP:20261113T062400Z
+DTSTAMP:20261114T075900Z
 DTSTART:20261111T040000Z
 DTEND:20261111T080000Z
 SUMMARY:[대학일자리+] 2026학년도 글로컬 잡 페어(GLOCAL JOB FA
  IR) 개최 안내
-DESCRIPTION:11월 11일에 열리는 글로컬 잡 페어에 참여하면 
- 다양한 기업과 1:1 상담이 가능하며\, 이력서 체험도 할 
- 수 있어요. 마감은 11월 10일입니다.\nhttps://www.kku.ac.kr/cms/
- FR_CON/BoardView.do?MENU_ID=1770&CONTENTS_NO=&SITE_NO=2&P_TAB_NO=&TAB_NO=&
- BOARD_SEQ=19&BOARD_CATEGORY_NO=&BBS_SEQ=120030&pageNo=1
+DESCRIPTION:글로컬 잡 페어에 참여할 수 있는 공지예요. 건
+ 국대학교 GLOCAL캠퍼스 학생이 11월 10일까지 신청하면 11
+ 월 11일 13시~17시 행사에서 이력서 사진\, 퍼스널 컬러·
+ 타로 등 체험할 수 있어요.\nhttps://www.kku.ac.kr/cms/FR_CON/Boar
+ dView.do?MENU_ID=1770&CONTENTS_NO=&SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=1
+ 9&BOARD_CATEGORY_NO=&BBS_SEQ=120030&pageNo=1
 URL:https://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1770&CONTENTS_NO=
  &SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=19&BOARD_CATEGORY_NO=&BBS_SEQ=12003
  0&pageNo=1
@@ -1125,16 +988,15 @@ END:VALARM
 END:VEVENT
 BEGIN:VEVENT
 UID:2-19-120031-deadline@gongji-jupjup
-DTSTAMP:20261113T062400Z
+DTSTAMP:20261114T075900Z
 DTSTART:20261111T145900Z
 DTEND:20261111T152900Z
 SUMMARY:[마감] 2026. 충북북부권대학 연합캠프 참가자 모집
-DESCRIPTION:2026년 11월 11일까지 건국대학교 창업교육센터에
- 서 진행하는 충북 북부권 대학 연합 창업캠프에 참여할 
- 수 있으며\, 창업마일리지 200점과 우수팀 장학금을 받을
-  수 있습니다.\nhttps://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=
- 1770&CONTENTS_NO=&SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=19&BOARD_CATEGORY_
- NO=&BBS_SEQ=120031&pageNo=1
+DESCRIPTION:충북 북부권 대학 연합 창업캠프 참가자를 모집
+ 해요. KU재학생 11월 11일까지 신청하면 공결증 발급\, 창
+ 업마일리지 200점이 주어져요.\nhttps://www.kku.ac.kr/cms/FR_CON/
+ BoardView.do?MENU_ID=1770&CONTENTS_NO=&SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_S
+ EQ=19&BOARD_CATEGORY_NO=&BBS_SEQ=120031&pageNo=1
 URL:https://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1770&CONTENTS_NO=
  &SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=19&BOARD_CATEGORY_NO=&BBS_SEQ=12003
  1&pageNo=1
@@ -1148,16 +1010,16 @@ END:VALARM
 END:VEVENT
 BEGIN:VEVENT
 UID:2-19-120033-deadline@gongji-jupjup
-DTSTAMP:20261113T062400Z
+DTSTAMP:20261114T075900Z
 DTSTART:20261112T145900Z
 DTEND:20261112T152900Z
 SUMMARY:[마감] [채용정보] 2026. 11월 1주차 공공기관 및 중소
  기업 채용정보
-DESCRIPTION:2026년 11월 12일까지 신청 가능하며\, 산림항공과
- 장 및 세무주사 직위에 지원할 수 있는 공고입니다. 채
- 용 시 성과연봉 및 연봉 지급 예정입니다.\nhttps://www.kku.a
- c.kr/cms/FR_CON/BoardView.do?MENU_ID=1770&CONTENTS_NO=&SITE_NO=2&P_TAB_NO=
- &TAB_NO=&BOARD_SEQ=19&BOARD_CATEGORY_NO=&BBS_SEQ=120033&pageNo=1
+DESCRIPTION:2026년 11월 중소기업 및 공공기관 채용정보를 안
+ 내해요. 재학생은 11월 12일까지 신청하면 다드림 포인트
+  5점을 받아요.\nhttps://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID
+ =1770&CONTENTS_NO=&SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=19&BOARD_CATEGORY
+ _NO=&BBS_SEQ=120033&pageNo=1
 URL:https://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1770&CONTENTS_NO=
  &SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=19&BOARD_CATEGORY_NO=&BBS_SEQ=12003
  3&pageNo=1
@@ -1171,16 +1033,16 @@ END:VALARM
 END:VEVENT
 BEGIN:VEVENT
 UID:2-19-120035-deadline@gongji-jupjup
-DTSTAMP:20261113T062400Z
+DTSTAMP:20261114T075900Z
 DTSTART:20261118T145900Z
 DTEND:20261118T152900Z
 SUMMARY:[마감] [채용정보] 2026. 11월 2주차 공공기관 및 중소
  기업 채용정보
-DESCRIPTION:충북 지역의 다양한 중소기업 및 공공기관 채용
- 정보입니다. 마감일은 11월 18일까지이며\, 고졸 이상이
- 면 지원 가능합니다.\nhttps://www.kku.ac.kr/cms/FR_CON/BoardView.do
- ?MENU_ID=1770&CONTENTS_NO=&SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=19&BOARD_
- CATEGORY_NO=&BBS_SEQ=120035&pageNo=1
+DESCRIPTION:2026년 11월 2주차 공공기관 및 중소기업 채용정
+ 보를 안내해요. 고졸 이상이 11월 18일까지 지원하면 다
+ 드림 포인트 5점을 받아요.\nhttps://www.kku.ac.kr/cms/FR_CON/Boar
+ dView.do?MENU_ID=1770&CONTENTS_NO=&SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=1
+ 9&BOARD_CATEGORY_NO=&BBS_SEQ=120035&pageNo=1
 URL:https://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1770&CONTENTS_NO=
  &SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=19&BOARD_CATEGORY_NO=&BBS_SEQ=12003
  5&pageNo=1
@@ -1193,35 +1055,16 @@ TRIGGER:-PT1440M
 END:VALARM
 END:VEVENT
 BEGIN:VEVENT
-UID:2-22-119899-deadline@gongji-jupjup
-DTSTAMP:20261113T062400Z
-DTSTART:20261030T145900Z
-DTEND:20261030T152900Z
-SUMMARY:[마감] 학생상담센터 이용 실태조사
-DESCRIPTION:학생상담센터 이용 실태조사\nhttps://www.kku.ac.kr/c
- ms/FR_CON/BoardView.do?MENU_ID=1790&CONTENTS_NO=&SITE_NO=2&P_TAB_NO=&TAB_N
- O=&BOARD_SEQ=22&BOARD_CATEGORY_NO=&BBS_SEQ=119899&pageNo=1
-URL:https://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1790&CONTENTS_NO=
- &SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=22&BOARD_CATEGORY_NO=&BBS_SEQ=11989
- 9&pageNo=1
-CATEGORIES:다드림 포인트
-BEGIN:VALARM
-ACTION:DISPLAY
-DESCRIPTION:[마감] 학생상담센터 이용 실태조사
-TRIGGER:-PT1440M
-END:VALARM
-END:VEVENT
-BEGIN:VEVENT
 UID:2-22-119913-deadline@gongji-jupjup
-DTSTAMP:20261113T062400Z
+DTSTAMP:20261114T075900Z
 DTSTART:20261222T145900Z
 DTEND:20261222T152900Z
 SUMMARY:[마감] 2027학년도 1학기 모시래ㆍ해오름 관생모집
-DESCRIPTION:2027학년도 1학기 생활관 관생 모집 신청 마감일
- 은 12월 22일입니다. 재학생 및 복학예정자만 지원 가능
- 합니다.\nhttps://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1790&CON
- TENTS_NO=&SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=22&BOARD_CATEGORY_NO=&BBS_
- SEQ=119913&pageNo=1
+DESCRIPTION:생활관 관생을 모집하는 공지예요. 재학생 및 
+ 복학예정자가 11월 24일부터 12월 22일까지 생활관 홈페이
+ 지에서 신청해요.\nhttps://www.kku.ac.kr/cms/FR_CON/BoardView.do?MEN
+ U_ID=1790&CONTENTS_NO=&SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=22&BOARD_CATE
+ GORY_NO=&BBS_SEQ=119913&pageNo=1
 URL:https://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1790&CONTENTS_NO=
  &SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=22&BOARD_CATEGORY_NO=&BBS_SEQ=11991
  3&pageNo=1
@@ -1235,16 +1078,15 @@ END:VALARM
 END:VEVENT
 BEGIN:VEVENT
 UID:2-22-119915-deadline@gongji-jupjup
-DTSTAMP:20261113T062400Z
+DTSTAMP:20261114T075900Z
 DTSTART:20261129T145900Z
 DTEND:20261129T152900Z
 SUMMARY:[마감] 인권작품 공모전 참가 안내
-DESCRIPTION:인권작품 공모전이 2026년 11월 29일까지 참여 가
- 능하며\, 우수작에게 상장과 상품이 제공됩니다. 인권 
- 문화 확산을 위한 창의적인 작품 제출을 환영합니다.\nht
- tps://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1790&CONTENTS_NO=&SITE
- _NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=22&BOARD_CATEGORY_NO=&BBS_SEQ=119915&pag
- eNo=1
+DESCRIPTION:인권작품 공모전 참여자를 모집해요. 재학생과 
+ 휴학생이 11월 29일까지 작품 제출하면 인권센터장 명의 
+ 상장과 상품을 받을 수 있어요.\nhttps://www.kku.ac.kr/cms/FR_CO
+ N/BoardView.do?MENU_ID=1790&CONTENTS_NO=&SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD
+ _SEQ=22&BOARD_CATEGORY_NO=&BBS_SEQ=119915&pageNo=1
 URL:https://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1790&CONTENTS_NO=
  &SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=22&BOARD_CATEGORY_NO=&BBS_SEQ=11991
  5&pageNo=1
@@ -1257,15 +1099,15 @@ END:VALARM
 END:VEVENT
 BEGIN:VEVENT
 UID:2-22-119916-event0@gongji-jupjup
-DTSTAMP:20261113T062400Z
+DTSTAMP:20261114T075900Z
 DTSTART:20261111T010000Z
 DTEND:20261111T080000Z
 SUMMARY:2026학년도 컴퓨터공학과 제26회 졸업작품 전시회
-DESCRIPTION:2026년 11월 11일에 컴퓨터공학과 졸업작품 전시
- 회가 열립니다. 참여를 원하시면 관련 조건을 확인해 주
- 세요.\nhttps://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1790&CONTEN
- TS_NO=&SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=22&BOARD_CATEGORY_NO=&BBS_SEQ
- =119916&pageNo=1
+DESCRIPTION:컴퓨터공학과 졸업작품 전시회를 개최한다고 
+ 해요. 컴퓨터공학과 졸업생이 2026년 11월 11일 10시~17시까
+ 지 교수연구동 1층 컨벤션홀에서 참여해요.\nhttps://www.kku
+ .ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1790&CONTENTS_NO=&SITE_NO=2&P_TAB_N
+ O=&TAB_NO=&BOARD_SEQ=22&BOARD_CATEGORY_NO=&BBS_SEQ=119916&pageNo=1
 URL:https://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1790&CONTENTS_NO=
  &SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=22&BOARD_CATEGORY_NO=&BBS_SEQ=11991
  6&pageNo=1
@@ -1279,15 +1121,16 @@ END:VALARM
 END:VEVENT
 BEGIN:VEVENT
 UID:2-22-119917-deadline@gongji-jupjup
-DTSTAMP:20261113T062400Z
+DTSTAMP:20261114T075900Z
 DTSTART:20261102T145900Z
 DTEND:20261102T152900Z
 SUMMARY:[마감] (기간연장) 2026-2 고민게시판(이런 내마음을 
  말해도 될까요?) 안내
-DESCRIPTION:고민을 적어주면 커피쿠폰이 주어집니다. 마감
- 은 2026년 11월 2일입니다.\nhttps://www.kku.ac.kr/cms/FR_CON/BoardVi
- ew.do?MENU_ID=1790&CONTENTS_NO=&SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=22&B
- OARD_CATEGORY_NO=&BBS_SEQ=119917&pageNo=1
+DESCRIPTION:고민을 나누는 기회를 안내해요. 건국대학교 글
+ 로컬캠퍼스 학생이 11월 2일까지 참여하면 레스토 커피
+ 쿠폰 5\,000원을 받을 수 있어요.\nhttps://www.kku.ac.kr/cms/FR_CO
+ N/BoardView.do?MENU_ID=1790&CONTENTS_NO=&SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD
+ _SEQ=22&BOARD_CATEGORY_NO=&BBS_SEQ=119917&pageNo=1
 URL:https://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1790&CONTENTS_NO=
  &SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=22&BOARD_CATEGORY_NO=&BBS_SEQ=11991
  7&pageNo=1
@@ -1301,16 +1144,16 @@ END:VALARM
 END:VEVENT
 BEGIN:VEVENT
 UID:2-22-119919-deadline@gongji-jupjup
-DTSTAMP:20261113T062400Z
+DTSTAMP:20261114T075900Z
 DTSTART:20261130T145900Z
 DTEND:20261130T152900Z
 SUMMARY:[마감] 2026학년도 MD/ LC 교육과정 수요 설문조사 실
  시 안내
-DESCRIPTION:2026년 11월 30일까지 MD/LC 교육과정 설문조사에 
- 참여하면 다드림 포인트 30포인트를 받을 수 있습니다.\n
- https://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1790&CONTENTS_NO=&SI
- TE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=22&BOARD_CATEGORY_NO=&BBS_SEQ=119919&p
- ageNo=1
+DESCRIPTION:MD/LC 교육과정 설문조사 참여자를 모집해요. 재
+ 학생이 11월 30일까지 설문을 완료하면 다드림 포인트 30
+ 점을 받을 수 있어요.\nhttps://www.kku.ac.kr/cms/FR_CON/BoardView.d
+ o?MENU_ID=1790&CONTENTS_NO=&SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=22&BOARD
+ _CATEGORY_NO=&BBS_SEQ=119919&pageNo=1
 URL:https://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1790&CONTENTS_NO=
  &SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=22&BOARD_CATEGORY_NO=&BBS_SEQ=11991
  9&pageNo=1
@@ -1324,16 +1167,16 @@ END:VALARM
 END:VEVENT
 BEGIN:VEVENT
 UID:2-22-119923-deadline@gongji-jupjup
-DTSTAMP:20261113T062400Z
+DTSTAMP:20261114T075900Z
 DTSTART:20261115T145900Z
 DTEND:20261115T152900Z
 SUMMARY:[마감] 학사정보시스템 2차 인증 의무화 시행 및 사
  전 등록 안내(대상: 교직원)
-DESCRIPTION:학사정보시스템 2차 인증 의무화 시행을 위해 
- 사전 등록이 필요합니다. 마감일은 2026년 11월 15일입니
- 다.\nhttps://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1790&CONTENTS_
- NO=&SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=22&BOARD_CATEGORY_NO=&BBS_SEQ=11
- 9923&pageNo=1
+DESCRIPTION:학사정보시스템 2차 인증 의무화 시행을 안내해
+ 요. 교직원이 11월 9일부터 15일까지 사전 등록하면 Google 
+ Authenticator 앱으로 OTP 인증을 해야해요.\nhttps://www.kku.ac.kr
+ /cms/FR_CON/BoardView.do?MENU_ID=1790&CONTENTS_NO=&SITE_NO=2&P_TAB_NO=&TAB
+ _NO=&BOARD_SEQ=22&BOARD_CATEGORY_NO=&BBS_SEQ=119923&pageNo=1
 URL:https://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1790&CONTENTS_NO=
  &SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=22&BOARD_CATEGORY_NO=&BBS_SEQ=11992
  3&pageNo=1
@@ -1347,13 +1190,14 @@ END:VALARM
 END:VEVENT
 BEGIN:VEVENT
 UID:2-22-119924-deadline@gongji-jupjup
-DTSTAMP:20261113T062400Z
+DTSTAMP:20261114T075900Z
 DTSTART:20261227T145900Z
 DTEND:20261227T152900Z
 SUMMARY:[마감] 2027학년도 1학기 평생교육원 KU아카데미 신
  규강좌 공개모집 안내
-DESCRIPTION:신청자는 강사 자격과 관련된 서류를 준비해야 
- 합니다.\nhttps://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1790&CON
+DESCRIPTION:신규강좌 개설 제안을 받는 공지예요. 강사가 12
+ 월 27일까지 이메일로 서류를 제출하면 심사를 통해 발
+ 표해요.\nhttps://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1790&CON
  TENTS_NO=&SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=22&BOARD_CATEGORY_NO=&BBS_
  SEQ=119924&pageNo=1
 URL:https://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1790&CONTENTS_NO=
@@ -1369,17 +1213,18 @@ END:VALARM
 END:VEVENT
 BEGIN:VEVENT
 UID:2-22-119925-deadline@gongji-jupjup
-DTSTAMP:20261113T062400Z
+DTSTAMP:20261114T075900Z
 DTSTART:20261123T145900Z
 DTEND:20261123T152900Z
 SUMMARY:[마감] 충북 PRIDE 공유대학  학습·취업 준비를 위
  한 생성형 AI 실무 프로그램(온라인) 수강생 모집(세명대
  학교)
-DESCRIPTION:충북 PRIDE 공유대학 학습·취업 준비를 위한 생
- 성형 AI 실무 프로그램 수강생을 모집합니다. 마감일은 2
- 026년 11월 23일입니다.\nhttps://www.kku.ac.kr/cms/FR_CON/BoardView.d
- o?MENU_ID=1790&CONTENTS_NO=&SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=22&BOARD
- _CATEGORY_NO=&BBS_SEQ=119925&pageNo=1
+DESCRIPTION:생성형 AI 실무 프로그램 수강생을 모집해요. 충
+ 북 PRIDE 공유대학 재학생 및 취업준비생이 11월 23일까지 
+ 신청하면 11월 23~25일 각 19시~21시에 참여할 수 있어요.\nh
+ ttps://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1790&CONTENTS_NO=&SIT
+ E_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=22&BOARD_CATEGORY_NO=&BBS_SEQ=119925&pa
+ geNo=1
 URL:https://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1790&CONTENTS_NO=
  &SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=22&BOARD_CATEGORY_NO=&BBS_SEQ=11992
  5&pageNo=1
@@ -1394,16 +1239,17 @@ END:VALARM
 END:VEVENT
 BEGIN:VEVENT
 UID:2-22-119925-event0@gongji-jupjup
-DTSTAMP:20261113T062400Z
+DTSTAMP:20261114T075900Z
 DTSTART:20261123T100000Z
 DTEND:20261123T120000Z
 SUMMARY:충북 PRIDE 공유대학  학습·취업 준비를 위한 생성
  형 AI 실무 프로그램(온라인) 수강생 모집(세명대학교)
-DESCRIPTION:충북 PRIDE 공유대학 학습·취업 준비를 위한 생
- 성형 AI 실무 프로그램 수강생을 모집합니다. 마감일은 2
- 026년 11월 23일입니다.\nhttps://www.kku.ac.kr/cms/FR_CON/BoardView.d
- o?MENU_ID=1790&CONTENTS_NO=&SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=22&BOARD
- _CATEGORY_NO=&BBS_SEQ=119925&pageNo=1
+DESCRIPTION:생성형 AI 실무 프로그램 수강생을 모집해요. 충
+ 북 PRIDE 공유대학 재학생 및 취업준비생이 11월 23일까지 
+ 신청하면 11월 23~25일 각 19시~21시에 참여할 수 있어요.\nh
+ ttps://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1790&CONTENTS_NO=&SIT
+ E_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=22&BOARD_CATEGORY_NO=&BBS_SEQ=119925&pa
+ geNo=1
 URL:https://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1790&CONTENTS_NO=
  &SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=22&BOARD_CATEGORY_NO=&BBS_SEQ=11992
  5&pageNo=1
@@ -1417,16 +1263,17 @@ END:VALARM
 END:VEVENT
 BEGIN:VEVENT
 UID:2-22-119925-event1@gongji-jupjup
-DTSTAMP:20261113T062400Z
+DTSTAMP:20261114T075900Z
 DTSTART:20261124T100000Z
 DTEND:20261124T120000Z
 SUMMARY:충북 PRIDE 공유대학  학습·취업 준비를 위한 생성
  형 AI 실무 프로그램(온라인) 수강생 모집(세명대학교)
-DESCRIPTION:충북 PRIDE 공유대학 학습·취업 준비를 위한 생
- 성형 AI 실무 프로그램 수강생을 모집합니다. 마감일은 2
- 026년 11월 23일입니다.\nhttps://www.kku.ac.kr/cms/FR_CON/BoardView.d
- o?MENU_ID=1790&CONTENTS_NO=&SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=22&BOARD
- _CATEGORY_NO=&BBS_SEQ=119925&pageNo=1
+DESCRIPTION:생성형 AI 실무 프로그램 수강생을 모집해요. 충
+ 북 PRIDE 공유대학 재학생 및 취업준비생이 11월 23일까지 
+ 신청하면 11월 23~25일 각 19시~21시에 참여할 수 있어요.\nh
+ ttps://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1790&CONTENTS_NO=&SIT
+ E_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=22&BOARD_CATEGORY_NO=&BBS_SEQ=119925&pa
+ geNo=1
 URL:https://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1790&CONTENTS_NO=
  &SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=22&BOARD_CATEGORY_NO=&BBS_SEQ=11992
  5&pageNo=1
@@ -1440,16 +1287,17 @@ END:VALARM
 END:VEVENT
 BEGIN:VEVENT
 UID:2-22-119925-event2@gongji-jupjup
-DTSTAMP:20261113T062400Z
+DTSTAMP:20261114T075900Z
 DTSTART:20261125T100000Z
 DTEND:20261125T120000Z
 SUMMARY:충북 PRIDE 공유대학  학습·취업 준비를 위한 생성
  형 AI 실무 프로그램(온라인) 수강생 모집(세명대학교)
-DESCRIPTION:충북 PRIDE 공유대학 학습·취업 준비를 위한 생
- 성형 AI 실무 프로그램 수강생을 모집합니다. 마감일은 2
- 026년 11월 23일입니다.\nhttps://www.kku.ac.kr/cms/FR_CON/BoardView.d
- o?MENU_ID=1790&CONTENTS_NO=&SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=22&BOARD
- _CATEGORY_NO=&BBS_SEQ=119925&pageNo=1
+DESCRIPTION:생성형 AI 실무 프로그램 수강생을 모집해요. 충
+ 북 PRIDE 공유대학 재학생 및 취업준비생이 11월 23일까지 
+ 신청하면 11월 23~25일 각 19시~21시에 참여할 수 있어요.\nh
+ ttps://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1790&CONTENTS_NO=&SIT
+ E_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=22&BOARD_CATEGORY_NO=&BBS_SEQ=119925&pa
+ geNo=1
 URL:https://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1790&CONTENTS_NO=
  &SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=22&BOARD_CATEGORY_NO=&BBS_SEQ=11992
  5&pageNo=1
@@ -1463,16 +1311,16 @@ END:VALARM
 END:VEVENT
 BEGIN:VEVENT
 UID:2-22-119927-deadline@gongji-jupjup
-DTSTAMP:20261113T062400Z
+DTSTAMP:20261114T075900Z
 DTSTART:20261206T145900Z
 DTEND:20261206T152900Z
 SUMMARY:[마감] 2026학년도 재학생 교육서비스 만족도 조사 
  실시 안내
-DESCRIPTION:2026년 11월 4일부터 12월 6일까지 재학생 교육서
- 비스 만족도 조사에 참여하면 다드림 30포인트와 사은 
- 쿠폰을 받을 수 있습니다.\nhttps://www.kku.ac.kr/cms/FR_CON/Board
- View.do?MENU_ID=1790&CONTENTS_NO=&SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=22
- &BOARD_CATEGORY_NO=&BBS_SEQ=119927&pageNo=1
+DESCRIPTION:교육서비스 만족도 조사에 참여할 수 있는 공지
+ 예요. 재학생이 12월 6일까지 참여하면 다드림 30포인트
+ 와 사은 쿠폰을 받을 수 있어요.\nhttps://www.kku.ac.kr/cms/FR_C
+ ON/BoardView.do?MENU_ID=1790&CONTENTS_NO=&SITE_NO=2&P_TAB_NO=&TAB_NO=&BOAR
+ D_SEQ=22&BOARD_CATEGORY_NO=&BBS_SEQ=119927&pageNo=1
 URL:https://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1790&CONTENTS_NO=
  &SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=22&BOARD_CATEGORY_NO=&BBS_SEQ=11992
  7&pageNo=1
@@ -1486,17 +1334,17 @@ END:VALARM
 END:VEVENT
 BEGIN:VEVENT
 UID:2-22-119928-deadline@gongji-jupjup
-DTSTAMP:20261113T062400Z
+DTSTAMP:20261114T075900Z
 DTSTART:20261118T145900Z
 DTEND:20261118T152900Z
 SUMMARY:[마감] 2026년도 지역혁신중신 대학지원체계(RISE) -20
  26년 2차 푸드테크 기기장비 활용 비교과 운영 공고-
-DESCRIPTION:2026년 11월 18일까지 신청 가능하며\, 푸드테크 
- 기기·장비 활용 비교과 운영에 참여할 교원에게 3\,000\,0
- 00원의 지원금이 제공됩니다. 관련 서류는 이메일로 제
- 출해야 합니다.\nhttps://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_I
- D=1790&CONTENTS_NO=&SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=22&BOARD_CATEGOR
- Y_NO=&BBS_SEQ=119928&pageNo=1
+DESCRIPTION:푸드테크 기기 활용 비교과 운영 참여자를 모집
+ 해요. 푸드테크 Micro-Degree 과정 참여교원이 11월 18일까지
+  신청하면 운영비 지원금 3\,000\,000원을 받을 수 있어요.\
+ nhttps://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1790&CONTENTS_NO=&S
+ ITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=22&BOARD_CATEGORY_NO=&BBS_SEQ=119928&
+ pageNo=1
 URL:https://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1790&CONTENTS_NO=
  &SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=22&BOARD_CATEGORY_NO=&BBS_SEQ=11992
  8&pageNo=1
@@ -1510,15 +1358,15 @@ END:VALARM
 END:VEVENT
 BEGIN:VEVENT
 UID:2-24-119515-deadline@gongji-jupjup
-DTSTAMP:20261113T062400Z
+DTSTAMP:20261114T075900Z
 DTSTART:20261104T145900Z
 DTEND:20261104T152900Z
 SUMMARY:[마감] [중원도서관] 북!톡Talk 6탄_경계와 욕망
-DESCRIPTION:11월 4일 중원도서관에서 북!톡Talk 6탄_경계와 욕
- 망이 진행됩니다. 교내 구성원과 충주시민 누구나 참여 
- 가능합니다.\nhttps://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=18
- 20&CONTENTS_NO=&SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=24&BOARD_CATEGORY_NO
- =&BBS_SEQ=119515&pageNo=1
+DESCRIPTION:북!톡Talk 6탄 참여자를 모집해요. 교내 구성원과
+  충주시민이 11월 4일까지 신청하면 중원도서관에서 진
+ 행되며\, 조미해 작가의 강연을 들을 수 있어요.\nhttps://w
+ ww.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1820&CONTENTS_NO=&SITE_NO=2&P
+ _TAB_NO=&TAB_NO=&BOARD_SEQ=24&BOARD_CATEGORY_NO=&BBS_SEQ=119515&pageNo=1
 URL:https://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1820&CONTENTS_NO=
  &SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=24&BOARD_CATEGORY_NO=&BBS_SEQ=11951
  5&pageNo=1
@@ -1531,16 +1379,16 @@ END:VALARM
 END:VEVENT
 BEGIN:VEVENT
 UID:2-24-119516-deadline@gongji-jupjup
-DTSTAMP:20261113T062400Z
+DTSTAMP:20261114T075900Z
 DTSTART:20261127T145900Z
 DTEND:20261127T152900Z
 SUMMARY:[마감] [AIX대학교육혁신원] 2026학년도 2학기 E-포트
  폴리오 공모전
-DESCRIPTION:건국대학교 글로컬캠퍼스에서 E-포트폴리오 공
- 모전을 진행하며\, 최우수상 수상 시 25만 원 상금이 주
- 어집니다.\nhttps://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1820&
- CONTENTS_NO=&SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=24&BOARD_CATEGORY_NO=&B
- BS_SEQ=119516&pageNo=1
+DESCRIPTION:E-포트폴리오 공모전 참여자를 모집해요. 재학
+ 생이 11월 27일까지 신청하면 상금 250\,000원 등 혜택을 받
+ 고\, 10월 5일부터 심사가 진행됩니다.\nhttps://www.kku.ac.kr/c
+ ms/FR_CON/BoardView.do?MENU_ID=1820&CONTENTS_NO=&SITE_NO=2&P_TAB_NO=&TAB_N
+ O=&BOARD_SEQ=24&BOARD_CATEGORY_NO=&BBS_SEQ=119516&pageNo=1
 URL:https://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1820&CONTENTS_NO=
  &SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=24&BOARD_CATEGORY_NO=&BBS_SEQ=11951
  6&pageNo=1
@@ -1554,15 +1402,16 @@ END:VALARM
 END:VEVENT
 BEGIN:VEVENT
 UID:2-24-119517-deadline@gongji-jupjup
-DTSTAMP:20261113T062400Z
+DTSTAMP:20261114T075900Z
 DTSTART:20261204T090000Z
 DTEND:20261204T093000Z
 SUMMARY:[마감] [RISE] 청년이 빛나는 봉방 공모전(사진/영상)
-DESCRIPTION:청년이 빛나는 봉방 축제 사진·영상 공모전에 
- 참여하면 최대 120만원의 인재지원금을 받을 수 있어요.\
- nhttps://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1820&CONTENTS_NO=&S
- ITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=24&BOARD_CATEGORY_NO=&BBS_SEQ=119517&
- pageNo=1
+DESCRIPTION:청년이 빛나는 봉방 공모전 참여자를 모집해요.
+  건국대학교 글로컬캠퍼스 재학생이 12월 4일까지 신청
+ 하면 인재지원금 50만원~120만원을 받을 수 있어요.\nhttps:
+ //www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1820&CONTENTS_NO=&SITE_NO=
+ 2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=24&BOARD_CATEGORY_NO=&BBS_SEQ=119517&pageNo=
+ 1
 URL:https://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1820&CONTENTS_NO=
  &SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=24&BOARD_CATEGORY_NO=&BBS_SEQ=11951
  7&pageNo=1
@@ -1576,15 +1425,15 @@ END:VALARM
 END:VEVENT
 BEGIN:VEVENT
 UID:2-24-119519-deadline@gongji-jupjup
-DTSTAMP:20261113T062400Z
+DTSTAMP:20261114T075900Z
 DTSTART:20261114T145900Z
 DTEND:20261114T152900Z
 SUMMARY:[마감] [중원도서관] 중원역사문화탐방
-DESCRIPTION:중원역사문화탐방 행사가 2026년 11월 14일에 진
- 행되며\, 충주 지역주민 및 건국대 GLOCAL 캠퍼스 구성원
- 이 참여할 수 있습니다.\nhttps://www.kku.ac.kr/cms/FR_CON/BoardVie
- w.do?MENU_ID=1820&CONTENTS_NO=&SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=24&BO
- ARD_CATEGORY_NO=&BBS_SEQ=119519&pageNo=1
+DESCRIPTION:중원역사문화탐방 행사를 안내해요. 충주 지역
+ 주민 및 건국대 GLOCAL 캠퍼스 구성원이 11월 14일까지 신
+ 청하면 행사에 참여할 수 있어요.\nhttps://www.kku.ac.kr/cms/FR
+ _CON/BoardView.do?MENU_ID=1820&CONTENTS_NO=&SITE_NO=2&P_TAB_NO=&TAB_NO=&BO
+ ARD_SEQ=24&BOARD_CATEGORY_NO=&BBS_SEQ=119519&pageNo=1
 URL:https://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1820&CONTENTS_NO=
  &SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=24&BOARD_CATEGORY_NO=&BBS_SEQ=11951
  9&pageNo=1
@@ -1597,14 +1446,16 @@ END:VALARM
 END:VEVENT
 BEGIN:VEVENT
 UID:2-25-119738-deadline@gongji-jupjup
-DTSTAMP:20261113T062400Z
+DTSTAMP:20261114T075900Z
 DTSTART:20261107T010000Z
 DTEND:20261107T013000Z
 SUMMARY:[마감] (한국국제협력단) 2026년 KOICA 해외봉사단 정
  기설명회 개최
-DESCRIPTION:혜택은 없습니다.\nhttps://www.kku.ac.kr/cms/FR_CON/Board
- View.do?MENU_ID=1830&CONTENTS_NO=&SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=25
- &BOARD_CATEGORY_NO=&BBS_SEQ=119738&pageNo=1
+DESCRIPTION:공모전·대외활동 관련 공지예요. 대상은 KOICA 
+ 해외봉사단 참여를 희망하는 학생이에요. 신청은 11월 7
+ 일 10시까지예요.\nhttps://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU
+ _ID=1830&CONTENTS_NO=&SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=25&BOARD_CATEG
+ ORY_NO=&BBS_SEQ=119738&pageNo=1
 URL:https://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1830&CONTENTS_NO=
  &SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=25&BOARD_CATEGORY_NO=&BBS_SEQ=11973
  8&pageNo=1
@@ -1617,42 +1468,17 @@ TRIGGER:-PT1440M
 END:VALARM
 END:VEVENT
 BEGIN:VEVENT
-UID:2-25-119739-deadline@gongji-jupjup
-DTSTAMP:20261113T062400Z
-DTSTART:20261030T145900Z
-DTEND:20261030T152900Z
-SUMMARY:[마감] 2026년 시립서울청소년센터 찾아가는 서울시
-  특수학급 예능발표회 및 청소년 어울림 한마당 자원봉
- 사자 모집
-DESCRIPTION:서울시 특수학급 예능발표회 및 청소년 어울림 
- 한마당 자원봉사자 모집이 10월 30일까지 진행됩니다. 활
- 동비나 VMS 시간을 제공합니다.\nhttps://www.kku.ac.kr/cms/FR_CON
- /BoardView.do?MENU_ID=1830&CONTENTS_NO=&SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_
- SEQ=25&BOARD_CATEGORY_NO=&BBS_SEQ=119739&pageNo=1
-URL:https://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1830&CONTENTS_NO=
- &SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=25&BOARD_CATEGORY_NO=&BBS_SEQ=11973
- 9&pageNo=1
-CATEGORIES:공모전·대외활동
-BEGIN:VALARM
-ACTION:DISPLAY
-DESCRIPTION:[마감] 2026년 시립서울청소년센터 찾아가는 서
- 울시 특수학급 예능발표회 및 청소년 어울림 한마당 자
- 원봉사자 모집
-TRIGGER:-PT1440M
-END:VALARM
-END:VEVENT
-BEGIN:VEVENT
 UID:2-26-119681-deadline@gongji-jupjup
-DTSTAMP:20261113T062400Z
+DTSTAMP:20261114T075900Z
 DTSTART:20261102T145900Z
 DTEND:20261102T152900Z
 SUMMARY:[마감] 시그마수학학원 초.중등 수학강사 모집합니
  다.
-DESCRIPTION:2026년 11월 2일까지 시그마수학학원에서 수학 강
- 사로 일할 수 있으며\, 시급은 15\,000원부터입니다.\nhttps:
- //www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1840&CONTENTS_NO=&SITE_NO=
- 2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=26&BOARD_CATEGORY_NO=&BBS_SEQ=119681&pageNo=
- 1
+DESCRIPTION:아이들을 위한 수학 강사 모집 공지예요. 최소 1
+ 년 이상 근무 가능하신 분이 11월 2일까지 지원하면 시급
+  15\,000원부터 받을 수 있어요.\nhttps://www.kku.ac.kr/cms/FR_CON/
+ BoardView.do?MENU_ID=1840&CONTENTS_NO=&SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_S
+ EQ=26&BOARD_CATEGORY_NO=&BBS_SEQ=119681&pageNo=1
 URL:https://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1840&CONTENTS_NO=
  &SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=26&BOARD_CATEGORY_NO=&BBS_SEQ=11968
  1&pageNo=1
@@ -1666,15 +1492,15 @@ END:VALARM
 END:VEVENT
 BEGIN:VEVENT
 UID:2-26-119689-deadline@gongji-jupjup
-DTSTAMP:20261113T062400Z
+DTSTAMP:20261114T075900Z
 DTSTART:20261118T145900Z
 DTEND:20261118T152900Z
 SUMMARY:[마감] [그린서비스] 2026 K-Brand GLOW WEEK 통역사 모집
-DESCRIPTION:2026년 11월 18일까지 지원 가능하며\, 영어/스페
- 인어 등 통역을 통해 일당 최대 29만 원의 수입이 있습니
- 다.\nhttps://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1840&CONTENTS_
- NO=&SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=26&BOARD_CATEGORY_NO=&BBS_SEQ=11
- 9689&pageNo=1
+DESCRIPTION:2026 K-Brand GLOW WEEK 통역사 모집공고예요. 영어/스
+ 페인어 등 통역 가능자 11월 18일까지 지원하면 통역료와
+  교통비·식비가 포함돼요.\nhttps://www.kku.ac.kr/cms/FR_CON/Boar
+ dView.do?MENU_ID=1840&CONTENTS_NO=&SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=2
+ 6&BOARD_CATEGORY_NO=&BBS_SEQ=119689&pageNo=1
 URL:https://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1840&CONTENTS_NO=
  &SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=26&BOARD_CATEGORY_NO=&BBS_SEQ=11968
  9&pageNo=1
@@ -1687,81 +1513,17 @@ TRIGGER:-PT1440M
 END:VALARM
 END:VEVENT
 BEGIN:VEVENT
-UID:2-27-120827-event0@gongji-jupjup
-DTSTAMP:20261113T062400Z
-DTSTART:20261111T010000Z
-DTEND:20261111T090000Z
-SUMMARY:2026년 한국산불학회 추계학술대회
-DESCRIPTION:2026년 11월 11일에 서울시립대학교에서 열리는 
- 산불학술대회에 참가할 수 있으며\, 참가비는 50\,000원입
- 니다.\nhttps://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1850&CONTEN
- TS_NO=&SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=27&BOARD_CATEGORY_NO=&BBS_SEQ
- =120827&pageNo=1
-URL:https://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1850&CONTENTS_NO=
- &SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=27&BOARD_CATEGORY_NO=&BBS_SEQ=12082
- 7&pageNo=1
-CATEGORIES:학사
-BEGIN:VALARM
-ACTION:DISPLAY
-DESCRIPTION:2026년 한국산불학회 추계학술대회
-TRIGGER:-PT60M
-END:VALARM
-END:VEVENT
-BEGIN:VEVENT
-UID:2-27-120827-event1@gongji-jupjup
-DTSTAMP:20261113T062400Z
-DTSTART:20261111T023000Z
-DTEND:20261111T030000Z
-SUMMARY:2026년 한국산불학회 추계학술대회
-DESCRIPTION:2026년 11월 11일에 서울시립대학교에서 열리는 
- 산불학술대회에 참가할 수 있으며\, 참가비는 50\,000원입
- 니다.\nhttps://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1850&CONTEN
- TS_NO=&SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=27&BOARD_CATEGORY_NO=&BBS_SEQ
- =120827&pageNo=1
-URL:https://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1850&CONTENTS_NO=
- &SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=27&BOARD_CATEGORY_NO=&BBS_SEQ=12082
- 7&pageNo=1
-CATEGORIES:학사
-BEGIN:VALARM
-ACTION:DISPLAY
-DESCRIPTION:2026년 한국산불학회 추계학술대회
-TRIGGER:-PT60M
-END:VALARM
-END:VEVENT
-BEGIN:VEVENT
-UID:2-27-120833-deadline@gongji-jupjup
-DTSTAMP:20261113T062400Z
-DTSTART:20261030T145900Z
-DTEND:20261030T152900Z
-SUMMARY:[마감] '2026년 제3회 마약 예방활동 우수사례 공모
- 전' 개최 알림
-DESCRIPTION:2026년 10월 30일까지 마약 예방 활동이나 콘텐츠
- 를 제출하면 식약처장 상장과 부상이 주어집니다. 개인 
- 또는 단체 모두 참여 가능합니다.\nhttps://www.kku.ac.kr/cms/FR
- _CON/BoardView.do?MENU_ID=1850&CONTENTS_NO=&SITE_NO=2&P_TAB_NO=&TAB_NO=&BO
- ARD_SEQ=27&BOARD_CATEGORY_NO=&BBS_SEQ=120833&pageNo=1
-URL:https://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1850&CONTENTS_NO=
- &SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=27&BOARD_CATEGORY_NO=&BBS_SEQ=12083
- 3&pageNo=1
-CATEGORIES:공모전·대외활동
-BEGIN:VALARM
-ACTION:DISPLAY
-DESCRIPTION:[마감] '2026년 제3회 마약 예방활동 우수사례 공
- 모전' 개최 알림
-TRIGGER:-PT1440M
-END:VALARM
-END:VEVENT
-BEGIN:VEVENT
 UID:2-27-120848-deadline@gongji-jupjup
-DTSTAMP:20261113T062400Z
+DTSTAMP:20261114T075900Z
 DTSTART:20261105T145900Z
 DTEND:20261105T152900Z
 SUMMARY:[마감] 전국민 AI 경진대회 「AI 달인 100」챌린지
-DESCRIPTION:전국민 AI 경진대회 'AI 달인 100' 챌린지에 참여
- 하면 모바일 기프트 카드 20만원권을 받을 수 있어요. 마
- 감은 2026년 11월 5일입니다.\nhttps://www.kku.ac.kr/cms/FR_CON/Boar
- dView.do?MENU_ID=1850&CONTENTS_NO=&SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=2
- 7&BOARD_CATEGORY_NO=&BBS_SEQ=120848&pageNo=1
+DESCRIPTION:전국민 AI 경진대회에 참여할 수 있어요. AI 활용
+ 에 자신있는 누구나 11월 5일까지 신청하면 모바일 기프
+ 트 카드 20만원권과 LG 스탠바이미TV를 받을 수 있어요.\nh
+ ttps://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1850&CONTENTS_NO=&SIT
+ E_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=27&BOARD_CATEGORY_NO=&BBS_SEQ=120848&pa
+ geNo=1
 URL:https://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1850&CONTENTS_NO=
  &SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=27&BOARD_CATEGORY_NO=&BBS_SEQ=12084
  8&pageNo=1
@@ -1774,15 +1536,16 @@ END:VALARM
 END:VEVENT
 BEGIN:VEVENT
 UID:2-27-120856-deadline@gongji-jupjup
-DTSTAMP:20261113T062400Z
+DTSTAMP:20261114T075900Z
 DTSTART:20261102T145900Z
 DTEND:20261102T152900Z
 SUMMARY:[마감] [한신대학교/미디어영상광고홍보학] 제31회 
  HIF 한신영상광고제
-DESCRIPTION:한신영상광고제에 참여하면 최대 75만원의 상금
- 을 받을 수 있어요.\nhttps://www.kku.ac.kr/cms/FR_CON/BoardView.do?M
- ENU_ID=1850&CONTENTS_NO=&SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=27&BOARD_CA
- TEGORY_NO=&BBS_SEQ=120856&pageNo=1
+DESCRIPTION:한신영상광고제 참가자를 모집해요. 전국 고등
+ 학생과 대학생이 11월 2일까지 신청하면 75만원\, 50만원\,
+  30만원 등 혜택을 받을 수 있어요.\nhttps://www.kku.ac.kr/cms/F
+ R_CON/BoardView.do?MENU_ID=1850&CONTENTS_NO=&SITE_NO=2&P_TAB_NO=&TAB_NO=&B
+ OARD_SEQ=27&BOARD_CATEGORY_NO=&BBS_SEQ=120856&pageNo=1
 URL:https://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1850&CONTENTS_NO=
  &SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=27&BOARD_CATEGORY_NO=&BBS_SEQ=12085
  6&pageNo=1
@@ -1796,16 +1559,17 @@ END:VALARM
 END:VEVENT
 BEGIN:VEVENT
 UID:2-27-120868-deadline@gongji-jupjup
-DTSTAMP:20261113T062400Z
+DTSTAMP:20261114T075900Z
 DTSTART:20270114T150000Z
 DTEND:20270114T153000Z
 SUMMARY:[마감] 「상주시 대표축제 대국민 아이디어 공모전
  」
-DESCRIPTION:상주시 대표축제 아이디어 공모전에 참여하면 
- 최대 3\,000만원의 상금을 받을 수 있으며\, 마감일은 2027
- 년 1월 15일입니다.\nhttps://www.kku.ac.kr/cms/FR_CON/BoardView.do?ME
- NU_ID=1850&CONTENTS_NO=&SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=27&BOARD_CAT
- EGORY_NO=&BBS_SEQ=120868&pageNo=1
+DESCRIPTION:상주시 대표축제 아이디어 공모전 참여자를 모
+ 집해요. 전 국민이 2026년 10월 1일부터 2027년 1월 15일까지
+  온라인으로 신청하면 상금 3\,000만원 등 혜택을 받을 수
+  있어요.\nhttps://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1850&CO
+ NTENTS_NO=&SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=27&BOARD_CATEGORY_NO=&BBS
+ _SEQ=120868&pageNo=1
 URL:https://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1850&CONTENTS_NO=
  &SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=27&BOARD_CATEGORY_NO=&BBS_SEQ=12086
  8&pageNo=1
@@ -1819,15 +1583,15 @@ END:VALARM
 END:VEVENT
 BEGIN:VEVENT
 UID:2-27-120869-deadline@gongji-jupjup
-DTSTAMP:20261113T062400Z
+DTSTAMP:20261114T075900Z
 DTSTART:20261106T090000Z
 DTEND:20261106T093000Z
 SUMMARY:[마감] 「제2회 성남시 창의도시계획 공모전」
-DESCRIPTION:성남시 창의도시계획 공모전에 참여하면 상금 4
- 00만원을 받을 수 있어요. 마감일은 2026년 11월 6일입니다
- .\nhttps://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1850&CONTENTS_NO=
- &SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=27&BOARD_CATEGORY_NO=&BBS_SEQ=12086
- 9&pageNo=1
+DESCRIPTION:성남시 창의도시계획 공모전 참여자를 모집해
+ 요. 전국 대학생 및 대학원생이 11월 6일까지 신청하면 
+ 상금 400만원과 성남시장상 등을 받을 수 있어요.\nhttps://
+ www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1850&CONTENTS_NO=&SITE_NO=2&
+ P_TAB_NO=&TAB_NO=&BOARD_SEQ=27&BOARD_CATEGORY_NO=&BBS_SEQ=120869&pageNo=1
 URL:https://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1850&CONTENTS_NO=
  &SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=27&BOARD_CATEGORY_NO=&BBS_SEQ=12086
  9&pageNo=1
@@ -1840,16 +1604,17 @@ END:VALARM
 END:VEVENT
 BEGIN:VEVENT
 UID:2-27-120882-deadline@gongji-jupjup
-DTSTAMP:20261113T062400Z
+DTSTAMP:20261114T075900Z
 DTSTART:20261031T145900Z
 DTEND:20261031T152900Z
 SUMMARY:[마감] 2026년 보건복지분야 사회복무요원 SNS 영상 
  공모전
-DESCRIPTION:2026년 보건복지분야 사회복무요원 SNS 영상 공모
- 전에 참여하면 최대 100만원 상금을 받을 수 있어요.\nhttp
- s://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1850&CONTENTS_NO=&SITE_N
- O=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=27&BOARD_CATEGORY_NO=&BBS_SEQ=120882&pageN
- o=1
+DESCRIPTION:보건복지분야 사회복무요원 SNS 영상 공모전 참
+ 여자를 모집해요. 사회복무요원 및 전 국민이 10월 31일
+ 까지 신청하면 상금과 기프티콘을 받을 수 있어요.\nhttps
+ ://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1850&CONTENTS_NO=&SITE_NO
+ =2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=27&BOARD_CATEGORY_NO=&BBS_SEQ=120882&pageNo
+ =1
 URL:https://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1850&CONTENTS_NO=
  &SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=27&BOARD_CATEGORY_NO=&BBS_SEQ=12088
  2&pageNo=1
@@ -1863,15 +1628,16 @@ END:VALARM
 END:VEVENT
 BEGIN:VEVENT
 UID:2-27-120891-event0@gongji-jupjup
-DTSTAMP:20261113T062400Z
+DTSTAMP:20261114T075900Z
 DTSTART:20261031T010000Z
 DTEND:20261031T073000Z
 SUMMARY:「2026년 충북인재 정책제안 대회」 참여자 모집
-DESCRIPTION:2026년 10월 23일까지 충북 지역 문제 해결을 위한
-  정책 아이디어를 제안해보세요. 최대 200만 원 상금이 
- 주어집니다.\nhttps://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=18
- 50&CONTENTS_NO=&SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=27&BOARD_CATEGORY_NO
- =&BBS_SEQ=120891&pageNo=1
+DESCRIPTION:충북인재 정책제안 대회 참여자를 모집해요. 충
+ 북권 대학 재학생 또는 청년이 10월 23일까지 신청하면 
+ 상금 2\,000\,000원을 받고 10월 31일과 11월 14일에 행사가 
+ 있어요.\nhttps://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1850&CON
+ TENTS_NO=&SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=27&BOARD_CATEGORY_NO=&BBS_
+ SEQ=120891&pageNo=1
 URL:https://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1850&CONTENTS_NO=
  &SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=27&BOARD_CATEGORY_NO=&BBS_SEQ=12089
  1&pageNo=1
@@ -1884,15 +1650,16 @@ END:VALARM
 END:VEVENT
 BEGIN:VEVENT
 UID:2-27-120891-event1@gongji-jupjup
-DTSTAMP:20261113T062400Z
+DTSTAMP:20261114T075900Z
 DTSTART:20261114T000000Z
 DTEND:20261114T060000Z
 SUMMARY:「2026년 충북인재 정책제안 대회」 참여자 모집
-DESCRIPTION:2026년 10월 23일까지 충북 지역 문제 해결을 위한
-  정책 아이디어를 제안해보세요. 최대 200만 원 상금이 
- 주어집니다.\nhttps://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=18
- 50&CONTENTS_NO=&SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=27&BOARD_CATEGORY_NO
- =&BBS_SEQ=120891&pageNo=1
+DESCRIPTION:충북인재 정책제안 대회 참여자를 모집해요. 충
+ 북권 대학 재학생 또는 청년이 10월 23일까지 신청하면 
+ 상금 2\,000\,000원을 받고 10월 31일과 11월 14일에 행사가 
+ 있어요.\nhttps://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1850&CON
+ TENTS_NO=&SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=27&BOARD_CATEGORY_NO=&BBS_
+ SEQ=120891&pageNo=1
 URL:https://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1850&CONTENTS_NO=
  &SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=27&BOARD_CATEGORY_NO=&BBS_SEQ=12089
  1&pageNo=1
@@ -1905,16 +1672,17 @@ END:VALARM
 END:VEVENT
 BEGIN:VEVENT
 UID:2-27-120893-deadline@gongji-jupjup
-DTSTAMP:20261113T062400Z
+DTSTAMP:20261114T075900Z
 DTSTART:20261103T145900Z
 DTEND:20261103T152900Z
 SUMMARY:[마감] 2026 한양대 컨소시엄 창의적 종합설계 경진
  대회 예선 개최 안내
-DESCRIPTION:2026년 11월 3일에 한양대 컨소시엄 창의적 종합
- 설계 경진대회 예선이 열립니다. 대상 상금은 100만원입
- 니다.\nhttps://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1850&CONTEN
- TS_NO=&SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=27&BOARD_CATEGORY_NO=&BBS_SEQ
- =120893&pageNo=1
+DESCRIPTION:한양대 컨소시엄 창의적 종합설계 경진대회 예
+ 선 참여자를 모집해요. 한양대학교 공과대학 학생이 11
+ 월 3일까지 신청하면 상금 100만원을 받을 수 있어요.\nhtt
+ ps://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1850&CONTENTS_NO=&SITE_
+ NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=27&BOARD_CATEGORY_NO=&BBS_SEQ=120893&page
+ No=1
 URL:https://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1850&CONTENTS_NO=
  &SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=27&BOARD_CATEGORY_NO=&BBS_SEQ=12089
  3&pageNo=1
@@ -1928,16 +1696,17 @@ END:VALARM
 END:VEVENT
 BEGIN:VEVENT
 UID:2-27-120893-event0@gongji-jupjup
-DTSTAMP:20261113T062400Z
+DTSTAMP:20261114T075900Z
 DTSTART:20261103T050000Z
 DTEND:20261103T083000Z
 SUMMARY:2026 한양대 컨소시엄 창의적 종합설계 경진대회 예
  선 개최 안내
-DESCRIPTION:2026년 11월 3일에 한양대 컨소시엄 창의적 종합
- 설계 경진대회 예선이 열립니다. 대상 상금은 100만원입
- 니다.\nhttps://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1850&CONTEN
- TS_NO=&SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=27&BOARD_CATEGORY_NO=&BBS_SEQ
- =120893&pageNo=1
+DESCRIPTION:한양대 컨소시엄 창의적 종합설계 경진대회 예
+ 선 참여자를 모집해요. 한양대학교 공과대학 학생이 11
+ 월 3일까지 신청하면 상금 100만원을 받을 수 있어요.\nhtt
+ ps://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1850&CONTENTS_NO=&SITE_
+ NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=27&BOARD_CATEGORY_NO=&BBS_SEQ=120893&page
+ No=1
 URL:https://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1850&CONTENTS_NO=
  &SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=27&BOARD_CATEGORY_NO=&BBS_SEQ=12089
  3&pageNo=1
@@ -1950,104 +1719,16 @@ TRIGGER:-PT60M
 END:VALARM
 END:VEVENT
 BEGIN:VEVENT
-UID:2-27-120899-deadline@gongji-jupjup
-DTSTAMP:20261113T062400Z
-DTSTART:20261030T145900Z
-DTEND:20261030T152900Z
-SUMMARY:[마감] 2026 안산시 정책 홍보 숏폼 대학생 공모전
-DESCRIPTION:2026 안산시 정책 홍보 숏폼 대학생 공모전에 참
- 여하면 최대 100만원 상금을 받을 수 있어요. 마감일은 10
- 월 30일입니다.\nhttps://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID
- =1850&CONTENTS_NO=&SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=27&BOARD_CATEGORY
- _NO=&BBS_SEQ=120899&pageNo=1
-URL:https://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1850&CONTENTS_NO=
- &SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=27&BOARD_CATEGORY_NO=&BBS_SEQ=12089
- 9&pageNo=1
-CATEGORIES:공모전·대외활동
-BEGIN:VALARM
-ACTION:DISPLAY
-DESCRIPTION:[마감] 2026 안산시 정책 홍보 숏폼 대학생 공모
- 전
-TRIGGER:-PT1440M
-END:VALARM
-END:VEVENT
-BEGIN:VEVENT
-UID:2-27-120900-deadline@gongji-jupjup
-DTSTAMP:20261113T062400Z
-DTSTART:20261030T145900Z
-DTEND:20261030T152900Z
-SUMMARY:[마감] 「2026학년도 전국 대학(원)생 빅데이터 경진
- 대회」
-DESCRIPTION:2026년 10월 30일까지 빅데이터 경진대회에 참여
- 할 수 있으며\, 최우수상은 70만원을 받습니다. 대회는 11
- 월 27일 시상식으로 마무리됩니다.\nhttps://www.kku.ac.kr/cms/F
- R_CON/BoardView.do?MENU_ID=1850&CONTENTS_NO=&SITE_NO=2&P_TAB_NO=&TAB_NO=&B
- OARD_SEQ=27&BOARD_CATEGORY_NO=&BBS_SEQ=120900&pageNo=1
-URL:https://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1850&CONTENTS_NO=
- &SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=27&BOARD_CATEGORY_NO=&BBS_SEQ=12090
- 0&pageNo=1
-CATEGORIES:공모전·대외활동
-BEGIN:VALARM
-ACTION:DISPLAY
-DESCRIPTION:[마감] 「2026학년도 전국 대학(원)생 빅데이터 
- 경진대회」
-TRIGGER:-PT1440M
-END:VALARM
-END:VEVENT
-BEGIN:VEVENT
-UID:2-27-120902-deadline@gongji-jupjup
-DTSTAMP:20261113T062400Z
-DTSTART:20261030T145900Z
-DTEND:20261030T152900Z
-SUMMARY:[마감] 'KDI국제정책대학원-세계은행 10월 월례 웨비
- 나'
-DESCRIPTION:마감은 10월 30일입니다.\nhttps://www.kku.ac.kr/cms/FR_C
- ON/BoardView.do?MENU_ID=1850&CONTENTS_NO=&SITE_NO=2&P_TAB_NO=&TAB_NO=&BOAR
- D_SEQ=27&BOARD_CATEGORY_NO=&BBS_SEQ=120902&pageNo=1
-URL:https://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1850&CONTENTS_NO=
- &SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=27&BOARD_CATEGORY_NO=&BBS_SEQ=12090
- 2&pageNo=1
-CATEGORIES:공모전·대외활동
-BEGIN:VALARM
-ACTION:DISPLAY
-DESCRIPTION:[마감] 'KDI국제정책대학원-세계은행 10월 월례 
- 웨비나'
-TRIGGER:-PT1440M
-END:VALARM
-END:VEVENT
-BEGIN:VEVENT
-UID:2-27-120903-deadline@gongji-jupjup
-DTSTAMP:20261113T062400Z
-DTSTART:20261030T145900Z
-DTEND:20261030T152900Z
-SUMMARY:[마감] 「2026 청년정책 공모전」
-DESCRIPTION:2026년 10월 7일부터 30일까지 청년정책 공모전에 
- 참여하면 최대 100만원 상금을 받을 수 있어요. 일자리\, 
- 주거\, 교육 등 5개 분야 중 하나를 선택해 정책 제안하
- 면 됩니다.\nhttps://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1850
- &CONTENTS_NO=&SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=27&BOARD_CATEGORY_NO=&
- BBS_SEQ=120903&pageNo=1
-URL:https://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1850&CONTENTS_NO=
- &SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=27&BOARD_CATEGORY_NO=&BBS_SEQ=12090
- 3&pageNo=1
-CATEGORIES:공모전·대외활동
-BEGIN:VALARM
-ACTION:DISPLAY
-DESCRIPTION:[마감] 「2026 청년정책 공모전」
-TRIGGER:-PT1440M
-END:VALARM
-END:VEVENT
-BEGIN:VEVENT
 UID:2-27-120905-event0@gongji-jupjup
-DTSTAMP:20261113T062400Z
+DTSTAMP:20261114T075900Z
 DTSTART:20261222T050000Z
 DTEND:20261222T070000Z
 SUMMARY:「제13회 대학생 물환경 정책·기술 공모전」
-DESCRIPTION:물환경 정책·기술 아이디어를 제안하면 최대 50
- 0만원 상금을 받을 수 있어요. 마감은 2026년 10월 25일입
- 니다.\nhttps://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1850&CONTEN
- TS_NO=&SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=27&BOARD_CATEGORY_NO=&BBS_SEQ
- =120905&pageNo=1
+DESCRIPTION:물환경 정책·기술 아이디어를 공모하는 공지예
+ 요. 국내대학 재·휴학생팀이 10월 25일까지 신청하면 총
+ 상금 1\,300만원을 받을 수 있어요.\nhttps://www.kku.ac.kr/cms/FR
+ _CON/BoardView.do?MENU_ID=1850&CONTENTS_NO=&SITE_NO=2&P_TAB_NO=&TAB_NO=&BO
+ ARD_SEQ=27&BOARD_CATEGORY_NO=&BBS_SEQ=120905&pageNo=1
 URL:https://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1850&CONTENTS_NO=
  &SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=27&BOARD_CATEGORY_NO=&BBS_SEQ=12090
  5&pageNo=1
@@ -2060,16 +1741,16 @@ END:VALARM
 END:VEVENT
 BEGIN:VEVENT
 UID:2-27-120908-event0@gongji-jupjup
-DTSTAMP:20261113T062400Z
+DTSTAMP:20261114T075900Z
 DTSTART:20261114T000000Z
 DTEND:20261114T093000Z
 SUMMARY:2026학년도 하반기 과학수사 CSI 경진대회 개최 안내
-DESCRIPTION:2026년 11월 14일까지 신청 가능하며\, 과학수사 CS
- I 경진대회에 참가하면 수료증을 받고 우수상 수상 시 
- 총장상을 드립니다. 마감일: 2026-10-23\, 혜택: 수료증 및 
- 상품 지급.\nhttps://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1850
- &CONTENTS_NO=&SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=27&BOARD_CATEGORY_NO=&
- BBS_SEQ=120908&pageNo=1
+DESCRIPTION:2026학년도 하반기 과학수사 CSI 경진대회 참가자
+ 를 모집해요. 전국 대학생 및 휴학생이 10월 23일까지 신
+ 청하면 수료증을 발급하고\, 대상 등 수상 시 총장상을 
+ 받을 수 있어요.\nhttps://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_
+ ID=1850&CONTENTS_NO=&SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=27&BOARD_CATEGO
+ RY_NO=&BBS_SEQ=120908&pageNo=1
 URL:https://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1850&CONTENTS_NO=
  &SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=27&BOARD_CATEGORY_NO=&BBS_SEQ=12090
  8&pageNo=1
@@ -2083,12 +1764,13 @@ END:VALARM
 END:VEVENT
 BEGIN:VEVENT
 UID:2-27-120909-event0@gongji-jupjup
-DTSTAMP:20261113T062400Z
+DTSTAMP:20261114T075900Z
 DTSTART:20261120T040000Z
 DTEND:20261120T083000Z
 SUMMARY:[전남대학교] 제2회 HAI 교육혁신 포럼 개최 안내
-DESCRIPTION:11월 20일 전남대 용봉홀에서 열리는 HAI 교육혁
- 신 포럼에 참여할 수 있습니다.\nhttps://www.kku.ac.kr/cms/FR_CO
+DESCRIPTION:HAI 교육혁신 포럼 참여자를 모집해요. 전남대 
+ 재학생이 11월 20일 13시에 용봉홀에서 참석하면 다양한 
+ 강연과 토론을 들을 수 있어요.\nhttps://www.kku.ac.kr/cms/FR_CO
  N/BoardView.do?MENU_ID=1850&CONTENTS_NO=&SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD
  _SEQ=27&BOARD_CATEGORY_NO=&BBS_SEQ=120909&pageNo=1
 URL:https://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1850&CONTENTS_NO=
@@ -2103,13 +1785,15 @@ END:VALARM
 END:VEVENT
 BEGIN:VEVENT
 UID:2-27-120911-deadline@gongji-jupjup
-DTSTAMP:20261113T062400Z
+DTSTAMP:20261114T075900Z
 DTSTART:20261115T145900Z
 DTEND:20261115T152900Z
 SUMMARY:[마감] 제2회 연세국제창작공모전
-DESCRIPTION:제2회 연세국제창작공모전\nhttps://www.kku.ac.kr/cms/
- FR_CON/BoardView.do?MENU_ID=1850&CONTENTS_NO=&SITE_NO=2&P_TAB_NO=&TAB_NO=&
- BOARD_SEQ=27&BOARD_CATEGORY_NO=&BBS_SEQ=120911&pageNo=1
+DESCRIPTION:제2회 연세국제창작공모전 참여자를 모집해요. 
+ 국내·국외 청소년 및 청년이 11월 15일까지 신청하면 수
+ 상 가능하고\, 12월 2일 시상식이 있어요.\nhttps://www.kku.ac.
+ kr/cms/FR_CON/BoardView.do?MENU_ID=1850&CONTENTS_NO=&SITE_NO=2&P_TAB_NO=&T
+ AB_NO=&BOARD_SEQ=27&BOARD_CATEGORY_NO=&BBS_SEQ=120911&pageNo=1
 URL:https://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1850&CONTENTS_NO=
  &SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=27&BOARD_CATEGORY_NO=&BBS_SEQ=12091
  1&pageNo=1
@@ -2122,13 +1806,15 @@ END:VALARM
 END:VEVENT
 BEGIN:VEVENT
 UID:2-27-120911-event0@gongji-jupjup
-DTSTAMP:20261113T062400Z
+DTSTAMP:20261114T075900Z
 DTSTART:20261202T013000Z
 DTEND:20261202T023000Z
 SUMMARY:제2회 연세국제창작공모전
-DESCRIPTION:제2회 연세국제창작공모전\nhttps://www.kku.ac.kr/cms/
- FR_CON/BoardView.do?MENU_ID=1850&CONTENTS_NO=&SITE_NO=2&P_TAB_NO=&TAB_NO=&
- BOARD_SEQ=27&BOARD_CATEGORY_NO=&BBS_SEQ=120911&pageNo=1
+DESCRIPTION:제2회 연세국제창작공모전 참여자를 모집해요. 
+ 국내·국외 청소년 및 청년이 11월 15일까지 신청하면 수
+ 상 가능하고\, 12월 2일 시상식이 있어요.\nhttps://www.kku.ac.
+ kr/cms/FR_CON/BoardView.do?MENU_ID=1850&CONTENTS_NO=&SITE_NO=2&P_TAB_NO=&T
+ AB_NO=&BOARD_SEQ=27&BOARD_CATEGORY_NO=&BBS_SEQ=120911&pageNo=1
 URL:https://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1850&CONTENTS_NO=
  &SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=27&BOARD_CATEGORY_NO=&BBS_SEQ=12091
  1&pageNo=1
@@ -2141,17 +1827,16 @@ END:VALARM
 END:VEVENT
 BEGIN:VEVENT
 UID:2-27-120912-deadline@gongji-jupjup
-DTSTAMP:20261113T062400Z
+DTSTAMP:20261114T075900Z
 DTSTART:20261120T145900Z
 DTEND:20261120T152900Z
 SUMMARY:[마감] 「용산국제업무지구 AI 스마트도시 아이디
  어 공모」
-DESCRIPTION:용산국제업무지구 AI 스마트도시 아이디어 공모
- 에 참여하면 최대 300만원의 상금을 받을 수 있으며\, 마
- 감일은 2026년 11월 20일입니다. 청년이라면 누구나 참여 
- 가능합니다.\nhttps://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=18
- 50&CONTENTS_NO=&SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=27&BOARD_CATEGORY_NO
- =&BBS_SEQ=120912&pageNo=1
+DESCRIPTION:용산국제업무지구 AI 스마트도시 아이디어를 모
+ 집하는 공고예요. 청년이 11월 20일까지 신청하면 상금 30
+ 0만원\, 100만원\, 50만원 등을 받을 수 있어요.\nhttps://www.k
+ ku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1850&CONTENTS_NO=&SITE_NO=2&P_TAB
+ _NO=&TAB_NO=&BOARD_SEQ=27&BOARD_CATEGORY_NO=&BBS_SEQ=120912&pageNo=1
 URL:https://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1850&CONTENTS_NO=
  &SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=27&BOARD_CATEGORY_NO=&BBS_SEQ=12091
  2&pageNo=1
@@ -2165,16 +1850,17 @@ END:VALARM
 END:VEVENT
 BEGIN:VEVENT
 UID:2-27-120913-deadline@gongji-jupjup
-DTSTAMP:20261113T062400Z
+DTSTAMP:20261114T075900Z
 DTSTART:20261103T145900Z
 DTEND:20261103T152900Z
 SUMMARY:[마감] 2026년 서울시 가족돌봄청소년·청년 성과포
  럼 참여 신청 안내
-DESCRIPTION:서울시 가족돌봄 청소년·청년 성과포럼에 참여
- 할 수 있으며\, 마감일은 2026년 11월 3일입니다. 혜택은 
- 없습니다.\nhttps://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1850&
- CONTENTS_NO=&SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=27&BOARD_CATEGORY_NO=&B
- BS_SEQ=120913&pageNo=1
+DESCRIPTION:가족돌봄 청소년·청년 성과포럼 참여자를 모집
+ 해요. 가족돌봄청소년·청년에 관심 있는 누구나 11월 3
+ 일까지 신청하면 행사 일시는 11월 3일 14시부터 17시까지
+ 예요.\nhttps://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1850&CONTEN
+ TS_NO=&SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=27&BOARD_CATEGORY_NO=&BBS_SEQ
+ =120913&pageNo=1
 URL:https://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1850&CONTENTS_NO=
  &SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=27&BOARD_CATEGORY_NO=&BBS_SEQ=12091
  3&pageNo=1
@@ -2188,15 +1874,15 @@ END:VALARM
 END:VEVENT
 BEGIN:VEVENT
 UID:2-27-120916-event0@gongji-jupjup
-DTSTAMP:20261113T062400Z
+DTSTAMP:20261114T075900Z
 DTSTART:20261106T000000Z
 DTEND:20261106T090000Z
 SUMMARY:개항 150년 기념 학술대회 개최 안내
-DESCRIPTION:부산 개항 150년을 기념하는 학술대회가 2026년 11
- 월 6일부터 7일까지 부산광역시청에서 열립니다. 학술적
-  혜택이 있는 행사입니다.\nhttps://www.kku.ac.kr/cms/FR_CON/Board
- View.do?MENU_ID=1850&CONTENTS_NO=&SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=27
- &BOARD_CATEGORY_NO=&BBS_SEQ=120916&pageNo=1
+DESCRIPTION:개항 150년 기념 학술대회 참여자를 모집해요. 
+ 부산시 및 관련 기관 소속 학자와 연구자가 2026년 11월 6
+ 일까지 신청하면 행사에 참석할 수 있어요.\nhttps://www.kku
+ .ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1850&CONTENTS_NO=&SITE_NO=2&P_TAB_N
+ O=&TAB_NO=&BOARD_SEQ=27&BOARD_CATEGORY_NO=&BBS_SEQ=120916&pageNo=1
 URL:https://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1850&CONTENTS_NO=
  &SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=27&BOARD_CATEGORY_NO=&BBS_SEQ=12091
  6&pageNo=1
@@ -2209,16 +1895,17 @@ END:VALARM
 END:VEVENT
 BEGIN:VEVENT
 UID:2-27-120917-deadline@gongji-jupjup
-DTSTAMP:20261113T062400Z
+DTSTAMP:20261114T075900Z
 DTSTART:20261031T145900Z
 DTEND:20261031T152900Z
 SUMMARY:[마감] 제2회 인공지능 활용 우수사례 공모전 참가
  자 모집
-DESCRIPTION:AI 활용 우수사례 공모전에 참여하면 상금과 편
- 의점 상품권을 받을 수 있어요. 마감일은 2026년 10월 31일
- 입니다.\nhttps://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1850&CON
- TENTS_NO=&SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=27&BOARD_CATEGORY_NO=&BBS_
- SEQ=120917&pageNo=1
+DESCRIPTION:인공지능 활용 우수사례 공모전 참여자를 모집
+ 해요. 청소년과 대학생이 10월 31일까지 신청하면 편의점
+  상품권 2\,000원을 받고\, 수상 시 상금도 지급돼요.\nhttps
+ ://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1850&CONTENTS_NO=&SITE_NO
+ =2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=27&BOARD_CATEGORY_NO=&BBS_SEQ=120917&pageNo
+ =1
 URL:https://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1850&CONTENTS_NO=
  &SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=27&BOARD_CATEGORY_NO=&BBS_SEQ=12091
  7&pageNo=1
@@ -2231,58 +1918,14 @@ TRIGGER:-PT1440M
 END:VALARM
 END:VEVENT
 BEGIN:VEVENT
-UID:2-27-120919-deadline@gongji-jupjup
-DTSTAMP:20261113T062400Z
-DTSTART:20261030T145900Z
-DTEND:20261030T152900Z
-SUMMARY:[마감] 무안군 마한사회와 유적 활용방안 학술대회
-  개최
-DESCRIPTION:2026년 10월 30일에 열리는 무안군 마한유적 학술
- 대회에 참여할 수 있습니다. 역사문화유산을 활용하는 
- 방안을 논의하는 자리입니다.\nhttps://www.kku.ac.kr/cms/FR_CON/
- BoardView.do?MENU_ID=1850&CONTENTS_NO=&SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_S
- EQ=27&BOARD_CATEGORY_NO=&BBS_SEQ=120919&pageNo=1
-URL:https://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1850&CONTENTS_NO=
- &SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=27&BOARD_CATEGORY_NO=&BBS_SEQ=12091
- 9&pageNo=1
-CATEGORIES:학사
-BEGIN:VALARM
-ACTION:DISPLAY
-DESCRIPTION:[마감] 무안군 마한사회와 유적 활용방안 학술
- 대회 개최
-TRIGGER:-PT1440M
-END:VALARM
-END:VEVENT
-BEGIN:VEVENT
-UID:2-27-120919-event0@gongji-jupjup
-DTSTAMP:20261113T062400Z
-DTSTART:20261030T043000Z
-DTEND:20261030T083000Z
-SUMMARY:무안군 마한사회와 유적 활용방안 학술대회 개최
-DESCRIPTION:2026년 10월 30일에 열리는 무안군 마한유적 학술
- 대회에 참여할 수 있습니다. 역사문화유산을 활용하는 
- 방안을 논의하는 자리입니다.\nhttps://www.kku.ac.kr/cms/FR_CON/
- BoardView.do?MENU_ID=1850&CONTENTS_NO=&SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_S
- EQ=27&BOARD_CATEGORY_NO=&BBS_SEQ=120919&pageNo=1
-URL:https://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1850&CONTENTS_NO=
- &SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=27&BOARD_CATEGORY_NO=&BBS_SEQ=12091
- 9&pageNo=1
-CATEGORIES:학사
-BEGIN:VALARM
-ACTION:DISPLAY
-DESCRIPTION:무안군 마한사회와 유적 활용방안 학술대회 개
- 최
-TRIGGER:-PT60M
-END:VALARM
-END:VEVENT
-BEGIN:VEVENT
 UID:2-27-120920-deadline@gongji-jupjup
-DTSTAMP:20261113T062400Z
+DTSTAMP:20261114T075900Z
 DTSTART:20261108T145900Z
 DTEND:20261108T152900Z
 SUMMARY:[마감] 2026 충북 정보보호 해커톤 대회
-DESCRIPTION:충북 정보보호 해커톤 대회에 참여하면 상품을 
- 받을 수 있어요. 마감일은 2026년 11월 8일입니다.\nhttps://w
+DESCRIPTION:충북 정보보호 해커톤 참여자를 모집해요. 충북
+  소재 대학 재학생이 11월 8일까지 신청하면 과학기술정
+ 보통신부장관상 등 총 4개 상을 받을 수 있어요.\nhttps://w
  ww.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1850&CONTENTS_NO=&SITE_NO=2&P
  _TAB_NO=&TAB_NO=&BOARD_SEQ=27&BOARD_CATEGORY_NO=&BBS_SEQ=120920&pageNo=1
 URL:https://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1850&CONTENTS_NO=
@@ -2297,17 +1940,16 @@ END:VALARM
 END:VEVENT
 BEGIN:VEVENT
 UID:2-27-120922-deadline@gongji-jupjup
-DTSTAMP:20261113T062400Z
+DTSTAMP:20261114T075900Z
 DTSTART:20261106T145900Z
 DTEND:20261106T152900Z
 SUMMARY:[마감] 'KDI국제정책대학원-세계은행 공동 재정정책
   컨퍼런스'
-DESCRIPTION:2026년 11월 4일부터 6일까지 KDI대학원 링컨홀에
- 서 열리는 국제 재정정책 컨퍼런스에 참여할 수 있습니
- 다. 다양한 세션과 토론을 통해 재정정책의 새로운 방향
- 을 배우는 기회입니다.\nhttps://www.kku.ac.kr/cms/FR_CON/BoardView
- .do?MENU_ID=1850&CONTENTS_NO=&SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=27&BOA
- RD_CATEGORY_NO=&BBS_SEQ=120922&pageNo=1
+DESCRIPTION:KDI대학원과 세계은행 공동 컨퍼런스 참여자를 
+ 모집해요. 세계은행 전문가와 KDI 교직원 등이 11월 6일까
+ 지 신청하면 11월 5일에 행사에 참여할 수 있어요.\nhttps:/
+ /www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1850&CONTENTS_NO=&SITE_NO=2
+ &P_TAB_NO=&TAB_NO=&BOARD_SEQ=27&BOARD_CATEGORY_NO=&BBS_SEQ=120922&pageNo=1
 URL:https://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1850&CONTENTS_NO=
  &SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=27&BOARD_CATEGORY_NO=&BBS_SEQ=12092
  2&pageNo=1
@@ -2321,17 +1963,16 @@ END:VALARM
 END:VEVENT
 BEGIN:VEVENT
 UID:2-27-120922-event0@gongji-jupjup
-DTSTAMP:20261113T062400Z
+DTSTAMP:20261114T075900Z
 DTSTART:20261105T022000Z
 DTEND:20261105T032000Z
 SUMMARY:'KDI국제정책대학원-세계은행 공동 재정정책 컨퍼
  런스'
-DESCRIPTION:2026년 11월 4일부터 6일까지 KDI대학원 링컨홀에
- 서 열리는 국제 재정정책 컨퍼런스에 참여할 수 있습니
- 다. 다양한 세션과 토론을 통해 재정정책의 새로운 방향
- 을 배우는 기회입니다.\nhttps://www.kku.ac.kr/cms/FR_CON/BoardView
- .do?MENU_ID=1850&CONTENTS_NO=&SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=27&BOA
- RD_CATEGORY_NO=&BBS_SEQ=120922&pageNo=1
+DESCRIPTION:KDI대학원과 세계은행 공동 컨퍼런스 참여자를 
+ 모집해요. 세계은행 전문가와 KDI 교직원 등이 11월 6일까
+ 지 신청하면 11월 5일에 행사에 참여할 수 있어요.\nhttps:/
+ /www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1850&CONTENTS_NO=&SITE_NO=2
+ &P_TAB_NO=&TAB_NO=&BOARD_SEQ=27&BOARD_CATEGORY_NO=&BBS_SEQ=120922&pageNo=1
 URL:https://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1850&CONTENTS_NO=
  &SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=27&BOARD_CATEGORY_NO=&BBS_SEQ=12092
  2&pageNo=1
@@ -2345,14 +1986,16 @@ END:VALARM
 END:VEVENT
 BEGIN:VEVENT
 UID:2-27-120923-deadline@gongji-jupjup
-DTSTAMP:20261113T062400Z
+DTSTAMP:20261114T075900Z
 DTSTART:20261120T145900Z
 DTEND:20261120T152900Z
 SUMMARY:[마감] 「2026 사회보장 데이터를 활용한 AI 혁신 아
  이디어 경진대회」
-DESCRIPTION:개인 또는 팀으로 참여 가능합니다.\nhttps://www.kk
- u.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1850&CONTENTS_NO=&SITE_NO=2&P_TAB_
- NO=&TAB_NO=&BOARD_SEQ=27&BOARD_CATEGORY_NO=&BBS_SEQ=120923&pageNo=1
+DESCRIPTION:AI 혁신 아이디어 경진대회 참여자를 모집해요. 
+ 대한민국 국민 누구나 11월 20일까지 신청하면 상금 500만
+ 원 내외를 받을 수 있어요.\nhttps://www.kku.ac.kr/cms/FR_CON/Boar
+ dView.do?MENU_ID=1850&CONTENTS_NO=&SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=2
+ 7&BOARD_CATEGORY_NO=&BBS_SEQ=120923&pageNo=1
 URL:https://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1850&CONTENTS_NO=
  &SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=27&BOARD_CATEGORY_NO=&BBS_SEQ=12092
  3&pageNo=1
@@ -2366,14 +2009,14 @@ END:VALARM
 END:VEVENT
 BEGIN:VEVENT
 UID:2-27-120924-deadline@gongji-jupjup
-DTSTAMP:20261113T062400Z
+DTSTAMP:20261114T075900Z
 DTSTART:20261104T145900Z
 DTEND:20261104T152900Z
 SUMMARY:[마감] 2026 드론 도심항공모빌리티 박람회 개최 안
  내(고양 킨텍스\, 11.4.~6.)
-DESCRIPTION:2026 드론 도심항공모빌리티 박람회에 참여할 수
-  있으며\, 사전등록 완료 시 빠른 입장이 가능합니다. 행
- 사 일정은 11월 4일부터 6일까지입니다.\nhttps://www.kku.ac.kr
+DESCRIPTION:드론 관련 박람회에 참여할 수 있는 공지예요. 
+ 재학생이 11월 4일까지 사전등록하면 입장이 가능하고\, 
+ 다양한 세미나와 전시를 볼 수 있어요.\nhttps://www.kku.ac.kr
  /cms/FR_CON/BoardView.do?MENU_ID=1850&CONTENTS_NO=&SITE_NO=2&P_TAB_NO=&TAB
  _NO=&BOARD_SEQ=27&BOARD_CATEGORY_NO=&BBS_SEQ=120924&pageNo=1
 URL:https://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1850&CONTENTS_NO=
@@ -2389,16 +2032,18 @@ END:VALARM
 END:VEVENT
 BEGIN:VEVENT
 UID:2-27-120925-deadline@gongji-jupjup
-DTSTAMP:20261113T062400Z
+DTSTAMP:20261114T075900Z
 DTSTART:20261201T145900Z
 DTEND:20261201T152900Z
 SUMMARY:[마감] 2025년 소득에 대한 근로·자녀장려금 기한 
  후 신청 안내(~2026.12.1.)
-DESCRIPTION:2026년 12월 1일까지 신청하면 근로·자녀장려금
- 을 받을 수 있어요. 최대 330만원까지 지원받을 수 있어
- 요.\nhttps://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1850&CONTENTS_
- NO=&SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=27&BOARD_CATEGORY_NO=&BBS_SEQ=12
- 0925&pageNo=1
+DESCRIPTION:근로·자녀장려금 신청 기한이 끝나는 공지예요
+ . 소득과 재산요건을 모두 충족하는 가구가 12월 1일까지
+  신청하면 단독가구 165만원\, 혼벌이가구 285만원\, 맞벌
+ 이가구 330만원\, 자녀장려금은 자녀 1인당 최대 100만원
+ 을 받을 수 있어요.\nhttps://www.kku.ac.kr/cms/FR_CON/BoardView.do?M
+ ENU_ID=1850&CONTENTS_NO=&SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=27&BOARD_CA
+ TEGORY_NO=&BBS_SEQ=120925&pageNo=1
 URL:https://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1850&CONTENTS_NO=
  &SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=27&BOARD_CATEGORY_NO=&BBS_SEQ=12092
  5&pageNo=1
@@ -2411,36 +2056,17 @@ TRIGGER:-PT1440M
 END:VALARM
 END:VEVENT
 BEGIN:VEVENT
-UID:2-27-120928-event0@gongji-jupjup
-DTSTAMP:20261113T062400Z
-DTSTART:20261030T050000Z
-DTEND:20261030T080000Z
-SUMMARY:2026년도 고흥분청문화박물관 학술대회
-DESCRIPTION:2026년 10월 30일에 열리는 고흥분청문화박물관 
- 학술대회에 참여할 수 있습니다.\nhttps://www.kku.ac.kr/cms/FR_
- CON/BoardView.do?MENU_ID=1850&CONTENTS_NO=&SITE_NO=2&P_TAB_NO=&TAB_NO=&BOA
- RD_SEQ=27&BOARD_CATEGORY_NO=&BBS_SEQ=120928&pageNo=1
-URL:https://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1850&CONTENTS_NO=
- &SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=27&BOARD_CATEGORY_NO=&BBS_SEQ=12092
- 8&pageNo=1
-CATEGORIES:행사·특강
-BEGIN:VALARM
-ACTION:DISPLAY
-DESCRIPTION:2026년도 고흥분청문화박물관 학술대회
-TRIGGER:-PT60M
-END:VALARM
-END:VEVENT
-BEGIN:VEVENT
 UID:2-27-120930-deadline@gongji-jupjup
-DTSTAMP:20261113T062400Z
+DTSTAMP:20261114T075900Z
 DTSTART:20261106T010000Z
 DTEND:20261106T013000Z
 SUMMARY:[마감] 2026년 제9회 찾아가는 청년주거 상담소 안내
-DESCRIPTION:2026년 11월 5일부터 6일까지 국회에서 청년 주거 
- 상담이 진행됩니다. 청년 주거 관련 궁금사항을 전문가
- 와 상담할 수 있는 기회입니다.\nhttps://www.kku.ac.kr/cms/FR_CO
- N/BoardView.do?MENU_ID=1850&CONTENTS_NO=&SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD
- _SEQ=27&BOARD_CATEGORY_NO=&BBS_SEQ=120930&pageNo=1
+DESCRIPTION:청년주거 상담소 참여자를 모집하는 공지예요. 
+ 청년 등 참여 희망자가 11월 6일까지 신청하면 11월 5일과
+  6일 10시~17시30분 국토교통부 부스에서 상담받을 수 있
+ 어요.\nhttps://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1850&CONTEN
+ TS_NO=&SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=27&BOARD_CATEGORY_NO=&BBS_SEQ
+ =120930&pageNo=1
 URL:https://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1850&CONTENTS_NO=
  &SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=27&BOARD_CATEGORY_NO=&BBS_SEQ=12093
  0&pageNo=1
@@ -2454,15 +2080,16 @@ END:VALARM
 END:VEVENT
 BEGIN:VEVENT
 UID:2-27-120930-event0@gongji-jupjup
-DTSTAMP:20261113T062400Z
+DTSTAMP:20261114T075900Z
 DTSTART:20261105T010000Z
 DTEND:20261105T083000Z
 SUMMARY:2026년 제9회 찾아가는 청년주거 상담소 안내
-DESCRIPTION:2026년 11월 5일부터 6일까지 국회에서 청년 주거 
- 상담이 진행됩니다. 청년 주거 관련 궁금사항을 전문가
- 와 상담할 수 있는 기회입니다.\nhttps://www.kku.ac.kr/cms/FR_CO
- N/BoardView.do?MENU_ID=1850&CONTENTS_NO=&SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD
- _SEQ=27&BOARD_CATEGORY_NO=&BBS_SEQ=120930&pageNo=1
+DESCRIPTION:청년주거 상담소 참여자를 모집하는 공지예요. 
+ 청년 등 참여 희망자가 11월 6일까지 신청하면 11월 5일과
+  6일 10시~17시30분 국토교통부 부스에서 상담받을 수 있
+ 어요.\nhttps://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1850&CONTEN
+ TS_NO=&SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=27&BOARD_CATEGORY_NO=&BBS_SEQ
+ =120930&pageNo=1
 URL:https://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1850&CONTENTS_NO=
  &SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=27&BOARD_CATEGORY_NO=&BBS_SEQ=12093
  0&pageNo=1
@@ -2475,15 +2102,16 @@ END:VALARM
 END:VEVENT
 BEGIN:VEVENT
 UID:2-27-120930-event1@gongji-jupjup
-DTSTAMP:20261113T062400Z
+DTSTAMP:20261114T075900Z
 DTSTART:20261106T010000Z
 DTEND:20261106T083000Z
 SUMMARY:2026년 제9회 찾아가는 청년주거 상담소 안내
-DESCRIPTION:2026년 11월 5일부터 6일까지 국회에서 청년 주거 
- 상담이 진행됩니다. 청년 주거 관련 궁금사항을 전문가
- 와 상담할 수 있는 기회입니다.\nhttps://www.kku.ac.kr/cms/FR_CO
- N/BoardView.do?MENU_ID=1850&CONTENTS_NO=&SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD
- _SEQ=27&BOARD_CATEGORY_NO=&BBS_SEQ=120930&pageNo=1
+DESCRIPTION:청년주거 상담소 참여자를 모집하는 공지예요. 
+ 청년 등 참여 희망자가 11월 6일까지 신청하면 11월 5일과
+  6일 10시~17시30분 국토교통부 부스에서 상담받을 수 있
+ 어요.\nhttps://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1850&CONTEN
+ TS_NO=&SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=27&BOARD_CATEGORY_NO=&BBS_SEQ
+ =120930&pageNo=1
 URL:https://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1850&CONTENTS_NO=
  &SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=27&BOARD_CATEGORY_NO=&BBS_SEQ=12093
  0&pageNo=1
@@ -2496,15 +2124,15 @@ END:VALARM
 END:VEVENT
 BEGIN:VEVENT
 UID:2-27-120933-deadline@gongji-jupjup
-DTSTAMP:20261113T062400Z
+DTSTAMP:20261114T075900Z
 DTSTART:20261106T145900Z
 DTEND:20261106T152900Z
 SUMMARY:[마감] 무안 YD 페스티벌 전국대학가요제
-DESCRIPTION:2026년 11월 6일까지 음악을 좋아하는 전국 대학·
- 대학원생이 참여할 수 있는 공모전이며\, 최대 500만 원 
- 상금이 주어집니다.\nhttps://www.kku.ac.kr/cms/FR_CON/BoardView.do?
- MENU_ID=1850&CONTENTS_NO=&SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=27&BOARD_C
- ATEGORY_NO=&BBS_SEQ=120933&pageNo=1
+DESCRIPTION:무안 YD 페스티벌 전국대학가요제 참가자를 모
+ 집해요. 재학생이 11월 6일까지 신청하면 상금 500만원 및
+  기념 트로피를 받을 수 있어요.\nhttps://www.kku.ac.kr/cms/FR_C
+ ON/BoardView.do?MENU_ID=1850&CONTENTS_NO=&SITE_NO=2&P_TAB_NO=&TAB_NO=&BOAR
+ D_SEQ=27&BOARD_CATEGORY_NO=&BBS_SEQ=120933&pageNo=1
 URL:https://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1850&CONTENTS_NO=
  &SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=27&BOARD_CATEGORY_NO=&BBS_SEQ=12093
  3&pageNo=1
@@ -2517,14 +2145,12 @@ END:VALARM
 END:VEVENT
 BEGIN:VEVENT
 UID:2-27-120934-event0@gongji-jupjup
-DTSTAMP:20261113T062400Z
+DTSTAMP:20261114T075900Z
 DTSTART:20261106T050000Z
 DTEND:20261106T060000Z
 SUMMARY:[한국문화예술교육진흥원] 2026 인문문화축제 <인문
  지능>
-DESCRIPTION:2026년 11월 6일부터 8일까지 서울 레이스튜디오11
- 에서 열리는 인문문화축제에 참여할 수 있습니다. 다양
- 한 토론과 프로그램을 통해 인문지능을 탐색해보세요.\n
+DESCRIPTION:2026 인문문화축제에 참여할 수 있는 기회예요.\n
  https://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1850&CONTENTS_NO=&SI
  TE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=27&BOARD_CATEGORY_NO=&BBS_SEQ=120934&p
  ageNo=1
@@ -2541,14 +2167,12 @@ END:VALARM
 END:VEVENT
 BEGIN:VEVENT
 UID:2-27-120934-event1@gongji-jupjup
-DTSTAMP:20261113T062400Z
+DTSTAMP:20261114T075900Z
 DTSTART:20261106T060000Z
 DTEND:20261106T070000Z
 SUMMARY:[한국문화예술교육진흥원] 2026 인문문화축제 <인문
  지능>
-DESCRIPTION:2026년 11월 6일부터 8일까지 서울 레이스튜디오11
- 에서 열리는 인문문화축제에 참여할 수 있습니다. 다양
- 한 토론과 프로그램을 통해 인문지능을 탐색해보세요.\n
+DESCRIPTION:2026 인문문화축제에 참여할 수 있는 기회예요.\n
  https://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1850&CONTENTS_NO=&SI
  TE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=27&BOARD_CATEGORY_NO=&BBS_SEQ=120934&p
  ageNo=1
@@ -2565,14 +2189,12 @@ END:VALARM
 END:VEVENT
 BEGIN:VEVENT
 UID:2-27-120934-event2@gongji-jupjup
-DTSTAMP:20261113T062400Z
+DTSTAMP:20261114T075900Z
 DTSTART:20261107T050000Z
 DTEND:20261107T063000Z
 SUMMARY:[한국문화예술교육진흥원] 2026 인문문화축제 <인문
  지능>
-DESCRIPTION:2026년 11월 6일부터 8일까지 서울 레이스튜디오11
- 에서 열리는 인문문화축제에 참여할 수 있습니다. 다양
- 한 토론과 프로그램을 통해 인문지능을 탐색해보세요.\n
+DESCRIPTION:2026 인문문화축제에 참여할 수 있는 기회예요.\n
  https://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1850&CONTENTS_NO=&SI
  TE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=27&BOARD_CATEGORY_NO=&BBS_SEQ=120934&p
  ageNo=1
@@ -2589,14 +2211,12 @@ END:VALARM
 END:VEVENT
 BEGIN:VEVENT
 UID:2-27-120934-event3@gongji-jupjup
-DTSTAMP:20261113T062400Z
+DTSTAMP:20261114T075900Z
 DTSTART:20261107T073000Z
 DTEND:20261107T090000Z
 SUMMARY:[한국문화예술교육진흥원] 2026 인문문화축제 <인문
  지능>
-DESCRIPTION:2026년 11월 6일부터 8일까지 서울 레이스튜디오11
- 에서 열리는 인문문화축제에 참여할 수 있습니다. 다양
- 한 토론과 프로그램을 통해 인문지능을 탐색해보세요.\n
+DESCRIPTION:2026 인문문화축제에 참여할 수 있는 기회예요.\n
  https://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1850&CONTENTS_NO=&SI
  TE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=27&BOARD_CATEGORY_NO=&BBS_SEQ=120934&p
  ageNo=1
@@ -2613,16 +2233,17 @@ END:VALARM
 END:VEVENT
 BEGIN:VEVENT
 UID:2-27-120935-deadline@gongji-jupjup
-DTSTAMP:20261113T062400Z
+DTSTAMP:20261114T075900Z
 DTSTART:20261116T145900Z
 DTEND:20261116T152900Z
 SUMMARY:[마감] 「2026 전남광주 청년 지역혁신 학술제」 학
  생 참여 안내
-DESCRIPTION:2026년 11월 16일까지 신청하면 전남광주 청년 지
- 역혁신 학술제에 참여할 수 있어요. 우수 발표자에게는 
- 상금과 상장이 주어집니다.\nhttps://www.kku.ac.kr/cms/FR_CON/Boa
- rdView.do?MENU_ID=1850&CONTENTS_NO=&SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=
- 27&BOARD_CATEGORY_NO=&BBS_SEQ=120935&pageNo=1
+DESCRIPTION:2026 전남광주 청년 지역혁신 학술제에 참여할 
+ 수 있어요. 대학원생과 대학생이 11월 16일까지 신청하면
+  상금 300만 원과 상장\, 발표확인서를 받을 수 있어요.\nh
+ ttps://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1850&CONTENTS_NO=&SIT
+ E_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=27&BOARD_CATEGORY_NO=&BBS_SEQ=120935&pa
+ geNo=1
 URL:https://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1850&CONTENTS_NO=
  &SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=27&BOARD_CATEGORY_NO=&BBS_SEQ=12093
  5&pageNo=1
@@ -2636,14 +2257,15 @@ END:VALARM
 END:VEVENT
 BEGIN:VEVENT
 UID:2-27-120936-deadline@gongji-jupjup
-DTSTAMP:20261113T062400Z
+DTSTAMP:20261114T075900Z
 DTSTART:20261115T145900Z
 DTEND:20261115T152900Z
 SUMMARY:[마감] 「이런(e-Learn) 한 컷\, 영상 공모전」
-DESCRIPTION:영상 공모전에 참여하면 최대 100만 원 상금을 
- 받을 수 있어요. 마감일은 2026년 11월 15일입니다.\nhttps://
- www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1850&CONTENTS_NO=&SITE_NO=2&
- P_TAB_NO=&TAB_NO=&BOARD_SEQ=27&BOARD_CATEGORY_NO=&BBS_SEQ=120936&pageNo=1
+DESCRIPTION:이런(e-Learn) 한 컷 영상 공모전 참여자를 모집해
+ 요. 대한민국 국민은 11월 15일까지 신청하면 시상금 100
+ 만 원 등 혜택을 받을 수 있어요.\nhttps://www.kku.ac.kr/cms/FR_
+ CON/BoardView.do?MENU_ID=1850&CONTENTS_NO=&SITE_NO=2&P_TAB_NO=&TAB_NO=&BOA
+ RD_SEQ=27&BOARD_CATEGORY_NO=&BBS_SEQ=120936&pageNo=1
 URL:https://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1850&CONTENTS_NO=
  &SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=27&BOARD_CATEGORY_NO=&BBS_SEQ=12093
  6&pageNo=1
@@ -2656,16 +2278,17 @@ END:VALARM
 END:VEVENT
 BEGIN:VEVENT
 UID:2-27-120937-deadline@gongji-jupjup
-DTSTAMP:20261113T062400Z
+DTSTAMP:20261114T075900Z
 DTSTART:20261123T145900Z
 DTEND:20261123T152900Z
 SUMMARY:[마감] [시립청소년문화교류센터] 2027 시드니 글로
  벌 인재양성 프로그램 참가자 모집
-DESCRIPTION:2026년 11월 23일까지 신청 가능합니다. 호주 시드
- 니에서 5박7일의 글로벌 체험 기회를 제공하며\, 참가비
- 는 일반 420만 원\, 사회배려 210만 원입니다.\nhttps://www.kku
- .ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1850&CONTENTS_NO=&SITE_NO=2&P_TAB_N
- O=&TAB_NO=&BOARD_SEQ=27&BOARD_CATEGORY_NO=&BBS_SEQ=120937&pageNo=1
+DESCRIPTION:시드니 글로벌 인재양성 프로그램 참가자를 모
+ 집해요. 초등학교 5학년 ~ 대학생이 11월 23일까지 신청하
+ 면 해외 체험과 글로벌 역량 강화 혜택을 받고\, 1월 29일
+ 부터 2월 4일까지 시드니에서 활동해요.\nhttps://www.kku.ac.k
+ r/cms/FR_CON/BoardView.do?MENU_ID=1850&CONTENTS_NO=&SITE_NO=2&P_TAB_NO=&TA
+ B_NO=&BOARD_SEQ=27&BOARD_CATEGORY_NO=&BBS_SEQ=120937&pageNo=1
 URL:https://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1850&CONTENTS_NO=
  &SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=27&BOARD_CATEGORY_NO=&BBS_SEQ=12093
  7&pageNo=1
@@ -2679,16 +2302,15 @@ END:VALARM
 END:VEVENT
 BEGIN:VEVENT
 UID:2-27-120938-deadline@gongji-jupjup
-DTSTAMP:20261113T062400Z
+DTSTAMP:20261114T075900Z
 DTSTART:20261128T145900Z
 DTEND:20261128T152900Z
 SUMMARY:[마감] 산울림 청소년활동가 미리보기 수료 과정
-DESCRIPTION:산울림 청소년활동가 미리보기 수료 과정은 2026
- 년 11월 28일에 진행되며\, 참가비 전액을 지원합니다. 청
- 소년 활동에 관심 있는 만 19세 이상의 시민이 참여할 수
-  있습니다.\nhttps://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1850
- &CONTENTS_NO=&SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=27&BOARD_CATEGORY_NO=&
- BBS_SEQ=120938&pageNo=1
+DESCRIPTION:산울림 청소년활동가 미리보기 과정 참여자를 
+ 모집해요. 만 19세 이상 시민이 11월 28일까지 신청하면 
+ 참가비 전액 지원과 점심 제공을 받을 수 있어요.\nhttps:/
+ /www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1850&CONTENTS_NO=&SITE_NO=2
+ &P_TAB_NO=&TAB_NO=&BOARD_SEQ=27&BOARD_CATEGORY_NO=&BBS_SEQ=120938&pageNo=1
 URL:https://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1850&CONTENTS_NO=
  &SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=27&BOARD_CATEGORY_NO=&BBS_SEQ=12093
  8&pageNo=1
@@ -2702,15 +2324,15 @@ END:VALARM
 END:VEVENT
 BEGIN:VEVENT
 UID:2-27-120939-deadline@gongji-jupjup
-DTSTAMP:20261113T062400Z
+DTSTAMP:20261114T075900Z
 DTSTART:20270611T145900Z
 DTEND:20270611T152900Z
 SUMMARY:[마감] 2026년 재난안전 AI 데이터 활용 해커톤 공고 
  안내
-DESCRIPTION:2026년 재난안전 AI 데이터 활용 해커톤 공고 안
- 내\nhttps://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1850&CONTENTS_N
- O=&SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=27&BOARD_CATEGORY_NO=&BBS_SEQ=120
- 939&pageNo=1
+DESCRIPTION:공모전·대외활동 관련 공지예요. 혜택은 총 상
+ 금 170만원이에요. 신청은 6월 11일까지예요.\nhttps://www.kku
+ .ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1850&CONTENTS_NO=&SITE_NO=2&P_TAB_N
+ O=&TAB_NO=&BOARD_SEQ=27&BOARD_CATEGORY_NO=&BBS_SEQ=120939&pageNo=1
 URL:https://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1850&CONTENTS_NO=
  &SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=27&BOARD_CATEGORY_NO=&BBS_SEQ=12093
  9&pageNo=1
@@ -2724,16 +2346,17 @@ END:VALARM
 END:VEVENT
 BEGIN:VEVENT
 UID:2-27-120940-deadline@gongji-jupjup
-DTSTAMP:20261113T062400Z
+DTSTAMP:20261114T075900Z
 DTSTART:20261109T145900Z
 DTEND:20261109T152900Z
 SUMMARY:[마감] 문화체육관광부 대학생기자단 울림 22기 모
  집
-DESCRIPTION:문화체육관광부 대학생기자단 울림 22기를 모집
- 합니다. 마감은 11월 9일이며 활동비와 명함 발급 혜택이
-  있습니다.\nhttps://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1850
- &CONTENTS_NO=&SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=27&BOARD_CATEGORY_NO=&
- BBS_SEQ=120940&pageNo=1
+DESCRIPTION:문화체육관광부 대학생기자단 울림 22기 모집이
+  있어요. 문화예술 등 분야를 좋아하는 재학생과 휴학생
+ 이 11월 9일까지 지원하면 활동비와 명함 등을 받을 수 
+ 있어요.\nhttps://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1850&CON
+ TENTS_NO=&SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=27&BOARD_CATEGORY_NO=&BBS_
+ SEQ=120940&pageNo=1
 URL:https://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1850&CONTENTS_NO=
  &SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=27&BOARD_CATEGORY_NO=&BBS_SEQ=12094
  0&pageNo=1
@@ -2747,7 +2370,7 @@ END:VALARM
 END:VEVENT
 BEGIN:VEVENT
 UID:2-27-120941-deadline@gongji-jupjup
-DTSTAMP:20261113T062400Z
+DTSTAMP:20261114T075900Z
 DTSTART:20261113T145900Z
 DTEND:20261113T152900Z
 SUMMARY:[마감] 「국제 배터리 엑스포 2026 포항」
@@ -2769,16 +2392,16 @@ END:VALARM
 END:VEVENT
 BEGIN:VEVENT
 UID:2-27-120943-deadline@gongji-jupjup
-DTSTAMP:20261113T062400Z
+DTSTAMP:20261114T075900Z
 DTSTART:20261115T145900Z
 DTEND:20261115T152900Z
 SUMMARY:[마감] ‘청년 사장님 소개 도민영상 공모전’ 시
  청자 참여 평가 참여
-DESCRIPTION:2026년 11월 15일까지 도민 공모전 영상을 시청하
- 고 응원 댓글을 달아주세요. 선착순으로 메가커피와 CU
- 편의점 상품권이 제공됩니다.\nhttps://www.kku.ac.kr/cms/FR_CON/
- BoardView.do?MENU_ID=1850&CONTENTS_NO=&SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_S
- EQ=27&BOARD_CATEGORY_NO=&BBS_SEQ=120943&pageNo=1
+DESCRIPTION:청년 사장님 소개 영상 시청자 참여 공고예요. 
+ 도민 공모전 영상 시청자가 11월 15일까지 참여하면 메가
+ 커피와 CU편의점 5\,000원권 각 50명을 드려요.\nhttps://www.kk
+ u.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1850&CONTENTS_NO=&SITE_NO=2&P_TAB_
+ NO=&TAB_NO=&BOARD_SEQ=27&BOARD_CATEGORY_NO=&BBS_SEQ=120943&pageNo=1
 URL:https://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1850&CONTENTS_NO=
  &SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=27&BOARD_CATEGORY_NO=&BBS_SEQ=12094
  3&pageNo=1
@@ -2792,15 +2415,15 @@ END:VALARM
 END:VEVENT
 BEGIN:VEVENT
 UID:2-27-120944-deadline@gongji-jupjup
-DTSTAMP:20261113T062400Z
+DTSTAMP:20261114T075900Z
 DTSTART:20261130T145900Z
 DTEND:20261130T152900Z
 SUMMARY:[마감] 서울미래인재재단 대표 캐릭터 공모전
-DESCRIPTION:서울미래인재재단 대표 캐릭터 공모전에 참여
- 하면 최대 200만원 상품권을 받을 수 있어요. 마감은 2026
- 년 11월 30일입니다.\nhttps://www.kku.ac.kr/cms/FR_CON/BoardView.do?M
- ENU_ID=1850&CONTENTS_NO=&SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=27&BOARD_CA
- TEGORY_NO=&BBS_SEQ=120944&pageNo=1
+DESCRIPTION:서울미래인재재단 대표 캐릭터 공모전 참여자
+ 를 모집해요. 개인 또는 팀(4인 이하)이 11월 30일까지 신
+ 청하면 상품권 440만원을 받을 수 있어요.\nhttps://www.kku.ac
+ .kr/cms/FR_CON/BoardView.do?MENU_ID=1850&CONTENTS_NO=&SITE_NO=2&P_TAB_NO=&
+ TAB_NO=&BOARD_SEQ=27&BOARD_CATEGORY_NO=&BBS_SEQ=120944&pageNo=1
 URL:https://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1850&CONTENTS_NO=
  &SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=27&BOARD_CATEGORY_NO=&BBS_SEQ=12094
  4&pageNo=1
@@ -2813,16 +2436,17 @@ END:VALARM
 END:VEVENT
 BEGIN:VEVENT
 UID:2-27-120945-deadline@gongji-jupjup
-DTSTAMP:20261113T062400Z
+DTSTAMP:20261114T075900Z
 DTSTART:20261218T145900Z
 DTEND:20261218T152900Z
 SUMMARY:[마감] 「전국 알밤 베이커리·떡 경연대회」참가
  자 모집
-DESCRIPTION:2027년 1월 23일과 24일에 열리는 전국 알밤 베이
- 커리·떡 경연대회에 참가할 수 있으며\, 대상에는 200만
- 원의 상금이 주어집니다.\nhttps://www.kku.ac.kr/cms/FR_CON/BoardV
- iew.do?MENU_ID=1850&CONTENTS_NO=&SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=27&
- BOARD_CATEGORY_NO=&BBS_SEQ=120945&pageNo=1
+DESCRIPTION:전국 알밤 베이커리·떡 경연대회 참가자를 모
+ 집해요. 재학생과 일반인 등이 12월 18일까지 신청하면 20
+ 0만원\, 100만원 등 상금과 기념품을 받을 수 있어요.\nhttp
+ s://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1850&CONTENTS_NO=&SITE_N
+ O=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=27&BOARD_CATEGORY_NO=&BBS_SEQ=120945&pageN
+ o=1
 URL:https://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1850&CONTENTS_NO=
  &SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=27&BOARD_CATEGORY_NO=&BBS_SEQ=12094
  5&pageNo=1
@@ -2836,15 +2460,16 @@ END:VALARM
 END:VEVENT
 BEGIN:VEVENT
 UID:2-27-120945-event0@gongji-jupjup
-DTSTAMP:20261113T062400Z
+DTSTAMP:20261114T075900Z
 DTSTART:20270123T000000Z
 DTEND:20270123T110000Z
 SUMMARY:「전국 알밤 베이커리·떡 경연대회」참가자 모집
-DESCRIPTION:2027년 1월 23일과 24일에 열리는 전국 알밤 베이
- 커리·떡 경연대회에 참가할 수 있으며\, 대상에는 200만
- 원의 상금이 주어집니다.\nhttps://www.kku.ac.kr/cms/FR_CON/BoardV
- iew.do?MENU_ID=1850&CONTENTS_NO=&SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=27&
- BOARD_CATEGORY_NO=&BBS_SEQ=120945&pageNo=1
+DESCRIPTION:전국 알밤 베이커리·떡 경연대회 참가자를 모
+ 집해요. 재학생과 일반인 등이 12월 18일까지 신청하면 20
+ 0만원\, 100만원 등 상금과 기념품을 받을 수 있어요.\nhttp
+ s://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1850&CONTENTS_NO=&SITE_N
+ O=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=27&BOARD_CATEGORY_NO=&BBS_SEQ=120945&pageN
+ o=1
 URL:https://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1850&CONTENTS_NO=
  &SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=27&BOARD_CATEGORY_NO=&BBS_SEQ=12094
  5&pageNo=1
@@ -2858,16 +2483,16 @@ END:VALARM
 END:VEVENT
 BEGIN:VEVENT
 UID:2-27-120946-deadline@gongji-jupjup
-DTSTAMP:20261113T062400Z
+DTSTAMP:20261114T075900Z
 DTSTART:20261122T145900Z
 DTEND:20261122T152900Z
 SUMMARY:[마감] 2026년 체육관련 규제개선 아이디어 공모전
-DESCRIPTION:2026년 11월 22일까지 규제 개선 아이디어를 제출
- 하면 최대 50만원의 상금을 받을 수 있는 공모전입니다. 
- 다양한 분야에서 창의적인 아이디어가 필요합니다.\nhttp
- s://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1850&CONTENTS_NO=&SITE_N
- O=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=27&BOARD_CATEGORY_NO=&BBS_SEQ=120946&pageN
- o=1
+DESCRIPTION:체육관련 규제개선 아이디어를 모집하는 공지
+ 예요. 대한민국 국민 누구나 11월 22일까지 국민체육진흥
+ 공단 홈페이지에서 제출하면 최대 50만원 상금을 받을 
+ 수 있어요.\nhttps://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1850
+ &CONTENTS_NO=&SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=27&BOARD_CATEGORY_NO=&
+ BBS_SEQ=120946&pageNo=1
 URL:https://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1850&CONTENTS_NO=
  &SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=27&BOARD_CATEGORY_NO=&BBS_SEQ=12094
  6&pageNo=1
@@ -2881,14 +2506,16 @@ END:VALARM
 END:VEVENT
 BEGIN:VEVENT
 UID:2-27-120947-deadline@gongji-jupjup
-DTSTAMP:20261113T062400Z
+DTSTAMP:20261114T075900Z
 DTSTART:20261127T145900Z
 DTEND:20261127T152900Z
 SUMMARY:[마감] 제2회 잠실 미디어아트 공모전
-DESCRIPTION:AI 기술로 지하도상가와 관련된 작품을 제작해 
- 보세요.\nhttps://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1850&CON
- TENTS_NO=&SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=27&BOARD_CATEGORY_NO=&BBS_
- SEQ=120947&pageNo=1
+DESCRIPTION:제2회 잠실 미디어아트 공모전 참여자를 모집해
+ 요. 대학생과 일반인은 11월 27일까지 신청하면 상금 300
+ 만원\, 200만원\, 100만원\, 10만원 등을 받을 수 있어요.\nht
+ tps://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1850&CONTENTS_NO=&SITE
+ _NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=27&BOARD_CATEGORY_NO=&BBS_SEQ=120947&pag
+ eNo=1
 URL:https://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1850&CONTENTS_NO=
  &SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=27&BOARD_CATEGORY_NO=&BBS_SEQ=12094
  7&pageNo=1
@@ -2901,16 +2528,16 @@ END:VALARM
 END:VEVENT
 BEGIN:VEVENT
 UID:2-27-120948-deadline@gongji-jupjup
-DTSTAMP:20261113T062400Z
+DTSTAMP:20261114T075900Z
 DTSTART:20261123T145900Z
 DTEND:20261123T152900Z
 SUMMARY:[마감] 경산 AI 미디어 콘텐츠 공모전 2026 「AI·스마
  트도시·YOUR STORY」
-DESCRIPTION:경산 AI 미디어 콘텐츠 공모전에 참여하면 최대 
- 5\,000\,000원의 창작지원금을 받을 수 있어요. 마감일은 20
- 26년 11월 23일입니다.\nhttps://www.kku.ac.kr/cms/FR_CON/BoardView.do
- ?MENU_ID=1850&CONTENTS_NO=&SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=27&BOARD_
- CATEGORY_NO=&BBS_SEQ=120948&pageNo=1
+DESCRIPTION:경산 AI 미디어 콘텐츠 공모전 참여자를 모집해
+ 요. 재학생과 휴학생이 11월 9일부터 23일까지 영상 제작 
+ 후 지원하면 창작지원금을 받을 수 있어요.\nhttps://www.kku
+ .ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1850&CONTENTS_NO=&SITE_NO=2&P_TAB_N
+ O=&TAB_NO=&BOARD_SEQ=27&BOARD_CATEGORY_NO=&BBS_SEQ=120948&pageNo=1
 URL:https://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1850&CONTENTS_NO=
  &SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=27&BOARD_CATEGORY_NO=&BBS_SEQ=12094
  8&pageNo=1
@@ -2924,16 +2551,16 @@ END:VALARM
 END:VEVENT
 BEGIN:VEVENT
 UID:2-27-120949-deadline@gongji-jupjup
-DTSTAMP:20261113T062400Z
+DTSTAMP:20261114T075900Z
 DTSTART:20261130T145900Z
 DTEND:20261130T152900Z
 SUMMARY:[마감] 가까운 강원‘1시간대컷 캠페인’영상 공모
  전
-DESCRIPTION:강원을 담은 영상을 제작하고 SNS에 업로드해 주
- 세요. 마감일까지 참여하면 강원 리조트 숙박권이 제공
- 됩니다. 마감일: 2026-11-30.\nhttps://www.kku.ac.kr/cms/FR_CON/BoardV
- iew.do?MENU_ID=1850&CONTENTS_NO=&SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=27&
- BOARD_CATEGORY_NO=&BBS_SEQ=120949&pageNo=1
+DESCRIPTION:가까운 강원을 주제로 영상 제작하는 공모전이
+ 에요. 재학생과 휴학생이 11월 30일까지 참여하면 총 100
+ 박 리조트 숙박권을 받을 수 있어요.\nhttps://www.kku.ac.kr/cm
+ s/FR_CON/BoardView.do?MENU_ID=1850&CONTENTS_NO=&SITE_NO=2&P_TAB_NO=&TAB_NO
+ =&BOARD_SEQ=27&BOARD_CATEGORY_NO=&BBS_SEQ=120949&pageNo=1
 URL:https://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1850&CONTENTS_NO=
  &SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=27&BOARD_CATEGORY_NO=&BBS_SEQ=12094
  9&pageNo=1
@@ -2947,7 +2574,7 @@ END:VALARM
 END:VEVENT
 BEGIN:VEVENT
 UID:2-27-120952-deadline@gongji-jupjup
-DTSTAMP:20261113T062400Z
+DTSTAMP:20261114T075900Z
 DTSTART:20261112T145900Z
 DTEND:20261112T152900Z
 SUMMARY:[마감] 11월 충주아카데미 개최 알림
@@ -2968,16 +2595,17 @@ END:VALARM
 END:VEVENT
 BEGIN:VEVENT
 UID:2-27-120953-deadline@gongji-jupjup
-DTSTAMP:20261113T062400Z
+DTSTAMP:20261114T075900Z
 DTSTART:20261130T145900Z
 DTEND:20261130T152900Z
 SUMMARY:[마감] 2026 제17회 국제 청소년 평화·휴머니즘 영상
   공모제
-DESCRIPTION:2026년 11월 30일까지 신청 가능하며\, 평화·휴머
- 니즘 등 주제로 영상 작품을 제출하면 상장과 부상을 받
- 을 수 있는 공모전입니다.\nhttps://www.kku.ac.kr/cms/FR_CON/Board
- View.do?MENU_ID=1850&CONTENTS_NO=&SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=27
- &BOARD_CATEGORY_NO=&BBS_SEQ=120953&pageNo=1
+DESCRIPTION:2026 국제 청소년 평화·휴머니즘 영상공모제 참
+ 여자를 모집해요. 13세~18세부\, 19세 이상부\, 일반부가 11
+ 월 5일부터 30일까지 신청하면 상장 및 부상을 받을 수 
+ 있어요.\nhttps://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1850&CON
+ TENTS_NO=&SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=27&BOARD_CATEGORY_NO=&BBS_
+ SEQ=120953&pageNo=1
 URL:https://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1850&CONTENTS_NO=
  &SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=27&BOARD_CATEGORY_NO=&BBS_SEQ=12095
  3&pageNo=1
@@ -2991,16 +2619,17 @@ END:VALARM
 END:VEVENT
 BEGIN:VEVENT
 UID:2-27-120954-deadline@gongji-jupjup
-DTSTAMP:20261113T062400Z
+DTSTAMP:20261114T075900Z
 DTSTART:20261208T145900Z
 DTEND:20261208T152900Z
 SUMMARY:[마감] 2026년 잠실청소년센터 '잠실산타 이즈 커밍'
   청소년산타(대학생) 모집
-DESCRIPTION:2026년 12월 8일까지 14~24세 청소년이 신청할 수 
- 있는 잠실산타 활동입니다. 참여 시 봉사활동확인서와 
- 산타등록증을 제공합니다.\nhttps://www.kku.ac.kr/cms/FR_CON/Boar
- dView.do?MENU_ID=1850&CONTENTS_NO=&SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=2
- 7&BOARD_CATEGORY_NO=&BBS_SEQ=120954&pageNo=1
+DESCRIPTION:잠실청소년산타 활동에 참여할 청소년을 모집
+ 해요. 14~24세 청소년이 12월 8일까지 신청하면 산타명단 
+ 기재\, 봉사활동확인서 발급\, 등록증 제공 및 식사와 산
+ 타복 제공 혜택을 받을 수 있어요.\nhttps://www.kku.ac.kr/cms/F
+ R_CON/BoardView.do?MENU_ID=1850&CONTENTS_NO=&SITE_NO=2&P_TAB_NO=&TAB_NO=&B
+ OARD_SEQ=27&BOARD_CATEGORY_NO=&BBS_SEQ=120954&pageNo=1
 URL:https://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1850&CONTENTS_NO=
  &SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=27&BOARD_CATEGORY_NO=&BBS_SEQ=12095
  4&pageNo=1
@@ -3014,16 +2643,16 @@ END:VALARM
 END:VEVENT
 BEGIN:VEVENT
 UID:2-27-120956-deadline@gongji-jupjup
-DTSTAMP:20261113T062400Z
+DTSTAMP:20261114T075900Z
 DTSTART:20261120T145900Z
 DTEND:20261120T152900Z
 SUMMARY:[마감] University of Wisconsin-Stout 2027 Winter 글로벌 리더
  십 프로그램 안내
-DESCRIPTION:2027년 1월 24일부터 2월 21일까지 미국 위스콘신
- 대학교에서 글로벌 리더십 프로그램에 참여할 수 있으
- 며\, 학점 이수와 수료증을 받을 수 있습니다.\nhttps://www.
- kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1850&CONTENTS_NO=&SITE_NO=2&P_TA
- B_NO=&TAB_NO=&BOARD_SEQ=27&BOARD_CATEGORY_NO=&BBS_SEQ=120956&pageNo=1
+DESCRIPTION:미국 대학 수업 듣고 학점 이수와 수료증까지 
+ 받을 수 있는 프로그램이에요. 재학생이 11월 20일까지 
+ 신청하면 $4\,800 USD를 지원받아요.\nhttps://www.kku.ac.kr/cms/FR
+ _CON/BoardView.do?MENU_ID=1850&CONTENTS_NO=&SITE_NO=2&P_TAB_NO=&TAB_NO=&BO
+ ARD_SEQ=27&BOARD_CATEGORY_NO=&BBS_SEQ=120956&pageNo=1
 URL:https://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1850&CONTENTS_NO=
  &SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=27&BOARD_CATEGORY_NO=&BBS_SEQ=12095
  6&pageNo=1
@@ -3037,15 +2666,16 @@ END:VALARM
 END:VEVENT
 BEGIN:VEVENT
 UID:2-27-120957-deadline@gongji-jupjup
-DTSTAMP:20261113T062400Z
+DTSTAMP:20261114T075900Z
 DTSTART:20261130T145900Z
 DTEND:20261130T152900Z
 SUMMARY:[마감] 2027년도 UN 청소년 대표단 모집
-DESCRIPTION:2027년 UN 청소년 대표단 모집이 11월 30일 마감됩
- 니다. 국제무대에서 직접 목소리를 낼 수 있는 기회입니
- 다.\nhttps://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1850&CONTENTS_
- NO=&SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=27&BOARD_CATEGORY_NO=&BBS_SEQ=12
- 0957&pageNo=1
+DESCRIPTION:2027년 UN 청소년 대표단 모집이 있어요. 만 13세~2
+ 4세 청소년이 11월 30일까지 지원하면 다드림·비교과 포
+ 인트와 다양한 혜택을 받고\, 2027년 1월부터 2월까지 뉴
+ 욕·보스턴에서 활동해요.\nhttps://www.kku.ac.kr/cms/FR_CON/Board
+ View.do?MENU_ID=1850&CONTENTS_NO=&SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=27
+ &BOARD_CATEGORY_NO=&BBS_SEQ=120957&pageNo=1
 URL:https://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1850&CONTENTS_NO=
  &SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=27&BOARD_CATEGORY_NO=&BBS_SEQ=12095
  7&pageNo=1
@@ -3058,15 +2688,16 @@ END:VALARM
 END:VEVENT
 BEGIN:VEVENT
 UID:2-27-120958-deadline@gongji-jupjup
-DTSTAMP:20261113T062400Z
+DTSTAMP:20261114T075900Z
 DTSTART:20261204T145900Z
 DTEND:20261204T152900Z
 SUMMARY:[마감] 제4회 충북특허유니버시아드(CBPU)
-DESCRIPTION:충북특허유니버시아드에 참여하면 2\,500만원 상
- 금과 해외연수 기회를 얻을 수 있습니다. 마감일은 12월 
- 4일입니다.\nhttps://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1850
- &CONTENTS_NO=&SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=27&BOARD_CATEGORY_NO=&
- BBS_SEQ=120958&pageNo=1
+DESCRIPTION:제4회 충북특허유니버시아드에 참여할 수 있는 
+ 공지예요. 대한민국 국적을 가진 충북 소재 대학(원)생
+ 이 12월 4일까지 신청하면 2\,500만원 상금과 취업 지원 및
+  해외연수 기회를 받을 수 있어요.\nhttps://www.kku.ac.kr/cms/F
+ R_CON/BoardView.do?MENU_ID=1850&CONTENTS_NO=&SITE_NO=2&P_TAB_NO=&TAB_NO=&B
+ OARD_SEQ=27&BOARD_CATEGORY_NO=&BBS_SEQ=120958&pageNo=1
 URL:https://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1850&CONTENTS_NO=
  &SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=27&BOARD_CATEGORY_NO=&BBS_SEQ=12095
  8&pageNo=1
@@ -3079,16 +2710,16 @@ END:VALARM
 END:VEVENT
 BEGIN:VEVENT
 UID:2-27-120959-deadline@gongji-jupjup
-DTSTAMP:20261113T062400Z
+DTSTAMP:20261114T075900Z
 DTSTART:20261126T145900Z
 DTEND:20261126T152900Z
 SUMMARY:[마감] [성균관대-POSTECH 공동주최] 「AI 시대의 대학
  행정」 포럼 개최 및 참여 안내
-DESCRIPTION:AI 시대의 대학행정에 대해 알아보는 포럼에 참
- 여할 수 있습니다. 마감일은 2026년 11월 26일입니다.\nhttps
- ://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1850&CONTENTS_NO=&SITE_NO
- =2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=27&BOARD_CATEGORY_NO=&BBS_SEQ=120959&pageNo
- =1
+DESCRIPTION:AI 시대 대학행정에 대한 포럼 참여자를 모집해
+ 요. 재학생이 11월 26일까지 신청하면 행사에 참여할 수 
+ 있어요.\nhttps://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1850&CON
+ TENTS_NO=&SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=27&BOARD_CATEGORY_NO=&BBS_
+ SEQ=120959&pageNo=1
 URL:https://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1850&CONTENTS_NO=
  &SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=27&BOARD_CATEGORY_NO=&BBS_SEQ=12095
  9&pageNo=1
@@ -3102,13 +2733,16 @@ END:VALARM
 END:VEVENT
 BEGIN:VEVENT
 UID:2-27-120960-deadline@gongji-jupjup
-DTSTAMP:20261113T062400Z
+DTSTAMP:20261114T075900Z
 DTSTART:20261201T010000Z
 DTEND:20261201T013000Z
 SUMMARY:[마감] 「2026 세계투자자주간」
-DESCRIPTION:「2026 세계투자자주간」\nhttps://www.kku.ac.kr/cms/FR_
- CON/BoardView.do?MENU_ID=1850&CONTENTS_NO=&SITE_NO=2&P_TAB_NO=&TAB_NO=&BOA
- RD_SEQ=27&BOARD_CATEGORY_NO=&BBS_SEQ=120960&pageNo=1
+DESCRIPTION:금융감독원과 함께하는 세계투자자주간에 참여
+ 할 수 있어요. 대학생과 일반 대중이 12월 1일까지 신청
+ 하면 자격시험 응시료 50% 할인 혜택을 받고\, 11월 23일부
+ 터 27일까지 다양한 프로그램을 즐길 수 있어요.\nhttps://w
+ ww.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1850&CONTENTS_NO=&SITE_NO=2&P
+ _TAB_NO=&TAB_NO=&BOARD_SEQ=27&BOARD_CATEGORY_NO=&BBS_SEQ=120960&pageNo=1
 URL:https://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1850&CONTENTS_NO=
  &SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=27&BOARD_CATEGORY_NO=&BBS_SEQ=12096
  0&pageNo=1
@@ -3121,13 +2755,16 @@ END:VALARM
 END:VEVENT
 BEGIN:VEVENT
 UID:2-27-120960-event0@gongji-jupjup
-DTSTAMP:20261113T062400Z
+DTSTAMP:20261114T075900Z
 DTSTART:20261123T010000Z
 DTEND:20261123T070000Z
 SUMMARY:「2026 세계투자자주간」
-DESCRIPTION:「2026 세계투자자주간」\nhttps://www.kku.ac.kr/cms/FR_
- CON/BoardView.do?MENU_ID=1850&CONTENTS_NO=&SITE_NO=2&P_TAB_NO=&TAB_NO=&BOA
- RD_SEQ=27&BOARD_CATEGORY_NO=&BBS_SEQ=120960&pageNo=1
+DESCRIPTION:금융감독원과 함께하는 세계투자자주간에 참여
+ 할 수 있어요. 대학생과 일반 대중이 12월 1일까지 신청
+ 하면 자격시험 응시료 50% 할인 혜택을 받고\, 11월 23일부
+ 터 27일까지 다양한 프로그램을 즐길 수 있어요.\nhttps://w
+ ww.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1850&CONTENTS_NO=&SITE_NO=2&P
+ _TAB_NO=&TAB_NO=&BOARD_SEQ=27&BOARD_CATEGORY_NO=&BBS_SEQ=120960&pageNo=1
 URL:https://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1850&CONTENTS_NO=
  &SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=27&BOARD_CATEGORY_NO=&BBS_SEQ=12096
  0&pageNo=1
@@ -3140,13 +2777,16 @@ END:VALARM
 END:VEVENT
 BEGIN:VEVENT
 UID:2-27-120960-event1@gongji-jupjup
-DTSTAMP:20261113T062400Z
+DTSTAMP:20261114T075900Z
 DTSTART:20261201T010000Z
 DTEND:20261201T023000Z
 SUMMARY:「2026 세계투자자주간」
-DESCRIPTION:「2026 세계투자자주간」\nhttps://www.kku.ac.kr/cms/FR_
- CON/BoardView.do?MENU_ID=1850&CONTENTS_NO=&SITE_NO=2&P_TAB_NO=&TAB_NO=&BOA
- RD_SEQ=27&BOARD_CATEGORY_NO=&BBS_SEQ=120960&pageNo=1
+DESCRIPTION:금융감독원과 함께하는 세계투자자주간에 참여
+ 할 수 있어요. 대학생과 일반 대중이 12월 1일까지 신청
+ 하면 자격시험 응시료 50% 할인 혜택을 받고\, 11월 23일부
+ 터 27일까지 다양한 프로그램을 즐길 수 있어요.\nhttps://w
+ ww.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1850&CONTENTS_NO=&SITE_NO=2&P
+ _TAB_NO=&TAB_NO=&BOARD_SEQ=27&BOARD_CATEGORY_NO=&BBS_SEQ=120960&pageNo=1
 URL:https://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1850&CONTENTS_NO=
  &SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=27&BOARD_CATEGORY_NO=&BBS_SEQ=12096
  0&pageNo=1
@@ -3159,16 +2799,17 @@ END:VALARM
 END:VEVENT
 BEGIN:VEVENT
 UID:45-1-36594-deadline@gongji-jupjup
-DTSTAMP:20261113T062400Z
+DTSTAMP:20261114T075900Z
 DTSTART:20261120T145900Z
 DTEND:20261120T152900Z
 SUMMARY:[마감] [AI기본교육]2026학년도 2학기 AI 교과 연계 프
  로젝트 공모전 홍보
-DESCRIPTION:2026년 11월 20일까지 AI 교과 연계 프로젝트 공모
- 전에 참여할 수 있으며\, 수업에서 발견한 나만의 AI 활
- 용 사례를 제출할 수 있습니다.\nhttps://ids.kku.ac.kr/cms/FR_CO
- N/BoardView.do?MENU_ID=950&CONTENTS_NO=&SITE_NO=45&P_TAB_NO=&TAB_NO=&BOARD
- _SEQ=1&BOARD_CATEGORY_NO=&BBS_SEQ=36594&pageNo=1
+DESCRIPTION:AI 교과 연계 프로젝트 공모전 참여자를 모집해
+ 요. 건국대학교 글로컬캠퍼스 학부 재학생 및 AI 수강생
+ 이 11월 20일까지 신청하면 이음교육시스템에서 제출하
+ 고\, 다드림 포인트를 받을 수 있어요.\nhttps://ids.kku.ac.kr/
+ cms/FR_CON/BoardView.do?MENU_ID=950&CONTENTS_NO=&SITE_NO=45&P_TAB_NO=&TAB_
+ NO=&BOARD_SEQ=1&BOARD_CATEGORY_NO=&BBS_SEQ=36594&pageNo=1
 URL:https://ids.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=950&CONTENTS_NO=&
  SITE_NO=45&P_TAB_NO=&TAB_NO=&BOARD_SEQ=1&BOARD_CATEGORY_NO=&BBS_SEQ=36594&
  pageNo=1
@@ -3182,15 +2823,16 @@ END:VALARM
 END:VEVENT
 BEGIN:VEVENT
 UID:45-1-36595-deadline@gongji-jupjup
-DTSTAMP:20261113T062400Z
+DTSTAMP:20261114T075900Z
 DTSTART:20270204T145900Z
 DTEND:20270204T152900Z
 SUMMARY:[마감] [(서울)수강신청 관련] 2027학년도 1학기 학부
   수강신청 운영 절차 변경 및 관련 일정 안내
-DESCRIPTION:2027학년도 1학기 수강신청은 2월 3일부터 4일까
- 지 진행됩니다. 수강신청 일정을 확인해 주세요.\nhttps://
- ids.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=950&CONTENTS_NO=&SITE_NO=45&
- P_TAB_NO=&TAB_NO=&BOARD_SEQ=1&BOARD_CATEGORY_NO=&BBS_SEQ=36595&pageNo=1
+DESCRIPTION:융합학부 학생의 서울캠퍼스 수강신청 일정 변
+ 경을 안내해요. 재학생이 2월 4일까지 신청하면 수강제
+ 한인원 초과 없이 자동 수강신청 가능해요.\nhttps://ids.kku
+ .ac.kr/cms/FR_CON/BoardView.do?MENU_ID=950&CONTENTS_NO=&SITE_NO=45&P_TAB_N
+ O=&TAB_NO=&BOARD_SEQ=1&BOARD_CATEGORY_NO=&BBS_SEQ=36595&pageNo=1
 URL:https://ids.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=950&CONTENTS_NO=&
  SITE_NO=45&P_TAB_NO=&TAB_NO=&BOARD_SEQ=1&BOARD_CATEGORY_NO=&BBS_SEQ=36595&
  pageNo=1
@@ -3204,15 +2846,16 @@ END:VALARM
 END:VEVENT
 BEGIN:VEVENT
 UID:7-1-36312-deadline@gongji-jupjup
-DTSTAMP:20261113T062400Z
+DTSTAMP:20261114T075900Z
 DTSTART:20261106T145900Z
 DTEND:20261106T152900Z
 SUMMARY:[마감] 풀브라이트 미국 유학 장학금 설명회
-DESCRIPTION:2026년 11월 6일에 열리는 미국 유학 장학금 설명
- 회에 참여하면 개별 상담과 기념품을 받을 수 있습니다.
- \nhttps://int.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=80&CONTENTS_NO=&SI
- TE_NO=7&P_TAB_NO=&TAB_NO=&BOARD_SEQ=1&BOARD_CATEGORY_NO=&BBS_SEQ=36312&pag
- eNo=1
+DESCRIPTION:풀브라이트 미국 유학 장학금 설명회 참여자를 
+ 모집해요. 미국 대학원 유학\, 포스트닥\, 안식년 연구 
+ 희망자가 11월 6일까지 신청하면 개별 상담과 기념품을 
+ 받을 수 있어요.\nhttps://int.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_
+ ID=80&CONTENTS_NO=&SITE_NO=7&P_TAB_NO=&TAB_NO=&BOARD_SEQ=1&BOARD_CATEGORY_
+ NO=&BBS_SEQ=36312&pageNo=1
 URL:https://int.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=80&CONTENTS_NO=&S
  ITE_NO=7&P_TAB_NO=&TAB_NO=&BOARD_SEQ=1&BOARD_CATEGORY_NO=&BBS_SEQ=36312&pa
  geNo=1
@@ -3225,14 +2868,15 @@ END:VALARM
 END:VEVENT
 BEGIN:VEVENT
 UID:7-1-36314-deadline@gongji-jupjup
-DTSTAMP:20261113T062400Z
+DTSTAMP:20261114T075900Z
 DTSTART:20261106T145900Z
 DTEND:20261106T152900Z
 SUMMARY:[마감] 11월 단기 교내 영어특강 모집 안내
-DESCRIPTION:11월 영어특강 수강 신청 마감일은 11월 6일입니
- 다. 녹화 강의와 모의 테스트가 제공됩니다.\nhttps://int.kk
- u.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=80&CONTENTS_NO=&SITE_NO=7&P_TAB_NO
- =&TAB_NO=&BOARD_SEQ=1&BOARD_CATEGORY_NO=&BBS_SEQ=36314&pageNo=1
+DESCRIPTION:11월 단기 영어특강 수강생을 모집해요. 재학생
+ 이 11월 6일까지 신청하면 녹화 강의와 모의 테스트 2회 
+ 무료 제공받아요.\nhttps://int.kku.ac.kr/cms/FR_CON/BoardView.do?MEN
+ U_ID=80&CONTENTS_NO=&SITE_NO=7&P_TAB_NO=&TAB_NO=&BOARD_SEQ=1&BOARD_CATEGOR
+ Y_NO=&BBS_SEQ=36314&pageNo=1
 URL:https://int.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=80&CONTENTS_NO=&S
  ITE_NO=7&P_TAB_NO=&TAB_NO=&BOARD_SEQ=1&BOARD_CATEGORY_NO=&BBS_SEQ=36314&pa
  geNo=1
@@ -3245,7 +2889,7 @@ END:VALARM
 END:VEVENT
 BEGIN:VEVENT
 UID:acad-20261214-09e578fc1eef@gongji-jupjup
-DTSTAMP:20261113T062400Z
+DTSTAMP:20261114T075900Z
 DTSTART;VALUE=DATE:20261214
 DTEND;VALUE=DATE:20261219
 SUMMARY:[학사] 기말고사
@@ -3253,7 +2897,7 @@ CATEGORIES:학사일정
 END:VEVENT
 BEGIN:VEVENT
 UID:acad-20261221-8f6e709c8daa@gongji-jupjup
-DTSTAMP:20261113T062400Z
+DTSTAMP:20261114T075900Z
 DTSTART;VALUE=DATE:20261221
 DTEND;VALUE=DATE:20270227
 SUMMARY:[학사] 동계방학

@@ -1,8 +1,9 @@
 // 실행: node tests/i18n.test.js
-// 네 언어가 같은 문구 항목을 가지고, 함수형 문구가 모두 글자를 돌려주는지 확인 (js/i18n.js + js/i18n2.js)
+// 네 언어가 같은 문구 항목을 가지고, 함수형 문구가 모두 글자를 돌려주는지 확인 (js/i18n.js + js/i18n2.js + js/i18n3.js)
 const assert = require('node:assert/strict');
 require('../js/i18n.js');
 require('../js/i18n2.js');
+require('../js/i18n3.js');
 const I = globalThis.GongjiI18n;
 
 let passed = 0;
@@ -53,6 +54,17 @@ test('날짜 문구: 알림·달력 제목이 언어에 맞다', () => {
   assert.equal(I.T.ja.alertDue(0), '保存したお知らせ・今日締切');
   assert.equal(I.T.en.alertDue(1), 'Saved notice · due in 1 day');
   assert.equal(I.T.en.alertDue(3), 'Saved notice · due in 3 days');
+});
+
+test('추가 문구 3: 필터·오늘 수업 문구가 네 언어에 모두 있다', () => {
+  for (const l of langs) {
+    assert.deepEqual(Object.keys(I.T[l].dueNote).sort(), ['new', 'soon', 'today']);
+    assert.match(I.T[l].removeAll(2), /2/);
+    assert.match(I.T[l].freeGap('10:30', '13:00'), /10:30.*13:00/);
+    assert.match(I.T[l].nextClass('수', '13:00', '자료구조'), /13:00.*자료구조/);
+  }
+  assert.equal(I.T.ko.filterToggleAria(0), '필터·정렬');
+  assert.equal(I.T.ko.filterToggleAria(2), '필터·정렬 (적용 2개)');
 });
 
 console.log(`\n${passed}개 통과`);

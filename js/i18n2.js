@@ -8,6 +8,12 @@
   const ADD = {
     ko: {
       myTitle: '나에게 맞게',
+      // 학과 교육과정 (시간표)
+      currTitle: '내 학과 과목으로 수업 넣기', deptLabel: '내 학과', deptPick: '학과를 골라 주세요',
+      currHelp: '학과를 고르면 학사요람의 과목이 학년별로 나와요. 과목을 누르면 수업 추가 창에 이름이 들어가고, 요일과 시간은 직접 정해요.',
+      gradeN: (n) => `${n}학년`, gradeAny: '학년 무관', gradeGeneral: '교양', reqMark: '전필',
+      currEmpty: '학과를 고르면 과목이 나와요.', currNote: '2026학년도 학사요람 기준 참고 목록이에요. 개설 여부와 요일·시간은 수강신청 시스템에서 확인하세요.',
+      creditN: (n) => `${n}학점`,
       // 테마·글자 크기
       themeToDark: '다크 모드로 전환', themeToLight: '라이트 모드로 전환',
       themeTitle: '화면 모드', themeAuto: '기기 설정 따르기', themeLight: '라이트', themeDark: '다크',
@@ -63,6 +69,12 @@
     },
     en: {
       myTitle: 'Personalize',
+      // Curriculum (timetable)
+      currTitle: 'Add classes from my curriculum', deptLabel: 'My department', deptPick: 'Choose your department',
+      currHelp: 'Pick a department to see its courses from the academic handbook by year. Tap a course to fill in its name; choose the day and time yourself.',
+      gradeN: (n) => `Year ${n}`, gradeAny: 'Any year', gradeGeneral: 'General Ed.', reqMark: 'Required',
+      currEmpty: 'Choose a department to see its courses.', currNote: 'Reference list based on the 2026 academic handbook (in Korean). Check availability and times in the course registration system.',
+      creditN: (n) => `${n} cr.`,
       themeToDark: 'Switch to dark mode', themeToLight: 'Switch to light mode',
       themeTitle: 'Appearance', themeAuto: 'Follow device', themeLight: 'Light', themeDark: 'Dark',
       fontTitle: 'Text size', fontSm: 'Small', fontMd: 'Medium', fontLg: 'Large',
@@ -111,6 +123,12 @@
     },
     zh: {
       myTitle: '个性化设置',
+      // 专业课程(课表)
+      currTitle: '从我的专业课程添加课程', deptLabel: '我的专业', deptPick: '请选择专业',
+      currHelp: '选择专业后,会按年级显示学事手册中的课程。点击课程即可填入课程名,星期和时间请自行设置。',
+      gradeN: (n) => `${n}年级`, gradeAny: '不限年级', gradeGeneral: '通识', reqMark: '必修',
+      currEmpty: '选择专业后会显示课程。', currNote: '基于2026学年学事手册的参考列表(韩文)。是否开课及时间请在选课系统中确认。',
+      creditN: (n) => `${n}学分`,
       themeToDark: '切换到深色模式', themeToLight: '切换到浅色模式',
       themeTitle: '显示模式', themeAuto: '跟随设备', themeLight: '浅色', themeDark: '深色',
       fontTitle: '字体大小', fontSm: '小', fontMd: '中', fontLg: '大',
@@ -158,6 +176,12 @@
     },
     ja: {
       myTitle: 'パーソナル設定',
+      // 学科カリキュラム(時間割)
+      currTitle: '自分の学科の科目から授業を追加', deptLabel: '自分の学科', deptPick: '学科を選んでください',
+      currHelp: '学科を選ぶと学事要覧の科目が学年別に出ます。科目を押すと名前が入り、曜日と時間は自分で決めます。',
+      gradeN: (n) => `${n}年生`, gradeAny: '学年不問', gradeGeneral: '教養', reqMark: '必修',
+      currEmpty: '学科を選ぶと科目が出ます。', currNote: '2026年度学事要覧に基づく参考一覧(韓国語)です。開講の有無や時間は履修登録システムで確認してください。',
+      creditN: (n) => `${n}単位`,
       themeToDark: 'ダークモードに切り替え', themeToLight: 'ライトモードに切り替え',
       themeTitle: '表示モード', themeAuto: '端末の設定に合わせる', themeLight: 'ライト', themeDark: 'ダーク',
       fontTitle: '文字の大きさ', fontSm: '小', fontMd: '標準', fontLg: '大',
