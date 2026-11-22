@@ -77,6 +77,16 @@
       <h2 id="home-title" data-i18n="homeTitle"></h2>
       <button type="button" class="link-btn home-toggle" id="home-toggle" aria-expanded="true"></button>
     </div>
+    <!-- 공지에게 묻기: 질문을 조건으로 풀어 찾고, 내 컴퓨터 서버로 열었으면 로컬 AI가 답을 씀 -->
+    <section class="ask" id="ask" aria-labelledby="ask-title">
+      <h3 id="ask-title" class="ask-title" data-i18n="askTitle"></h3>
+      <form class="ask-form" id="ask-form" role="search">
+        <input type="search" id="ask-q" autocomplete="off" enterkeyhint="search" maxlength="120" data-i18n-placeholder="askPlaceholder">
+        <button type="submit" class="btn primary" data-i18n="askBtn"></button>
+      </form>
+      <div class="ask-examples" id="ask-examples"></div>
+      <div id="ask-result" aria-live="polite"></div>
+    </section>
     <div id="home-body"></div>
   </section>
 
@@ -141,6 +151,11 @@
             <input type="checkbox" id="mine-only">
             <span data-i18n="mineOnly"></span>
           </label>
+          <label class="toggle" id="fit-only-wrap" hidden>
+            <input type="checkbox" id="fit-only">
+            <span data-i18n="fitOnly"></span>
+          </label>
+          <button type="button" class="link-btn fit-setup" id="fit-setup" hidden data-i18n="fitSetup"></button>
           <label class="toggle">
             <input type="checkbox" id="unread-only">
             <span data-i18n="unreadOnly"></span>
@@ -381,10 +396,13 @@
   <script src="js/extras.js"></script>
   <script src="js/summary.js"></script>
   <script src="js/personal.js"></script>
+  <script src="js/eligibility.js"></script>
+  <script src="js/ask.js"></script>
   <script src="js/cal.js"></script>
   <script src="js/i18n.js"></script>
   <script src="js/i18n2.js"></script>
   <script src="js/i18n3.js"></script>
+  <script src="js/i18n4.js"></script>
   <script src="js/curriculum.js"></script>
   <script src="js/theme.js"></script>
   <script src="js/app.js"></script>

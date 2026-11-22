@@ -7,6 +7,9 @@ run_server.bat 으로 켭니다 (setup_auto.bat 을 한 번 실행하면 로그�
   - GET  /status                                    서버 상태: 켜짐, 처리 중인 단계·진행(공지 12/40), 웹 앱 데이터 건수·기준 시각
                                                    (확장 팝업이 보여 줌)
   - GET  /                                          웹 앱 미리보기 (index.html · css · js · data · icons 만)
+  - POST /ask                                       공지에게 묻기: 웹 앱이 고른 공지(최대 8건)와 질문을 로컬 AI(Ollama)에게 보여 주고 답을 받음
+  - POST /mine · GET /reminders                     저장한 공지 목록을 맞춰 두고, 크롬 확장이 마감 하루 전·당일 알림에 씀
+                                                   (/ask · /mine 은 이 서버가 보여 준 웹 앱에서만 받음)
 
 안전장치
   - 127.0.0.1 에서만 받습니다 (같은 컴퓨터만 접속 가능).
@@ -34,7 +37,8 @@ from pathlib import Path
 from urllib.parse import parse_qs, unquote, urlparse
 
 ROOT = Path(__file__).resolve().parent.parent
-VERSION = '1.1.0'
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+VERSION = '1.2.0'
 KINDS = ('notices', 'lectures', 'reference')
 MAX_BYTES = 200 * 1024 * 1024
 DEBOUNCE_SEC = 60
@@ -102,6 +106,104 @@ def count_items(kind: str, data: dict) -> int:
     if kind == 'lectures':
         return sum(len(t.get('rows') or []) for t in data.get('terms') or [] if isinstance(t, dict))
     return len(data.get('calendar') or []) + len(data.get('rules') or [])
+
+
+def same_origin(origin: str | None, host: str | None) -> bool:
+    """이 서버가 보여 준 웹 앱(같은 주소)에서 온 요청인가. Origin 이 없으면(파이썬·curl) 허용"""
+    if not origin:
+        return True
+    host = (host or '').strip()
+    return host.split(':')[0] in ('127.0.0.1', 'localhost') and origin in (f'http://{host}', f'https://{host}')
+
+
+# ------------------------------------------------------------------
+# 공지에게 묻기 (로컬 AI)
+# ------------------------------------------------------------------
+LANG_NAMES = {'ko': '한국어', 'en': 'English', 'zh': '简体中文', 'ja': '日本語'}
+ASK_SYSTEM = ('너는 건국대학교 GLOCAL캠퍼스 학생을 돕는 공지 안내 도우미다. 질문에 [공지 목록]에 적힌 내용만으로 답한다. '
+              '목록에 없는 사실(날짜·금액·조건·링크)은 절대 만들지 않는다. 2~4문장으로 짧게, 질문에 가장 맞는 공지부터 말하고 '
+              '말한 공지마다 번호를 [1]처럼 붙인다. 마감이 있으면 날짜도 말한다. 맞는 공지가 없으면 없다고 말한다. '
+              '답은 지정한 언어로만 쓴다.')
+ASK_SCHEMA = {'type': 'object', 'properties': {'answer': {'type': 'string'}, 'used': {'type': 'array', 'items': {'type': 'integer'}}},
+              'required': ['answer', 'used']}
+ASK_FIELDS = (('deadline', '마감'), ('benefit', '혜택'), ('eligibility', '대상'), ('summary', '요약'))
+
+
+def build_ask_prompt(question: str, lang: str, notices: list[dict]) -> str:
+    lines = [f'질문: {question}', f'답할 언어: {LANG_NAMES.get(lang, "한국어")}', '', '[공지 목록]']
+    for n in notices:
+        lines.append(f"[{n['no']}] {n['title']}")
+        for key, label in ASK_FIELDS:
+            v = str(n.get(key) or '').strip()
+            if v:
+                lines.append(f'    {label}: {v[:300]}')
+    return '\n'.join(lines)
+
+
+def ask_ai(question: str, lang: str, notices: list[dict], ai=None) -> dict:
+    """로컬 AI에게 묻는다. 답에 나온 번호를 공지 id 로 바꿔 돌려준다 (목록에 없는 번호는 버림)"""
+    import gongji_pipeline as gp
+    ai = ai or gp.Ollama(os.environ.get('GONGJI_MODEL', 'qwen3:8b'), think=False, timeout=120)
+    t0 = time.time()
+    out = ai.chat_json(ASK_SYSTEM, build_ask_prompt(question, lang, notices), ASK_SCHEMA, num_predict=700)
+    answer = re.sub(r'<think>.*?</think>', '', str(out.get('answer') or ''), flags=re.S).strip()
+    nos = {n['no']: n['id'] for n in notices}
+    used = []
+    for k in list(out.get('used') or []) + [int(m) for m in re.findall(r'\[(\d{1,2})\]', answer)]:
+        if isinstance(k, int) and k in nos and nos[k] not in used:
+            used.append(nos[k])
+    # 목록에 없는 번호 [9] 같은 것은 답에서 지운다
+    answer = re.sub(r'\[(\d{1,2})\]', lambda m: m[0] if int(m[1]) in nos else '', answer)
+    answer = re.sub(r'[ \t]+', ' ', answer).strip()
+    return {'answer': answer[:1500], 'used': used, 'model': getattr(ai, 'model', ''), 'seconds': round(time.time() - t0, 1)}
+
+
+def check_ask(data) -> str | None:
+    if not isinstance(data, dict):
+        return '모양이 맞지 않습니다'
+    q = data.get('q')
+    if not isinstance(q, str) or not q.strip() or len(q) > 200:
+        return '질문이 없거나 너무 깁니다'
+    ns = data.get('notices')
+    if not isinstance(ns, list) or not ns or len(ns) > 8:
+        return '공지 목록은 1~8건'
+    for n in ns:
+        if not isinstance(n, dict) or not isinstance(n.get('no'), int) or not isinstance(n.get('id'), str) or not isinstance(n.get('title'), str):
+            return '공지 모양이 맞지 않습니다'
+    return None
+
+
+# ------------------------------------------------------------------
+# 저장한 공지 → 마감 알림 (크롬 확장이 읽음)
+# ------------------------------------------------------------------
+def reminders(root: Path, inbox: Path, now: datetime | None = None) -> list[dict]:
+    """저장했고 지원 완료가 아닌 공지 중 마감이 오늘·내일인 것"""
+    import gongji_pipeline as gp
+    now = now or datetime.now()
+    try:
+        mine = json.loads((Path(inbox) / 'mine.json').read_text(encoding='utf-8'))
+    except (OSError, ValueError):
+        return []
+    saved = set(mine.get('saved') or []) - set(mine.get('applied') or [])
+    if not saved:
+        return []
+    try:
+        notices = gp.read_notices_js(Path(root) / 'data' / 'notices.js').get('notices', [])
+    except (OSError, ValueError, KeyError):
+        return []
+    out = []
+    for n in notices:
+        if n.get('id') not in saved or not n.get('deadline'):
+            continue
+        try:
+            dl = datetime.fromisoformat(n['deadline'])
+        except ValueError:
+            continue
+        days = (dl.date() - now.date()).days
+        if dl > now and days in (0, 1):
+            out.append({'id': n['id'], 'title': n.get('title') or '', 'deadline': n['deadline'], 'days': days})
+    out.sort(key=lambda x: x['deadline'])
+    return out
 
 
 def origin_allowed(origin: str | None) -> bool:
@@ -253,8 +355,47 @@ class Handler(BaseHTTPRequestHandler):
         self.end_headers()
 
     # --- 받기 ---
+    def _read_json(self, limit: int):
+        try:
+            length = int(self.headers.get('Content-Length') or 0)
+        except ValueError:
+            length = 0
+        if length <= 0 or length > limit:
+            return None
+        try:
+            return json.loads(self.rfile.read(length).decode('utf-8-sig'))
+        except (UnicodeDecodeError, ValueError):
+            return None
+
     def do_POST(self):
         url = urlparse(self.path)
+        if url.path in ('/ask', '/mine'):
+            if not same_origin(self.headers.get('Origin'), self.headers.get('Host')):
+                self._json(403, {'ok': False, 'error': '이 서버가 보여 준 웹 앱에서만 쓸 수 있습니다'})
+                return
+            data = self._read_json(64 * 1024)
+            if url.path == '/mine':
+                ok = isinstance(data, dict) and all(isinstance(data.get(k, []), list) and len(data.get(k, [])) <= 2000
+                                                    and all(isinstance(x, str) for x in data.get(k, [])) for k in ('saved', 'applied'))
+                if not ok:
+                    self._json(400, {'ok': False, 'error': '모양이 맞지 않습니다'})
+                    return
+                self.inbox.mkdir(parents=True, exist_ok=True)
+                rec = {'saved': data.get('saved', []), 'applied': data.get('applied', []), 'at': datetime.now().strftime('%Y-%m-%d %H:%M')}
+                (self.inbox / 'mine.json').write_text(json.dumps(rec, ensure_ascii=False), encoding='utf-8')
+                self._json(200, {'ok': True, 'saved': len(rec['saved'])})
+                return
+            why = check_ask(data)
+            if why:
+                self._json(400, {'ok': False, 'error': why})
+                return
+            try:
+                res = self.ask_fn(data['q'].strip(), str(data.get('lang') or 'ko'), data['notices'])
+            except Exception as e:          # Ollama 꺼짐·시간 초과 등: 웹 앱은 조건으로 찾은 결과만 보여 줌
+                self._json(503, {'ok': False, 'error': str(e)[:200]})
+                return
+            self._json(200, {'ok': True, **res})
+            return
         if url.path != '/ingest':
             self._json(404, {'ok': False, 'error': '없는 주소'})
             return
@@ -295,6 +436,14 @@ class Handler(BaseHTTPRequestHandler):
     # --- 상태 · 웹 앱 미리보기 ---
     def do_GET(self):
         url = urlparse(self.path)
+        if url.path == '/reminders':
+            when = (parse_qs(url.query).get('now') or [''])[0]
+            try:
+                now = datetime.fromisoformat(when) if when else None
+            except ValueError:
+                now = None
+            self._json(200, {'ok': True, 'items': reminders(self.root, self.inbox, now)})
+            return
         if url.path == '/status':
             st = self.runner.status() if self.runner else {'busy': False, 'waiting': False, 'last': None, 'runs': 0, 'progress': None}
             self._json(200, {'ok': True, 'app': 'gongji-jupjup', 'version': VERSION, **st, 'received': self.received[-5:],
@@ -322,10 +471,12 @@ class Handler(BaseHTTPRequestHandler):
         self.wfile.write(body)
 
 
-def make_server(port: int = 8765, root: Path | None = None, runner: Runner | None = None, inbox: Path | None = None) -> ThreadingHTTPServer:
+def make_server(port: int = 8765, root: Path | None = None, runner: Runner | None = None, inbox: Path | None = None,
+                ask_fn=None) -> ThreadingHTTPServer:
     root = Path(root or ROOT)
     handler = type('BoundHandler', (Handler,), {
-        'root': root, 'inbox': Path(inbox or root / 'collected'), 'runner': runner, 'received': []
+        'root': root, 'inbox': Path(inbox or root / 'collected'), 'runner': runner, 'received': [],
+        'ask_fn': staticmethod(ask_fn or ask_ai)
     })
     return ThreadingHTTPServer(('127.0.0.1', port), handler)
 

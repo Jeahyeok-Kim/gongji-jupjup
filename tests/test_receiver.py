@@ -150,6 +150,64 @@ class ReceiverTest(unittest.TestCase):
         log = next((self.root / 'logs').glob('server-*.log')).read_text(encoding='utf-8')
         self.assertIn('[4/4] 끝', log, '출력은 그대로 기록에 남김')
 
+    def _with_ask(self, fn):
+        self.httpd.shutdown(); self.httpd.server_close()
+        self.httpd = receiver.make_server(0, self.root, self.runner, ask_fn=fn)
+        self.base = f'http://127.0.0.1:{self.httpd.server_address[1]}'
+        self.thread = threading.Thread(target=self.httpd.serve_forever, daemon=True)
+        self.thread.start()
+
+    def test_ask_same_origin_only_and_shape(self):
+        seen = {}
+        def fake(q, lang, notices):
+            seen.update(q=q, lang=lang, n=len(notices))
+            return {'answer': '[1] 국가장학금은 11월 30일까지예요.', 'used': ['a'], 'model': 'fake', 'seconds': 0.1}
+        self._with_ask(fake)
+        body = {'q': '이번 주 장학금', 'lang': 'ko', 'notices': [{'no': 1, 'id': 'a', 'title': '국가장학금'}]}
+        host = self.base.split('//')[1]
+        code, raw, _ = call(self.base + '/ask', body, {'Content-Type': 'application/json', 'Origin': 'http://' + host})
+        self.assertEqual(code, 200, raw)
+        self.assertEqual(json.loads(raw)['used'], ['a'])
+        self.assertEqual(seen, {'q': '이번 주 장학금', 'lang': 'ko', 'n': 1})
+        self.assertEqual(call(self.base + '/ask', body, {'Origin': 'https://evil.example'})[0], 403)
+        self.assertEqual(call(self.base + '/ask', body, {'Origin': 'chrome-extension://abc'})[0], 403, '확장도 /ask 는 못 씀')
+        self.assertEqual(call(self.base + '/ask', {'q': '', 'notices': []})[0], 400)
+        self.assertEqual(call(self.base + '/ask', {'q': 'x', 'notices': [{'no': 1}]})[0], 400)
+        def down(q, lang, notices):
+            raise RuntimeError('Ollama 응답 없음')
+        self._with_ask(down)
+        self.assertEqual(call(self.base + '/ask', body)[0], 503)
+
+    def test_ask_ai_maps_numbers_and_drops_unknown(self):
+        class FakeAI:
+            model = 'fake'
+            def chat_json(self, system, user, schema, num_predict=0):
+                assert '[2] 해외 연수' in user and '마감: 2026-11-30T23:59' in user
+                return {'answer': '<think>음</think>해외 연수 [2]가 있어요. [9]', 'used': [2, 7]}
+        notices = [{'no': 1, 'id': 'a', 'title': '장학'}, {'no': 2, 'id': 'b', 'title': '해외 연수', 'deadline': '2026-11-30T23:59'}]
+        r = receiver.ask_ai('해외', 'ko', notices, ai=FakeAI())
+        self.assertEqual(r['used'], ['b'])
+        self.assertEqual(r['answer'], '해외 연수 [2]가 있어요.')
+
+    def test_mine_and_reminders(self):
+        (self.root / 'data').mkdir(exist_ok=True)
+        notices = {'meta': {}, 'categories': [], 'notices': [
+            {'id': 'a', 'title': '오늘 마감 장학', 'deadline': '2026-11-19T18:00'},
+            {'id': 'b', 'title': '내일 마감 특강', 'deadline': '2026-11-20T23:59'},
+            {'id': 'c', 'title': '다음 주 마감', 'deadline': '2026-11-26T23:59'},
+            {'id': 'd', 'title': '지원 완료', 'deadline': '2026-11-19T23:59'},
+            {'id': 'e', 'title': '이미 지난 시각', 'deadline': '2026-11-19T09:00'}]}
+        (self.root / 'data' / 'notices.js').write_text('window.GONGJI_DATA = /*JSON-START*/' + json.dumps(notices, ensure_ascii=False) + '/*JSON-END*/;', encoding='utf-8')
+        host = self.base.split('//')[1]
+        code, _, _ = call(self.base + '/mine', {'saved': ['a', 'b', 'c', 'd', 'e'], 'applied': ['d']}, {'Origin': 'http://' + host})
+        self.assertEqual(code, 200)
+        self.assertEqual(call(self.base + '/mine', {'saved': ['a']}, {'Origin': 'https://evil.example'})[0], 403)
+        self.assertEqual(call(self.base + '/mine', {'saved': 'a'})[0], 400)
+        code, raw, headers = call(self.base + '/reminders?now=2026-11-19T10:00', headers={'Origin': 'chrome-extension://abc'})
+        items = json.loads(raw)['items']
+        self.assertEqual([(x['id'], x['days']) for x in items], [('a', 0), ('b', 1)])
+        self.assertEqual(headers.get('Access-Control-Allow-Origin'), 'chrome-extension://abc')
+
     def test_disabled_runner_only_saves(self):
         self.runner.enabled = False
         code, body, _ = call(self.base + '/ingest?kind=notices', NOTICES)

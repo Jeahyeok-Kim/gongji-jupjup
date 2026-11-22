@@ -17,6 +17,8 @@
   const C = window.GongjiCal;
   const TH = window.GongjiTheme;
   const CU = window.GongjiCurriculum;
+  const EL = window.GongjiEligibility;               // 지원 자격 판정
+  const AK = window.GongjiAsk;                       // 공지에게 묻기
   const PAGE = 30;                                   // 목록은 30건씩 보여 주고 '더 보기'로 늘린다
   const $ = (sel) => document.querySelector(sel);
 
@@ -59,8 +61,20 @@
     { day: 5, start: '10:30', end: '12:00', names: { ko: '대학영어', en: 'College English', zh: '大学英语', ja: '大学英語' } }
   ];
 
+  // 내 정보(지원 자격 확인용): 과정·학년·학적·유학생·학과. 학년(또는 대학원)을 고르면 켜진다
+  function cleanProfile(p) {
+    const o = p && typeof p === 'object' ? p : {};
+    const level = o.level === 'grad' ? 'grad' : 'undergrad';
+    const grade = [1, 2, 3, 4].includes(+o.grade) ? +o.grade : null;
+    const out = { level, grade, status: o.status === 'leave' ? 'leave' : 'enrolled', intl: o.intl === true, dept: String(o.dept || '').trim().slice(0, 30) };
+    out.set = level === 'grad' || grade !== null;
+    return out;
+  }
+
   const state = {
     lang: initialLang(),
+    profile: cleanProfile(store.get('profile', null)),
+    fitOnly: store.get('fitOnly', true) !== false,
     query: '',
     board: '',
     status: 'open',
@@ -134,7 +148,19 @@
   const isApplied = (id) => state.applied.includes(id);
   const isRead = (id) => state.read.includes(id);
   // 지원 완료한 공지는 알림·추천·오늘 요약에서 뺀다
-  const activeNotices = () => DATA.notices.filter((n) => !isApplied(n.id));
+  // 지원 완료한 공지와, 내 정보로 보아 대상이 아닌 공지(교직원 대상 등)는 오늘 화면·추천·알림 요약에서 뺀다
+  const activeNotices = () => DATA.notices.filter((n) => !isApplied(n.id) && !unfit(n));
+  let fitMemo = { sig: '', map: new Map() };
+  function fitOf(n, profile) {
+    if (!EL) return null;
+    if (profile) return EL.judge(n, profile);
+    const sig = JSON.stringify(state.profile) + '|' + DATA.meta.generatedAt + '|' + DATA.notices.length;
+    if (fitMemo.sig !== sig) fitMemo = { sig, map: new Map() };
+    if (!fitMemo.map.has(n.id)) fitMemo.map.set(n.id, EL.judge(n, state.profile));
+    return fitMemo.map.get(n.id);
+  }
+  const fitStatus = (n, profile) => { const r = fitOf(n, profile); return r ? r.status : null; };
+  const unfit = (n) => state.profile.set && fitStatus(n) === 'no';
   const personalCtx = () => ({ keywords: state.keywords, interests: state.interests });
   const mineOf = (n) => P.mine(n, personalCtx());
   const hasMine = () => state.keywords.length > 0 || state.interests.length > 0;
@@ -253,6 +279,12 @@
     if (state.savedOnly) { const keep = new Set(state.saved); base = base.filter((n) => keep.has(n.id)); }
     if (state.mineOnly) base = base.filter((n) => mineOf(n).any);
     if (state.unreadOnly) base = base.filter((n) => !isRead(n.id));
+    let fitHidden = 0;
+    if (state.profile.set && state.fitOnly) {
+      const before = base.length;
+      base = base.filter((n) => fitStatus(n) !== 'no');
+      fitHidden = before - base.length;
+    }
     if (state.due) {
       // 오늘 화면의 숫자(오늘 마감·3일 안 마감·새 공지)와 목록이 같은 공지를 가리키게 한다
       base = base.filter((n) => {
@@ -279,7 +311,7 @@
       hidden = before - list.length;
     }
     list = list.filter((n) => n.pinned).concat(list.filter((n) => !n.pinned));      // 운영자가 '중요'로 표시한 공지는 맨 위
-    return { base, counts, subCounts, list, hidden };
+    return { base, counts, subCounts, list, hidden, fitHidden };
   }
 
   function renderChips(counts, subCounts, total) {
@@ -352,6 +384,7 @@
     renderAlerts();
     if ($('#detail').open && state.openId) openDetail(state.openId, true);
     if (!quiet) toast(was ? t().unsavedToastMsg : t().savedToastMsg, { label: t().undo, run: () => toggleSave(id, true) });
+    syncMine();
   }
 
   // ---------- 지원 완료 ----------
@@ -366,6 +399,7 @@
     if ($('#detail').open && state.openId) openDetail(state.openId, true);
     if (document.body.dataset.tab === 'budget') runBudget();
     if (!quiet) toast(was ? t().unappliedToast : t().appliedToast, { label: t().undo, run: () => toggleApplied(id, true) });
+    syncMine();
   }
   function markRead(id) {
     if (isRead(id)) return;
@@ -396,12 +430,14 @@
     const imageOnly = n.bodyStatus === 'image';
     const sm = S.pick(n, state.lang);
     const mine = mineOf(n);
+    const fit = state.profile.set ? fitStatus(n) : null;
     return h('li', {
       'data-id': n.id,
-      class: 'card' + (expired ? ' is-expired' : '') + (conflicts.length ? ' has-conflict' : '') + (n.pinned ? ' is-pinned' : '')
+      class: 'card' + (expired ? ' is-expired' : '') + (conflicts.length ? ' has-conflict' : '') + (n.pinned ? ' is-pinned' : '') + (fit === 'no' ? ' is-unfit' : '')
         + (isRead(n.id) ? ' is-read' : '') + (isApplied(n.id) ? ' is-applied' : '')
     },
       h('div', { class: 'card-top' },
+        fitBadge(n),
         X.isNew(n, since) ? h('span', { class: 'new-badge' }, t().newBadge) : null,
         n.pinned ? h('span', { class: 'pin-badge' }, t().pinnedBadge) : null,
         isApplied(n.id) ? h('span', { class: 'applied-badge' }, t().appliedBadge) : null,
@@ -425,6 +461,16 @@
     );
   }
 
+  // 지원 자격 배지: 지원 가능 · 조건 확인 · 대상 아님 (마우스를 올리면 이유)
+  function fitBadge(n) {
+    if (!state.profile.set) return null;
+    const r = fitOf(n);
+    if (!r) return null;
+    const T = t();
+    const why = r.reasons.map((x) => T.fitReason(x)).filter(Boolean).join(' · ') || T.fitYesNote;
+    return h('span', { class: 'fit-badge ' + r.status, title: why }, r.status === 'yes' ? T.fitYes : r.status === 'no' ? T.fitNo : T.fitCheck);
+  }
+
   const filtersActive = () => !!(state.query || state.board || state.category || state.group || state.sub || state.savedOnly || state.mineOnly || state.unreadOnly || state.due || state.status !== 'open');
   function resetFilters() {
     Object.assign(state, { query: '', board: '', category: '', group: '', sub: '', savedOnly: false, mineOnly: false, unreadOnly: false, due: '', status: 'open' });
@@ -435,6 +481,10 @@
   function renderListTools() {
     const mineWrap = $('#mine-only-wrap');
     if (mineWrap) { mineWrap.hidden = !hasMine() && !state.mineOnly; $('#mine-only').checked = state.mineOnly; }
+    const fitWrap = $('#fit-only-wrap');
+    if (fitWrap) { fitWrap.hidden = !state.profile.set || !EL; $('#fit-only').checked = state.fitOnly; }
+    const fitSetup = $('#fit-setup');
+    if (fitSetup) fitSetup.hidden = state.profile.set || !EL;
     const unread = $('#unread-only');
     if (unread) unread.checked = state.unreadOnly;
     const label = $('#saved-only-label');
@@ -472,13 +522,13 @@
     const sig = JSON.stringify([state.query, state.board, state.category, state.status, state.sort, state.group, state.sub,
       state.savedOnly, state.mineOnly, state.unreadOnly, state.due, state.grouped, state.hideConflicts, state.lang]);
     if (sig !== state.sig) { state.sig = sig; state.limit = PAGE; }
-    const { base, counts, subCounts, list: full, hidden } = computeVisible();
+    const { base, counts, subCounts, list: full, hidden, fitHidden } = computeVisible();
     const list = full.slice(0, state.limit);
     const rest = full.length - list.length;
     listIds = full.map((n) => n.id);
     renderListTools();
     renderChips(counts, subCounts, base.length);
-    $('#count').textContent = t().count(full.length) + (hidden ? ` · ${t().hiddenByConflict(hidden)}` : '');
+    $('#count').textContent = t().count(full.length) + (hidden ? ` · ${t().hiddenByConflict(hidden)}` : '') + (fitHidden ? ` · ${t().fitHidden(fitHidden)}` : '');
     const box = $('#list');
     if (!list.length) {
       const T = t();
@@ -576,6 +626,8 @@
         n.benefit ? fact(T.benefit, tr(n.benefit.text)) : fact(T.benefit, T.notStated, true),
         fact(T.category, catLabel(n.category)),
         n.eligibility ? fact(T.eligibility, tr(n.eligibility)) : fact(T.eligibility, T.notStated, true),
+        state.profile.set && fitOf(n) ? fact(T.fitLabel, [fitBadge(n), ' ',
+          h('span', { class: 'fit-why' }, fitOf(n).reasons.map((x) => T.fitReason(x)).filter(Boolean).join(' · ') || T.fitYesNote)]) : null,
         eventsNode ? fact(T.when, eventsNode) : null,
         n.hours ? fact(T.hours, T.hoursValue(n.hours)) : null));
     }
@@ -1337,6 +1389,11 @@
         } }, T.homeTimetableBtn)));
     }
 
+    if (!state.profile.set && EL) {
+      parts.push(h('div', { class: 'home-tip' },
+        h('p', null, T.fitHomeTip),
+        h('button', { type: 'button', class: 'btn small primary', onclick: goProfile }, T.fitHomeBtn)));
+    }
     const main = [
       todayClassCard(),
       homeSection(T.homePinned, s.pinned, 5, null),
@@ -1693,6 +1750,7 @@
         seg([['auto', T.themeAuto], ['light', T.themeLight], ['dark', T.themeDark]], TH.get(), (v) => TH.setTheme(v), T.themeTitle),
         h('h3', { style: 'margin-top:12px' }, T.fontTitle),
         seg([['sm', T.fontSm], ['md', T.fontMd], ['lg', T.fontLg]], TH.font(), (v) => { TH.setFont(v); renderMyPanel(); }, T.fontTitle)) : null,
+      EL ? profileSection(seg) : null,
       h('div', { class: 'my-section' },
         h('p', { class: 'help' }, T.interestsHelp),
         h('h3', null, T.interestsFields), interestChips(),
@@ -1707,7 +1765,9 @@
         h('button', { type: 'button', class: 'btn small' + (state.alertsOn ? ' is-on' : ''), 'aria-pressed': String(state.alertsOn), onclick: () => setNotify(!state.alertsOn) },
           state.alertsOn ? T.notifyOff : T.notifyOn),
         denied ? h('p', { class: 'fine' }, T.notifyDenied) : null,
-        !notifySupported() ? h('p', { class: 'fine' }, T.notifyUnsupported) : null),
+        !notifySupported() ? h('p', { class: 'fine' }, T.notifyUnsupported) : null,
+        h('h3', { style: 'margin-top:14px' }, T.remindTitle),
+        h('p', { class: 'help' + (server.ok ? ' ok-note' : '') }, server.ok ? T.remindOn(state.saved.length) : T.remindOff)),
       h('div', { class: 'my-section' },
         h('h3', null, T.calSyncTitle),
         feed ? [
@@ -1720,6 +1780,185 @@
           h('p', { class: 'fine' }, T.calSyncSteps)
         ] : h('p', { class: 'help' }, T.calSyncUnavailable)));
     if (focusKeyword) { const el = $('#kw-input'); if (el) el.focus(); }
+  }
+
+  // ---------- 내 정보 (지원 자격 확인) ----------
+  function profileSection(seg) {
+    const T = t();
+    const p = state.profile;
+    const set = (patch) => {
+      state.profile = cleanProfile(Object.assign({}, state.profile, patch));
+      store.set('profile', state.profile);
+      profileChanged();
+    };
+    const dept = h('input', {
+      type: 'text', id: 'profile-dept', maxlength: '30', value: p.dept || state.dept || '', placeholder: T.profileDeptPh,
+      list: 'dept-list', autocomplete: 'off', 'aria-label': T.profileDept, onchange: (e) => set({ dept: e.target.value })
+    });
+    return h('div', { class: 'my-section profile-section', id: 'profile-section' },
+      h('h3', null, T.profileTitle),
+      h('p', { class: 'help' }, T.profileHelp),
+      h('div', { class: 'profile-grid' },
+        h('span', { class: 'pf-label' }, T.profileLevel),
+        seg([['undergrad', T.levelUndergrad], ['grad', T.levelGrad]], p.level, (v) => set({ level: v }), T.profileLevel),
+        p.level === 'grad' ? null : [h('span', { class: 'pf-label' }, T.profileGrade),
+          seg([1, 2, 3, 4].map((g) => [g, T.gradeN(g)]), p.grade, (v) => set({ grade: v }), T.profileGrade)],
+        h('span', { class: 'pf-label' }, T.profileStatus),
+        seg([['enrolled', T.statusEnrolled], ['leave', T.statusLeave]], p.status, (v) => set({ status: v }), T.profileStatus),
+        h('span', { class: 'pf-label' }, T.profileDept), dept),
+      h('label', { class: 'toggle pf-intl' },
+        h('input', { type: 'checkbox', checked: p.intl, onchange: (e) => set({ intl: e.target.checked }) }), h('span', null, T.profileIntl)),
+      h('datalist', { id: 'dept-list' }, deptList().map((d) => h('option', { value: d }))),
+      p.set ? h('p', { class: 'fine ok-note' }, '✓ ' + T.profileSaved + ' ',
+        h('button', { type: 'button', class: 'link-btn', onclick: () => { state.profile = cleanProfile(null); store.set('profile', null); profileChanged(); } }, T.profileClear)) : null);
+  }
+  // 학과 이름 후보: 강의 시간표(data/timetable.js)의 개설 학과
+  let deptCache = null;
+  function deptList() {
+    if (deptCache) return deptCache;
+    const tt = window.GONGJI_TIMETABLE;
+    const set = new Set(((tt && tt.courses) || []).map((c) => c.d).filter((d) => d && /(과|부|전공)$/.test(d)));
+    deptCache = [...set].sort((a, b) => a.localeCompare(b, 'ko')).slice(0, 200);
+    return deptCache;
+  }
+  function profileChanged() {
+    renderMyPanel();
+    renderList();
+    renderHome();
+    renderAlerts();
+    if (state.budgetResult) runBudget();
+    if (ask.res) runAsk(ask.q);
+    if ($('#detail').open && state.openId) openDetail(state.openId, true);
+  }
+  function goProfile() {
+    location.hash = '#/settings';
+    setTab('settings', true);
+    setTimeout(() => { const el = $('#profile-section'); if (el) el.scrollIntoView({ block: 'start', behavior: 'smooth' }); }, 60);
+  }
+
+  // ---------- 공지에게 묻기 ----------
+  const ask = { q: '', res: null, ai: null, aiState: '', seq: 0, all: false };
+  function renderAskExamples() {
+    const box = $('#ask-examples');
+    if (!box || !AK) return;
+    fill(box, t().askExamples.map((q) => h('button', { type: 'button', class: 'chip small', onclick: () => { $('#ask-q').value = q; runAsk(q); } }, q)));
+  }
+  function runAsk(question) {
+    if (!AK) return;
+    const q = String(question || '').trim();
+    ask.q = q;
+    ask.seq += 1;
+    ask.ai = null;
+    ask.aiState = '';
+    ask.all = false;
+    if (!q) { ask.res = null; renderAsk(); return; }
+    const cond = AK.parse(q);
+    const r = AK.run(DATA.notices.filter((n) => !isApplied(n.id)), cond,
+      { now, fit: (n, p) => fitStatus(n, p), profileSet: state.profile.set });
+    // 내 정보가 있으면 대상이 아닌 공지는 뺀다
+    if (state.profile.set && state.fitOnly) r.list = r.list.filter((n) => fitStatus(n) !== 'no');
+    ask.res = Object.assign({ cond }, r);
+    renderAsk();
+    if (server.ok && r.list.length) askAi(q, r.list, ask.seq);
+  }
+  async function askAi(q, list, seq) {
+    const brief = AK.brief(list, state.lang, 8);
+    ask.aiState = 'busy';
+    renderAsk();
+    try {
+      const res = await fetch('ask', {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ q, lang: state.lang, notices: brief })
+      });
+      const j = await res.json();
+      if (seq !== ask.seq) return;
+      if (!res.ok || !j.ok || !j.answer) throw new Error(j.error || String(res.status));
+      ask.ai = { answer: j.answer, brief, model: j.model, seconds: j.seconds };
+      ask.aiState = '';
+    } catch (e) {
+      if (seq !== ask.seq) return;
+      ask.aiState = 'fail';
+    }
+    renderAsk();
+  }
+  // AI 답의 [1] 같은 번호를 누르면 그 공지가 열리게
+  function cited(answer, brief, ids) {
+    const out = [];
+    let last = 0;
+    answer.replace(/\[(\d{1,2})\]/g, (m, k, at) => {
+      const b = brief.find((x) => x.no === +k);
+      out.push(answer.slice(last, at));
+      out.push(b ? h('button', { type: 'button', class: 'cite', title: b.title, onclick: () => openDetail(b.id, false, ids) }, m) : m);
+      last = at + m.length;
+      return m;
+    });
+    out.push(answer.slice(last));
+    return out;
+  }
+  function renderAsk() {
+    const box = $('#ask-result');
+    if (!box) return;
+    const r = ask.res;
+    if (!r) { fill(box); return; }
+    const T = t();
+    const c = r.cond;
+    const chips = [];
+    if (c.due !== null) chips.push(T.condDue(c.due));
+    for (const sb of c.subs) chips.push(subLabel(sb));
+    for (const g of c.groups) chips.push(groupLabel(g));
+    const words = c.words.slice(0, 3).concat(c.tokens.filter((w) => !r.ignored.includes(w)));
+    if (words.length) chips.push(T.condWords(words.join(', ')));
+    if (c.intl) chips.push(T.condIntl);
+    if (c.grade) chips.push(T.condGrade(c.grade));
+    if ((c.mine || state.fitOnly) && state.profile.set) chips.push(T.condMine);
+    if (r.sort && T.condSort[r.sort]) chips.push(T.condSort[r.sort]);
+    const ids = r.list.map((n) => n.id);
+    const shown = ask.all ? r.list.slice(0, 60) : r.list.slice(0, 5);
+    let ai = null;
+    if (r.list.length) {
+      if (ask.aiState === 'busy') ai = h('div', { class: 'ask-ai busy', role: 'status' }, h('span', { class: 'spinner', 'aria-hidden': 'true' }), T.askAiWorking);
+      else if (ask.aiState === 'fail') ai = h('p', { class: 'fine' }, T.askAiFail);
+      else if (ask.ai) ai = h('div', { class: 'ask-ai' }, h('h4', null, T.askAiTitle), h('p', null, cited(ask.ai.answer, ask.ai.brief, ids)), h('p', { class: 'fine' }, T.askAiNote));
+      else if (server.checked && !server.ok) ai = h('p', { class: 'fine ask-ai-hint' }, T.askAiLocalOnly);
+    }
+    fill(box, h('div', { class: 'ask-card' },
+      h('div', { class: 'ask-cond' },
+        h('span', { class: 'ask-cond-label' }, T.askUnderstood),
+        chips.map((x) => h('span', { class: 'cond-chip' }, x)),
+        h('span', { class: 'ask-count' }, T.askCount(r.list.length))),
+      r.ignored.length ? h('p', { class: 'fine' }, T.askIgnored(r.ignored.join(', '))) : null,
+      ai,
+      shown.length ? h('ul', { class: 'home-list' }, shown.map((n) => homeRow(n, ids))) : h('p', { class: 'ask-none' }, T.askNone),
+      h('div', { class: 'ask-actions' },
+        !ask.all && r.list.length > 5 ? h('button', { type: 'button', class: 'link-btn', onclick: () => { ask.all = true; renderAsk(); } }, T.askSeeAll(r.list.length)) : null,
+        h('button', { type: 'button', class: 'link-btn', onclick: () => { $('#ask-q').value = ''; runAsk(''); } }, T.askClear))));
+  }
+
+  // ---------- 내 컴퓨터 서버 (수신 서버로 열었을 때만): AI 답 · 저장한 공지 마감 알림 ----------
+  const server = { ok: false, checked: false };
+  async function detectServer() {
+    const local = /^https?:$/.test(location.protocol) && /^(127\.0\.0\.1|localhost)$/.test(location.hostname);
+    if (local) {
+      try {
+        const r = await fetch('status', { cache: 'no-store' });
+        const j = await r.json();
+        server.ok = !!(j && j.app === 'gongji-jupjup');
+      } catch (e) { server.ok = false; }
+    }
+    server.checked = true;
+    if (server.ok) syncMine(true);
+    renderMyPanel();
+    renderAsk();
+  }
+  let mineTimer = null;
+  function syncMine(now) {
+    if (!server.ok) return;
+    clearTimeout(mineTimer);
+    mineTimer = setTimeout(() => {
+      fetch('mine', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ saved: state.saved, applied: state.applied }) })
+        .then((r) => { if (r.ok) renderMyPanel(); })
+        .catch(() => { /* 서버가 잠깐 꺼져 있으면 다음에 */ });
+    }, now ? 0 : 500);
   }
 
   // 검색창 아래에 최근 검색어와 내 키워드를 제안
@@ -1933,6 +2172,8 @@
   let homeCollapsed = store.get('homeCollapsed', false);
   function renderAll() {
     applyStaticText();
+    renderAskExamples();
+    renderAsk();
     renderList();
     renderTimetable();
     renderCurriculum();
@@ -1974,6 +2215,10 @@
     $('#q').addEventListener('change', rememberQuery);
     $('#mine-only').addEventListener('change', (e) => { state.mineOnly = e.target.checked; renderList(); });
     $('#unread-only').addEventListener('change', (e) => { state.unreadOnly = e.target.checked; renderList(); });
+    $('#fit-only').addEventListener('change', (e) => { state.fitOnly = e.target.checked; store.set('fitOnly', state.fitOnly); renderList(); });
+    $('#fit-setup').addEventListener('click', goProfile);
+    $('#ask-form').addEventListener('submit', (e) => { e.preventDefault(); runAsk($('#ask-q').value); });
+    $('#ask-q').addEventListener('search', (e) => { if (!e.target.value) runAsk(''); });
     // 해·달 버튼 · 알림 센터
     $('#theme-toggle').addEventListener('click', () => { if (TH) TH.toggle(); });
     document.addEventListener('gongji:theme', () => { renderThemeButton(); renderMyPanel(); });
@@ -2249,6 +2494,7 @@
   renderAll();
   setTab(tabFromHash(), false);
   openFromHash();
+  detectServer();
   runBudget();
   loadOverrides();
   if (CFG.overridesUrl) setInterval(loadOverrides, Math.max(5, CFG.refreshMinutes || 30) * 60000);

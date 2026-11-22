@@ -1,10 +1,10 @@
 // 공지 줍줍 서비스 워커: 한 번 열어 본 화면은 오프라인에서도 열리고, 새 데이터는 네트워크가 되면 받아 온다.
 // - 화면 파일(html·css·js·아이콘): 저장된 것을 먼저 보여 주고 뒤에서 새로 받아 둔다 (다음에 열면 새 버전)
 // - 공지 데이터(version·notices·calendar·overrides 의 json): 항상 네트워크 먼저, 안 되면 저장된 것
-const CACHE = 'gongji-v12';
+const CACHE = 'gongji-v13';
 const CORE = ['./', 'index.html', 'css/style.css', 'manifest.webmanifest', 'icons/icon-192.png',
-  'js/benefit.js', 'js/sync.js', 'js/logic.js', 'js/overrides.js', 'js/extras.js', 'js/summary.js', 'js/personal.js', 'js/cal.js',
-  'js/i18n.js', 'js/i18n2.js', 'js/i18n3.js', 'js/theme.js', 'js/app.js',
+  'js/benefit.js', 'js/sync.js', 'js/logic.js', 'js/overrides.js', 'js/extras.js', 'js/summary.js', 'js/personal.js', 'js/eligibility.js', 'js/ask.js', 'js/cal.js',
+  'js/i18n.js', 'js/i18n2.js', 'js/i18n3.js', 'js/i18n4.js', 'js/theme.js', 'js/app.js',
   'data/notices.js', 'data/glossary.js', 'data/calendar.js', 'data/config.js', 'data/courses.js', 'data/timetable.js', 'js/curriculum.js'];
 const DATA_JSON = /\/data\/(version|notices|calendar|glossary|overrides)\.json$|\/data\/gongji\.ics$/;
 
@@ -22,6 +22,7 @@ self.addEventListener('fetch', (e) => {
   if (req.method !== 'GET') return;
   const url = new URL(req.url);
   if (url.origin !== location.origin) return;                     // 다른 서버(깃허브 raw·구글 시트)는 건드리지 않음
+  if (/^\/(status|reminders|ask|mine|ingest)$/.test(url.pathname)) return;   // 내 컴퓨터 서버의 API 는 언제나 새로 묻는다
 
   if (DATA_JSON.test(url.pathname)) {
     e.respondWith(fetch(req).then((res) => {

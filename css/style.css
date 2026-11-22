@@ -300,6 +300,32 @@ body[data-tab="settings"] [data-view="settings"] { display: block; }
 .home-pill:hover { border-color: var(--accent); transform: translateY(-1px); }
 .home-pill.urgent { border-color: color-mix(in srgb, var(--danger) 35%, var(--border)); background: color-mix(in srgb, var(--danger-soft) 55%, var(--surface)); }
 .home-pill.urgent strong { color: var(--danger); }
+/* 공지에게 묻기 */
+.ask { margin: 0 0 16px; padding: 18px 20px; border-radius: var(--r-lg); border: 1px solid color-mix(in srgb, var(--accent) 30%, var(--border)); background: linear-gradient(180deg, color-mix(in srgb, var(--accent-soft) 70%, var(--surface)), var(--surface)); box-shadow: var(--shadow); }
+.ask-title { margin: 0 0 10px; font-size: 15px; display: flex; align-items: center; gap: 8px; }
+.ask-title::before { content: ""; width: 18px; height: 18px; flex: none; background: var(--accent); -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z'/%3E%3C/svg%3E") center / contain no-repeat; mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z'/%3E%3C/svg%3E") center / contain no-repeat; }
+.ask-form { display: flex; gap: 8px; }
+.ask-form input { flex: 1; min-width: 0; height: 46px; font-size: 15.5px; }
+.ask-form .btn { flex: none; min-width: 84px; }
+.ask-examples { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
+.ask-card { margin-top: 14px; padding-top: 14px; border-top: 1px dashed var(--border-strong); }
+.ask-cond { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; margin-bottom: 6px; }
+.ask-cond-label { font-size: 12.5px; font-weight: 700; color: var(--muted); margin-right: 2px; }
+.cond-chip { padding: 2px 10px; border-radius: 999px; background: var(--surface); border: 1px solid color-mix(in srgb, var(--accent) 40%, var(--border)); color: var(--accent-strong); font-size: 12.5px; font-weight: 700; }
+.ask-count { margin-left: auto; font-size: 12.5px; color: var(--muted); font-variant-numeric: tabular-nums; }
+.ask-ai { margin: 10px 0; padding: 12px 14px; border-radius: var(--r); background: var(--surface); border: 1px solid var(--border); }
+.ask-ai h4 { margin: 0 0 4px; font-size: 13px; color: var(--accent-strong); }
+.ask-ai p { margin: 4px 0 0; }
+.ask-ai.busy { display: flex; align-items: center; gap: 10px; color: var(--muted); font-size: 13.5px; }
+.cite { padding: 0 4px; border: 0; border-radius: 5px; background: var(--accent-soft); color: var(--accent-strong); font: inherit; font-weight: 800; font-size: .9em; cursor: pointer; }
+.cite:hover { background: var(--accent); color: var(--on-accent); }
+.spinner { width: 16px; height: 16px; flex: none; border-radius: 50%; border: 2px solid var(--border-strong); border-top-color: var(--accent); animation: spin .8s linear infinite; }
+@keyframes spin { to { rotate: 360deg; } }
+@media (prefers-reduced-motion: reduce) { .spinner { animation-duration: 2.4s; } }
+.ask-none { margin: 8px 0; color: var(--muted); }
+.ask-actions { display: flex; gap: 14px; margin-top: 6px; }
+.ask-ai-hint { margin: 6px 0; }
+
 .home-tip { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; padding: 12px 16px; margin-bottom: 14px; border-radius: var(--r-lg); background: var(--accent-soft); color: var(--accent-strong); font-size: 14.5px; font-weight: 600; }
 .home-tip p { margin: 0; flex: 1 1 240px; }
 
@@ -407,6 +433,15 @@ body[data-tab="settings"] [data-view="settings"] { display: block; }
 }
 .card:hover { border-color: color-mix(in srgb, var(--accent) 55%, var(--border)); transform: translateY(-1px); }
 .card.is-expired { opacity: .6; }
+.card.is-unfit { opacity: .62; }
+.card.is-unfit:hover { opacity: .9; }
+/* 지원 자격 배지 */
+.fit-badge { display: inline-flex; align-items: center; padding: 1px 8px; border-radius: 6px; font-size: 11.5px; font-weight: 800; white-space: nowrap; cursor: help; }
+.fit-badge.yes { background: var(--accent); color: var(--on-accent); }
+.fit-badge.check { background: var(--warn-soft); color: var(--warn); }
+.fit-badge.no { background: var(--surface-2); color: var(--muted); border: 1px solid var(--border); }
+.fit-why { color: var(--muted); font-size: 13.5px; font-weight: 500; }
+.fit-setup { font-size: 13px; }
 .card.has-conflict { box-shadow: inset 4px 0 0 #e8892b, var(--shadow); }
 .card.is-pinned { border-color: var(--gold); }
 .card.is-applied { background: color-mix(in srgb, var(--accent-soft) 45%, var(--surface)); }
@@ -633,7 +668,9 @@ dialog[open]::backdrop { background-color: rgba(12, 22, 17, .55); }
 .pick-meta { margin: 6px 0 0; color: var(--muted); font-size: 12.5px; }
 @media (min-width: 900px) {
   /* 왼쪽: 조건 / 오른쪽: 추천 결과 */
-  #budget-panel { max-width: none; padding: 24px 28px; display: grid; grid-template-columns: minmax(300px, 380px) minmax(0, 1fr); column-gap: 36px; align-items: start; }
+  #budget-panel { max-width: none; padding: 24px 28px; }
+  /* 추천 화면이 보일 때만 두 단으로 (다른 화면에서는 [data-view] 규칙대로 숨김) */
+  body[data-tab="budget"] #budget-panel { display: grid; grid-template-columns: minmax(300px, 380px) minmax(0, 1fr); column-gap: 36px; align-items: start; }
   #budget-panel > * { grid-column: 1; }
   #budget-panel > #budget-result { grid-column: 2; grid-row: 1 / span 6; }
   #budget-result .budget-summary { margin-top: 0; }
@@ -650,6 +687,12 @@ dialog[open]::backdrop { background-color: rgba(12, 22, 17, .55); }
 .my-section { margin: 16px 0 0; padding-top: 16px; border-top: 1px solid var(--border); }
 .my-section:first-child { margin-top: 0; padding-top: 0; border-top: 0; }
 .my-section h3 { margin: 0 0 8px; font-size: 14.5px; }
+.profile-grid { display: grid; grid-template-columns: max-content minmax(0, 1fr); gap: 10px 14px; align-items: center; margin: 10px 0 8px; }
+.profile-grid .seg { width: fit-content; max-width: 100%; flex-wrap: wrap; }
+.pf-label { font-size: 13px; font-weight: 650; color: var(--muted); }
+.profile-grid input { max-width: 280px; }
+.pf-intl { margin-top: 4px; }
+.ok-note { color: var(--accent-strong) !important; }
 .seg { display: inline-flex; padding: 3px; border-radius: var(--r); background: var(--surface-2); }
 .seg button { border: 0; background: none; padding: 7px 16px; border-radius: 9px; font-size: 14px; font-weight: 600; color: var(--muted); cursor: pointer; }
 .seg button[aria-pressed="true"] { background: var(--surface); color: var(--text); font-weight: 750; box-shadow: 0 1px 3px rgba(0, 0, 0, .12); }
@@ -732,6 +775,12 @@ dialog[open]::backdrop { background-color: rgba(12, 22, 17, .55); }
 
 /* ============ 12. 휴대폰 · 작은 창 ============ */
 @media (max-width: 899px) {
+  .ask { padding: 14px; margin-bottom: 12px; box-shadow: none; }
+  .ask-form input { height: 44px; font-size: 15px; }
+  .ask-examples { flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; margin-inline: -14px; padding-inline: 14px; }
+  .ask-examples .chip { flex: none; }
+  .profile-grid { grid-template-columns: minmax(0, 1fr); gap: 4px; }
+  .profile-grid .pf-label { margin-top: 6px; }
   body { padding-bottom: calc(64px + env(safe-area-inset-bottom, 0px)); }
   .topbar { padding: max(8px, env(safe-area-inset-top, 0px)) max(16px, env(safe-area-inset-right, 0px)) 8px max(16px, env(safe-area-inset-left, 0px)); }
   .logo { width: 36px; height: 36px; font-size: 17px; border-radius: 10px; }

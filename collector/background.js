@@ -5,6 +5,7 @@
 //  2) 새로 모인 자료(공지·강의 시간표·학교 기본 정보)를 내 컴퓨터의 수신 서버(pipeline/receiver.py)로 보낸다.
 //     서버가 꺼져 있으면 다운로드 폴더에 kku-종류-날짜.json 으로 저장한다 (run_pipeline.bat 이 찾아 쓴다).
 //  3) 자동 수집으로 새 공지를 받으면 제목 몇 개를 알림으로 보여 주고, 서버가 AI 정리를 끝내 웹 앱에 반영되면 한 번 더 알린다.
+//  4) 웹 앱에서 저장한 공지(서버에 맞춰 둔 것)의 마감 하루 전·당일에 알린다 (30분마다 서버에 물어봄, 공지·단계마다 한 번).
 // 서비스 워커는 30초쯤 쉬면 꺼지므로 진행 상태는 전부 chrome.storage.local 에 둔다 (job · lastRun · delivery · pending).
 importScripts('config.js');
 
@@ -27,6 +28,8 @@ async function schedule() {
   const s = await kkuSettings();
   await chrome.alarms.clear('auto');
   if (s.auto) await chrome.alarms.create('auto', { delayInMinutes: 1, periodInMinutes: s.intervalHours * 60 });
+  await chrome.alarms.clear('remind');
+  if (s.notify) await chrome.alarms.create('remind', { delayInMinutes: 1, periodInMinutes: 30 });
 }
 
 async function isDue(host) {
@@ -174,11 +177,51 @@ async function checkServerWatch() {
   } catch { /* 알림이 꺼져 있음 */ }
 }
 
+// 저장한 공지 마감 알림: 서버의 /reminders (오늘·내일 마감) → 공지·단계(오늘/내일)마다 한 번만
+async function checkReminders(nowIso) {
+  const s = await kkuSettings();
+  if (!s.notify || !chrome.notifications) return [];
+  let items = [];
+  try {
+    const res = await fetch(`${s.server.replace(/\/+$/, '')}/reminders${nowIso ? '?now=' + encodeURIComponent(nowIso) : ''}`, { signal: AbortSignal.timeout(8000) });
+    if (!res.ok) return [];
+    items = (await res.json()).items ?? [];
+  } catch { return []; }
+  const { reminded = {} } = await getLocal('reminded');
+  const now = Date.now();
+  for (const [k, at] of Object.entries(reminded)) if (now - at > 7 * 86400000) delete reminded[k];
+  const fresh = items.filter((it) => !reminded[`${it.id}:${it.days}`]);
+  if (!fresh.length) { await setLocal({ reminded }); return []; }
+  const time = (d) => d.slice(11, 16);
+  for (const it of fresh.slice(0, 3)) {
+    reminded[`${it.id}:${it.days}`] = now;
+    try {
+      await chrome.notifications.create(`remind:${it.id}`, {
+        type: 'basic', iconUrl: 'icons/icon-128.png', priority: 1,
+        title: `${it.days === 0 ? '오늘' : '내일'} ${time(it.deadline)} 마감`,
+        message: it.title.length > 60 ? it.title.slice(0, 59) + '…' : it.title,
+        contextMessage: '공지 줍줍 · 저장한 공지'
+      });
+    } catch { /* 알림이 꺼져 있음 */ }
+  }
+  if (fresh.length > 3) {
+    for (const it of fresh.slice(3)) reminded[`${it.id}:${it.days}`] = now;
+    try {
+      await chrome.notifications.create('remind:more', {
+        type: 'basic', iconUrl: 'icons/icon-128.png', priority: 0,
+        title: `저장한 공지 ${fresh.length - 3}건도 곧 마감이에요`, message: '눌러서 웹 앱에서 확인하세요.', contextMessage: '공지 줍줍'
+      });
+    } catch { /* 무시 */ }
+  }
+  await setLocal({ reminded });
+  return fresh;
+}
+
 // 웹 앱 열기: 내 컴퓨터 서버가 켜져 있으면 방금 갱신된 웹 앱을, 아니면 팝업 화면을 연다
-async function openWebApp() {
+async function openWebApp(hash = '#/home') {
   const s = await kkuSettings();
   const ping = await pingServer();
-  const url = ping.ok ? `${s.server.replace(/\/+$/, '')}/#/home` : chrome.runtime.getURL('popup/popup.html');
+  const url = ping.ok ? `${s.server.replace(/\/+$/, '')}/${hash}` : chrome.runtime.getURL('popup/popup.html');
   await chrome.tabs.create({ url });
 }
 
@@ -286,6 +329,8 @@ chrome.alarms.onAlarm.addListener(async (alarm) => {
     if (s.auto && (await isDue(null))) await serial(() => startJob('auto'));
   } else if (alarm.name === 'watchdog') {
     await serial(watchdog);
+  } else if (alarm.name === 'remind') {
+    await checkReminders();
   } else if (alarm.name === 'serverWatch') {
     await checkServerWatch();
   } else if (alarm.name === 'deliver') {
@@ -306,6 +351,12 @@ chrome.storage.onChanged.addListener(async (changes, area) => {
 });
 
 chrome.notifications?.onClicked.addListener(async (id) => {
+  if (id.startsWith('remind:')) {
+    await chrome.notifications.clear(id);
+    const nid = id.slice(7);
+    await openWebApp(nid === 'more' ? '#/home' : '#/n/' + encodeURIComponent(nid));
+    return;
+  }
   if (id !== NOTE_ID) return;
   await chrome.notifications.clear(id);
   await setLocal({ badgeSeen: Date.now() });
