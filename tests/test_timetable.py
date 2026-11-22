@@ -36,6 +36,33 @@ class BuildTest(unittest.TestCase):
         self.assertEqual(r['meta']['termName'], '2학기')
         self.assertEqual(len(r['courses'][0]['t']), 2)
 
+    def test_prefers_regular_semester_over_small_seasonal(self):
+        row = lambda i: {'n': f'과목{i}', 't': '월1000-1130', 's': '01', 'h': str(i)}
+        regular = {'year': '2026', 'term': 'B01012', 'collectedAt': 1, 'rows': [row(i) for i in range(60)]}
+        seasonal = {'year': '2026', 'term': 'B01015', 'collectedAt': 9, 'rows': [row(1)]}
+        self.assertEqual(bt.build([regular, seasonal])['meta']['term'], 'B01012', '나중에 받았어도 계절학기 1과목은 고르지 않음')
+        self.assertEqual(bt.build([seasonal])['meta']['term'], 'B01015', '그것밖에 없으면 그것')
+        self.assertEqual(bt.build([regular, seasonal], 'B01015')['meta']['count'], 1, '학기를 정하면 그대로')
+
+    def test_small_other_term_does_not_overwrite(self):
+        import json, tempfile
+        with tempfile.TemporaryDirectory() as d:
+            out = Path(d) / 'timetable.js'
+            big = bt.build([{'year': '2026', 'term': 'B01012', 'collectedAt': 1,
+                             'rows': [{'n': f'과목{i}', 't': '월1000-1130', 's': '01', 'h': str(i)} for i in range(80)]}])
+            out.write_text(bt.HEADER + 'window.GONGJI_TIMETABLE = ' + json.dumps(big, ensure_ascii=False) + ';\n', encoding='utf-8')
+            small = {'year': '2026', 'term': 'B01015', 'count': 1}
+            self.assertEqual(bt.keep_existing(out, small)['count'], 80)
+            self.assertIsNone(bt.keep_existing(out, {'year': '2026', 'term': 'B01012', 'count': 3}), '같은 학기면 덮어씀')
+            self.assertIsNone(bt.keep_existing(out, {'year': '2027', 'term': 'B01011', 'count': 70}), '다른 학기라도 크면 덮어씀')
+            inp = Path(d) / 'kku-lectures-x.json'
+            inp.write_text(json.dumps({'terms': [{'year': '2026', 'term': 'B01015', 'collectedAt': 9,
+                                                  'rows': [{'n': '계절', 't': '화0900-1200', 's': '01'}]}]}), encoding='utf-8')
+            self.assertEqual(bt.main([str(inp), '--out', str(out)]), 0)
+            self.assertIn('"count":80', out.read_text(encoding='utf-8').replace(' ', ''), '기존 시간표 유지')
+            self.assertEqual(bt.main([str(inp), '--out', str(out), '--force']), 0)
+            self.assertIn('"count":1', out.read_text(encoding='utf-8').replace(' ', ''))
+
     def test_unknown_term_raises(self):
         with self.assertRaises(ValueError):
             bt.build([{'term': 'B01012', 'rows': []}], 'X')

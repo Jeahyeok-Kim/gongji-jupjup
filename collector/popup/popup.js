@@ -42,6 +42,7 @@ async function renderHero() {
   $('auto').checked = s.auto;
   $('autoHint').textContent = s.auto ? `${s.intervalHours}시간마다 새 글만 받아요` : '꺼져 있어요. 직접 눌러야 수집합니다';
 
+  renderTitles(lastRun);
   if (lastRun) {
     const errs = (lastRun.results ?? []).filter((r) => r.error);
     $('lastRun').textContent = `${fmtTime(lastRun.at)} · 새 글 ${lastRun.added}건` + (errs.length ? ` · 실패 ${errs.length}곳` : '');
@@ -74,13 +75,61 @@ async function renderHero() {
   }
 }
 
+// 마지막 수집에서 새로 받은 글 제목 (최대 5개)
+function renderTitles(lastRun) {
+  const titles = lastRun?.titles ?? [];
+  $('titlesBox').hidden = titles.length === 0;
+  if (!titles.length) return;
+  $('titlesHead').textContent = `새로 받은 공지 ${lastRun.added}건`;
+  const ul = $('titles');
+  ul.replaceChildren(...titles.slice(0, 5).map((t) => {
+    const li = document.createElement('li');
+    li.textContent = t;
+    li.title = t;
+    return li;
+  }));
+  if (lastRun.added > 5) {
+    const li = document.createElement('li');
+    li.className = 'more';
+    li.textContent = `외 ${lastRun.added - Math.min(5, titles.length)}건`;
+    ul.append(li);
+  }
+}
+
+const shortTime = (s) => (s || '').replace(/^\d{4}-/, '').replace('-', '/');
+
+// 서버 상태: 켜짐/꺼짐, 처리 중인 단계와 진행(12/40), 웹 앱 데이터 건수·기준 시각
+let serverTimer = null;
 async function renderServer() {
   const res = await send({ type: 'pingServer' }).catch(() => ({ ok: false }));
+  const info = res?.info ?? {};
   const dot = document.querySelector('#server .dot');
-  dot.className = 'dot ' + (res?.ok ? 'on' : 'off');
-  $('serverText').textContent = res?.ok
-    ? (res.info?.busy ? '켜짐 · 공지 처리 중' : '켜짐')
-    : '꺼짐 (파일로 저장해요)';
+  const busy = !!(res?.ok && (info.busy || info.waiting));
+  dot.className = 'dot ' + (res?.ok ? (busy ? 'busy' : 'on') : 'off');
+  $('serverText').textContent = res?.ok ? '켜짐' : '꺼짐 (파일로 저장해요)';
+  $('openApp').disabled = !res?.ok;
+
+  let text = '서버가 켜지면 보여요';
+  const pr = info.progress;
+  $('appProgress').hidden = !(res?.ok && info.busy && pr?.total);
+  if (res?.ok) {
+    if (info.busy) {
+      text = pr?.total ? `AI 정리 중 · ${pr.stage} ${pr.done}/${pr.total}` : `처리 중${pr?.stage ? ' · ' + pr.stage : ''}`;
+      if (pr?.total) $('appBar').style.width = `${Math.round((pr.done / pr.total) * 100)}%`;
+    } else if (info.waiting) {
+      text = '곧 정리를 시작해요 (1분 안)';
+    } else if (info.data) {
+      text = `공지 ${info.data.count.toLocaleString('ko-KR')}건 · ${shortTime(info.data.generatedAt)} 기준`;
+      if (info.last && info.last.code !== 0) text += ' · 마지막 처리 실패';
+    } else {
+      text = '아직 만든 데이터가 없어요';
+    }
+  }
+  $('appInfo').textContent = text;
+  $('appInfo').title = info.last ? `마지막 처리: ${info.last.at} (${info.last.code === 0 ? '성공' : '종료 코드 ' + info.last.code}) · 기록 logs/${info.last.log}` : '';
+  // 처리 중이면 팝업을 열어 둔 동안 2초마다 다시 확인
+  clearTimeout(serverTimer);
+  if (busy) serverTimer = setTimeout(renderServer, 2000);
 }
 
 function heroStatus(text, isError) {
@@ -234,6 +283,9 @@ async function init() {
   const s = await globalThis.kkuSettings();
   $('interval').value = String(s.intervalHours);
   $('serverUrl').value = s.server;
+  $('notify').checked = s.notify !== false;
+  $('notify').addEventListener('change', async () => { await saveSettings({ notify: $('notify').checked }); });
+  $('openApp').addEventListener('click', async () => { await send({ type: 'openApp' }); window.close(); });
 
   $('auto').addEventListener('change', async () => { await saveSettings({ auto: $('auto').checked }); });
   $('interval').addEventListener('change', async () => { await saveSettings({ intervalHours: Number($('interval').value) }); });

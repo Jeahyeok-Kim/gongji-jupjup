@@ -4,12 +4,15 @@
 //     그 탭의 콘텐츠 스크립트가 새 글만 받게 하고, 끝나면 탭을 닫는다. (평소에 학교 사이트를 열었을 때도 때가 됐으면 그 탭에서 받는다)
 //  2) 새로 모인 자료(공지·강의 시간표·학교 기본 정보)를 내 컴퓨터의 수신 서버(pipeline/receiver.py)로 보낸다.
 //     서버가 꺼져 있으면 다운로드 폴더에 kku-종류-날짜.json 으로 저장한다 (run_pipeline.bat 이 찾아 쓴다).
+//  3) 자동 수집으로 새 공지를 받으면 제목 몇 개를 알림으로 보여 주고, 서버가 AI 정리를 끝내 웹 앱에 반영되면 한 번 더 알린다.
 // 서비스 워커는 30초쯤 쉬면 꺼지므로 진행 상태는 전부 chrome.storage.local 에 둔다 (job · lastRun · delivery · pending).
 importScripts('config.js');
 
 const JOB_MAX_MS = 25 * 60 * 1000;        // 한 번의 수집이 이보다 오래 걸리면 멈춘 것으로 본다
 const SITE_MAX_MS = 15 * 60 * 1000;       // 사이트 하나에 쓰는 최대 시간
 const KINDS = ['notices', 'lectures', 'reference'];
+const WATCH_MAX_MS = 60 * 60 * 1000;      // 서버 처리 완료를 기다리는 최대 시간
+const NOTE_ID = 'gongji-new';
 
 const getLocal = (keys) => chrome.storage.local.get(keys);
 const setLocal = (obj) => chrome.storage.local.set(obj);
@@ -80,6 +83,7 @@ async function nextSite() {
 // 한 사이트가 끝남 (콘텐츠 스크립트가 crawlState 를 running:false 로 바꿨을 때)
 async function siteDone(cs) {
   const added = (cs.results ?? []).reduce((sum, r) => sum + (r.added || 0), 0);
+  const titles = (cs.results ?? []).flatMap((r) => r.titles ?? []).slice(0, 8);
   await setLocal({ [`auto:${cs.host}`]: Date.now() });
   if (added > 0) await markPending('notices', false);
   const { job } = await getLocal('job');
@@ -88,7 +92,7 @@ async function siteDone(cs) {
     if (added > 0) await chrome.alarms.create('deliver', { delayInMinutes: 0.5 });
     return;
   }
-  job.results.push({ host: cs.host, added, error: cs.error ?? null, stopped: !!cs.stopped });
+  job.results.push({ host: cs.host, added, titles, error: cs.error ?? null, stopped: !!cs.stopped });
   await releaseTab(job);
   await nextSite();
 }
@@ -114,11 +118,68 @@ async function failSite(message) {
 async function finishJob(job) {
   await chrome.alarms.clear('watchdog');
   const added = job.results.reduce((sum, r) => sum + (r.added || 0), 0);
-  await setLocal({ lastRun: { at: Date.now(), reason: job.reason, results: job.results, added } });
+  const titles = job.results.flatMap((r) => r.titles ?? []).slice(0, 8);
+  await setLocal({ lastRun: { at: Date.now(), reason: job.reason, results: job.results, added, titles } });
   await chrome.storage.local.remove('job');
   const { pending = {} } = await getLocal('pending');
-  if (KINDS.some((k) => pending[k])) await deliver(false);
+  let delivery = null;
+  if (KINDS.some((k) => pending[k])) delivery = await deliver(false);
   await refreshBadge();
+  // 직접 누른 수집은 팝업을 보고 있으니 알리지 않는다
+  if (added > 0 && job.reason !== 'manual') await notifyNew(added, titles, delivery);
+}
+
+// ---------- 알림 ----------
+async function notifyNew(added, titles, delivery) {
+  const s = await kkuSettings();
+  if (!s.notify || !chrome.notifications) return;
+  const toServer = delivery?.items?.some((it) => it.kind === 'notices' && it.via === 'server');
+  const lines = titles.slice(0, 3).map((t) => '· ' + (t.length > 38 ? t.slice(0, 37) + '…' : t));
+  if (added > lines.length && lines.length) lines.push(`외 ${added - lines.length}건`);
+  try {
+    await chrome.notifications.create(NOTE_ID, {
+      type: 'basic', iconUrl: 'icons/icon-128.png', priority: 0,
+      title: `새 공지 ${added}건을 받았어요`,
+      message: lines.join('\n') || '팝업에서 확인하세요.',
+      contextMessage: toServer ? '내 컴퓨터에서 AI가 정리하는 중 · 끝나면 다시 알려 드려요' : '공지 줍줍 수집기'
+    });
+  } catch (e) { console.warn('공지 줍줍 수집기: 알림 실패', e); }
+  if (toServer) await watchServer();
+}
+
+// 서버가 받은 자료를 다 처리할 때까지 1분마다 확인 → 웹 앱에 반영되면 알림을 바꾼다
+async function watchServer() {
+  const ping = await pingServer();
+  await setLocal({ serverWatch: { since: ping.info?.runs ?? 0, at: Date.now() } });
+  await chrome.alarms.create('serverWatch', { delayInMinutes: 1, periodInMinutes: 1 });
+}
+
+async function checkServerWatch() {
+  const { serverWatch } = await getLocal('serverWatch');
+  const stop = async () => { await chrome.alarms.clear('serverWatch'); await chrome.storage.local.remove('serverWatch'); };
+  if (!serverWatch || Date.now() - serverWatch.at > WATCH_MAX_MS) { await stop(); return; }
+  const ping = await pingServer();
+  if (!ping.ok) return;                                   // 잠깐 꺼졌을 수 있으니 다음에 다시
+  const info = ping.info;
+  if (info.busy || info.waiting || (info.runs ?? 0) <= serverWatch.since) return;
+  await stop();
+  const ok = info.last?.code === 0;
+  try {
+    await chrome.notifications.create(NOTE_ID, {
+      type: 'basic', iconUrl: 'icons/icon-128.png', priority: 0,
+      title: ok ? '웹 앱에 새 공지를 반영했어요' : '공지 정리 중 문제가 있었어요',
+      message: ok ? `지금 웹 앱에 공지 ${info.data?.count ?? ''}건이 있어요. 눌러서 열기` : `서버 기록(logs/${info.last?.log ?? ''})을 확인해 주세요.`,
+      contextMessage: '공지 줍줍'
+    });
+  } catch { /* 알림이 꺼져 있음 */ }
+}
+
+// 웹 앱 열기: 내 컴퓨터 서버가 켜져 있으면 방금 갱신된 웹 앱을, 아니면 팝업 화면을 연다
+async function openWebApp() {
+  const s = await kkuSettings();
+  const ping = await pingServer();
+  const url = ping.ok ? `${s.server.replace(/\/+$/, '')}/#/home` : chrome.runtime.getURL('popup/popup.html');
+  await chrome.tabs.create({ url });
 }
 
 async function cancelJob() {
@@ -225,6 +286,8 @@ chrome.alarms.onAlarm.addListener(async (alarm) => {
     if (s.auto && (await isDue(null))) await serial(() => startJob('auto'));
   } else if (alarm.name === 'watchdog') {
     await serial(watchdog);
+  } else if (alarm.name === 'serverWatch') {
+    await checkServerWatch();
   } else if (alarm.name === 'deliver') {
     const { job } = await getLocal('job');
     if (!job) await deliver(false);
@@ -240,6 +303,14 @@ chrome.storage.onChanged.addListener(async (changes, area) => {
   const keys = Object.keys(changes);
   if (keys.some((k) => k.startsWith('lec:'))) await markPending('lectures');
   if (keys.includes('ref:kku') || keys.includes('ref:rule')) await markPending('reference');
+});
+
+chrome.notifications?.onClicked.addListener(async (id) => {
+  if (id !== NOTE_ID) return;
+  await chrome.notifications.clear(id);
+  await setLocal({ badgeSeen: Date.now() });
+  await refreshBadge();
+  await openWebApp();
 });
 
 // 백그라운드로 연 탭을 사용자가 닫으면 그 사이트는 건너뛴다
@@ -286,6 +357,9 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
         sendResponse({ ok: true, delivery: await deliver(true) });
       } else if (msg?.type === 'export') {
         sendResponse({ ok: true, delivery: await deliver(true, msg.kind, true) });
+      } else if (msg?.type === 'openApp') {
+        await openWebApp();
+        sendResponse({ ok: true });
       } else if (msg?.type === 'pingServer') {
         sendResponse(await pingServer());
       } else if (msg?.type === 'seen') {

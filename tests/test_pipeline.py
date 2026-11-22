@@ -842,6 +842,12 @@ class RulesTest(unittest.TestCase):
         self.assertEqual(f('모집기간: 12/20 ~ 1/5', '2026-12-15')[0], '2027-01-05T23:59', '해를 넘기는 기간')
         self.assertEqual(f('일시: 2026. 11. 18.(수) 13:00~15:00\n장소: 학생회관', '2026-11-10')[0], None, '행사 일시는 마감이 아님')
         self.assertEqual(f('2024. 3. 2.까지 제출', '2026-11-10')[0], None, '작성일과 너무 먼 날짜')
+        self.assertEqual(f('가. 사전 등록 기간: 2026. 11. 9.(월) ~ 15.(일)\n나. 등록 방법: 학사정보시스템', '2026-11-05')[0], '2026-11-15T23:59', '끝 날짜가 날만 있음')
+        self.assertEqual(f('신청기간: 11. 28.(토) ~ 3.(목) 18:00', '2026-11-25')[0], '2026-12-03T18:00', '끝 날이 작으면 다음 달')
+        self.assertEqual(f('나. 근로기간: 2027. 1. 1.(금) ~ 2027. 2. 22.(월)', '2026-11-01')[0], None, '근로 기간은 마감이 아님')
+        self.assertEqual(f('2) 수강 기간: 2026년 11월 2일(월) ~ 12월 11일(금)', '2026-11-01')[0], None, '수강 기간은 마감이 아님')
+        self.assertEqual(f('수강신청 기간: 11. 16.(월) ~ 11. 20.(금)', '2026-11-10')[0], '2026-11-20T23:59', '수강신청 기간은 마감')
+        self.assertEqual(f('접수기간 : 2026. 11. 3.(화) ~ 11. 20.(금)', '2026-11-02')[0], '2026-11-20T23:59', '월. 일 끝 날짜는 그대로')
 
     def test_benefit_patterns(self):
         import rules
@@ -852,6 +858,23 @@ class RulesTest(unittest.TestCase):
         b = rules.find_benefit('※ 장학금 300,000원 지급')
         self.assertEqual(b['won'], 300000)
         self.assertIsNone(rules.find_benefit('혜택: 수료증 발급'), '숫자가 없으면 지어내지 않음')
+
+    def test_cross_check_flags_different_deadline(self):
+        import rules
+        raw = {'id': 'x', 'subject': '장학 신청', 'date': '2026-11-10', 'text': '1. 신청 기간: 11. 10.(화) ~ 11. 20.(금)까지\n2. 결과 발표: 11. 30.'}
+        same = {'bodyStatus': 'text', 'date': '2026-11-10', 'deadline': '2026-11-20T18:00', 'evidence': {}}
+        self.assertIsNone(rules.cross_check(same, raw), '날짜가 같으면 시각이 달라도 표시하지 않음')
+        other = dict(same, deadline='2026-11-30T23:59', evidence={'deadline': '2. 결과 발표: 11. 30.'})
+        chk = rules.cross_check(other, raw)
+        self.assertEqual((chk['deadline'], chk['kind']), ('2026-11-20T23:59', 'differs'))
+        self.assertIn('신청 기간', chk['line'])
+        missing = dict(same, deadline=None)
+        self.assertEqual(rules.cross_check(missing, raw)['kind'], 'missing')
+        seen = dict(same, deadline='2026-11-10T23:59', evidence={'deadline': '신청 기간: 11. 10.(화) ~ 11. 20.(금)까지'})
+        self.assertIsNone(rules.cross_check(seen, raw), 'AI가 같은 줄을 근거로 고른 값이면 다시 묻지 않음')
+        weak = {'id': 'y', 'date': '2026-11-10', 'text': '모집 기간 11. 12. ~ 11. 19.'}
+        self.assertIsNone(rules.cross_check(dict(same, deadline=None), weak), "'마감·까지'가 없는 줄은 믿지 않음")
+        self.assertIsNone(rules.cross_check(dict(same, bodyStatus='image'), raw))
 
 
 class MediaReuseTest(PipelineBase):

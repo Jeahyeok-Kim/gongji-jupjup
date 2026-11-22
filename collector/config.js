@@ -65,7 +65,7 @@ globalThis.KKU_REFERENCE = {
 };
 
 // ---- 공통 설정·도우미 (서비스 워커 · 콘텐츠 스크립트 · 팝업이 함께 사용) ----
-globalThis.KKU_VERSION = '1.0.0';
+globalThis.KKU_VERSION = '1.1.0';
 
 // 자동 수집이 백그라운드 탭으로 여는 주소 (login: 로그인해야 보이는 곳이라 기본으로는 꺼 둠)
 globalThis.KKU_SITES = [
@@ -80,7 +80,8 @@ globalThis.KKU_DEFAULT_SETTINGS = {
   intervalHours: 6,                            // 수집 간격(시간)
   sites: { 'www.kku.ac.kr': true, 'int.kku.ac.kr': true, 'ids.kku.ac.kr': true, 'im.kku.ac.kr': false },
   server: 'http://127.0.0.1:8765',             // 내 컴퓨터의 수신 서버 (pipeline/receiver.py)
-  newsLimit: 300                               // 투데이뉴스는 최근 몇 건까지
+  newsLimit: 300,
+  notify: true          // 자동 수집으로 새 공지를 받으면 알림, 웹 앱 반영이 끝나면 한 번 더 알림                               // 투데이뉴스는 최근 몇 건까지
 };
 
 // 저장된 설정 + 기본값. 예전 버전의 '자동 수집' 체크(autoCollect)도 이어받는다.

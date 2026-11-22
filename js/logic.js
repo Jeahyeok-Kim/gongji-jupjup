@@ -97,15 +97,52 @@
     return String(s || '').toLowerCase().replace(/\s+/g, '');
   }
 
-  // 제목, 번역 제목, 요약, 혜택, 용어에서 검색어 찾기 (띄어쓰기·대소문자 무시)
+  // 한글 초성: 'ㅈㅎㄱ' 으로 '장학금'을 찾을 수 있게 (음절 하나 → 초성 하나라 글자 위치가 그대로 맞는다)
+  const CHO = 'ㄱㄲㄴㄷㄸㄹㅁㅂㅃㅅㅆㅇㅈㅉㅊㅋㅌㅍㅎ';
+  function chosung(s) {
+    let out = '';
+    for (const ch of String(s || '')) {
+      const c = ch.charCodeAt(0);
+      out += c >= 0xac00 && c <= 0xd7a3 ? CHO[Math.floor((c - 0xac00) / 588)] : ch;
+    }
+    return out;
+  }
+  const isChosungOnly = (t) => /^[ㄱ-ㅎ]{2,}$/.test(t);
+
+  // 검색어 → 낱말들 (띄어 쓴 낱말은 모두 들어 있어야 찾음)
+  function queryTokens(query) {
+    return String(query || '').trim().toLowerCase().split(/\s+/).filter(Boolean);
+  }
+
+  // 제목, 번역 제목, 요약, 혜택, 대상, 행사, 용어에서 검색어 찾기 (띄어쓰기·대소문자 무시, 낱말마다 AND, 초성 검색)
   function matchesQuery(notice, query) {
-    if (!query || !query.trim()) return true;
+    const tokens = queryTokens(query);
+    if (!tokens.length) return true;
     const parts = [notice.title, notice.boardName]
       .concat(Object.values(notice.titleTr || {}))
       .concat(Object.values(notice.summary || {}))
       .concat(notice.benefit ? Object.values(notice.benefit.text || {}) : [])
+      .concat(notice.eligibility ? Object.values(notice.eligibility) : [])
+      .concat((notice.events || []).map((e) => e && (e.label || e.title || '')))
       .concat(notice.terms || []);
-    return squash(parts.join(' ')).includes(squash(query));
+    const hay = squash(parts.join(' '));
+    let cho = null;
+    return tokens.every((t) => {
+      if (hay.includes(t)) return true;
+      if (!isChosungOnly(t)) return false;
+      // 초성은 너무 많이 걸리지 않게 제목에서만, 낱말을 넘어가지 않게 띄어쓰기를 살려서 찾는다
+      cho = cho || chosung(String(notice.title || '').toLowerCase());
+      return cho.includes(t);
+    });
+  }
+
+  // 검색어 낱말이 모두 제목에 있는가 (검색 결과에서 제목에 맞는 공지를 먼저 보여 줄 때 씀)
+  function titleMatches(notice, query) {
+    const tokens = queryTokens(query);
+    if (!tokens.length) return false;
+    const title = squash([notice.title].concat(Object.values(notice.titleTr || {})).join(' '));
+    let cho = null;
+    return tokens.every((t) => title.includes(t) || (isChosungOnly(t) && (cho = cho || chosung(String(notice.title || '').toLowerCase())).includes(t)));
   }
 
   // filters: { query, board, category, group(큰 혜택 분류), sub(세부 혜택 분류), status: 'open' | 'week' | 'all' }
@@ -328,7 +365,7 @@
   const api = {
     parseLocal, toMinutes, startOfDay, addDays, daysLeft, isExpired,
     overlaps, weekdayOf, isValidClass, findConflicts,
-    matchesQuery, filterNotices, sortNotices, countByCategory, groupByCategory,
+    matchesQuery, titleMatches, queryTokens, chosung, isChosungOnly, filterNotices, sortNotices, countByCategory, groupByCategory,
     BENEFIT_KINDS: Benefit.BENEFIT_KINDS, benefitKinds, primaryKind,
     BENEFIT_TREE: Benefit.BENEFIT_TREE, classifyBenefit, countBySub: Benefit.countBySub,
     countByGroup: Benefit.countByGroup, groupByBenefit: Benefit.groupByBenefit,

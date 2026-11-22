@@ -156,6 +156,7 @@
     let seen = 0;
     let added = 0;
     let total = 0;
+    const titles = [];          // 새로 받은 글 제목 몇 개 (팝업·알림에 보여 줌)
 
     while (!abortFlag) {
       const list = await fetchPage(params, page);
@@ -172,6 +173,7 @@
       }
       seen += items.length;
       added += fresh.length;
+      for (const it of fresh) if (titles.length < 5 && it.subject) titles.push(it.subject);
       await setState({ current: board.name, progress: { menu: board.menu, seen, total, added } });
 
       // 증분 수집: 한 페이지가 전부 이미 아는 글이면 더 볼 필요가 없다.
@@ -184,7 +186,7 @@
     await chrome.storage.local.set({
       [`s:${site}:${boardSeq}`]: { host: location.host, menu: board.menu, name: board.name, total, lastSyncAt: Date.now() }
     });
-    return { menu: board.menu, name: board.name, total, seen, added };
+    return { menu: board.menu, name: board.name, total, seen, added, titles };
   }
 
   async function run(menus, opts) {

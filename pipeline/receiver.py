@@ -4,7 +4,8 @@
 run_server.bat 으로 켭니다 (setup_auto.bat 을 한 번 실행하면 로그인할 때마다 자동으로 켜짐).
   - POST /ingest?kind=notices|lectures|reference   확장이 보낸 JSON을 collected/ 에 kku-종류-시각.json 으로 저장하고,
                                                    1분 동안 더 오는 것이 없으면 파이프라인(run_all.py --auto)을 한 번 돌린다.
-  - GET  /status                                    서버 상태 (확장 팝업이 '켜짐'을 표시하는 데 씀)
+  - GET  /status                                    서버 상태: 켜짐, 처리 중인 단계·진행(공지 12/40), 웹 앱 데이터 건수·기준 시각
+                                                   (확장 팝업이 보여 줌)
   - GET  /                                          웹 앱 미리보기 (index.html · css · js · data · icons 만)
 
 안전장치
@@ -22,6 +23,7 @@ import argparse
 import json
 import mimetypes
 import os
+import re
 import subprocess
 import sys
 import threading
@@ -32,12 +34,14 @@ from pathlib import Path
 from urllib.parse import parse_qs, unquote, urlparse
 
 ROOT = Path(__file__).resolve().parent.parent
-VERSION = '1.0.0'
+VERSION = '1.1.0'
 KINDS = ('notices', 'lectures', 'reference')
 MAX_BYTES = 200 * 1024 * 1024
 DEBOUNCE_SEC = 60
 STATIC_DIRS = ('css', 'js', 'data', 'icons')
 STATIC_FILES = ('index.html', 'sw.js', 'manifest.webmanifest')
+STAGE_RE = re.compile(r'^=== *([\d-]+)\. *(.+?) *===')       # run_all.py 의 단계 제목
+ITEM_RE = re.compile(r'^\[(\d+)/(\d+)\]')                      # build_notices.py 의 공지 한 건 처리 줄
 
 
 def note(root: Path, text: str) -> None:
@@ -121,6 +125,7 @@ class Runner:
         self.again = False
         self.last: dict | None = None
         self.runs = 0
+        self.progress: dict | None = None      # 실행 중일 때 {'stage': 단계 이름, 'done': n, 'total': n}
 
     def request(self) -> None:
         if not self.enabled:
@@ -149,12 +154,18 @@ class Runner:
         code = None
         try:
             env = dict(os.environ, PYTHONUTF8='1', PYTHONIOENCODING='utf-8')
+            env['PYTHONUNBUFFERED'] = '1'          # 진행 줄을 바로바로 읽기 위해
             with open(log_path, 'a', encoding='utf-8') as log:
                 log.write(f'\n===== {datetime.now():%Y-%m-%d %H:%M:%S} 자료가 들어와 파이프라인 실행 =====\n')
                 log.flush()
                 # 창 없이 켜진 서버(pythonw)에서도 검은 창이 뜨지 않게
                 flags = getattr(subprocess, 'CREATE_NO_WINDOW', 0)
-                code = subprocess.call(self.command, cwd=str(self.root), stdout=log, stderr=subprocess.STDOUT, env=env, creationflags=flags)
+                with subprocess.Popen(self.command, cwd=str(self.root), stdout=subprocess.PIPE, stderr=subprocess.STDOUT, env=env,
+                                      creationflags=flags, text=True, encoding='utf-8', errors='replace') as proc:
+                    for line in proc.stdout:
+                        log.write(line)
+                        self._track(line)
+                    code = proc.wait()
         except OSError as e:
             code = -1
             note(self.root, f'  파이프라인을 실행하지 못했습니다: {e}')
@@ -162,6 +173,7 @@ class Runner:
             took = time.time() - started
             with self.lock:
                 self.busy = False
+                self.progress = None
                 self.runs += 1
                 self.last = {'at': datetime.now().strftime('%Y-%m-%d %H:%M'), 'code': code, 'seconds': round(took, 1), 'log': log_path.name}
                 again, self.again = self.again, False
@@ -169,9 +181,33 @@ class Runner:
             if again:
                 self.request()
 
+    def _track(self, line: str) -> None:
+        """파이프라인 출력 한 줄에서 지금 단계와 공지 처리 진행을 읽어 둔다 (팝업의 'AI 정리 중 12/40' 표시용)"""
+        line = line.strip()
+        m = STAGE_RE.match(line)
+        if m:
+            with self.lock:
+                self.progress = {'stage': m[2], 'done': 0, 'total': 0}
+            return
+        m = ITEM_RE.match(line)
+        if m:
+            with self.lock:
+                cur = self.progress or {'stage': ''}
+                self.progress = {**cur, 'done': int(m[1]), 'total': int(m[2])}
+
     def status(self) -> dict:
         with self.lock:
-            return {'busy': self.busy, 'waiting': self.timer is not None, 'last': self.last, 'runs': self.runs}
+            return {'busy': self.busy, 'waiting': self.timer is not None, 'last': self.last, 'runs': self.runs,
+                    'progress': dict(self.progress) if (self.busy and self.progress) else None}
+
+
+def data_info(root: Path) -> dict | None:
+    """웹 앱 데이터(data/version.json)의 공지 건수와 기준 시각"""
+    try:
+        v = json.loads((Path(root) / 'data' / 'version.json').read_text(encoding='utf-8'))
+        return {'count': int(v.get('count') or 0), 'generatedAt': str(v.get('generatedAt') or '')}
+    except (OSError, ValueError, TypeError):
+        return None
 
 
 # ------------------------------------------------------------------
@@ -260,8 +296,9 @@ class Handler(BaseHTTPRequestHandler):
     def do_GET(self):
         url = urlparse(self.path)
         if url.path == '/status':
-            st = self.runner.status() if self.runner else {'busy': False, 'waiting': False, 'last': None, 'runs': 0}
-            self._json(200, {'ok': True, 'app': 'gongji-jupjup', 'version': VERSION, **st, 'received': self.received[-5:]})
+            st = self.runner.status() if self.runner else {'busy': False, 'waiting': False, 'last': None, 'runs': 0, 'progress': None}
+            self._json(200, {'ok': True, 'app': 'gongji-jupjup', 'version': VERSION, **st, 'received': self.received[-5:],
+                             'data': data_info(self.root)})
             return
         self._static(url.path)
 

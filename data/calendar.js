@@ -1,7 +1,7 @@
 // 학사일정 (크롬 확장으로 모은 학교 연간주요일정, pipeline/build_reference.py 가 만든 파일)
 (function (root) {
   const CAL = /*JSON-START*/{
- "generatedAt": "2026-11-13",
+ "generatedAt": "2026-11-22",
  "items": [
   {
    "start": "2025-03-04",

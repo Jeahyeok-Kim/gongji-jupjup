@@ -128,6 +128,28 @@ class ReceiverTest(unittest.TestCase):
         call(self.base + '/ingest?kind=notices', NOTICES)     # 실행 중에 들어옴 → 끝난 뒤 한 번 더
         self.wait_runs(2, limit=8)
 
+    def test_status_shows_stage_progress_and_data(self):
+        (self.root / 'data').mkdir()
+        (self.root / 'data' / 'version.json').write_text('{"generatedAt": "2026-11-22 09:10", "count": 232}', encoding='utf-8')
+        script = ("import time\nprint('=== 3. 공지 합치기·해독 ===')\nprint('[1/4] 학사 | 장학')\nprint('[2/4] 학사 | 수강')\n"
+                  "time.sleep(1.0)\nprint('[4/4] 끝')")
+        self.runner.command = [sys.executable, '-c', script]
+        call(self.base + '/ingest?kind=notices', NOTICES)
+        t0, seen = time.time(), None
+        while time.time() - t0 < 5:
+            info = json.loads(call(self.base + '/status')[1])
+            if info['progress'] and info['progress']['done'] == 2:
+                seen = info
+                break
+            time.sleep(0.05)
+        self.assertIsNotNone(seen, '실행 중 진행이 보이지 않음')
+        self.assertEqual(seen['progress'], {'stage': '공지 합치기·해독', 'done': 2, 'total': 4})
+        self.assertEqual(seen['data'], {'count': 232, 'generatedAt': '2026-11-22 09:10'})
+        st = self.wait_runs(1)
+        self.assertIsNone(st['progress'], '끝나면 진행 표시를 지움')
+        log = next((self.root / 'logs').glob('server-*.log')).read_text(encoding='utf-8')
+        self.assertIn('[4/4] 끝', log, '출력은 그대로 기록에 남김')
+
     def test_disabled_runner_only_saves(self):
         self.runner.enabled = False
         code, body, _ = call(self.base + '/ingest?kind=notices', NOTICES)

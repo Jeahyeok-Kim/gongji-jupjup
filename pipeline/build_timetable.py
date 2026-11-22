@@ -4,6 +4,9 @@
     python pipeline/build_timetable.py                      (공지줍줍·다운로드 폴더의 kku-lectures-*.json 중 가장 최근 것)
     python pipeline/build_timetable.py kku-lectures-2026-11-13.json --term B01012
 
+학기를 정하지 않으면 정규 학기(1·2학기) 중 가장 최근 것을 고릅니다. 계절학기처럼 과목이 몇 개 안 되는 자료가
+나중에 들어와도, 이미 있는 정규 학기 시간표(과목이 훨씬 많은 것)를 덮어쓰지 않습니다 (바꾸려면 --term 또는 --force).
+
 강의시간 글자는 '월0900-1030(인문사회관 101), 목1330-1500(인문사회관 101)' 처럼 규칙이 있어 코드로 읽습니다.
 읽지 못한 칸은 건너뛰고 몇 개인지 알려 줍니다. 결과는 요일마다 시간이 달라도 그대로 담깁니다.
 """
@@ -21,6 +24,9 @@ import store as st  # noqa: E402
 
 DAYS = {'일': 0, '월': 1, '화': 2, '수': 3, '목': 4, '금': 5, '토': 6}
 TERM_NAMES = {'B01011': '1학기', 'B01012': '2학기', 'B01013': '여름학기', 'B01014': '겨울학기'}
+REGULAR_TERMS = ('B01011', 'B01012')
+MIN_REGULAR = 50          # 정규 학기로 볼 최소 과목 수 (일부만 받은 자료는 고르지 않음)
+SHRINK_GUARD = 0.2        # 새 자료가 기존 과목 수의 20% 미만이고 학기가 다르면 덮어쓰지 않음
 SLOT = re.compile(r'([일월화수목금토])\s*(\d{2})(\d{2})\s*-\s*(\d{2})(\d{2})\s*(?:\(([^()]*(?:\([^()]*\)[^()]*)*)\))?')
 
 
@@ -36,6 +42,26 @@ def parse_slots(text: str) -> list[list]:
     return out
 
 
+def pick_term(terms: list[dict]) -> dict:
+    """학기를 정하지 않았을 때: 과목이 충분한 정규 학기(1·2학기) 중 가장 최근 것, 없으면 가장 최근에 받은 것"""
+    key = lambda t: (str(t.get('year') or ''), t.get('collectedAt') or 0)
+    regular = [t for t in terms if t.get('term') in REGULAR_TERMS and len(t.get('rows') or []) >= MIN_REGULAR]
+    return sorted(regular or terms, key=key)[-1]
+
+
+def keep_existing(out: Path, new_meta: dict) -> dict | None:
+    """이미 있는 시간표가 훨씬 크고 학기가 다르면 그 meta 를 돌려준다 (덮어쓰지 않기)"""
+    try:
+        text = Path(out).read_text(encoding='utf-8')
+        old = json.loads(text[text.index('{'):text.rindex('}') + 1]).get('meta') or {}
+    except (OSError, ValueError):
+        return None
+    same = (old.get('year'), old.get('term')) == (new_meta.get('year'), new_meta.get('term'))
+    if not same and (old.get('count') or 0) >= MIN_REGULAR and new_meta['count'] < (old.get('count') or 0) * SHRINK_GUARD:
+        return old
+    return None
+
+
 def build(terms: list[dict], term_code: str | None = None) -> dict:
     """내보내기 파일의 terms 중 하나를 골라 웹 앱용 자료로"""
     if not terms:
@@ -46,7 +72,7 @@ def build(terms: list[dict], term_code: str | None = None) -> dict:
             raise ValueError(f'{term_code} 학기 자료가 없습니다. 있는 것: ' + ', '.join(t.get('term', '?') for t in terms))
         term = picked[0]
     else:
-        term = sorted(terms, key=lambda t: (t.get('collectedAt') or 0))[-1]
+        term = pick_term(terms)
     courses, seen, skipped = [], set(), 0
     for r in term.get('rows', []):
         name = (r.get('n') or '').strip()
@@ -77,6 +103,7 @@ def main(argv=None) -> int:
     ap.add_argument('input', nargs='?', help='확장에서 내보낸 kku-lectures-날짜.json (생략하면 가장 최근 것)')
     ap.add_argument('--term', default=None, help='학기 코드 (예: B01012 = 2학기). 생략하면 가장 최근에 받은 학기')
     ap.add_argument('--out', default=str(gp.ROOT / 'data' / 'timetable.js'))
+    ap.add_argument('--force', action='store_true', help='과목 수가 훨씬 적은 다른 학기 자료라도 덮어쓰기')
     args = ap.parse_args(argv)
     paths = [Path(args.input)] if args.input else st.find_exports('lectures')[-1:]
     if not paths:
@@ -88,6 +115,12 @@ def main(argv=None) -> int:
     except ValueError as e:
         print(f'  ! {e}')
         return 1
+    old = None if (args.term or args.force) else keep_existing(Path(args.out), result['meta'])
+    if old:
+        m = result['meta']
+        print(f'  ! 새로 받은 {m["year"]}년 {m["termName"]} 강의가 {m["count"]}개뿐이라, 기존 {old.get("year")}년 {old.get("termName")} '
+              f'강의 {old.get("count")}개를 그대로 둡니다. (바꾸려면 --term {m["term"]} 또는 --force)')
+        return 0
     Path(args.out).write_text(HEADER + 'window.GONGJI_TIMETABLE = ' + json.dumps(result, ensure_ascii=False, separators=(',', ':')) + ';\n', encoding='utf-8')
     m = result['meta']
     print(f'완료: {args.out} 에 {m["year"]}년 {m["termName"]} 강의 {m["count"]}개 저장 (시간을 읽지 못해 건너뜀 {m["skipped"]}개)')

@@ -251,6 +251,7 @@ def main(argv=None) -> int:
         pass
     kept_previous = 0
     by_rules = 0                 # AI 없이 규칙으로 먼저 정리한 새 공지
+    need_check = 0               # AI 마감과 규칙 마감이 달라 '원문 확인'을 붙인 공지
     budget_note = False
 
     # 4) 한 건씩 처리 (저장해 둔 AI 답이 있으면 재사용)
@@ -316,6 +317,13 @@ def main(argv=None) -> int:
                                       encoding='utf-8')
         if raw.get('alsoIn'):
             notice['alsoIn'] = [b for b in raw['alsoIn'] if b and b != notice['boardName']]
+        # 규칙으로 마감을 한 번 더 읽어 AI 값과 다르면 '확인 필요' 표시 (AI 값은 그대로 둔다)
+        chk = rules.cross_check(notice, raw, media_by_id.get(raw['id']))
+        if chk:
+            notice['check'] = chk
+            need_check += 1
+        else:
+            notice.pop('check', None)
         out_notices.append(notice)
         dropped = checks.get('dropped', [])
         dropped_total += len(dropped)
@@ -348,7 +356,7 @@ def main(argv=None) -> int:
                 'collected': len(collected), 'processed': len(out_notices), 'fromCache': from_cache,
                 'failed': len(failed), 'imageOnly': image_only, 'droppedValues': dropped_total,
                 'summaryRetried': quality['retried'], 'summaryDraft': quality['draft'], 'summaryComposed': quality['composed'],
-                'translationLost': quality['translationLost'], 'aiPending': by_rules,
+                'translationLost': quality['translationLost'], 'aiPending': by_rules, 'needsCheck': need_check,
             },
         },
         'categories': gp.CATEGORIES,
@@ -377,6 +385,8 @@ def main(argv=None) -> int:
     print(f'  요약 품질 검사: 다시 써서 통과 {quality["retried"]}건 · 초안으로 대체 {quality["draft"]}건 · 확인된 정보로 직접 만든 요약 {quality["composed"]}건 · 번역에서 날짜·금액이 빠져 숨겨질 요약 {quality["translationLost"]}건')
     if kept_previous:
         print(f'  AI 답이 없어 직전 결과를 그대로 쓴 공지 {kept_previous}건' + (' (Ollama를 켜고 실행하면 새로 처리)' if args.offline else ''))
+    if need_check:
+        print(f'  AI 마감과 규칙으로 읽은 마감이 달라 "원문 확인" 표시를 붙인 공지 {need_check}건')
     if by_rules:
         print(f'  AI 없이 규칙으로 먼저 정리한 새 공지 {by_rules}건 (다음 실행에서 AI가 정밀 해독' + (', 시간 상한 때문' if budget_note else '') + ')')
     if failed:

@@ -1,7 +1,7 @@
 // 공지 줍줍 서비스 워커: 한 번 열어 본 화면은 오프라인에서도 열리고, 새 데이터는 네트워크가 되면 받아 온다.
 // - 화면 파일(html·css·js·아이콘): 저장된 것을 먼저 보여 주고 뒤에서 새로 받아 둔다 (다음에 열면 새 버전)
 // - 공지 데이터(version·notices·calendar·overrides 의 json): 항상 네트워크 먼저, 안 되면 저장된 것
-const CACHE = 'gongji-v11';
+const CACHE = 'gongji-v12';
 const CORE = ['./', 'index.html', 'css/style.css', 'manifest.webmanifest', 'icons/icon-192.png',
   'js/benefit.js', 'js/sync.js', 'js/logic.js', 'js/overrides.js', 'js/extras.js', 'js/summary.js', 'js/personal.js', 'js/cal.js',
   'js/i18n.js', 'js/i18n2.js', 'js/i18n3.js', 'js/theme.js', 'js/app.js',

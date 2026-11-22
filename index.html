@@ -89,6 +89,7 @@
         <label class="search">
           <span class="visually-hidden" data-i18n="searchLabel"></span>
           <input type="search" id="q" autocomplete="off" enterkeyhint="search" list="recent-list" data-i18n-placeholder="searchPlaceholder">
+          <kbd class="search-key" aria-hidden="true">/</kbd>
           <datalist id="recent-list"></datalist>
         </label>
         <button type="button" class="btn filter-toggle" id="filter-toggle" aria-expanded="false">
@@ -203,6 +204,7 @@
           </label>
           <button type="submit" class="btn primary wide" data-i18n="recommend"></button>
         </form>
+        <div class="budget-presets" id="budget-presets" role="group"></div>
         <div id="budget-result" aria-live="polite"></div>
         <p class="fine" data-i18n="scoreRule"></p>
       </section>
@@ -227,6 +229,7 @@
           <button type="button" class="btn small" id="show-guide" data-i18n="showGuide"></button>
           <button type="button" class="btn small" id="export-saved-cal"></button>
         </div>
+        <p class="fine kbd-help" data-i18n="kbdHelp"></p>
         <div class="install-box setting-row" id="install-box" hidden>
           <button type="button" class="btn small primary" id="install-btn" data-i18n="installApp"></button>
           <p class="fine" id="install-hint"></p>
@@ -284,10 +287,11 @@
   </nav>
 
   <dialog id="detail" aria-labelledby="detail-title" closedby="any">
+    <div class="detail-nav" id="detail-nav" hidden></div>
     <div class="dialog-body" id="detail-body"></div>
     <form method="dialog" class="dialog-actions detail-actions">
       <span class="detail-foot" id="detail-foot"></span>
-      <button class="btn" value="close" autofocus data-i18n="close"></button>
+      <button class="btn" value="close" data-i18n="close"></button>
     </form>
   </dialog>
 

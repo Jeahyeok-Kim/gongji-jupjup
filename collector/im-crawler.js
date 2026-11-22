@@ -133,6 +133,7 @@
     let added = 0;
     const done = new Set();
     let stopped = false;
+    const titles = [];
 
     while (!abortFlag && page <= MAX_PAGES && !stopped) {
       const list = parseList(await getHtml(`${LIST_PATH}${page}`));
@@ -151,6 +152,7 @@
         await chrome.storage.local.set({ [storageKey(notice)]: notice });
         added += 1;
         freshInPage += 1;
+        if (titles.length < 5 && notice.subject) titles.push(notice.subject);
         await setState({ current: board.name, progress: { menu: board.menu, seen, total: null, added } });
         await sleep(DELAY_MS);
       }
@@ -164,7 +166,7 @@
     await chrome.storage.local.set({
       [`s:im:${board.menu}`]: { host: location.host, menu: board.menu, name: board.name, total: seen, lastSyncAt: Date.now() }
     });
-    return { menu: board.menu, name: board.name, total: seen, seen, added };
+    return { menu: board.menu, name: board.name, total: seen, seen, added, titles };
   }
 
   async function run(menus, opts) {
