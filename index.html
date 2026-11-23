@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="google" content="notranslate">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <meta name="theme-color" content="#17824a">
+  <meta name="theme-color" content="#ffffff">
   <meta name="color-scheme" content="light dark">
   <script>
     /* 화면을 그리기 전에 테마를 정해서, 다크 모드 사용자가 흰 화면을 잠깐 보지 않게 한다 */
@@ -17,12 +17,13 @@
       var dark = pref === 'dark' || (pref === 'auto' && window.matchMedia && matchMedia('(prefers-color-scheme: dark)').matches);
       var el = document.documentElement;
       el.dataset.theme = dark ? 'dark' : 'light'; el.dataset.themePref = pref; el.dataset.fs = fs;
-      var m = document.querySelector('meta[name="theme-color"]'); if (m) m.content = dark ? '#101713' : '#17824a';
+      var m = document.querySelector('meta[name="theme-color"]'); if (m) m.content = dark ? '#1a1d21' : '#ffffff';
     })();
   </script>
   <title>공지 줍줍</title>
   <meta name="description" content="건국대학교 GLOCAL캠퍼스 공지를 모아 내 시간표와 시간에 맞게 골라 주는 서비스">
   <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" type="image/svg+xml" href="icons/mark.svg">
   <link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png">
   <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -31,17 +32,24 @@
   <!-- 글꼴: Pretendard (받지 못하면 기기 글꼴로 보임) -->
   <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
+  <!-- 제목·숫자용 글꼴: 원티드 산스 (기업 브랜드 서체, OFL). 받지 못하면 Pretendard 로 보임 -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/wanteddev/wanted-sans@v1.0.3/packages/wanted-sans/fonts/webfonts/variable/split/WantedSansVariable.min.css">
   <link rel="stylesheet" href="css/style.css">
 </head>
 <body data-tab="notices">
   <header class="topbar">
     <div class="brand">
-      <span class="logo" aria-hidden="true">줍</span>
+      <svg class="mark brand-mark" viewBox="0 0 32 32" aria-hidden="true"><rect width="32" height="32" rx="9" fill="currentColor"/><path d="M10.5 6.5h7.2l3.8 3.8v6.2H10.5z" fill="#fff"/><path d="M17.7 6.5v3.8h3.8" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="M7.5 17.2h4.6l1.6 2.6h4.6l1.6-2.6h4.6v5.6a2.6 2.6 0 0 1-2.6 2.6H10.1a2.6 2.6 0 0 1-2.6-2.6z" fill="#fff"/></svg>
       <div>
         <h1>공지 <em>줍줍</em></h1>
         <p class="tagline" data-i18n="tagline"></p>
       </div>
     </div>
+    <button type="button" class="cmdk" id="palette-btn" aria-haspopup="dialog" aria-keyshortcuts="Control+K Meta+K" data-i18n-aria="palTitle">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+      <span class="cmdk-text" data-i18n="palShort"></span>
+      <kbd>Ctrl K</kbd>
+    </button>
     <div class="topbar-right">
       <p class="today"><span data-i18n="today"></span> <strong class="today-text"></strong></p>
       <label class="lang-select">
@@ -73,8 +81,13 @@
 
   <!-- 오늘 (PC: 목록 위 한 줄 요약 / 휴대폰: '오늘' 탭) -->
   <section class="home" id="home" data-view="home" aria-labelledby="home-title">
+    <div class="masthead">
+    <div class="masthead-in">
     <div class="home-head">
-      <h2 id="home-title" data-i18n="homeTitle"></h2>
+      <div class="hero">
+        <p class="hero-date" id="home-date"></p>
+        <h2 id="home-title"></h2>
+      </div>
       <button type="button" class="link-btn home-toggle" id="home-toggle" aria-expanded="true"></button>
     </div>
     <!-- 공지에게 묻기: 질문을 조건으로 풀어 찾고, 내 컴퓨터 서버로 열었으면 로컬 AI가 답을 씀 -->
@@ -85,9 +98,13 @@
         <button type="submit" class="btn primary" data-i18n="askBtn"></button>
       </form>
       <div class="ask-examples" id="ask-examples"></div>
-      <div id="ask-result" aria-live="polite"></div>
     </section>
-    <div id="home-body"></div>
+    </div>
+    </div>
+    <div class="home-wrap">
+      <div id="ask-result" aria-live="polite"></div>
+      <div id="home-body"></div>
+    </div>
   </section>
 
   <main class="layout">
@@ -96,6 +113,7 @@
       <div class="view-head">
         <h2 id="list-heading" data-i18n="tabNotices"></h2>
         <p class="view-sub" data-i18n="viewNoticesSub"></p>
+        <div class="view-switch" role="tablist" data-i18n-aria="nviewLabel"></div>
       </div>
 
       <div class="toolbar">
@@ -123,6 +141,7 @@
             <option value="open" data-i18n="statusOpen"></option>
             <option value="week" data-i18n="statusWeek"></option>
             <option value="all" data-i18n="statusAll"></option>
+            <option value="past" data-i18n="statusPast"></option>
           </select>
         </label>
         <label class="field">
@@ -173,6 +192,15 @@
       <div id="list"></div>
     </section>
 
+    <!-- 지원 보드: 저장한 공지를 관심 → 준비 중 → 지원 완료 → 결과로 끌어 옮긴다 -->
+    <section class="board-view" data-view="track" aria-labelledby="board-title">
+      <div class="view-head">
+        <h2 id="board-title" data-i18n="boardTitle"></h2>
+        <p class="view-sub"><span data-i18n="boardHelp"></span> <strong id="board-sum"></strong></p>
+      </div>
+      <div class="board" id="kanban"></div>
+    </section>
+
     <aside class="side">
       <!-- 내 시간표 (휴대폰: '시간표' 탭) -->
       <section class="panel" id="timetable-panel" data-view="timetable" data-sub="week" aria-labelledby="tt-title">
@@ -193,6 +221,7 @@
         <div class="row">
           <button type="button" class="btn" id="example-tt" data-i18n="exampleTimetable"></button>
           <button type="button" class="btn" id="clear-tt" data-i18n="clearTimetable"></button>
+          <button type="button" class="btn" id="tt-image" data-i18n="ttImage"></button>
         </div>
         <label class="toggle">
           <input type="checkbox" class="hide-control">
@@ -208,6 +237,11 @@
       </section>
 
       <!-- 시간 예산 추천 (휴대폰: '추천' 탭) -->
+      <div class="view-head budget-head" data-view="budget">
+        <h2 data-i18n="tabNotices"></h2>
+        <p class="view-sub" data-i18n="viewNoticesSub"></p>
+        <div class="view-switch" role="tablist" data-i18n-aria="nviewLabel"></div>
+      </div>
       <section class="panel" id="budget-panel" data-view="budget" aria-labelledby="budget-title">
         <h2 id="budget-title" data-i18n="budget"></h2>
         <p class="help" data-i18n="budgetHelp"></p>
@@ -297,14 +331,15 @@
       <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 3h12a1 1 0 0 1 1 1v16a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1zM8.5 8h7M8.5 12h7M8.5 16h4"/></svg>
       <span data-i18n="tabNotices"></span>
     </a>
+    <a href="#/track" data-tab="track">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3.5" y="4.5" width="5" height="15" rx="1.5"/><rect x="9.5" y="4.5" width="5" height="10" rx="1.5"/><rect x="15.5" y="4.5" width="5" height="12.5" rx="1.5"/></svg>
+      <span data-i18n="tabTrack"></span>
+      <span class="tab-badge" id="badge-track" hidden></span>
+    </a>
     <a href="#/timetable" data-tab="timetable">
       <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 5h14a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1zM4 10h16M8 3v4M16 3v4M8 14h2M14 14h2M8 17h2"/></svg>
       <span data-i18n="tabTimetable"></span>
       <span class="tab-badge" id="badge-timetable" hidden></span>
-    </a>
-    <a href="#/budget" data-tab="budget">
-      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l2.5 5.4 5.9.7-4.4 4 1.2 5.9L12 16.1 6.8 19l1.2-5.9-4.4-4 5.9-.7z"/></svg>
-      <span data-i18n="tabBudget"></span>
     </a>
     <a href="#/settings" data-tab="settings">
       <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h9M17 7h3M4 17h3M11 17h9M15 5v4M9 15v4"/></svg>
@@ -419,6 +454,9 @@
   <script src="js/curriculum.js"></script>
   <script src="js/plan.js"></script>
   <script src="js/planui.js"></script>
+  <script src="js/track.js"></script>
+  <script src="js/palette.js"></script>
+  <script src="js/ttimage.js"></script>
   <script src="js/theme.js"></script>
   <script src="js/app.js"></script>
 </body>

@@ -3,7 +3,10 @@
 
 사용법 (공지줍줍 폴더에서):
     python pipeline/build_notices.py kku-notices-2026-11-20.json
-    python pipeline/build_notices.py kku-notices-2026-11-20.json --model qwen3:8b --days 60
+    python pipeline/build_notices.py kku-notices-2026-11-20.json --model qwen3:8b --months 12
+
+보관 기간: 확장 팝업에서 고른 기간(기본 최근 6개월 = 한 학기 이상)에 올라온 공지를 처리하고 웹 앱에 남깁니다.
+마감이 지난 공지도 이 기간 안이면 남겨 '지난 공지'로 다시 볼 수 있습니다.
 
 준비물:
     1) Ollama 설치 후 모델 받기:  ollama pull qwen3:8b
@@ -37,11 +40,14 @@ def parse_args(argv=None):
     ap.add_argument('input', nargs='?', help='크롬 확장에서 내보낸 kku-notices-날짜.json (생략하면 공지줍줍·collected·다운로드 폴더의 내보내기 파일을 모두 저장소에 합침)')
     ap.add_argument('--model', default=os.environ.get('GONGJI_MODEL', 'qwen3:8b'), help='Ollama 모델 이름 (기본 qwen3:8b)')
     ap.add_argument('--host', default=None, help='Ollama 주소 (기본 http://localhost:11434)')
-    ap.add_argument('--days', type=int, default=60, help='최근 며칠 안에 올라온 공지만 처리 (0이면 전부, 기본 60)')
+    ap.add_argument('--months', type=int, default=None,
+                    help='최근 몇 개월 안에 올라온 공지를 처리하고 남길지 (기본: 확장 팝업에서 고른 보관 기간, 없으면 6 = 한 학기 이상)')
+    ap.add_argument('--days', type=int, default=None, help='개월 대신 일 수로 정하기 (0이면 기간 제한 없음. 시험용)')
     ap.add_argument('--limit', type=int, default=0, help='최대 몇 건까지 처리할지 (0이면 제한 없음)')
     ap.add_argument('--out', default=str(gp.ROOT / 'data' / 'notices.js'), help='결과 파일 (기본 data/notices.js)')
     ap.add_argument('--no-cache', action='store_true', help='저장해 둔 AI 답을 쓰지 않고 모두 다시 처리')
-    ap.add_argument('--keep-days', type=int, default=30, help='마감 후 며칠이 지나면 저장소에서 지울지 (기본 30, 0이면 지우지 않음)')
+    ap.add_argument('--keep-days', type=int, default=30,
+                    help='보관 기간보다 오래된 공지를 마감 후 며칠이 지나면 저장소에서 지울지 (기본 30, 0이면 지우지 않음)')
     ap.add_argument('--no-archive', action='store_true', help='합친 내보내기 파일을 collected/원본 으로 옮기지 않음')
     ap.add_argument('--offline', action='store_true', help='AI를 부르지 않고 저장된 AI 답에 검사 규칙만 다시 적용 (Ollama 꺼져 있어도 됨)')
     ap.add_argument('--vision-model', default=os.environ.get('GONGJI_VISION_MODEL', 'qwen2.5vl:7b'),
@@ -69,11 +75,15 @@ def needs_media(raw: dict) -> bool:
     return bool(md.file_list(raw)) and (len(text) < 400 or '첨부' in text)
 
 
-def read_all_media(targets: list[dict], args, ai, use_vision: bool = True) -> dict:
-    """use_vision=False: 이미지 모델을 부르지 않는다 (예전에 읽어 둔 포스터 글자와 첨부파일 글자는 그대로 씀)"""
+def read_all_media(targets: list[dict], args, ai, use_vision: bool = True, budget_s: float = 0,
+                   clock=time.time) -> tuple[dict, set]:
+    """use_vision=False: 이미지 모델을 부르지 않는다 (예전에 읽어 둔 포스터 글자와 첨부파일 글자는 그대로 씀)
+    budget_s: 이미지 모델을 쓰는 시간 상한(초). 넘으면 남은 포스터는 다음 실행에서 읽는다.
+    돌려주는 값: ({id: 읽은 결과}, 포스터를 아직 못 읽어 다음 실행으로 미룬 공지 id)"""
     todo = [r for r in targets if needs_media(r)]
+    later: set = set()
     if not todo:
-        return {}
+        return {}, later
     vision = None
     if not args.offline and use_vision:
         v = gp.Ollama(args.vision_model, host=args.host, think=None, timeout=args.timeout)
@@ -86,9 +96,14 @@ def read_all_media(targets: list[dict], args, ai, use_vision: bool = True) -> di
             print(e)
     print(f'포스터 이미지·첨부파일 읽기: {len(todo)}건' + (f' (이미지는 {args.vision_model})' if vision else ''))
     out = {}
-    t0 = time.time()
+    t0 = clock()
+    deferred = False
     for i, raw in enumerate(todo, 1):
-        t1 = time.time()
+        t1 = clock()
+        if vision and budget_s > 0 and t1 - t0 > budget_s:
+            vision = None
+            deferred = True
+            print(f'  이미지 읽기 시간 상한({budget_s / 60:g}분)이 지나 남은 포스터는 다음 실행에서 읽습니다 (예전에 읽은 글자·첨부파일은 씀).')
         try:
             res = md.read_notice_media(raw, vision=vision)
         except gp.OllamaError as e:
@@ -101,12 +116,15 @@ def read_all_media(targets: list[dict], args, ai, use_vision: bool = True) -> di
             print(f'  [{i}/{len(todo)}] {raw.get("subject", "")[:40]}  건너뜀: {type(e).__name__}: {e}')
             continue
         out[raw['id']] = res
+        if deferred and (raw.get('imgs') or gp.body_status(raw) == 'image') and not any(x['kind'] == 'poster' for x in res['sources']):
+            later.add(raw['id'])
         what = ', '.join(f"{'포스터' if x['kind'] == 'poster' else x['name'][:20]} {x['chars']}자" for x in res['sources']) or '읽은 글 없음'
         err = f"  ({'; '.join(res['errors'])[:120]})" if res['errors'] else ''
         print(f'  [{i}/{len(todo)}] {raw.get("subject", "")[:40]}  {time.time() - t1:.1f}초  {what}{err}')
     got = sum(1 for r in out.values() if r['text'])
-    print(f'이미지·첨부에서 글을 읽은 공지 {got}/{len(todo)}건 ({(time.time() - t0) / 60:.1f}분)\n')
-    return out
+    print(f'이미지·첨부에서 글을 읽은 공지 {got}/{len(todo)}건 ({(time.time() - t0) / 60:.1f}분)'
+          + (f' · 포스터를 다음에 읽을 공지 {len(later)}건' if later else '') + '\n')
+    return out, later
 
 
 def merge_duplicates(targets: list[dict]) -> tuple[list[dict], int]:
@@ -153,18 +171,46 @@ def merge_reposts(targets: list[dict]) -> tuple[list[dict], int]:
     return keep, dup
 
 
-def gather(args) -> list[dict] | None:
-    """내보낸 JSON(여러 개)을 수집 저장소(collected/notices.json)에 합치고, 합친 공지 전체를 돌려준다."""
+def keep_window(args, period: dict | None, today: date) -> tuple[date | None, dict]:
+    """보관 기간의 첫날과 설명. 정하는 순서: --days > --months > 확장 팝업에서 고른 기간 > 기본 6개월"""
+    if args.days is not None:
+        if args.days <= 0:
+            return None, {'months': None, 'days': None, 'since': None, 'label': '기간 제한 없음'}
+        since = today - timedelta(days=args.days)
+        return since, {'months': None, 'days': args.days, 'since': since.isoformat(), 'label': f'최근 {args.days}일'}
+    if args.months is not None:
+        months = max(1, min(60, args.months))
+        how = '직접 지정'
+    elif period:
+        months = st.keep_months(period.get('months'))
+        how = '확장 설정'
+    else:
+        months = st.DEFAULT_KEEP_MONTHS
+        how = '기본'
+    since = st.months_ago(today, months)
+    label = f'최근 {months}개월' + (' (한 학기 이상)' if months == 6 else ' (1년)' if months == 12 else '')
+    return since, {'months': months, 'days': None, 'since': since.isoformat(), 'label': f'{label} · {how}'}
+
+
+def gather(args, today: date | None = None):
+    """내보낸 JSON(여러 개)을 수집 저장소(collected/공지)에 합치고 (합친 공지 전체, 보관 기간 첫날, 보관 기간 정보)를 돌려준다."""
+    today = today or date.today()
     paths = [Path(args.input)] if args.input else st.find_exports('notices')
     store = st.load_notices()
     if not paths and not store['notices']:
         print('kku-notices-날짜.json 파일을 찾지 못했습니다. 크롬 확장에서 공지를 모아 JSON으로 내보내세요.')
         return None
+    period = st.read_period(paths) if paths else None
+    if period:
+        store['period'] = period
+    since, keep = keep_window(args, store.get('period'), today)
+    print(f'보관 기간: {keep["label"]}' + (f' → {keep["since"]} 이후에 올라온 공지' if keep['since'] else ''))
     if paths:
-        store, stats = st.merge_notice_files(paths, store)
+        store, stats = st.merge_notice_files(paths, store, since=since)
         st.save_notices(store)
         print(f'수집 파일 {stats["files"]}개를 저장소에 합침 → 새 공지 {stats["added"]}건, 내용이 바뀐 공지 {stats["updated"]}건'
-              f' (저장소 전체 {len(store["notices"])}건)')
+              + (f', 보관 기간 안이라 되살린 공지 {stats["restored"]}건' if stats['restored'] else '')
+              + f' (저장소 전체 {len(store["notices"])}건)')
         if stats['byBoard']:
             print('  새 공지: ' + ', '.join(f'{k} {v}' for k, v in sorted(stats['byBoard'].items(), key=lambda kv: -kv[1])))
         if not args.no_archive:
@@ -173,24 +219,31 @@ def gather(args) -> list[dict] | None:
                 print(f'  합친 파일 {len(moved)}개는 collected/원본 폴더로 옮겼습니다.')
     else:
         print(f'새로 내보낸 파일이 없어 저장소의 공지 {len(store["notices"])}건으로 처리합니다.')
-    return gp.dedupe_notices(st.store_as_export(store)['notices'])
+    return gp.dedupe_notices(st.store_as_export(store)['notices']), since, keep
 
 
 def main(argv=None) -> int:
     args = parse_args(argv)
     today = date.fromisoformat(args.today) if args.today else date.today()
 
-    collected = gather(args)
-    if collected is None:
+    got = gather(args, today)
+    if got is None:
         return 1
+    collected, since, keep = got
     glossary = gp.load_glossary()
     regs = gp.load_regulations()
 
-    # 1) 처리할 공지 고르기
+    # 직전 결과: 실패한 공지는 직전에 만든 결과를 그대로 유지
+    previous = {}
+    try:
+        previous = {n['id']: n for n in gp.read_notices_js(Path(args.out)).get('notices', [])}
+    except (OSError, ValueError, KeyError):
+        pass
+
+    # 1) 처리할 공지 고르기: 보관 기간에 올라온 공지 + 그보다 먼저 올라왔지만 마감이 아직 남은 공지(직전 결과 기준)
     skipped = {}
     skipped_old = 0
     targets = []
-    since = today - timedelta(days=args.days) if args.days > 0 else None
     for raw in collected:
         reason = gp.skip_reason(raw, with_news=args.with_news, with_private=args.with_private)
         if reason:
@@ -198,8 +251,10 @@ def main(argv=None) -> int:
             continue
         posted = gp.norm_date(raw.get('date'))
         if since and posted and date.fromisoformat(posted) < since:
-            skipped_old += 1
-            continue
+            dl = str((previous.get(raw['id']) or {}).get('deadline') or '')[:10]
+            if not dl or dl < today.isoformat():
+                skipped_old += 1
+                continue
         targets.append(raw)
     targets.sort(key=lambda r: r.get('date') or '', reverse=True)
     targets, dup = merge_duplicates(targets)
@@ -214,7 +269,7 @@ def main(argv=None) -> int:
     why = ', '.join([f'오래된 글 {skipped_old}건'] + [f'{k} {v}건' for k, v in skipped.items()])
     print(f'수집한 공지 {len(collected)}건 → 처리할 공지 {len(targets)}건 ({why} 제외)')
     if not targets:
-        print('처리할 공지가 없습니다. --days 값을 늘려 보세요.')
+        print('처리할 공지가 없습니다. 보관 기간을 늘려 보세요 (확장 팝업 → 고급 설정 → 공지 보관 기간, 또는 --months 12).')
         return 1
 
     # 2) Ollama 확인: 꺼져 있거나 모델이 없어도 멈추지 않는다. 저장된 AI 답 → 직전 결과 → 규칙 정리 순서로 채운다.
@@ -239,16 +294,12 @@ def main(argv=None) -> int:
     no_ai = gp.NoAI(ai.model)
 
     # 3) 포스터 이미지·첨부파일 읽기 (먼저 몰아서 한다: 비전 모델과 글 모델을 번갈아 올리면 그래픽 메모리가 모자라 느려짐)
-    media_by_id = {}
+    media_by_id, media_later = {}, set()
     if not args.no_media:
-        media_by_id = read_all_media(targets, args, ai, use_vision=ai_on)
+        # 이미지 모델은 AI 시간 상한의 절반까지만 (보관 기간을 늘린 첫 실행에서 오래된 포스터를 한꺼번에 읽느라 오래 걸리지 않게)
+        budget = args.max_minutes * 30 if args.max_minutes > 0 else 0
+        media_by_id, media_later = read_all_media(targets, args, ai, use_vision=ai_on, budget_s=budget)
 
-    # 직전 결과: 실패한 공지는 직전에 만든 결과를 그대로 유지
-    previous = {}
-    try:
-        previous = {n['id']: n for n in gp.read_notices_js(Path(args.out)).get('notices', [])}
-    except (OSError, ValueError, KeyError):
-        pass
     kept_previous = 0
     by_rules = 0                 # AI 없이 규칙으로 먼저 정리한 새 공지
     need_check = 0               # AI 마감과 규칙 마감이 달라 '원문 확인'을 붙인 공지
@@ -292,7 +343,9 @@ def main(argv=None) -> int:
             budget_note = True
             print(f'AI 시간 상한({args.max_minutes:g}분)이 지나 남은 새 공지는 규칙으로 먼저 정리합니다.')
         try:
-            notice, checks = gp.process_notice(raw, ai if ai_on else no_ai, glossary, regs, today, cache=cache,
+            # 포스터를 아직 못 읽은 공지는 이번에는 규칙으로 정리하고, 포스터를 읽은 다음 실행에서 AI로 해독한다
+            use_ai = ai_on and raw['id'] not in media_later
+            notice, checks = gp.process_notice(raw, ai if use_ai else no_ai, glossary, regs, today, cache=cache,
                                                media=media_by_id.get(raw['id']))
         except gp.OllamaError as e:
             old = previous.get(raw['id'])
@@ -352,6 +405,7 @@ def main(argv=None) -> int:
             'generatedAt': datetime.now().strftime('%Y-%m-%d %H:%M'),
             'model': ai.model if ai.calls else (args.model if args.offline else ai.model),
             'note': 'AI가 만든 요약·번역입니다. 근거 문장이 원문에 없는 값은 버렸습니다.',
+            'keep': {k: keep[k] for k in ('months', 'days', 'since')},
             'stats': {
                 'collected': len(collected), 'processed': len(out_notices), 'fromCache': from_cache,
                 'failed': len(failed), 'imageOnly': image_only, 'droppedValues': dropped_total,
@@ -364,11 +418,11 @@ def main(argv=None) -> int:
     }
     backup = gp.write_notices_js(Path(args.out), data)
 
-    # 6) 저장소 정리: 마감 후 keep_days 일, 마감을 모르면 올린 뒤 180일이 지난 공지를 지움
-    if args.keep_days > 0 and not args.input:
+    # 6) 저장소 정리: 보관 기간보다 오래되고 마감도 지난(또는 마감을 모르는) 공지를 지움. 보관 기간 안은 그대로 둔다
+    if args.keep_days > 0 and not args.input and since is not None:
         store = st.load_notices()
         known = {n['id']: n.get('deadline') for n in out_notices}
-        gone = st.prune(store, known, today, keep_days=args.keep_days)
+        gone = st.prune(store, known, today, since=since, keep_days=args.keep_days)
         if gone:
             st.save_notices(store)
             for nid in gone:      # 그 공지의 AI 답·내려받은 파일도 정리
@@ -377,7 +431,7 @@ def main(argv=None) -> int:
                 except OSError:
                     pass
                 shutil.rmtree(md.MEDIA_DIR / md._safe(str(nid)), ignore_errors=True)
-            print(f'  기간이 지난 공지 {len(gone)}건을 저장소에서 지웠습니다 (마감 후 {args.keep_days}일, 마감을 모르면 올린 뒤 180일).')
+            print(f'  보관 기간({keep["since"]} 이후)보다 오래된 공지 {len(gone)}건을 저장소에서 지웠습니다 (마감이 남은 공지는 남김).')
     took = time.time() - t_start
     print()
     print(f'완료: {args.out} 에 공지 {len(out_notices)}건 저장 ({took / 60:.1f}분, AI 호출 {ai.calls}번)')

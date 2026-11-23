@@ -192,6 +192,51 @@ test('목표 학점을 남은 전공·교양 비율대로 나눈다', () => {
   assert.deepStrictEqual(r.quota, { major: 9, general: 3, free: 0 });
 });
 
+test('평점평균: 4.5 만점, P·성적 없는 과목은 빼고 학점 가중 평균', () => {
+  const h = P.cleanHistory([
+    { name: '자료구조', credit: 3, kind: '전필', term: '2025-2', grade: 'A+' },
+    { name: '글쓰기1', credit: 2, kind: '기초', term: '2025-1', grade: 'b' },
+    { name: '봉사', credit: 1, kind: '일선', term: '2025-1', grade: 'Pass' },
+    { name: '이산수학', credit: 3, kind: '전선', term: '2025-2' }
+  ]);
+  assert.deepStrictEqual(h.map((x) => x.grade || ''), ['A+', 'B0', 'P', '']);
+  assert.deepStrictEqual(P.gpa(h), { gpa: 3.9, credits: 5 }, '(4.5×3 + 3.0×2) ÷ 5');
+  assert.deepStrictEqual(P.gpa(h, (x) => P.area(x.kind) === 'major'), { gpa: 4.5, credits: 3 });
+  assert.strictEqual(P.gpa([]), null);
+  const cat = P.buildCatalog({ courses: [] }, null);
+  const r = P.parsePaste('2025 2학기\t자료구조\t전필\t3\tA+\n2025 2학기\t이산수학\t전선\t3\tB0', cat);
+  assert.deepStrictEqual(r.items.map((x) => x.grade), ['A+', 'B0'], '붙여넣기에서 성적도 읽음');
+});
+
+test('요람의 전공필수 중 안 들은 과목', () => {
+  const left = P.requiredLeft([['2-1', '전필', '자료구조', 3], ['3-1', '전필', '운영체제', 3], ['1-1', '전선', 'C프로그래밍', 3], ['4-1', '전필', '캡스톤디자인', 3]],
+    [{ name: '자료 구조', credit: 3, kind: '전필' }]);
+  assert.deepStrictEqual(left.map((x) => x.name), ['운영체제', '캡스톤디자인']);
+});
+
+test('추천 3안: 공강 최대는 쉬는 평일이 더 많고, 늦게 시작은 10:30 전 수업이 없다', () => {
+  const alts = P.alternatives(baseOpts({ target: 9, left: { major: 30, general: 0, gen: null } }));
+  assert.deepStrictEqual(alts.map((a) => a.key), ['balanced', 'freeDay', 'lateStart']);
+  const [bal, free, late] = alts;
+  assert.ok(free.free.length >= 5 - bal.days.filter((d) => d >= 1 && d <= 5).length, '균형안보다 쉬는 날이 적지 않음');
+  assert.ok(free.result.credits >= bal.result.credits - 2);
+  assert.ok(late.start === null || late.start >= 630, '첫 수업 10:30 이후: ' + late.start);
+  for (const a of alts) {
+    const slots = a.result.picks.map((p) => p.section.t);
+    for (let i = 0; i < slots.length; i++) for (let j = i + 1; j < slots.length; j++) assert.ok(!P.overlaps(slots[i], slots[j]), a.key + ' 겹침 없음');
+  }
+});
+
+test('졸업 로드맵: 남은 학점을 학기마다 고르게, 전공·교양은 비율대로', () => {
+  const r = P.roadmap({ total: 66, major: 54, general: 6 }, 4, '2027-1');
+  assert.deepStrictEqual(r.map((x) => x.term), ['2027-1', '2027-2', '2028-1', '2028-2']);
+  assert.deepStrictEqual(r.map((x) => x.credits), [17, 17, 16, 16]);
+  assert.strictEqual(r.reduce((s, x) => s + x.credits, 0), 66);
+  assert.strictEqual(r.reduce((s, x) => s + x.major, 0), 54);
+  assert.strictEqual(r.reduce((s, x) => s + x.general, 0), 6);
+  assert.deepStrictEqual(P.roadmap({ total: 0 }, 4, '2027-1'), []);
+});
+
 test('실제 개설 과목(data/timetable.js)으로도 시간 안에 끝난다', () => {
   const TT = load('timetable.js', 'GONGJI_TIMETABLE');
   const groups = P.groupOffered(TT);

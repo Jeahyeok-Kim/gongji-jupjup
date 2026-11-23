@@ -41,6 +41,27 @@
     return null;
   }
 
+  // ---------- 성적 (4.5 만점) ----------
+  const GRADE_POINTS = { 'A+': 4.5, A0: 4.0, 'B+': 3.5, B0: 3.0, 'C+': 2.5, C0: 2.0, 'D+': 1.5, D0: 1.0, F: 0 };
+  const GRADES = ['A+', 'A0', 'B+', 'B0', 'C+', 'C0', 'D+', 'D0', 'P'];
+  function cleanGrade(g) {
+    const x = String(g || '').trim().toUpperCase().replace(/^([ABCD])$/, '$10').replace(/^([ABCD])-$/, '$10').replace(/^PASS$|^S$/, 'P');
+    return GRADES.includes(x) || x === 'F' ? x : '';
+  }
+  // 평점평균: P(통과)와 성적 없는 과목은 빼고, 학점을 곱해 평균 (소수 둘째 자리)
+  function gpa(history, filter) {
+    let sum = 0;
+    let cr = 0;
+    for (const x of history || []) {
+      if (filter && !filter(x)) continue;
+      const pt = GRADE_POINTS[cleanGrade(x.grade)];
+      if (pt === undefined) continue;
+      sum += pt * (Number(x.credit) || 0);
+      cr += Number(x.credit) || 0;
+    }
+    return cr ? { gpa: Math.round((sum / cr) * 100) / 100, credits: cr } : null;
+  }
+
   // ---------- 이수 내역 ----------
   const TERM_RE = /^\d{4}-(1|2|S|W)$/;
   const num = (v, lo, hi) => { const n = Number(v); return Number.isFinite(n) && n >= lo && n <= hi ? n : null; };
@@ -59,7 +80,8 @@
       const key = `${term}|${code || normName(name)}`;
       if (seen.has(key)) continue;
       seen.add(key);
-      out.push({ id, name, code, credit, kind: cleanKind(x.kind), term });
+      const grade = cleanGrade(x.grade);
+      out.push(Object.assign({ id, name, code, credit, kind: cleanKind(x.kind), term }, grade ? { grade } : {}));
       if (out.length >= 300) break;
     }
     return out;
@@ -225,7 +247,8 @@
         if (hit) name = catalog.byName.get(hit).name;
       }
       if (!name) {
-        const tok = tokens.find((x) => /[가-힣A-Za-z]{2,}/.test(x) && !KIND_RE.test(x) && !GRADE_TOKEN.test(x) && !/^[A-Z]{4}\d{5}$/.test(x)
+        const termOnly = (x) => !/[가-힣A-Za-z]{2,}/.test(x.replace(/20\d{2}\s*(년도?|학년도)?/g, '').replace(/(1|2)?\s*학기|여름|겨울|하계|동계|계절/g, ''));
+        const tok = tokens.find((x) => /[가-힣A-Za-z]{2,}/.test(x) && !termOnly(x) && !KIND_RE.test(x) && !GRADE_TOKEN.test(x) && !/^[A-Z]{4}\d{5}$/.test(x)
           && !/^(20\d{2}|\d{4}년|\d학기|[1-4]학년|학기|여름|겨울|하계|동계|이수|재수강|학점)$/.test(x));
         if (tok) name = tok.replace(/^\d+\s*/, '').slice(0, 60);
       }
@@ -255,9 +278,25 @@
       const key = `${term}|${code || (cat && cat.code) || normName(name)}`;
       if (seen.has(key)) continue;
       seen.add(key);
-      items.push({ name, code: code || (cat && cat.code) || '', credit, kind, term });
+      const gradeTok = tokens.find((x) => GRADE_TOKEN.test(x) && !/^(W|U|FA|NP|F)$/i.test(x));
+      const grade = gradeTok ? cleanGrade(gradeTok) : '';
+      items.push(Object.assign({ name, code: code || (cat && cat.code) || '', credit, kind, term }, grade ? { grade } : {}));
     }
     return { items, failed, skipped };
+  }
+
+  // 내 학과 요람의 전공필수 중 아직 안 들은 과목 (courses: [학년-학기, 이수구분, 과목명, 학점])
+  function requiredLeft(courses, history) {
+    const done = new Set((history || []).map((x) => normName(x.name)));
+    const seen = new Set();
+    const out = [];
+    for (const [term, kind, name, credit] of courses || []) {
+      const n = normName(name);
+      if (cleanKind(kind) !== '전필' || done.has(n) || seen.has(n)) continue;
+      seen.add(n);
+      out.push({ term, name, credit: Number(credit) || 0 });
+    }
+    return out.sort((a, b) => String(a.term).localeCompare(String(b.term)) || a.name.localeCompare(b.name));
   }
 
   // ---------- 개설 과목 (data/timetable.js) ----------
@@ -337,6 +376,7 @@
     const lockedKeys = new Set((o.locked || []).map((x) => x.key));
     const grades = Array.isArray(o.grades) && o.grades.length ? new Set(o.grades.map(Number)) : null;
     const avoid = new Set(o.avoidDays || []);
+    const minStart = Number(o.minStart) || 0;            // 이 시각(분) 전에 시작하는 분반은 빼기 (늦게 시작하는 조합)
     const deptCourses = o.deptCourses || new Set();
     const left = o.left || {};
     const out = [];
@@ -354,7 +394,7 @@
       if (!isLocked && grades && g.grade && !grades.has(g.grade)) { stats.grade += 1; continue; }
       // 고정한 과목은 사용자가 고른 것이라 요일·방식 조건을 따지지 않는다
       const sections = isLocked ? g.sections : g.sections.filter((s) => (s.mode !== 'elearn' || inc.elearn) && (s.mode !== 'live' || inc.live)
-        && !s.t.some(([d]) => avoid.has(d)) && !overlaps(s.t, o.busy || []));
+        && !s.t.some(([d, a]) => avoid.has(d) || (minStart && toMin(a) < minStart)) && !overlaps(s.t, o.busy || []));
       if (!sections.length) { stats.time += 1; continue; }
       // 점수: 남은 학점이 있는 영역 > 학년이 맞는 과목 > 그 밖
       let score;
@@ -455,7 +495,63 @@
     const byArea = { major: 0, general: 0, free: 0 };
     for (const r of result) byArea[r.area] += r.group.credit;
     result.sort((a, b) => (a.area === b.area ? 0 : a.area === 'major' ? -1 : b.area === 'major' ? 1 : 0) || b.score - a.score);
-    return { picks: result, credits, byArea, target, quota, short: Math.max(0, target - credits), considered: all.length, stats, nodes };
+    return { picks: result, credits, byArea, target, quota, value: best.val, short: Math.max(0, target - credits), considered: all.length, stats, nodes };
+  }
+
+  // 결과에서 수업이 있는 요일 (월=1 … 일=0) 과 가장 이른 시작 시각
+  function daysUsed(r) {
+    return [...new Set((r.picks || []).flatMap((p) => p.section.t.map((x) => x[0])))].sort((a, b) => (a || 7) - (b || 7));
+  }
+  function earliest(r) {
+    const all = (r.picks || []).flatMap((p) => p.section.t.map((x) => toMin(x[1])));
+    return all.length ? Math.min(...all) : null;
+  }
+
+  // 추천 3안: 균형 · 공강 최대(평일을 비워 보며 쉬는 날이 가장 많은 조합) · 늦게 시작(첫 수업 10:30 이후)
+  // 목표 학점에서 2학점 넘게 모자라면 그 안은 쓰지 않는다.
+  function alternatives(opts) {
+    const o = { ...(opts || {}), maxNodes: (opts && opts.maxNodes) || 25000 };
+    const base = recommend(o);
+    const enough = (r) => r.credits >= Math.min(base.credits, base.target - 2);
+    const out = [{ key: 'balanced', result: base, days: daysUsed(base), start: earliest(base) }];
+    const avoid0 = o.avoidDays || [];
+    const weekdays = [1, 2, 3, 4, 5].filter((d) => !avoid0.includes(d));
+    const freeOf = (r) => weekdays.filter((d) => !daysUsed(r).includes(d)).length;
+    let best = { r: base, free: freeOf(base) };
+    const tryDays = (days) => {
+      const r = recommend({ ...o, avoidDays: avoid0.concat(days) });
+      if (!enough(r)) return;
+      const f = freeOf(r);
+      if (f > best.free || (f === best.free && r.credits > best.r.credits)) best = { r, free: f };
+    };
+    for (const d of weekdays) tryDays([d]);
+    const first = weekdays.filter((d) => !daysUsed(best.r).includes(d));
+    for (const a of first) for (const b of weekdays) if (b !== a && !first.includes(b)) tryDays([...first, b].filter((x, i, arr) => arr.indexOf(x) === i));
+    out.push({ key: 'freeDay', result: best.r, days: daysUsed(best.r), free: weekdays.filter((d) => !daysUsed(best.r).includes(d)), start: earliest(best.r) });
+    const late = recommend({ ...o, minStart: 10 * 60 + 30 });
+    out.push({ key: 'lateStart', result: late, days: daysUsed(late), start: earliest(late), ok: enough(late) });
+    return out;
+  }
+
+  // 졸업 로드맵: 남은 학점을 남은 학기에 고르게 나누고, 학기마다 전공·교양을 남은 비율대로
+  function roadmap(left, semesters, firstTerm) {
+    const n = Math.max(0, Math.min(12, Number(semesters) || 0));
+    const total = Math.max(0, Number(left && left.total) || 0);
+    if (!n || !total) return [];
+    let restM = Math.max(0, Number(left.major) || 0);
+    let restG = Math.max(0, Number(left.general) || 0);
+    let restT = total;
+    const out = [];
+    let term = firstTerm;
+    for (let i = 0; i < n; i++) {
+      const credits = Math.ceil(restT / (n - i));
+      const sp = split({ major: restM, general: restG }, credits);
+      out.push({ term, credits, major: sp.major, general: sp.general, free: sp.free });
+      restT -= credits; restM -= sp.major; restG -= sp.general;
+      const m = /^(\d{4})-(1|2)$/.exec(term || '');
+      term = m ? (m[2] === '1' ? `${m[1]}-2` : `${Number(m[1]) + 1}-1`) : '';
+    }
+    return out;
   }
 
   // 결과의 시간을 내 시간표 수업 형식으로: [{ name, day, start, end, room }]
@@ -468,6 +564,7 @@
   return {
     normName, cleanKind, area, genArea, cleanHistory, totals, byTerm, termKey, requirement, remaining,
     currentTerm, semestersLeft, pace, nextTerm, buildCatalog, parsePaste, overlaps, groupOffered, modeOf, split,
-    candidates, recommend, toClasses, deptMatch
+    candidates, recommend, toClasses, deptMatch, alternatives, roadmap, daysUsed, earliest,
+    GRADES, cleanGrade, gpa, requiredLeft
   };
 }));

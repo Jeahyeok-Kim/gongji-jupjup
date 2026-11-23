@@ -98,17 +98,72 @@
       const req = requirement();
       const tot = totalsNow();
       const left = leftNow();
-      const head = h('div', { class: 'plan-hero' },
+      const pct = req.total ? Math.min(100, Math.round((tot.total / req.total) * 100)) : 0;
+      const head = h('div', { class: 'plan-hero has-ring' },
+        req.total ? ring(pct, `${pct}%`) : null,
         h('div', null,
           h('p', { class: 'plan-kicker' }, [req.dept, req.mode === 'transfer' ? Tx.reqModeTransfer : ''].filter(Boolean).join(' · ') || Tx.histTitle),
-          h('p', { class: 'plan-big' }, left.total !== null ? Tx.histLeft(left.total) : Tx.histLeftUnknown)),
-        h('p', { class: 'plan-side' }, Tx.histDone(tot.total)));
+          h('p', { class: 'plan-big' }, left.total !== null ? Tx.histLeft(left.total) : Tx.histLeftUnknown),
+          h('p', { class: 'plan-side' }, [Tx.histDone(tot.total), (() => { const v = P.gpa(st.history); return v ? Tx.gpaHero(v.gpa.toFixed(2)) : ''; })()].filter(Boolean).join(' · '))));
       const meters = h('div', { class: 'meters' },
         meter(Tx.areaTotal, tot.total, req.total),
         meter(Tx.areaMajor, tot.major, req.major),
         meter(Tx.areaGeneral, tot.general, req.general,
           req.gen ? h('p', { class: 'meter-sub' }, ['기초', '심화', '소양'].map((g) => `${Tx.genLabel[g]} ${tot.gen[g]}/${req.gen[g]}`).join(' · ')) : null));
-      return [head, meters];
+      return [head, meters, renderRoadmap(left), renderRequired()];
+    }
+
+    // 원형 진행 표시 (SVG). 처음 그릴 때 0 에서 값까지 차오른다
+    function ring(pct, label) {
+      const r = 42;
+      const c = 2 * Math.PI * r;
+      const wrap = h('div', { class: 'ring', role: 'img', 'aria-label': label });
+      wrap.innerHTML = `<svg viewBox="0 0 100 100"><circle class="ring-bg" cx="50" cy="50" r="${r}"/><circle class="ring-fg" cx="50" cy="50" r="${r}" stroke-dasharray="${c.toFixed(1)}" stroke-dashoffset="${c.toFixed(1)}"/></svg><span>${label}</span>`;
+      const fg = wrap.querySelector('.ring-fg');
+      requestAnimationFrame(() => requestAnimationFrame(() => { fg.style.strokeDashoffset = String((c * (1 - pct / 100)).toFixed(1)); }));
+      return wrap;
+    }
+
+    // 남은 전공필수: 요람의 내 학과 전공필수 중 이수 내역에 없는 과목. 이번 학기에 열렸으면 눌러서 추천에 고정
+    function renderRequired() {
+      const Tx = T();
+      const C = root.GongjiCurriculum;
+      const d = C && C.findDept ? C.findDept(dept(), root.GONGJI_COURSES) : null;
+      if (!d) return null;
+      const left = P.requiredLeft(d.courses, st.history);
+      const offered = (name) => groups.find((g) => P.normName(g.name) === P.normName(name) && P.deptMatch(g.dept, dept()))
+        || groups.find((g) => P.normName(g.name) === P.normName(name));
+      return h('section', { class: 'req-left' },
+        h('div', { class: 'road-head' }, h('h3', null, Tx.reqLeftTitle, left.length ? h('span', { class: 'group-count' }, ` ${left.length}`) : null),
+          h('p', { class: 'fine' }, left.length ? Tx.reqLeftHelp : Tx.reqLeftNone)),
+        left.length ? h('ul', { class: 'req-chips' }, left.map((x) => {
+          const g = offered(x.name);
+          return h('li', null, h('button', {
+            type: 'button', class: 'req-chip' + (g ? '' : ' is-off'), disabled: g ? null : true,
+            title: g ? Tx.palPin : Tx.reqNotOffered,
+            onclick: () => { if (g) { setSub('plan'); api.pin(g.key); } }
+          }, h('strong', null, x.name), h('small', null, [x.term, `${x.credit}${Tx.creditUnit}`, g ? '' : Tx.reqNotOffered].filter(Boolean).join(' · '))));
+        })) : null);
+    }
+
+    // 졸업 로드맵: 남은 학점을 남은 학기에 나눈 막대
+    function renderRoadmap(left) {
+      const Tx = T();
+      const sem = semLeft();
+      const plan = P.roadmap(left, sem, P.nextTerm(deps.now));
+      if (!plan.length) return null;
+      const max = Math.max(...plan.map((x) => x.credits), 1);
+      return h('section', { class: 'roadmap' },
+        h('div', { class: 'road-head' }, h('h3', null, Tx.roadTitle), h('p', { class: 'fine' }, Tx.roadHelp(sem))),
+        h('ol', { class: 'road-list' }, plan.map((x, i) => h('li', { style: `--i:${i}` },
+          h('span', { class: 'road-term' }, termName(x.term)),
+          h('span', { class: 'road-bar', style: `--w:${(x.credits / max) * 100}%` },
+            x.major ? h('i', { class: 'm', style: `flex:${x.major}` }) : null,
+            x.general ? h('i', { class: 'g', style: `flex:${x.general}` }) : null,
+            x.free ? h('i', { class: 'f', style: `flex:${x.free}` }) : null),
+          h('span', { class: 'road-num' }, h('strong', null, String(x.credits)), ` ${Tx.planBy(x.major, x.general, x.free)}`)))),
+        h('ul', { class: 'road-legend' },
+          h('li', { class: 'm' }, Tx.areaMajor), h('li', { class: 'g' }, Tx.areaGeneral), h('li', { class: 'f' }, Tx.roadFree)));
     }
 
     function renderReq() {
@@ -163,7 +218,7 @@
         const credit = Number(f.elements.credit.value);
         if (!name || !(credit > 0)) { toast(Tx.histBadInput); return; }
         const hit = cat().byName.get(P.normName(name));
-        const n = addItems([{ name, credit, kind: f.elements.kind.value, term: f.elements.term.value, code: hit ? hit.code : '' }]);
+        const n = addItems([{ name, credit, kind: f.elements.kind.value, term: f.elements.term.value, code: hit ? hit.code : '', grade: f.elements.grade.value }]);
         if (!n) { toast(Tx.histDup); return; }
         f.elements.name.value = '';
         render();
@@ -186,6 +241,8 @@
         h('label', null, h('span', null, Tx.histTerm),
           h('select', { name: 'term' }, h('option', { value: '' }, Tx.histTermNone),
             terms.map((x) => h('option', { value: x, selected: x === `${cur.year}-${cur.term}` ? true : null }, termName(x))))),
+        h('label', null, h('span', null, Tx.histGrade),
+          h('select', { name: 'grade' }, h('option', { value: '' }, Tx.gradeNone), P.GRADES.map((g) => h('option', { value: g }, g)))),
         h('button', { type: 'submit', class: 'btn primary' }, Tx.histAdd));
       const names = h('datalist', { id: 'hist-names' }, cat().names.slice(0, 0));
       // 자동완성 후보: 내 학과 요람 과목 + 교양 + 개설 과목 (많으면 느려서 앞 600개)
@@ -247,10 +304,16 @@
       const Tx = T();
       if (!st.history.length) return h('p', { class: 'empty' }, Tx.histEmpty);
       return h('div', { class: 'terms' }, P.byTerm(st.history).map((g) => h('section', { class: 'term' },
-        h('h4', { class: 'term-head' }, h('span', null, termName(g.term)), h('span', { class: 'term-sum' }, Tx.histCredits(g.credits))),
+        h('h4', { class: 'term-head' }, h('span', null, termName(g.term)),
+          h('span', { class: 'term-sum' }, [Tx.histCredits(g.credits), (() => { const v = P.gpa(g.items); return v ? Tx.gpaLabel(v.gpa.toFixed(2)) : ''; })()].filter(Boolean).join(' · '))),
         h('ul', { class: 'term-list' }, g.items.map((x) => h('li', null,
           h('span', { class: 'tl-name' }, x.name),
           h('span', { class: 'tl-kind' }, kindLabel(x.kind)),
+          h('select', { class: 'tl-grade', 'aria-label': `${x.name} ${Tx.histGrade}`, onchange: (e) => {
+            st.history = st.history.map((y) => (y === x ? Object.assign({}, y, { grade: e.target.value }) : y));
+            st.history = P.cleanHistory(st.history);
+            save(); render();
+          } }, h('option', { value: '' }, '—'), P.GRADES.concat('F').map((gr) => h('option', { value: gr, selected: x.grade === gr ? true : null }, gr))),
           h('span', { class: 'tl-credit' }, String(x.credit)),
           h('button', { type: 'button', class: 'icon-x', 'aria-label': `${x.name} ${Tx.histRemove}`, title: Tx.histRemove, onclick: () => {
             const before = st.history;
@@ -300,14 +363,23 @@
       return pc.per ? Math.max(3, Math.min(21, pc.per)) : 18;
     }
 
+    // 추천: 세 가지 안(균형 · 공강 최대 · 늦게 시작)을 함께 계산하고, 고른 안을 보여 준다
     function run() {
       const left = leftNow();
-      st.result = P.recommend({
+      st.alts = P.alternatives({
         groups, taken: takenSet(), left, target: Number(st.prefs.target) || defaultTarget(),
         grades: st.prefs.grades, dept: dept(), deptCourses: deptCourses(), myGrade: nextGrade(),
         include: st.prefs.include, avoidDays: st.prefs.avoid, locked: st.prefs.locked, excluded: st.prefs.excluded
       });
+      const pick = st.alts.find((a) => a.key === st.altKey) || st.alts[0];
+      st.altKey = pick.key;
+      st.result = pick.result;
       renderPlan();
+    }
+    function runSoon() {
+      st.busy = true;
+      renderPlan();
+      setTimeout(() => { st.busy = false; run(); }, 30);
     }
 
     function chipToggle(label, on, onclick, extra) {
@@ -365,7 +437,7 @@
           h('input', { type: 'checkbox', checked: p.takenNow ? true : null, onchange: (e) => setPref({ takenNow: e.target.checked }) }),
           h('span', null, Tx.planTakenNow)),
         !dept() ? h('p', { class: 'help warn-note' }, Tx.planNeedDept) : null,
-        h('button', { type: 'button', class: 'btn primary plan-run', onclick: run }, Tx.planRun));
+        h('button', { type: 'button', class: 'btn primary plan-run', onclick: runSoon, disabled: st.busy ? true : null }, st.busy ? Tx.altComputing : Tx.planRun));
     }
 
     // 고른 분반을 요일×시간 격자로 (월~금, 수업이 있는 시간대만)
@@ -431,7 +503,20 @@
               save(); run();
             } }, Tx.planExclude)));
       });
+      const altTabs = st.alts ? h('div', { class: 'alt-tabs', role: 'tablist', 'aria-label': Tx.altTitle }, st.alts.map((a) => {
+        const r2 = a.result;
+        const wk = a.days.filter((d) => d >= 1 && d <= 5).length;
+        const sub = a.key === 'freeDay' ? (a.free && a.free.length ? Tx.altFree(a.free.map((d) => deps.dayName(d)).join('·')) : Tx.altNoFree)
+          : a.key === 'lateStart' ? (a.ok === false ? Tx.altShort : a.start !== null ? Tx.altStart(`${String(Math.floor(a.start / 60)).padStart(2, '0')}:${String(a.start % 60).padStart(2, '0')}`) : Tx.planModeElearn)
+            : Tx.altBalanced;
+        return h('button', { type: 'button', role: 'tab', class: 'alt-tab', 'aria-selected': String(a.key === st.altKey),
+          onclick: () => { st.altKey = a.key; st.result = a.result; renderPlan(); } },
+          h('span', { class: 'alt-name' }, Tx['alt_' + a.key]),
+          h('strong', null, `${r2.credits}${Tx.creditUnit}`, h('small', null, ` · ${Tx.altDays(wk)}`)),
+          h('span', { class: 'alt-sub' }, sub));
+      })) : null;
       return h('div', { class: 'plan-result' },
+        altTabs,
         h('div', { class: 'pr-summary' },
           h('p', { class: 'pr-total' }, h('strong', null, String(r.credits)), ` / ${r.target}${Tx.creditUnit}`),
           h('p', { class: 'pr-by' }, Tx.planBy(r.byArea.major, r.byArea.general, r.byArea.free)),
@@ -444,6 +529,16 @@
             const classes = P.toClasses(r.picks).map((c, i) => Object.assign({ id: 'p' + Date.now().toString(36) + i }, c, c.room ? {} : { room: undefined }));
             deps.setTimetable(classes, Tx.planToTtDone(r.picks.length));
           } }, Tx.planToTt),
+          root.GongjiTTImage ? h('button', { type: 'button', class: 'btn', onclick: () => {
+            const alt = (st.alts || []).find((a) => a.key === st.altKey);
+            const [ny, nt] = P.nextTerm(deps.now).split('-');
+            const el = r.picks.filter((x) => !x.section.t.length).map((x) => x.group.name);
+            root.GongjiTTImage.download(P.toClasses(r.picks), {
+              kicker: Tx.planTitle, title: Tx.termName(ny, nt), sub: `${r.credits}${Tx.creditUnit}${alt ? ' · ' + Tx['alt_' + alt.key] : ''}`,
+              note: el.length ? Tx.ttImageElearn(el.join(', ')) : '', dayName: deps.dayName, colorOf: deps.classColor,
+              dark: document.documentElement.dataset.theme === 'dark', filename: `gongji-plan-${ny}-${nt}.png`
+            }).then((ok) => { if (ok) toast(Tx.ttImageDone); });
+          } }, Tx.ttImage) : null,
           p.excluded.length ? h('button', { type: 'button', class: 'link-btn', onclick: () => { st.prefs.excluded = []; save(); run(); } },
             `${Tx.planExcluded(p.excluded.length)} · ${Tx.planClearExcluded}`) : null));
     }
@@ -481,9 +576,35 @@
       });
     });
 
-    return {
+    const api = {
       render,
       setSub,
+      // 빠른 실행에서 과목 찾기 (이름에 검색어가 든 과목, 내 학과 먼저)
+      findCourses(q, limit) {
+        const n = P.normName(q);
+        if (!n) return [];
+        const mine = (g) => (P.deptMatch(g.dept, dept()) ? 0 : 1);
+        return groups.filter((g) => P.normName(g.name).includes(n))
+          .sort((a, b) => mine(a) - mine(b) || (P.normName(a.name).startsWith(n) ? 0 : 1) - (P.normName(b.name).startsWith(n) ? 0 : 1) || a.name.localeCompare(b.name))
+          .slice(0, limit || 5)
+          .map((g) => ({ key: g.key, name: g.name, sub: [kindLabel(g.kind), `${g.credit}${T().creditUnit}`, g.dept, T().planAlts ? `${g.sections.length}${T().secUnit}` : ''].filter(Boolean).join(' · ') }));
+      },
+      // 과목을 추천에 고정하고 추천 화면으로
+      pin(key) {
+        const g = groups.find((x) => x.key === key);
+        if (!g) return;
+        st.prefs.locked = st.prefs.locked.filter((x) => x.key !== key).concat({ key, s: g.sections[0].s });
+        st.prefs.excluded = st.prefs.excluded.filter((x) => x !== key);
+        save();
+        setSub('plan');
+        run();
+      },
+      progress() {
+        const req = requirement();
+        const tot = totalsNow();
+        const left = leftNow();
+        return { total: req.total, done: tot.total, left, dept: req.dept, count: st.history.length, mode: req.mode };
+      },
       // 백업 파일에 넣고 불러올 값
       values: () => ({ history: st.history, gradReq: st.req, planPrefs: st.prefs }),
       load(v) {
@@ -494,6 +615,7 @@
         render();
       }
     };
+    return api;
   }
 
   root.GongjiPlanUI = { mount };

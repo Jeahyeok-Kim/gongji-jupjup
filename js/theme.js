@@ -9,7 +9,7 @@
   const KEYS = { theme: 'gongji:theme', fontScale: 'gongji:fontScale' };
   const THEMES = ['auto', 'light', 'dark'];
   const FONTS = ['sm', 'md', 'lg'];
-  const COLORS = { light: '#17824a', dark: '#101713' };    // 주소창·상태 표시줄 색
+  const COLORS = { light: '#ffffff', dark: '#1a1d21' };    // 주소창·상태 표시줄 색 (위쪽 막대와 같은 흰 면)
 
   function read(key, allowed, fallback) {
     try {

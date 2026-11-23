@@ -145,7 +145,7 @@
     return tokens.every((t) => title.includes(t) || (isChosungOnly(t) && (cho = cho || chosung(String(notice.title || '').toLowerCase())).includes(t)));
   }
 
-  // filters: { query, board, category, group(큰 혜택 분류), sub(세부 혜택 분류), status: 'open' | 'week' | 'all' }
+  // filters: { query, board, category, group(큰 혜택 분류), sub(세부 혜택 분류), status: 'open' | 'week' | 'all' | 'past'(마감 지난 공지만) }
   function filterNotices(notices, filters, now) {
     const f = filters || {};
     return notices.filter((n) => {
@@ -154,7 +154,8 @@
       if (f.group && !classifyBenefit(n).groups.includes(f.group)) return false;
       if (f.sub && !classifyBenefit(n).subs.includes(f.sub)) return false;
       const status = f.status || 'open';
-      if (status !== 'all' && isExpired(n, now)) return false;
+      if (status === 'past') { if (!isExpired(n, now)) return false; }
+      else if (status !== 'all' && isExpired(n, now)) return false;
       if (status === 'week') {
         const d = daysLeft(n.deadline, now);
         if (d === null || d > 7) return false;
@@ -173,6 +174,14 @@
     const cmpNum = (a, b) => (a === b ? 0 : a < b ? -1 : 1);
     if (key === 'latest') {
       arr.sort((a, b) => String(b.date || '').localeCompare(String(a.date || '')));
+    } else if (key === 'recentClosed') {
+      // 마감 지난 공지 보기: 최근에 끝난 것부터 (마감이 없으면 마지막 행사 날, 그것도 없으면 올린 날)
+      const endOf = (n) => {
+        const ev = (n.events || []).map((e) => parseLocal(e.date)).filter(Boolean).sort((x, y) => y - x)[0];
+        const d = parseLocal(n.deadline) || ev || parseLocal(n.date);
+        return d ? d.getTime() : 0;
+      };
+      arr.sort((a, b) => endOf(b) - endOf(a));
     } else if (key === 'hits') {
       arr.sort((a, b) => (b.hits || 0) - (a.hits || 0));
     } else if (key === 'benefit') {

@@ -330,13 +330,20 @@ class PipelineTest(PipelineBase):
         self.assertEqual(store['notices']['x-1']['text'], '고친 본문', '더 최근에 모은 내용으로')
         st.save_notices(store)
         self.assertEqual(sorted(p.name for p in st.NOTICE_DIR.glob('*.json')), ['_지운목록.json', '장학공지.json', '학사공지.json'])
-        # 마감 후 30일, 마감을 모르면 180일 지난 공지 지우기 → 다시 합쳐도 되살아나지 않음
+        # 보관 기간(기본 6개월 → 2026-06-10 이후)은 마감이 지나도 남기고, 그보다 오래되고 마감을 모르는 공지만 지움
         gone = st.prune(store, {'x-1': '2026-11-05T23:59', 'x-3': None}, date(2026, 12, 10))
-        self.assertEqual(sorted(gone), ['x-1', 'x-2'])
+        self.assertEqual(gone, ['x-2'])
+        self.assertIn('x-1', store['notices'], '마감이 지나도 보관 기간 안이면 남김 (지난 공지 다시 보기)')
         st.save_notices(store)
-        store2, stats2 = st.merge_notice_files([a, b], st.load_notices())
-        self.assertEqual(sorted(store2['notices']), ['x-3'])
-        self.assertEqual(stats2['skippedRemoved'], 3)
+        since = st.months_ago(date(2026, 12, 10), 6)
+        store2, stats2 = st.merge_notice_files([a, b], st.load_notices(), since=since)
+        self.assertEqual(sorted(store2['notices']), ['x-1', 'x-3'])
+        self.assertEqual(stats2['skippedRemoved'], 1, '보관 기간보다 오래된 공지는 다시 들어오지 않음')
+        # 보관 기간을 1년으로 늘리면 그 안의 지운 공지는 되살린다
+        store3, stats3 = st.merge_notice_files([a], st.load_notices(), since=st.months_ago(date(2026, 12, 10), 12))
+        self.assertEqual(stats3['restored'], 1)
+        self.assertIn('x-2', store3['notices'])
+        self.assertNotIn('x-2', store3['removed'])
         moved = st.archive([a, b])
         self.assertEqual(len(moved), 2)
         self.assertFalse(a.exists())
@@ -897,3 +904,87 @@ class MediaReuseTest(PipelineBase):
         import rules
         b = rules.find_benefit('지원금액: 3,000,000만원(1명 기준)')
         self.assertEqual((b['ko'], b['won']), ('지원금액: 3,000,000만원(1명 기준)', 0))
+
+
+class KeepWindowTest(PipelineBase):
+    """보관 기간: 한 학기 이상(기본 6개월) 공지를 남기고, 확장 팝업에서 고른 기간을 따른다"""
+
+    def build(self, *extra):
+        buf = io.StringIO()
+        with contextlib.redirect_stdout(buf):
+            code = build_notices.main([str(self.input), '--model', 'fake', '--host', 'http://127.0.0.1:9', '--no-media',
+                                       '--out', str(self.out), '--today', '2026-11-12', '--no-archive', *extra])
+        return code, buf.getvalue()
+
+    def test_month_math(self):
+        from datetime import date
+        self.assertEqual(st.months_ago(date(2026, 11, 23), 6), date(2026, 5, 23))
+        self.assertEqual(st.months_ago(date(2026, 8, 31), 6), date(2026, 2, 28), '그 달에 없는 날은 마지막 날')
+        self.assertEqual(st.months_ago(date(2026, 1, 15), 6), date(2025, 7, 15), '해를 넘김')
+        self.assertEqual(st.months_ago(date(2026, 11, 23), 12), date(2025, 11, 23))
+        self.assertEqual([st.keep_months(v) for v in (3, '12', None, 99)], [6, 12, 6, 24], '6개월(한 학기)보다 짧게는 안 함')
+
+    def test_prune_rules(self):
+        from datetime import date
+        store = {'notices': {
+            'old-open': {'id': 'old-open', 'date': '2026-01-10'},
+            'old-done': {'id': 'old-done', 'date': '2026-01-10'},
+            'old-unknown': {'id': 'old-unknown', 'date': '2026-01-10'},
+            'recent-done': {'id': 'recent-done', 'date': '2026-09-01'},
+            'no-date': {'id': 'no-date'}}, 'removed': {}}
+        dls = {'old-open': '2027-01-31T23:59', 'old-done': '2026-02-01T23:59', 'recent-done': '2026-09-10T18:00'}
+        self.assertEqual(st.prune(dict(store, notices=dict(store['notices'])), dls, date(2026, 11, 12), since=None), [],
+                         '기간 제한이 없으면 지우지 않음')
+        gone = st.prune(store, dls, date(2026, 11, 12), since=date(2026, 5, 12))
+        self.assertEqual(sorted(gone), ['old-done', 'old-unknown'])
+        self.assertEqual(sorted(store['notices']), ['no-date', 'old-open', 'recent-done'], '마감이 남은 오래된 공지는 남김')
+        self.assertEqual(sorted(store['removed']), ['old-done', 'old-unknown'])
+
+    def test_default_six_months_and_meta(self):
+        code, log = self.build()
+        self.assertEqual(code, 0, log)
+        self.assertIn('보관 기간: 최근 6개월 (한 학기 이상) · 기본 → 2026-05-12 이후', log)
+        data = gp.read_notices_js(self.out)
+        self.assertEqual(data['meta']['keep'], {'months': 6, 'days': None, 'since': '2026-05-12'})
+        self.assertNotIn('www.kku.ac.kr-5-505', {n['id'] for n in data['notices']}, '2025년 글은 보관 기간 밖')
+
+    def test_period_from_extension_and_overrides(self):
+        data = json.loads(self.input.read_text(encoding='utf-8'))
+        data['period'] = {'months': 12, 'since': '2025-11-12'}
+        self.input.write_text(json.dumps(data, ensure_ascii=False), encoding='utf-8')
+        code, log = self.build()
+        self.assertEqual(code, 0, log)
+        self.assertEqual(gp.read_notices_js(self.out)['meta']['keep']['since'], '2025-11-12', '확장 팝업에서 고른 1년')
+        self.assertEqual(st.load_notices()['period'], {'months': 12, 'since': '2025-11-12'}, '다음 실행도 같은 기간')
+        code, log = self.build('--months', '9')
+        self.assertEqual(gp.read_notices_js(self.out)['meta']['keep']['months'], 9, '명령줄이 우선')
+        code, log = self.build('--days', '0')
+        self.assertEqual(code, 0, log)
+        ids = {n['id'] for n in gp.read_notices_js(self.out)['notices']}
+        self.assertIn('www.kku.ac.kr-5-505', ids, '기간 제한 없음이면 오래된 글도')
+
+    def test_old_notice_with_open_deadline_stays(self):
+        code, log = self.build()
+        self.assertEqual(code, 0, log)
+        data = gp.read_notices_js(self.out)
+        old = dict(data['notices'][0], id='www.kku.ac.kr-5-505', deadline='2026-12-01T23:59')
+        data['notices'].append(old)
+        gp.write_notices_js(self.out, data)
+        code, log = self.build()
+        self.assertEqual(code, 0, log)
+        self.assertIn('www.kku.ac.kr-5-505', {n['id'] for n in gp.read_notices_js(self.out)['notices']},
+                      '보관 기간보다 먼저 올라왔어도 마감이 남았으면 처리')
+
+    def test_media_budget_defers_posters(self):
+        # 이미지 모델 시간 상한을 넘기면 남은 포스터는 다음 실행으로 미루고, 그 공지는 이번에 규칙으로 정리한다
+        import itertools
+        args = build_notices.parse_args([str(self.input), '--model', 'fake', '--host', self.host, '--out', str(self.out)])
+        raw = next(n for n in json.loads(self.input.read_text(encoding='utf-8'))['notices'] if n['id'] == 'www.kku.ac.kr-3-303')
+        twin = dict(raw, id='www.kku.ac.kr-3-304')
+        ai = gp.Ollama('fake', host=self.host)
+        tick = itertools.count(0, 100)
+        with contextlib.redirect_stdout(io.StringIO()) as buf:
+            out, later = build_notices.read_all_media([raw, twin], args, ai, budget_s=150, clock=lambda: next(tick))
+        self.assertIn('포스터', ' '.join(x['kind'] == 'poster' and '포스터' or '' for x in out[raw['id']]['sources']))
+        self.assertEqual(later, {'www.kku.ac.kr-3-304'}, buf.getvalue())
+        self.assertIn('다음 실행에서 읽습니다', buf.getvalue())

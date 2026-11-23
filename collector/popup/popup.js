@@ -24,8 +24,14 @@ async function loadStored() {
   return { notices, lectures, hasRef: !!(all['ref:kku'] || all['ref:rule']) };
 }
 
+const shortDate = (ymd) => { const [, m, d] = String(ymd).split('-').map(Number); return `${m}월 ${d}일`; };
+
 async function renderCounts() {
   const { notices, lectures, hasRef } = await loadStored();
+  const s = await globalThis.kkuSettings();
+  const since = globalThis.kkuSince(s.keepMonths);
+  const inWindow = notices.filter((n) => !n?.date || String(n.date).slice(0, 10) >= since).length;
+  $('keepInfo').textContent = `최근 ${s.keepMonths === 12 ? '1년' : s.keepMonths + '개월'} · ${shortDate(since)} 이후 글 ${inWindow.toLocaleString('ko-KR')}건`;
   const parts = [`공지 ${notices.length.toLocaleString('ko-KR')}건`];
   if (lectures) parts.push(`강의 ${lectures.toLocaleString('ko-KR')}과목`);
   parts.push(hasRef ? '학교 기본 정보 있음' : '학교 기본 정보 없음');
@@ -224,7 +230,8 @@ async function pingPage() {
 async function onStart() {
   const menus = [...document.querySelectorAll('#boards input:checked')].map((i) => Number(i.value));
   if (menus.length === 0) { $('status').textContent = '수집할 게시판을 선택하세요.'; return; }
-  const opts = { full: $('full').checked, newsLimit: Number($('newsLimit').value) || 300 };
+  const s = await globalThis.kkuSettings();
+  const opts = { full: $('full').checked, newsLimit: Number($('newsLimit').value) || 300, since: globalThis.kkuSince(s.keepMonths) };
   try {
     const res = await chrome.tabs.sendMessage(tab.id, { type: 'start', menus, opts });
     if (!res?.ok) $('status').textContent = res?.error ?? '시작하지 못했습니다.';
@@ -282,6 +289,14 @@ async function init() {
 
   const s = await globalThis.kkuSettings();
   $('interval').value = String(s.intervalHours);
+  $('keepMonths').value = String(s.keepMonths === 12 ? 12 : 6);
+  $('keepMonths').addEventListener('change', async () => {
+    await saveSettings({ keepMonths: Number($('keepMonths').value) });
+    // 다음 전달 때 새 보관 기간으로 다시 보내도록 표시 (서버가 그 기간만큼 웹 앱에 남긴다)
+    const { pending = {} } = await chrome.storage.local.get('pending');
+    await chrome.storage.local.set({ pending: { ...pending, notices: true } });
+    await renderCounts();
+  });
   $('serverUrl').value = s.server;
   $('notify').checked = s.notify !== false;
   $('notify').addEventListener('change', async () => { await saveSettings({ notify: $('notify').checked }); });

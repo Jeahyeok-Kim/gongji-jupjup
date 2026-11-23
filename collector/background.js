@@ -320,7 +320,12 @@ async function pingServer() {
 }
 
 // ---------- 이벤트 (모두 맨 위에서 등록) ----------
-chrome.runtime.onInstalled.addListener(async () => { await schedule(); await refreshBadge(); });
+chrome.runtime.onInstalled.addListener(async (details) => {
+  await schedule();
+  await refreshBadge();
+  // 새 버전으로 바뀌면(1.3: 보관 기간) 모아 둔 공지를 새 보관 기간으로 한 번 다시 보낸다 → 서버가 그 기간만큼 웹 앱에 남김
+  if (details?.reason === 'update') await markPending('notices', true);
+});
 chrome.runtime.onStartup.addListener(async () => { await schedule(); await refreshBadge(); });
 
 chrome.alarms.onAlarm.addListener(async (alarm) => {
@@ -386,14 +391,14 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
             const cur = (await getLocal('job')).job;
             if (cur && cur.tabId === tabId) { cur.started = true; await setLocal({ job: cur }); }
           });
-          sendResponse({ run: true, newsLimit: s.newsLimit });
+          sendResponse({ run: true, newsLimit: s.newsLimit, since: kkuSince(s.keepMonths) });
         } else if (!job && s.auto && s.sites[msg.host] && tabId != null && (await isDue(msg.host))) {
           // 평소에 학교 사이트를 열었고 수집할 때가 됐다 → 이 탭에서 조용히 새 글만 받는다 (탭은 닫지 않음)
           const now = Date.now();
           await setLocal({ job: { reason: 'visit', queue: [], host: msg.host, tabId, keepTab: true, started: true, startedAt: now, siteStartedAt: now, results: [] } });
           await chrome.alarms.create('watchdog', { delayInMinutes: 2 });
           await refreshBadge();
-          sendResponse({ run: true, newsLimit: s.newsLimit });
+          sendResponse({ run: true, newsLimit: s.newsLimit, since: kkuSince(s.keepMonths) });
         } else {
           sendResponse({ run: false });
         }

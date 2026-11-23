@@ -65,7 +65,7 @@ globalThis.KKU_REFERENCE = {
 };
 
 // ---- 공통 설정·도우미 (서비스 워커 · 콘텐츠 스크립트 · 팝업이 함께 사용) ----
-globalThis.KKU_VERSION = '1.2.0';
+globalThis.KKU_VERSION = '1.3.0';
 
 // 자동 수집이 백그라운드 탭으로 여는 주소 (login: 로그인해야 보이는 곳이라 기본으로는 꺼 둠)
 globalThis.KKU_SITES = [
@@ -80,7 +80,8 @@ globalThis.KKU_DEFAULT_SETTINGS = {
   intervalHours: 6,                            // 수집 간격(시간)
   sites: { 'www.kku.ac.kr': true, 'int.kku.ac.kr': true, 'ids.kku.ac.kr': true, 'im.kku.ac.kr': false },
   server: 'http://127.0.0.1:8765',             // 내 컴퓨터의 수신 서버 (pipeline/receiver.py)
-  newsLimit: 300,                              // 투데이뉴스는 최근 몇 건까지
+  keepMonths: 6,                               // 공지를 모으고 남겨 둘 기간(개월). 6 = 한 학기 이상, 12 = 1년(두 학기)
+  newsLimit: 300,                              // 투데이뉴스는 최근 몇 건까지 (보관 기간 안에서)
   notify: true                                 // 새 공지 · 웹 앱 반영 · 저장한 공지 마감(하루 전·당일) 알림
 };
 
@@ -92,24 +93,58 @@ globalThis.kkuSettings = async () => {
   const out = { ...d, ...u, sites: { ...d.sites, ...(u.sites ?? {}) } };
   if (u.auto === undefined && got.autoCollect === false) out.auto = false;
   out.intervalHours = Math.min(24, Math.max(1, Number(out.intervalHours) || d.intervalHours));
+  out.keepMonths = Math.min(24, Math.max(6, Math.round(Number(out.keepMonths) || d.keepMonths)));
   out.server = String(out.server || d.server).replace(/\/+$/, '');
   return out;
 };
 
 const kkuGenerator = () => `kku-collector ${globalThis.KKU_VERSION}`;
 
+// 보관 기간의 첫날 'YYYY-MM-DD': 오늘에서 months 개월 전 같은 날 (그 달에 없는 날이면 그 달 마지막 날).
+// 수집기는 이 날짜보다 오래된 글이 나오면 그 게시판을 그만 읽고, 내보낼 때도 이 날짜 이후 글만 보낸다.
+globalThis.kkuSince = (months, now = new Date()) => {
+  const m = Math.min(24, Math.max(6, Math.round(Number(months) || 6)));
+  const y = now.getFullYear();
+  const mon = now.getMonth() - m;
+  const first = new Date(y, mon, 1);
+  const last = new Date(first.getFullYear(), first.getMonth() + 1, 0).getDate();
+  const d = new Date(first.getFullYear(), first.getMonth(), Math.min(now.getDate(), last));
+  const pad = (n) => String(n).padStart(2, '0');
+  return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
+};
+
+// 게시판 한 쪽을 읽은 뒤 다음 쪽으로 갈지 정한다 (수집기 crawler.js 와 시험이 함께 씀)
+//   'done'  : 보관 기간보다 오래된 글이나 목록 끝·건수 상한까지 왔다 (보관 기간을 빈틈없이 가짐)
+//   'known' : 한 쪽이 전부 이미 아는 글이라 멈춘다 (증분 수집. 빈 곳을 채우는 중이거나 전부 다시 받을 때는 계속)
+//   'next'  : 다음 쪽으로
+globalThis.kkuNextPage = ({ items, since, full, backfill, fresh, seen, limit, listLen, pageSize }) => {
+  // 고정 공지는 날짜와 상관없이 맨 위에 있으므로 빼고 본다
+  const oldest = (items || []).filter((it) => !it.pinned && it.date)
+    .reduce((m, it) => { const d = String(it.date).slice(0, 10); return !m || d < m ? d : m; }, '');
+  if (since && oldest && oldest < since) return 'done';
+  if (seen >= limit || listLen < pageSize) return 'done';
+  if (!full && !backfill && fresh === 0) return 'known';
+  return 'next';
+};
+// 처음이거나 보관 기간을 늘렸으면(전에 채운 첫날이 새 첫날보다 늦으면) 거슬러 올라가 빈 곳을 채워야 한다
+globalThis.kkuNeedsBackfill = (coveredSince, since) => !!since && !(coveredSince && coveredSince <= since);
+
 // 내보내기 꾸러미 3종: 공지 · 강의 시간표 · 학교 기본 정보 (없으면 null)
 globalThis.kkuNoticesPayload = async () => {
   const all = await chrome.storage.local.get(null);
+  const s = await globalThis.kkuSettings();
+  const since = globalThis.kkuSince(s.keepMonths);
   const notices = [];
   const boards = [];
   for (const [key, value] of Object.entries(all)) {
-    if (key.startsWith('n:')) notices.push(value);
+    // 보관 기간(since 이후에 올라온 글)만 보낸다. 날짜를 모르는 글은 보낸다.
+    if (key.startsWith('n:')) { if (!value?.date || String(value.date).slice(0, 10) >= since) notices.push(value); }
     else if (key.startsWith('s:')) boards.push(value);
   }
   if (notices.length === 0) return null;
   notices.sort((a, b) => (a.date < b.date ? 1 : a.date > b.date ? -1 : b.bbsSeq - a.bbsSeq));
-  return { schema: 1, generator: kkuGenerator(), generatedAt: new Date().toISOString(), boards, count: notices.length, notices };
+  return { schema: 1, generator: kkuGenerator(), generatedAt: new Date().toISOString(),
+    period: { months: s.keepMonths, since }, boards, count: notices.length, notices };
 };
 globalThis.kkuLecturesPayload = async () => {
   const all = await chrome.storage.local.get(null);

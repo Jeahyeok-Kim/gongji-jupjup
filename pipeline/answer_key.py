@@ -134,7 +134,7 @@ def main(argv=None) -> int:
     m.add_argument('--n', type=int, default=30)
     m.add_argument('--out', default=str(DEFAULT_CSV))
     m.add_argument('--force', action='store_true')
-    m.add_argument('--days', type=int, default=60, help='build_notices.py 와 같은 값으로 (기본 60)')
+    m.add_argument('--days', type=int, default=60, help='정답표를 뽑을 기간(일). 최근 글 위주로 뽑도록 기본 60 (웹 앱 보관 기간과는 따로)')
     m.add_argument('--today', default=None, help='기준 날짜 YYYY-MM-DD (시험용)')
     c = sub.add_parser('check', help='정답표와 AI 결과 비교')
     c.add_argument('--key', default=str(DEFAULT_CSV))

@@ -22,6 +22,7 @@
       <input type="checkbox" id="auto" class="switch" role="switch">
     </label>
     <dl class="facts">
+      <dt>보관 기간</dt><dd id="keepInfo">최근 6개월</dd>
       <dt>마지막 수집</dt><dd id="lastRun">아직 없음</dd>
       <dt>전달</dt><dd id="delivery">아직 없음</dd>
       <dt>내 컴퓨터 서버</dt><dd id="server"><span class="dot"></span><span id="serverText">확인 중</span></dd>
@@ -87,6 +88,13 @@
 
   <details class="fold" id="advBox">
     <summary>고급 설정</summary>
+    <label class="field">공지 보관 기간
+      <select id="keepMonths">
+        <option value="6">최근 6개월 (한 학기 이상)</option>
+        <option value="12">최근 1년 (두 학기)</option>
+      </select>
+    </label>
+    <p class="muted" id="keepHint">이 기간에 올라온 공지를 빠짐없이 모으고, 웹 앱에도 이 기간만큼 남겨 둡니다. 기간을 늘리면 다음 수집 때 그만큼 거슬러 올라가 채웁니다.</p>
     <label class="field">수집 간격
       <select id="interval">
         <option value="1">1시간마다</option>

@@ -151,21 +151,27 @@
     const site = params.get('SITE_NO');
     const boardSeq = params.get('BOARD_SEQ');
     const limit = board.news ? opts.newsLimit : Infinity;
+    const since = opts.since || '';             // 보관 기간 첫날. 이보다 오래된 글이 나오면 그 게시판은 그만 읽는다
+    const syncKey = `s:${site}:${boardSeq}`;
+    const prev = (await chrome.storage.local.get(syncKey))[syncKey];
+    // 처음이거나 보관 기간을 늘렸으면: 이미 아는 글이 나와도 멈추지 않고 since 까지 거슬러 올라가 빈 곳을 채운다
+    const backfill = globalThis.kkuNeedsBackfill(prev?.since, since);
 
     let page = 1;
     let seen = 0;
     let added = 0;
     let total = 0;
+    let reached = false;        // since 보다 오래된 글이나 목록 끝까지 읽었다 = 보관 기간을 빈틈없이 가졌다
     const titles = [];          // 새로 받은 글 제목 몇 개 (팝업·알림에 보여 줌)
 
     while (!abortFlag) {
       const list = await fetchPage(params, page);
       if (page === 1) total = list[0]?.RNUM_DESC ?? 0;
-      if (list.length === 0) break;
+      if (list.length === 0) { reached = true; break; }
 
       // 최대 건수 제한이 있으면 남은 개수만큼만 처리한다.
       const items = list.slice(0, Math.max(0, limit - seen)).map((n) => toNotice(n, board, site, boardSeq));
-      if (items.length === 0) break;
+      if (items.length === 0) { reached = true; break; }
       const known = await chrome.storage.local.get(items.map(storageKey));
       const fresh = opts.full ? items : items.filter((it) => !(storageKey(it) in known));
       if (fresh.length > 0) {
@@ -176,15 +182,17 @@
       for (const it of fresh) if (titles.length < 5 && it.subject) titles.push(it.subject);
       await setState({ current: board.name, progress: { menu: board.menu, seen, total, added } });
 
-      // 증분 수집: 한 페이지가 전부 이미 아는 글이면 더 볼 필요가 없다.
-      if (!opts.full && fresh.length === 0) break;
-      if (seen >= limit || list.length < PAGE_SIZE) break;
+      const step = globalThis.kkuNextPage({ items, since, full: opts.full, backfill, fresh: fresh.length, seen, limit, listLen: list.length, pageSize: PAGE_SIZE });
+      if (step === 'done') { reached = true; break; }
+      if (step === 'known') break;
       page += 1;
       await sleep(DELAY_MS);
     }
 
+    // since: 이 날짜 이후 글은 빠짐없이 가지고 있다는 표시. 끝까지 못 읽었으면(중지) 예전 표시를 그대로 둔다
+    const covered = reached ? (since || prev?.since || null) : prev?.since ?? null;
     await chrome.storage.local.set({
-      [`s:${site}:${boardSeq}`]: { host: location.host, menu: board.menu, name: board.name, total, lastSyncAt: Date.now() }
+      [syncKey]: { host: location.host, menu: board.menu, name: board.name, total, lastSyncAt: Date.now(), since: covered }
     });
     return { menu: board.menu, name: board.name, total, seen, added, titles };
   }
@@ -233,7 +241,7 @@
       if (running) {
         sendResponse({ ok: false, error: '이미 수집 중입니다.' });
       } else {
-        run(msg.menus ?? [], { full: !!msg.opts?.full, newsLimit: Number(msg.opts?.newsLimit) || 300 });
+        run(msg.menus ?? [], { full: !!msg.opts?.full, newsLimit: Number(msg.opts?.newsLimit) || 300, since: String(msg.opts?.since || '') });
         sendResponse({ ok: true });
       }
     } else if (msg?.type === 'stop') {
@@ -250,7 +258,9 @@
     if (window !== window.top || running || BOARDS.length === 0) return;
     try {
       const res = await chrome.runtime.sendMessage({ type: 'hello', host: location.host });
-      if (res?.run && !running) await run(BOARDS.filter((b) => !b.off).map((b) => b.menu), { full: false, newsLimit: Number(res.newsLimit) || 300 });
+      if (res?.run && !running) {
+        await run(BOARDS.filter((b) => !b.off).map((b) => b.menu), { full: false, newsLimit: Number(res.newsLimit) || 300, since: String(res.since || '') });
+      }
     } catch {
       /* 확장을 다시 불러온 직후 등: 다음 방문 때 다시 시도 */
     }

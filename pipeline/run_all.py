@@ -10,7 +10,7 @@
 시작할 때 하루에 한 번 자동으로 백업합니다 (backups/ 와 settings.json 의 backupDir).
   --no-backup  백업을 건너뜀      --no-publish  게시를 건너뜀
   --auto       예약 실행용 (질문 없이 진행, 새로 내보낸 파일이 없어도 저장소 기준으로 실행)
-추가 옵션은 build_notices.py 로 그대로 넘깁니다 (예: --model qwen3:4b --days 30).
+추가 옵션은 build_notices.py 로 그대로 넘깁니다 (예: --model qwen3:4b --months 12).
 """
 from __future__ import annotations
 

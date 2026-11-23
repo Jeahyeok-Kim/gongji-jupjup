@@ -91,7 +91,7 @@
 
   // ---- 내 설정 백업(시간표·언어·정렬 등): 이 브라우저에만 있는 것을 파일로 옮기고 다른 기기에서 불러오기 ----
   const BACKUP_KEYS = ['timetable', 'lang', 'sort', 'grouped', 'hideConflicts', 'budgetHours', 'budgetWindow', 'budgetSelective', 'saved',
-    'theme', 'fontScale', 'applied', 'read', 'keywords', 'interests', 'recent', 'alertsOn', 'history', 'gradReq', 'planPrefs'];
+    'theme', 'fontScale', 'applied', 'read', 'keywords', 'interests', 'recent', 'alertsOn', 'history', 'gradReq', 'planPrefs', 'track'];
   const BACKUP_KIND = 'gongji-jupjup-settings';
 
   function makeBackup(values, nowDate) {
@@ -136,6 +136,7 @@
     const plainObj = (o) => o && typeof o === 'object' && !Array.isArray(o) && JSON.stringify(o).length < 4000;
     if (plainObj(v.gradReq)) out.gradReq = v.gradReq;
     if (plainObj(v.planPrefs)) out.planPrefs = v.planPrefs;
+    if (v.track && typeof v.track === 'object' && !Array.isArray(v.track) && JSON.stringify(v.track).length < 200000) out.track = v.track;   // 지원 보드 (js/track.js 가 정리)
     return { ok: true, values: out, dropped };
   }
 

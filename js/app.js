@@ -19,7 +19,9 @@
   const CU = window.GongjiCurriculum;
   const EL = window.GongjiEligibility;               // 지원 자격 판정
   const AK = window.GongjiAsk;                       // 공지에게 묻기
+  const K = window.GongjiTrack;                      // 지원 보드 (관심 → 준비 중 → 지원 완료 → 결과)
   let planUI = null;                                 // 이수 내역 · 수강신청 추천 화면 (아래에서 mount)
+  let palette = null;                                // 빠른 실행 (아래에서 mount)
   const PAGE = 30;                                   // 목록은 30건씩 보여 주고 '더 보기'로 늘린다
   const $ = (sel) => document.querySelector(sel);
 
@@ -96,6 +98,8 @@
     savedOnly: false,
     openId: null,
     applied: P.cleanIds(store.get('applied', []), 500),          // 지원 완료로 표시한 공지
+    track: K ? K.cleanTrack(store.get('track', {})) : {},       // 지원 보드: 단계·준비물·메모
+    nview: store.get('nview', 'list') === 'table' ? 'table' : 'list',   // 공지 보기: 목록 · 표
     read: P.cleanIds(store.get('read', []), 400),                // 열어 본 공지
     keywords: P.cleanKeywords(store.get('keywords', [])),        // 내 키워드
     interests: P.cleanInterests(store.get('interests', [])),     // 내 관심 분야 (분류 id)
@@ -242,7 +246,9 @@
       el.setAttribute('aria-label', t()[el.dataset.i18nAria]);
     });
     document.querySelectorAll('.today-text').forEach((el) => { el.textContent = I.formatDate(now, state.lang); });
-    document.querySelectorAll('.data-info').forEach((el) => { el.textContent = t().dataInfo(DATA.meta); });
+    const keep = DATA.meta.keep;
+    const keepText = keep && keep.months && keep.since ? ' · ' + t().keepNote(keep.months, String(keep.since).replace(/-/g, '.')) : '';
+    document.querySelectorAll('.data-info').forEach((el) => { el.textContent = t().dataInfo(DATA.meta) + keepText; });
     $('#sample-banner').hidden = DATA.meta.source !== 'sample';
 
     // 게시판 목록
@@ -299,7 +305,8 @@
     const inGroup = state.group ? base.filter((n) => L.classifyBenefit(n).groups.includes(state.group)) : base;
     const subCounts = L.countBySub(inGroup);
     let list = state.sub ? inGroup.filter((n) => L.classifyBenefit(n).subs.includes(state.sub)) : inGroup;
-    list = L.sortNotices(list, state.sort, now);
+    // 마감 지난 공지만 볼 때 '마감 가까운 순'은 최근에 끝난 것부터
+    list = L.sortNotices(list, state.status === 'past' && state.sort === 'deadline' ? 'recentClosed' : state.sort, now);
     if (state.query.trim()) {
       // 검색 중에는 제목에 검색어가 다 들어 있는 공지를 먼저 (고른 정렬 순서는 그 안에서 그대로)
       const inTitle = list.filter((n) => L.titleMatches(n, state.query));
@@ -379,10 +386,17 @@
       if (n) b.setAttribute('aria-label', on ? t().unsaveAria(titleOf(n)) : t().saveAria(titleOf(n)));
       b.title = on ? t().savedNotice : t().saveNotice;
     });
+    if (!isSaved(id) && state.track[id]) {                       // 저장을 풀면 보드에서도 뺀다
+      const tr2 = { ...state.track };
+      delete tr2[id];
+      state.track = tr2;
+      store.set('track', state.track);
+    }
     renderListTools();
     if (state.savedOnly) renderList();
     renderHome();
     renderAlerts();
+    renderBoard();
     if ($('#detail').open && state.openId) openDetail(state.openId, true);
     if (!quiet) toast(was ? t().unsavedToastMsg : t().savedToastMsg, { label: t().undo, run: () => toggleSave(id, true) });
     syncMine();
@@ -393,6 +407,14 @@
     const was = isApplied(id);
     state.applied = P.toggle(state.applied, id, 500);
     store.set('applied', state.applied);
+    // 보드 단계도 맞춘다: 지원 완료로 표시하면 '지원 완료' 칸으로, 해제하면 '준비 중'으로
+    const te = state.track[id];
+    if (K && te) {
+      if (isApplied(id) && (te.stage === 'interest' || te.stage === 'prep')) state.track = K.update(state.track, id, { stage: 'done' });
+      if (!isApplied(id) && (te.stage === 'done' || te.stage === 'result')) state.track = K.update(state.track, id, { stage: 'prep' });
+      store.set('track', state.track);
+    }
+    renderBoard();
     state.budgetResult = null;
     renderList();
     renderHome();
@@ -477,6 +499,170 @@
     );
   }
 
+  // ---------- 지원 보드 (트렐로·노션 보드처럼 끌어서 단계 옮기기) ----------
+  function saveTrackState(r) {
+    state.track = r.track; state.saved = r.saved; state.applied = r.applied;
+    store.set('track', state.track); store.set('saved', state.saved); store.set('applied', state.applied);
+  }
+  function afterTrackChange() {
+    renderBoard();
+    renderList();
+    renderHome();
+    renderAlerts();
+    syncMine();
+    if ($('#detail').open && state.openId) openDetail(state.openId, true);
+  }
+  function moveStage(id, stage) {
+    if (!K) return;
+    const before = { track: state.track, saved: state.saved, applied: state.applied };
+    const cur = K.stageOf(id, state.track, state.saved, state.applied);
+    if (cur === stage) return;
+    saveTrackState(K.move(before, id, stage, new Date()));
+    afterTrackChange();
+    const T = t();
+    toast(stage ? T.movedTo(T.stage[stage]) : T.boardRemoved, { label: T.undo, run: () => { saveTrackState(before); afterTrackChange(); } });
+  }
+  // 준비물·메모 고치기. quiet 이면 상세 창을 다시 그리지 않는다 (메모를 쓰는 중에 글자 칸이 사라지지 않게)
+  function setTrack(track, id, quiet) {
+    state.track = track;
+    if (track[id] && !isSaved(id)) { state.saved = X.toggleSaved(state.saved, id); store.set('saved', state.saved); syncMine(); }
+    store.set('track', state.track);
+    renderBoard();
+    if (!quiet && $('#detail').open && state.openId) openDetail(state.openId, true);
+  }
+  function boardIds() {
+    if (!K) return [];
+    const cols = K.columns(DATA.notices, { track: state.track, saved: state.saved, applied: state.applied }, now);
+    return K.STAGES.flatMap((s) => cols[s].map((n) => n.id));
+  }
+  function boardCard(n, stage, ids) {
+    const T = t();
+    const e = state.track[n.id];
+    const pg = K.progress(e);
+    const sub = L.classifyBenefit(n).subs[0];
+    const next = K.STAGES[K.STAGES.indexOf(stage) + 1];
+    return h('li', {
+      class: 'bcard' + (L.isExpired(n, now) ? ' is-expired' : ''), draggable: 'true', 'data-id': n.id,
+      ondragstart: (ev) => { ev.dataTransfer.setData('text/plain', n.id); ev.dataTransfer.effectAllowed = 'move'; ev.currentTarget.classList.add('is-drag'); document.body.classList.add('is-dragging'); },
+      ondragend: (ev) => { ev.currentTarget.classList.remove('is-drag'); document.body.classList.remove('is-dragging'); }
+    },
+    h('div', { class: 'bcard-top' }, ddayBadge(n), sub ? subTag(n, sub) : null,
+      e && e.result ? h('span', { class: 'bres ' + e.result }, T.result[e.result]) : null),
+    h('button', { type: 'button', class: 'bcard-title', 'aria-haspopup': 'dialog', onclick: () => openDetail(n.id, false, ids) }, titleOf(n)),
+    pg.total ? h('div', { class: 'bcard-prog' },
+      h('span', { class: 'bbar', 'aria-hidden': 'true' }, h('i', { style: `width:${(pg.done / pg.total) * 100}%` })),
+      h('small', null, T.checksDone(pg.done, pg.total))) : null,
+    e && e.memo ? h('p', { class: 'bcard-memo' }, e.memo) : null,
+    h('div', { class: 'bcard-foot' },
+      h('select', { class: 'bcard-move', 'aria-label': `${titleOf(n)} · ${T.moveTo}`, onchange: (ev) => moveStage(n.id, ev.target.value || null) },
+        K.STAGES.map((s2) => h('option', { value: s2, selected: s2 === stage ? true : null }, T.stage[s2])),
+        h('option', { value: '' }, T.boardRemove)),
+      next ? h('button', { type: 'button', class: 'bcard-next', onclick: () => moveStage(n.id, next) }, T.stage[next], h('span', { 'aria-hidden': 'true' }, ' →')) : null));
+  }
+  function renderBoard() {
+    const box = $('#kanban');
+    if (!box || !K) return;
+    const T = t();
+    const cols = K.columns(DATA.notices, { track: state.track, saved: state.saved, applied: state.applied }, now);
+    const sum = K.summary(cols, now);
+    const ids = K.STAGES.flatMap((s2) => cols[s2].map((n) => n.id));
+    const sumEl = $('#board-sum');
+    if (sumEl) sumEl.textContent = T.boardSummary(sum);
+    if (!ids.length) {
+      fill(box, h('div', { class: 'board-empty' },
+        h('p', { class: 'be-title' }, T.boardEmptyTitle),
+        h('p', null, T.boardEmpty),
+        h('button', { type: 'button', class: 'btn primary', onclick: () => goList({ due: 'soon', sort: 'deadline' }) }, T.boardEmptyBtn)));
+      return;
+    }
+    fill(box, ...K.STAGES.map((stage) => h('section', {
+      class: 'bcol', 'data-stage': stage, 'aria-label': T.stage[stage],
+      ondragover: (ev) => { ev.preventDefault(); ev.dataTransfer.dropEffect = 'move'; ev.currentTarget.classList.add('is-over'); },
+      ondragleave: (ev) => { if (!ev.currentTarget.contains(ev.relatedTarget)) ev.currentTarget.classList.remove('is-over'); },
+      ondrop: (ev) => { ev.preventDefault(); ev.currentTarget.classList.remove('is-over'); const id = ev.dataTransfer.getData('text/plain'); if (id) moveStage(id, stage); }
+    },
+    h('header', { class: 'bcol-head' },
+      h('span', { class: 'bcol-dot ' + stage, 'aria-hidden': 'true' }), h('h3', null, T.stage[stage]), h('span', { class: 'bcol-count' }, String(cols[stage].length))),
+    cols[stage].length ? h('ul', { class: 'bcards' }, cols[stage].map((n) => boardCard(n, stage, ids)))
+      : h('p', { class: 'bcol-empty' }, T.stageEmpty[stage]))));
+  }
+
+  // 공지 상세의 '지원 준비': 단계 · 준비물 체크리스트 · 메모
+  let memoTimer = null;
+  function trackBox(n) {
+    const T = t();
+    const stage = K.stageOf(n.id, state.track, state.saved, state.applied);
+    const e = state.track[n.id];
+    const checks = (e && e.checks) || [];
+    return h('section', { class: 'd-section track-box' },
+      h('h3', null, T.trackTitle),
+      h('div', { class: 'stage-seg', role: 'group', 'aria-label': T.boardTitle },
+        K.STAGES.map((s2) => h('button', { type: 'button', 'aria-pressed': String(stage === s2), onclick: () => moveStage(n.id, s2) },
+          h('span', { class: 'bcol-dot ' + s2, 'aria-hidden': 'true' }), T.stage[s2]))),
+      stage === 'result' ? h('div', { class: 'result-seg', role: 'group' },
+        ['pass', 'fail'].map((r) => h('button', { type: 'button', class: 'chip small', 'aria-pressed': String(!!e && e.result === r),
+          onclick: () => setTrack(K.update(state.track, n.id, { result: e && e.result === r ? '' : r }), n.id) }, T.result[r]))) : null,
+      checks.length ? h('ul', { class: 'checks' }, checks.map((c, i) => h('li', { class: c.d ? 'is-done' : '' },
+        h('label', null,
+          h('input', { type: 'checkbox', checked: c.d ? true : null, onchange: () => setTrack(K.toggleCheck(state.track, n.id, i), n.id) }),
+          h('span', null, c.t)),
+        h('button', { type: 'button', class: 'icon-x', 'aria-label': `${c.t} ${T.histRemove}`, onclick: () => setTrack(K.removeCheck(state.track, n.id, i), n.id) }, '×')))) : null,
+      h('form', { class: 'check-add', onsubmit: (ev) => { ev.preventDefault(); const v = ev.currentTarget.elements.c.value; if (v.trim()) setTrack(K.addCheck(state.track, n.id, v), n.id); } },
+        h('input', { name: 'c', type: 'text', maxlength: '40', placeholder: T.checkPh, 'aria-label': T.checkPh }),
+        h('button', { type: 'submit', class: 'btn small' }, T.checkAdd)),
+      h('div', { class: 'check-sugg' }, (T.checkSuggest || K.SUGGEST).filter((x) => !checks.some((c) => c.t === x)).slice(0, 6)
+        .map((x) => h('button', { type: 'button', class: 'chip small', onclick: () => setTrack(K.addCheck(state.track, n.id, x), n.id) }, '+ ' + x))),
+      h('textarea', { class: 'memo', rows: '2', maxlength: '500', placeholder: T.memoPh, 'aria-label': T.memoPh,
+        oninput: (ev) => { const v = ev.target.value; clearTimeout(memoTimer); memoTimer = setTimeout(() => setTrack(K.update(state.track, n.id, { memo: v }), n.id, true), 350); } },
+      (e && e.memo) || ''));
+  }
+
+  // ---------- 공지 보기 바꾸기: 목록 · 표 · 시간 맞춤 추천 ----------
+  function renderViewSwitch() {
+    const T = t();
+    const tab = document.body.dataset.tab;
+    const cur = tab === 'budget' ? 'budget' : state.nview;
+    document.querySelectorAll('.view-switch').forEach((box) => {
+      fill(box, ...[['list', T.nviewList], ['table', T.nviewTable], ['budget', T.nviewBudget]].map(([k, label]) => h('button', {
+        type: 'button', role: 'tab', 'aria-selected': String(cur === k),
+        onclick: () => {
+          if (k === 'budget') { location.hash = '#/budget'; setTab('budget', true); return; }
+          state.nview = k; store.set('nview', k);
+          if (tab !== 'notices') { location.hash = '#/notices'; setTab('notices', true); }
+          renderList(); renderViewSwitch();
+        }
+      }, label)));
+    });
+  }
+  const shortDate = (s) => { const d = L.parseLocal(s); return d ? `${d.getMonth() + 1}.${String(d.getDate()).padStart(2, '0')}` : ''; };
+  // 표 보기: 머리글을 누르면 그 기준으로 정렬 (노션 데이터베이스 표처럼)
+  function tableView(list, ids) {
+    const T = t();
+    const th = (label, sortKey, cls) => h('th', { scope: 'col', class: cls || null, 'aria-sort': sortKey && state.sort === sortKey ? (sortKey === 'latest' || sortKey === 'benefit' ? 'descending' : 'ascending') : null },
+      sortKey ? h('button', { type: 'button', class: 'th-sort' + (state.sort === sortKey ? ' is-on' : ''), onclick: () => {
+        state.sort = sortKey; store.set('sort', sortKey); $('#sort').value = sortKey; renderList();
+      } }, label) : label);
+    return h('div', { class: 'ntable-wrap' }, h('table', { class: 'ntable' },
+      h('thead', null, h('tr', null, th(T.deadline, 'deadline', 'th-dl'), th(T.colTitle, null, 'th-title'), th(T.benefit, 'benefit', 'th-benefit'),
+        th(T.eligibility, null, 'th-who'), th(T.board, null, 'th-board'), th(T.colPosted, 'latest', 'th-date'), h('th', { class: 'th-star' }, h('span', { class: 'visually-hidden' }, T.saveNotice)))),
+      h('tbody', null, list.map((n) => {
+        const left = L.daysLeft(n.deadline, now);
+        const expired = L.isExpired(n, now);
+        return h('tr', { 'data-id': n.id, class: (expired ? 'is-expired' : '') + (isRead(n.id) ? ' is-read' : '') },
+          h('td', { class: 'td-dl' + (!expired && left !== null && left <= 3 ? ' urgent' : '') },
+            n.deadline ? [h('strong', null, expired ? T.closed : left === 0 ? T.dueToday : `D-${left}`), h('small', null, shortDate(n.deadline))] : h('small', null, T.noDeadlineShort)),
+          h('td', { class: 'td-title' },
+            h('button', { type: 'button', class: 'tt-link', 'aria-haspopup': 'dialog', onclick: () => openDetail(n.id, false, ids) }, hl(titleOf(n))),
+            h('div', { class: 'td-sub' }, fitBadge(n), X.isNew(n, since) ? h('span', { class: 'new-badge' }, T.newBadge) : null,
+              ...L.classifyBenefit(n).subs.slice(0, 1).map((sb) => subTag(n, sb)))),
+          h('td', { class: 'td-benefit' }, n.benefit ? tr(n.benefit.text) : h('span', { class: 'missing' }, '—')),
+          h('td', { class: 'td-who' }, n.eligibility ? tr(n.eligibility) : h('span', { class: 'missing' }, '—')),
+          h('td', { class: 'td-board' }, boardsOf(n)),
+          h('td', { class: 'td-date' }, n.date ? shortDate(n.date) : ''),
+          h('td', { class: 'td-star' }, starButton(n)));
+      }))));
+  }
+
   // 지원 자격 배지: 지원 가능 · 조건 확인 · 대상 아님 (마우스를 올리면 이유)
   function fitBadge(n) {
     if (!state.profile.set) return null;
@@ -537,7 +723,8 @@
     // 조건(검색·분류·정렬 …)이 바뀌면 처음 30건부터 다시 보여 준다
     const sig = JSON.stringify([state.query, state.board, state.category, state.status, state.sort, state.group, state.sub,
       state.savedOnly, state.mineOnly, state.unreadOnly, state.due, state.grouped, state.hideConflicts, state.lang]);
-    if (sig !== state.sig) { state.sig = sig; state.limit = PAGE; }
+    const fresh = sig !== state.sig;                 // 조건이 바뀌었을 때만 행이 차례로 떠오르게 (더 보기로 늘릴 때는 그대로)
+    if (fresh) { state.sig = sig; state.limit = PAGE; }
     const { base, counts, subCounts, list: full, hidden, fitHidden } = computeVisible();
     const list = full.slice(0, state.limit);
     const rest = full.length - list.length;
@@ -560,6 +747,7 @@
           filtersActive() ? h('button', { type: 'button', class: 'btn small', onclick: resetFilters }, T.resetFilters) : null)));
       return;
     }
+    box.classList.toggle('reveal', fresh && !(window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches));
     if (state.grouped) {
       fill(box, ...L.groupByBenefit(list).map((g) =>
         h('section', { class: 'group' },
@@ -567,9 +755,12 @@
             h('span', { class: 'tag kind-' + g.group }, groupLabel(g.group)),
             h('span', { class: 'group-count' }, t().count(g.items.length))),
           h('ul', { class: 'cards' }, g.items.map(card)))));
+    } else if (state.nview === 'table') {
+      fill(box, tableView(list, listIds));
     } else {
       fill(box, h('ul', { class: 'cards' }, list.map(card)));
     }
+    box.querySelectorAll('.card').forEach((el, i) => { if (i < 14) el.style.setProperty('--i', String(i)); });
     if (rest > 0) {
       const more = h('button', { type: 'button', class: 'btn more-btn', onclick: () => { state.limit += PAGE; renderList(); } }, t().moreItems(rest));
       box.append(more);
@@ -584,6 +775,23 @@
     } else if (moreObserver) {
       moreObserver.disconnect();
     }
+    if (rest <= 0) { const arc = archiveHint(); if (arc) box.append(arc); }
+  }
+
+  // 목록 끝: 보관 기간(기본 6개월 = 한 학기 이상) 동안 마감된 공지도 가지고 있다는 안내 + 바로 보기
+  function archiveHint() {
+    if (state.status !== 'open' || state.savedOnly || state.due || state.query.trim()) return null;
+    // 지금 고른 게시판·분야·받는 것 조건 그대로, 마감만 지난 공지 수
+    const past = L.filterNotices(DATA.notices, { board: state.board, category: state.category, group: state.group, sub: state.sub, status: 'past' }, now).length;
+    if (!past) return null;
+    const T = t();
+    const keep = DATA.meta.keep;
+    return h('div', { class: 'archive-hint' },
+      h('p', null, T.archiveHint(past, keep && keep.months ? keep.months : 0)),
+      h('button', { type: 'button', class: 'btn small', onclick: () => {
+        state.status = 'past'; $('#status').value = 'past'; renderList();
+        const top = $('#list'); if (top) top.scrollIntoView({ behavior: reduceMotion() ? 'auto' : 'smooth', block: 'start' });
+      } }, T.archiveBtn));
   }
 
   // ---------- 해독 카드 (상세 대화상자) ----------
@@ -657,6 +865,7 @@
       }, isApplied(n.id) ? '✓ ' + T.appliedBadge : T.appliedMark),
       h('button', { type: 'button', class: 'btn small', onclick: () => exportCalendar([n], 'gongji-' + n.id) }, T.addToCalendar),
       h('button', { type: 'button', class: 'btn small', onclick: () => shareNotice(n) }, navigator.share ? T.share : T.copyLink)));
+    if (K) parts.push(trackBox(n));
 
 
     // 캘린더에 추가: 마감·행사마다 구글 캘린더로 한 번에 (서버·키 없이 주소만으로)
@@ -1381,90 +1590,344 @@
       h('button', { type: 'button', class: 'link-btn', onclick: () => { location.hash = '#/timetable'; setTab('timetable', true); } }, T.seeTimetable));
   }
 
+  // ---------- 오늘 (홈): 큰 헤드라인 + 위젯 격자 (애플 위젯·토스 홈 방식) ----------
+  let homeAnimated = false;                              // 처음 한 번만 순서대로 떠오르며 나타남
+  let cdTimer = null;                                    // 마감 카운트다운을 30초마다 고침
+  const reduceMotion = () => !!(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches);
+  const clock = () => (demoDate ? now : new Date());
+
+  // 숫자가 0 에서 값까지 올라가는 효과 (토스식). 움직임 줄이기 설정이면 바로 값
+  function countUp(rootEl) {
+    if (reduceMotion()) return;
+    rootEl.querySelectorAll('[data-count]').forEach((el) => {
+      const to = Number(el.dataset.count);
+      if (!Number.isFinite(to) || to <= 0) return;
+      const t0 = performance.now();
+      const dur = Math.min(900, 380 + to * 18);
+      const step = (t) => {
+        const k = Math.min(1, (t - t0) / dur);
+        el.textContent = String(Math.round(to * (1 - Math.pow(1 - k, 3))));
+        if (k < 1) requestAnimationFrame(step);
+      };
+      el.textContent = '0';
+      requestAnimationFrame(step);
+    });
+  }
+
+  function heroCopy(s) {
+    const T = t();
+    const hr = clock().getHours();
+    const part = hr < 5 ? 'night' : hr < 12 ? 'morning' : hr < 18 ? 'afternoon' : hr < 23 ? 'evening' : 'night';
+    const date = new Intl.DateTimeFormat({ ko: 'ko-KR', en: 'en-US', zh: 'zh-CN', ja: 'ja-JP' }[state.lang] || 'ko-KR', { month: 'long', day: 'numeric', weekday: 'long' }).format(now);
+    return { kicker: `${date} · ${T.heroGreeting[part]}`, title: s.today.length || s.soon.length ? T.heroTitle(s.today.length, s.soon.length) : T.heroTitleCalm(s.fresh.length) };
+  }
+
+  // 남은 시간: 하루 안이면 'N시간 M분', 아니면 'D-N'
+  function countdownText(deadline) {
+    const T = t();
+    const ms = L.parseLocal(deadline).getTime() - clock().getTime();
+    if (ms <= 0) return T.closed;
+    const mins = Math.floor(ms / 60000);
+    if (mins < 24 * 60) return T.cdLeft(Math.floor(mins / 60), mins % 60);
+    return T.cdDays(L.daysLeft(deadline, clock()));
+  }
+
+  // 졸업까지: 이수 내역의 진행률을 원으로
+  function widgetGrad() {
+    if (!planUI) return null;
+    const T = t();
+    const g = planUI.progress();
+    const go = () => { planUI.setSub('history'); location.hash = '#/timetable'; setTab('timetable', true); };
+    const has = g.count > 0 && g.total;
+    const pct = has ? Math.min(100, Math.round((g.done / g.total) * 100)) : 0;
+    const r = 42;
+    const c = 2 * Math.PI * r;
+    const ringEl = h('div', { class: 'ring', role: 'img', 'aria-label': `${pct}%` });
+    ringEl.innerHTML = `<svg viewBox="0 0 100 100"><circle class="ring-bg" cx="50" cy="50" r="${r}"/><circle class="ring-fg" cx="50" cy="50" r="${r}" stroke-dasharray="${c.toFixed(1)}" stroke-dashoffset="${(reduceMotion() || homeAnimated ? c * (1 - pct / 100) : c).toFixed(1)}"/></svg><span>${has ? pct + '%' : '—'}</span>`;
+    if (!reduceMotion() && !homeAnimated) {
+      const fg = ringEl.querySelector('.ring-fg');
+      requestAnimationFrame(() => requestAnimationFrame(() => { fg.style.strokeDashoffset = String((c * (1 - pct / 100)).toFixed(1)); }));
+    }
+    return h('section', { class: 'w w-grad' },
+      h('button', { type: 'button', class: 'w-hit', onclick: go, 'aria-label': T.wGrad }),
+      h('p', { class: 'w-label' }, T.wGrad),
+      h('div', { class: 'grad-body' }, ringEl,
+        h('div', null,
+          has ? h('p', { class: 'grad-big' }, g.left.total ? T.wGradLeft(g.left.total) : T.wGradDone) : h('p', { class: 'grad-empty' }, T.wGradEmpty),
+          has ? h('p', { class: 'grad-sub' }, T.wGradSub(g.left.major || 0, g.left.general || 0)) : null)));
+  }
+
+  // 이번 주: 월~일 일곱 칸에 마감·행사·학사일정 점 (삼성 캘린더 주간 띠)
+  function widgetWeek() {
+    const T = t();
+    const entries = C.collect(activeNotices(), { titleOf, calendar: window.GONGJI_CALENDAR, academicTitle: (it) => tr(it.title) });
+    const base = L.startOfDay(now);
+    const monday = L.addDays(base, -((base.getDay() + 6) % 7));
+    const todayKey = X.ymd(now);
+    const days = Array.from({ length: 7 }, (_, i) => L.addDays(monday, i));
+    return h('section', { class: 'w w-week' },
+      h('p', { class: 'w-label' }, T.wWeek),
+      h('div', { class: 'week' }, days.map((d) => {
+        const key = X.ymd(d);
+        const es = entries.filter((e) => e.date === key);
+        const cnt = (type) => es.filter((e) => e.type === type).length;
+        const dl = cnt('deadline');
+        return h('button', {
+          type: 'button', class: 'wk' + (key === todayKey ? ' is-today' : '') + (d.getDay() === 0 ? ' sun' : d.getDay() === 6 ? ' sat' : ''),
+          'aria-label': T.calCellAria(I.formatDate(d, state.lang), es.length),
+          onclick: () => {
+            state.cal = { year: d.getFullYear(), month0: d.getMonth(), sel: key };
+            refreshCal();
+            const cc = document.querySelector('.cal-card');
+            if (cc) cc.scrollIntoView({ behavior: reduceMotion() ? 'auto' : 'smooth', block: 'start' });
+          }
+        },
+        h('span', { class: 'wk-dow' }, dayName(d.getDay())),
+        h('span', { class: 'wk-num' }, String(d.getDate())),
+        h('span', { class: 'wk-dots', 'aria-hidden': 'true' },
+          dl ? h('i', { class: 'dot deadline' }) : null, cnt('event') ? h('i', { class: 'dot event' }) : null, cnt('academic') ? h('i', { class: 'dot academic' }) : null),
+        dl ? h('span', { class: 'wk-count' }, String(dl)) : null);
+      })));
+  }
+
+  // 시작하기: 처음 쓰는 사람에게 해 둘 일 네 가지를 한 줄 띠로 (다 하면 사라짐)
+  function setupStrip() {
+    const T = t();
+    const hist = planUI ? planUI.progress().count > 0 : true;
+    const steps = [
+      { done: state.timetable.length > 0, label: T.setupTimetable, run: () => { if (planUI) planUI.setSub('week'); location.hash = '#/timetable'; setTab('timetable', true); if (window.matchMedia('(min-width: 900px)').matches) openClassDialog(); } },
+      { done: state.profile.set, label: T.setupProfile, run: goProfile },
+      { done: hist, label: T.setupHistory, run: () => { if (planUI) planUI.setSub('history'); location.hash = '#/timetable'; setTab('timetable', true); } },
+      { done: state.interests.length > 0 || state.keywords.length > 0, label: T.setupInterests, run: () => { location.hash = '#/settings'; setTab('settings', true); } }
+    ];
+    const done = steps.filter((x) => x.done).length;
+    if (done === steps.length) return null;
+    return h('section', { class: 'setup-strip', 'aria-label': T.wSetup },
+      h('div', { class: 'ss-head' },
+        h('strong', null, T.wSetup),
+        h('span', { class: 'ss-count' }, T.setupProgress(done, steps.length)),
+        h('span', { class: 'ss-dots', 'aria-hidden': 'true' }, steps.map((x) => h('i', { class: x.done ? 'on' : '' })))),
+      h('ul', { class: 'ss-list' }, steps.map((x) => h('li', { class: x.done ? 'is-done' : '' },
+        h('button', { type: 'button', onclick: x.run, disabled: x.done ? true : null },
+          h('span', { class: 'setup-check', 'aria-hidden': 'true' }), h('span', null, x.label))))));
+  }
+
+  // 오늘의 브리핑: 숫자 하나와 한 줄 설명으로 '지금 볼 것'을 네 칸에 (토스 리포트·애플 요약처럼). 모두 규칙으로 계산
+  function nextAcademic() {
+    const today = L.startOfDay(now);
+    for (const x of upcomingCalendar(12)) {
+      const st = L.parseLocal(x.start);
+      const en = L.parseLocal(x.end);
+      if (!st || !en) continue;
+      if (st <= today && en >= today) return { item: x, days: 0, ongoing: true };
+      if (st > today) return { item: x, days: Math.round((st - today) / 86400000), ongoing: false };
+    }
+    return null;
+  }
+  function briefing(s) {
+    const T = t();
+    const out = [];
+    const fitOk = (n) => !state.profile.set || fitStatus(n) !== 'no';
+    out.push({
+      k: 'today', big: String(s.today.length), unit: T.unitCount, label: T.bfToday,
+      sub: s.today.length && state.profile.set ? T.bfTodayFit(s.today.filter(fitOk).length) : T.bfSoon(s.soon.length),
+      go: () => goList({ due: s.today.length ? 'today' : 'soon', sort: 'deadline' }), hot: s.today.length > 0
+    });
+    const week = activeNotices().filter((n) => n.deadline && !L.isExpired(n, now) && L.daysLeft(n.deadline, now) <= 7 && fitOk(n));
+    const money = week.map((n) => ({ n, won: (n.benefit && (n.benefit.won || 0)) || 0 })).filter((x) => x.won > 0).sort((a, b) => b.won - a.won)[0];
+    if (money) out.push({ k: 'money', big: I.formatWon(money.won, state.lang), label: T.bfMoney, sub: titleOf(money.n), go: () => openDetail(money.n.id) });
+    const pts = week.filter((n) => n.benefit && n.benefit.points > 0);
+    if (pts.length) out.push({ k: 'points', big: String(pts.reduce((a, n) => a + n.benefit.points, 0)), unit: 'P', label: T.bfPoints, sub: T.bfPointsSub(pts.length), go: () => goList({ sub: 'dadream', sort: 'deadline' }) });
+    const ac = nextAcademic();
+    if (ac) out.push({ k: 'acad', big: ac.ongoing ? T.bfOngoing : `D-${ac.days}`, label: tr(ac.item.title), sub: `${I.formatDate(L.parseLocal(ac.item.start), state.lang)}${ac.item.end !== ac.item.start ? ' ~' : ''}`, go: () => { const cc = document.querySelector('.cal-card'); if (cc) cc.scrollIntoView({ behavior: reduceMotion() ? 'auto' : 'smooth' }); } });
+    if (K) {
+      const sum = K.summary(K.columns(DATA.notices, { track: state.track, saved: state.saved, applied: state.applied }, now), now);
+      if (sum.interest + sum.prep + sum.done) out.push({ k: 'board', big: String(sum.prep), unit: T.unitCount, label: T.bfBoard, sub: T.bfBoardSub(sum), go: () => { location.hash = '#/track'; setTab('track', true); } });
+    }
+    if (state.timetable.length) {
+      const clash = activeNotices().filter((n) => !L.isExpired(n, now) && L.findConflicts(n, state.timetable).length).length;
+      if (clash) out.push({ k: 'clash', big: String(clash), unit: T.unitCount, label: T.bfClash, sub: T.bfClashSub, go: () => goList({ status: 'open' }) });
+    }
+    return out.slice(0, 4);
+  }
+  function briefingRow(s) {
+    const T = t();
+    const items = briefing(s);
+    if (!items.length) return null;
+    return h('section', { class: 'brief', 'aria-label': T.bfTitle },
+      h('h3', { class: 'visually-hidden' }, T.bfTitle),
+      h('ul', null, items.map((x) => h('li', { class: 'bf bf-' + x.k + (x.hot ? ' is-hot' : '') },
+        h('button', { type: 'button', onclick: x.go },
+          h('span', { class: 'bf-label' }, x.label),
+          h('span', { class: 'bf-big' }, /^\d+$/.test(x.big) ? h('span', { 'data-count': x.big }, x.big) : x.big, x.unit ? h('small', null, x.unit) : null),
+          h('span', { class: 'bf-sub' }, x.sub))))));
+  }
+
+  // 마감 티켓: 가까운 마감을 '오려 낸 표'처럼 옆으로 넘겨 본다 (줍줍 = 주워 담는 표). 저장한 공지는 초록 띠
+  function ticketStrip() {
+    const T = t();
+    const fitOk = (n) => !state.profile.set || fitStatus(n) !== 'no';
+    const list = activeNotices().filter((n) => n.deadline && !L.isExpired(n, now) && fitOk(n))
+      .sort((a, b) => L.parseLocal(a.deadline) - L.parseLocal(b.deadline)).slice(0, 14);
+    if (!list.length) return null;
+    const ids = list.map((n) => n.id);
+    const rail = h('div', { class: 'tickets', tabindex: '-1' }, list.map((n) => {
+      const d = L.parseLocal(n.deadline);
+      const left = L.daysLeft(n.deadline, now);
+      const sub = L.classifyBenefit(n).subs[0];
+      return h('button', { type: 'button', class: 'ticket' + (left <= 1 ? ' is-hot' : '') + (left === 0 ? ' is-today' : '') + (isSaved(n.id) ? ' is-saved' : ''), 'aria-haspopup': 'dialog', onclick: () => openDetail(n.id, false, ids) },
+        h('span', { class: 'tk-stub' },
+          h('strong', null, left === 0 ? T.dueToday : `D-${left}`),
+          h('small', null, `${d.getMonth() + 1}.${String(d.getDate()).padStart(2, '0')} ${dayName(d.getDay())}`),
+          left === 0 ? h('small', { class: 'tk-time is-live', 'data-deadline': n.deadline }, countdownText(n.deadline))
+            : h('small', { class: 'tk-time' }, `${String(d.getHours()).padStart(2, '0')}:${String(d.getMinutes()).padStart(2, '0')}`)),
+        h('span', { class: 'tk-body' },
+          h('span', { class: 'tk-meta' }, isSaved(n.id) ? h('span', { class: 'tk-saved' }, '★ ' + T.savedNotice) : catLabel(n.category)),
+          h('span', { class: 'tk-title' }, titleOf(n)),
+          sub ? subTag(n, sub) : null));
+    }));
+    const scroll = (dir) => rail.scrollBy({ left: dir * Math.max(280, rail.clientWidth * 0.8), behavior: reduceMotion() ? 'auto' : 'smooth' });
+    return h('section', { class: 'sec sec-tickets' },
+      h('header', { class: 'sec-head' },
+        h('h3', null, T.secTickets), h('span', { class: 'sec-count' }, String(list.length)),
+        h('div', { class: 'sec-tools' },
+          h('button', { type: 'button', class: 'rail-btn', 'aria-label': T.calPrev, onclick: () => scroll(-1) }, '‹'),
+          h('button', { type: 'button', class: 'rail-btn', 'aria-label': T.calNext, onclick: () => scroll(1) }, '›'),
+          h('button', { type: 'button', class: 'link-btn', onclick: () => goList({ due: 'soon', sort: 'deadline' }) }, T.homeMore))),
+      rail);
+  }
+
+  // 편집형 섹션: 위에 굵은 선 + 제목 + '더 보기' (카드 상자 대신)
+  function sec(cls, title, count, more, ...body) {
+    return h('section', { class: 'sec ' + (cls || '') },
+      h('header', { class: 'sec-head' }, h('h3', null, title), count !== null && count !== undefined ? h('span', { class: 'sec-count' }, String(count)) : null,
+        more ? h('div', { class: 'sec-tools' }, h('button', { type: 'button', class: 'link-btn', onclick: more.run }, more.label)) : null),
+      ...body);
+  }
+  function rows(items, limit, ids) {
+    return h('ul', { class: 'home-list' }, items.slice(0, limit).map((n) => homeRow(n, ids || items.map((x) => x.id))));
+  }
+  function boardMini() {
+    if (!K) return null;
+    const T = t();
+    const cols = K.columns(DATA.notices, { track: state.track, saved: state.saved, applied: state.applied }, now);
+    const sum = K.summary(cols, now);
+    if (!(sum.interest + sum.prep + sum.done + sum.result)) return null;
+    const go = () => { location.hash = '#/track'; setTab('track', true); };
+    return sec('sec-board', T.boardTitle, null, { label: T.homeMore, run: go },
+      h('ol', { class: 'pipe' }, K.STAGES.map((st) => h('li', { class: 'pipe-' + st },
+        h('button', { type: 'button', onclick: go }, h('strong', { 'data-count': String(cols[st].length) }, String(cols[st].length)), h('span', null, T.stage[st]))))),
+      sum.dueWeek ? h('p', { class: 'fine' }, T.boardDueWeek(sum.dueWeek)) : null);
+  }
+
   function renderHome() {
     const box = $('#home-body');
     if (!box) return;
     const T = t();
     const sOpts = { saved: state.saved, since, timetable: state.timetable, hideConflicts: state.hideConflicts };
     const s = X.summarize(activeNotices(), now, sOpts);                  // 지원 완료한 공지는 요약에서 뺀다
-    const sAll = X.summarize(DATA.notices, now, sOpts);                  // 저장한 공지는 지원 완료한 것도 보여 준다
     const mineFresh = hasMine() ? s.fresh.filter((n) => mineOf(n).any) : [];
-    const pill = (label, n, onclick, urgent) => h('button', { type: 'button', class: 'home-pill' + (urgent && n ? ' urgent' : ''), onclick },
-      h('strong', null, String(n)), h('span', null, label));
-    const labels = { ko: ['오늘 마감', '3일 안 마감', '새 공지'], en: ['Due today', 'Due in 3 days', 'New'], zh: ['今天截止', '3天内截止', '新公告'], ja: ['今日締切', '3日以内', '新着'] }[state.lang] || [];
-    const parts = [h('div', { class: 'home-pills', role: 'group', 'aria-label': T.homeSummary({ today: s.today.length, soon: s.soon.length, fresh: s.fresh.length }) },
-      pill(labels[0], s.today.length, () => goList({ due: 'today', sort: 'deadline' }), true),
-      pill(labels[1], s.soon.length, () => goList({ due: 'soon', sort: 'deadline' }), true),
-      pill(labels[2], s.fresh.length, () => goList({ due: 'new', sort: 'latest' }), false))];
+    const hero = heroCopy(s);
+    const kick = $('#home-date');
+    if (kick) kick.textContent = hero.kicker;
+    $('#home-title').textContent = hero.title;
 
-    if (!state.timetable.length) {
-      parts.push(h('div', { class: 'home-tip' },
-        h('p', null, T.homeTimetableTip),
-        h('button', { type: 'button', class: 'btn small primary', onclick: () => {
-          location.hash = '#/timetable'; setTab('timetable', true);
-          if (window.matchMedia && window.matchMedia('(min-width: 900px)').matches) openClassDialog();
-        } }, T.homeTimetableBtn)));
-    }
-
-    if (!state.profile.set && EL) {
-      parts.push(h('div', { class: 'home-tip' },
-        h('p', null, T.fitHomeTip),
-        h('button', { type: 'button', class: 'btn small primary', onclick: goProfile }, T.fitHomeBtn)));
-    }
-    // 수강신청 추천: 이수 내역이 비어 있으면 넣는 곳으로, 있으면 추천으로 안내
-    if (planUI && T.homePlanTip) {
-      const hasHistory = planUI.values().history.length > 0;
-      parts.push(h('div', { class: 'home-tip' },
-        h('p', null, hasHistory ? T.homePlanTipReady : T.homePlanTip),
-        h('button', { type: 'button', class: 'btn small primary', onclick: () => {
-          planUI.setSub(hasHistory ? 'plan' : 'history');
-          location.hash = '#/timetable'; setTab('timetable', true);
-        } }, hasHistory ? T.planTabPlan : T.planTabHistory)));
-    }
-    const main = [
-      todayClassCard(),
-      homeSection(T.homePinned, s.pinned, 5, null),
-      homeSection(T.homeSoon, s.soon, 5, () => goList({ due: 'soon', sort: 'deadline' })),
-      homeSection(T.homeSaved, sAll.saved, 5, () => goList({ savedOnly: true, status: 'all' })),
-      homeSection(T.homeMine, mineFresh, 5, () => goList({ mineOnly: true, sort: 'latest' })),
-      homeSection(T.homeNew, s.fresh, 5, () => goList({ due: 'new', sort: 'latest' }))
-    ];
-    const side = [];
-    // 이번 주 추천 (추천 탭에서 쓰는 시간·기간 설정 그대로)
+    // 이번 주 추천 (추천 보기에서 쓰는 시간·기간 설정 그대로)
     const rec = L.recommend(activeNotices(), state.budgetHours, {
       now, windowDays: state.budgetWindow, timetable: state.timetable, includeSelective: state.budgetSelective
     });
-    if (rec.chosen.length) {
-      const recIds = rec.chosen.map((it) => it.notice.id);
-      side.push(h('section', { class: 'home-card' },
-        h('h3', null, T.homePicks),
-        h('ul', { class: 'home-list' }, rec.chosen.slice(0, 4).map((it) => homeRow(it.notice, recIds))),
-        h('button', { type: 'button', class: 'link-btn', onclick: () => { location.hash = '#/budget'; setTab('budget', true); } }, T.homeMore)));
-    }
-    const calItems = upcomingCalendar(3);
-    if (calItems.length) {
-      const fmt = (d) => I.formatDate(L.parseLocal(d), state.lang);
-      side.push(h('section', { class: 'home-card' },
-        h('h3', null, T.calendarTitle),
-        h('ul', { class: 'home-list' }, calItems.map((x) => h('li', { class: 'home-row' },
-          h('span', { class: 'cal-what' }, tr(x.title)),
-          h('span', { class: 'home-meta cal-when' }, x.start === x.end ? fmt(x.start) : `${fmt(x.start)} ~ ${fmt(x.end)}`))))));
-    }
-    // PC: 왼쪽 넓은 칸에 할 일(오늘 수업·곧 마감·저장·관심·새 공지), 오른쪽 좁은 칸에 추천·학사일정. 휴대폰은 한 줄로
-    const left = main.filter(Boolean);
-    const cal = calCard();
-    if (left.length || side.length) {
-      parts.push(h('div', { class: 'home-grid' + (left.length && side.length ? ' has-side' : '') },
-        left.length ? h('div', { class: 'home-col' }, left) : null,
-        side.length ? h('div', { class: 'home-col side' }, side) : null));
-    } else if (!cal) {
-      parts.push(h('p', { class: 'empty' }, T.homeNothing));
-    }
-    if (cal) parts.push(cal);
-    fill(box, ...parts);
+    const recIds = rec.chosen.map((it) => it.notice.id);
+    const calItems = upcomingCalendar(4);
+    const fmt = (d) => I.formatDate(L.parseLocal(d), state.lang);
+    const classes = todayClassCard();
+    if (classes) classes.className = 'sec sec-classes today-classes';
+    const week = widgetWeek();
+    if (week) week.className = 'sec sec-week';
+    const grad = widgetGrad();
+    if (grad) grad.className = 'sec sec-grad w-grad';
+
+    const lists = [
+      s.pinned.length ? sec('', T.homePinned, s.pinned.length, null, rows(s.pinned, 4)) : null,
+      mineFresh.length ? sec('', T.homeMine, mineFresh.length, { label: T.homeMore, run: () => goList({ mineOnly: true, sort: 'latest' }) }, rows(mineFresh, 4)) : null,
+      s.fresh.length ? sec('', T.homeNew, s.fresh.length, { label: T.homeMore, run: () => goList({ due: 'new', sort: 'latest' }) }, rows(s.fresh, 4)) : null,
+      rec.chosen.length ? sec('', T.homePicks, null, { label: T.homeMore, run: () => { location.hash = '#/budget'; setTab('budget', true); } },
+        h('ul', { class: 'home-list' }, rec.chosen.slice(0, 4).map((it) => homeRow(it.notice, recIds)))) : null,
+      calItems.length ? sec('', T.calendarTitle, null, null, h('ul', { class: 'home-list' }, calItems.map((x) => h('li', { class: 'home-row' },
+        h('span', { class: 'cal-what' }, tr(x.title)),
+        h('span', { class: 'home-meta cal-when' }, x.start === x.end ? fmt(x.start) : `${fmt(x.start)} ~ ${fmt(x.end)}`))))) : null
+    ].filter(Boolean);
+
+    const parts = [
+      setupStrip(),
+      briefingRow(s),
+      ticketStrip(),
+      h('div', { class: 'home-cols' },
+        h('div', { class: 'home-col' }, classes, week),
+        h('div', { class: 'home-col' }, grad, boardMini())),
+      lists.length ? h('div', { class: 'home-lists' }, lists) : null,
+      calCard()
+    ].filter(Boolean);
+    const cc = parts.find((x) => x.classList && x.classList.contains('cal-card'));
+    if (cc) cc.classList.add('sec');
+    const wrap = h('div', { class: 'home-v5' + (homeAnimated || reduceMotion() ? '' : ' reveal') }, parts);
+    [...wrap.children].forEach((el, i) => el.style.setProperty('--i', String(i)));
+    fill(box, wrap);
+    if (!homeAnimated) { countUp(wrap); homeAnimated = true; }
     const badge = $('#badge-home');
     const urgent = s.today.length + s.pinned.length;
     if (badge) { badge.hidden = !urgent; badge.textContent = String(urgent); }
+    const tb = $('#badge-track');
+    if (tb && K) {
+      const sum = K.summary(K.columns(DATA.notices, { track: state.track, saved: state.saved, applied: state.applied }, now), now);
+      tb.hidden = !sum.dueWeek; tb.textContent = String(sum.dueWeek);
+    }
+    // 오늘 마감 티켓의 남은 시간은 30초마다 글자만 고친다
+    clearInterval(cdTimer);
+    cdTimer = setInterval(() => {
+      document.querySelectorAll('.tk-time[data-deadline]').forEach((el) => { el.textContent = countdownText(el.dataset.deadline); });
+    }, 30000);
+  }
+
+  // 빠른 실행에 보일 항목: 검색어가 비면 이동·동작만, 있으면 공지·과목까지
+  function paletteItems(q) {
+    const T = t();
+    const low = q.toLowerCase();
+    const has = (...xs) => !q || xs.some((x) => String(x || '').toLowerCase().includes(low));
+    const goTab = (tab, sub) => () => { if (sub && planUI) planUI.setSub(sub); location.hash = '#/' + tab; setTab(tab, true); };
+    const nav = [
+      { icon: 'home', label: T.tabHome, run: goTab('home') },
+      { icon: 'doc', label: T.tabNotices, run: goTab('notices') },
+      { icon: 'board', label: T.boardTitle, run: goTab('track') },
+      { icon: 'cal', label: `${T.tabTimetable} · ${T.planTabWeek}`, run: goTab('timetable', 'week') },
+      { icon: 'book', label: T.planTabHistory, run: goTab('timetable', 'history') },
+      { icon: 'spark', label: T.planTabPlan, run: goTab('timetable', 'plan') },
+      { icon: 'star', label: `${T.tabNotices} · ${T.nviewBudget}`, run: goTab('budget') },
+      { icon: 'gear', label: T.tabSettings, run: goTab('settings') },
+      { icon: 'star', label: T.palSaved, run: () => goList({ savedOnly: true, status: 'all' }) }
+    ].filter((x) => has(x.label));
+    const dark = TH && TH.effective() === 'dark';
+    const acts = [
+      TH ? { icon: 'moon', label: dark ? T.palLight : T.palDark, run: () => { TH.setTheme(dark ? 'light' : 'dark'); renderThemeButton(); } } : null,
+      { icon: 'plus', label: T.palAddClass, run: () => { location.hash = '#/timetable'; setTab('timetable', true); if (planUI) planUI.setSub('week'); openClassDialog(); } },
+      ...I.LANGS.filter((l) => l.code !== state.lang).map((l) => ({ icon: 'globe', label: T.palLang(l.name), run: () => { state.lang = l.code; store.set('lang', state.lang); renderAll(); } }))
+    ].filter((x) => x && has(x.label, 'language', '언어', 'theme', '테마'));
+    const out = [{ title: T.palGo, items: nav }, { title: T.palActions, items: acts }];
+    if (q.length >= 1) {
+      const hits = L.sortNotices(L.filterNotices(DATA.notices, { query: q, board: '', status: 'all', category: '' }, now), 'deadline', now).slice(0, 6);
+      const ids = hits.map((n) => n.id);
+      out.splice(0, 0, { title: T.palNotices, items: hits.map((n) => ({
+        icon: 'doc', label: titleOf(n),
+        sub: [n.deadline ? I.formatDate(L.parseLocal(n.deadline), state.lang) : '', catLabel(n.category)].filter(Boolean).join(' · '),
+        run: () => openDetail(n.id, false, ids)
+      })) });
+      if (planUI) {
+        out.push({ title: T.palCourses, items: planUI.findCourses(q, 4).map((c) => ({
+          icon: 'book', label: c.name, sub: `${c.sub} · ${T.palPin}`,
+          run: () => { location.hash = '#/timetable'; setTab('timetable', true); planUI.pin(c.key); }
+        })) });
+      }
+    }
+    return out;
   }
 
   function upcomingCalendar(limit) {
@@ -1545,21 +2008,49 @@
     timetableChanged();
     renderHome();
   }
+  // 첫 화면 안내: 세 단계 (소개·언어 → 내 정보 → 관심 분야). 토스·애플 첫 실행 화면처럼 한 화면에 한 가지
+  let wStep = 0;
+  const brandMark = () => {
+    const el = h('span', { class: 'mark-wrap', 'aria-hidden': 'true' });
+    el.innerHTML = document.querySelector('.brand-mark') ? document.querySelector('.brand-mark').outerHTML.replace('brand-mark', 'w-mark') : '';
+    return el;
+  };
   function renderWelcome() {
     const T = t();
-    fill($('#welcome-body'), 
-      h('div', { class: 'welcome-logo', 'aria-hidden': 'true' }, '줍'),
-      h('h2', { id: 'welcome-title' }, T.welcomeTitle),
-      h('p', { class: 'welcome-lead' }, T.welcomeLead),
-      h('ol', { class: 'welcome-steps' }, T.welcomeSteps.map((st) => h('li', null, h('strong', null, st.t), h('span', null, st.d)))),
-      usedCategories().length ? h('div', { class: 'welcome-interests' }, h('p', null, T.welcomeInterests), interestChips()) : null,
-      h('label', { class: 'welcome-lang' }, h('span', null, T.language),
-        h('select', { class: 'lang-control', translate: 'no', onchange: (e) => { state.lang = e.target.value; store.set('lang', state.lang); renderAll(); } },
-          ...I.LANGS.map((l) => h('option', { value: l.code, lang: l.code, selected: l.code === state.lang }, l.name)))));
-    $('#welcome-example').textContent = T.welcomeExample;
-    $('#welcome-start').textContent = T.welcomeStart;
+    const dots = h('div', { class: 'w-progress', 'aria-hidden': 'true' }, [0, 1, 2].map((i) => h('i', { class: i === wStep ? 'on' : i < wStep ? 'done' : '' })));
+    let body;
+    if (wStep === 0) {
+      body = [
+        h('div', { class: 'w-brand' }, brandMark(), h('span', null, '공지 ', h('em', null, '줍줍'))),
+        h('h2', { id: 'welcome-title' }, T.welcomeTitle),
+        h('p', { class: 'welcome-lead' }, T.welcomeLead),
+        h('ol', { class: 'welcome-steps' }, T.welcomeSteps.map((st) => h('li', null, h('strong', null, st.t), h('span', null, st.d)))),
+        h('label', { class: 'welcome-lang' }, h('span', null, T.language),
+          h('select', { class: 'lang-control', translate: 'no', onchange: (e) => { state.lang = e.target.value; store.set('lang', state.lang); renderAll(); } },
+            ...I.LANGS.map((l) => h('option', { value: l.code, lang: l.code, selected: l.code === state.lang }, l.name))))
+      ];
+    } else if (wStep === 1) {
+      body = [
+        h('p', { class: 'w-kicker' }, T.wStepOf(2, 3)),
+        h('h2', { id: 'welcome-title' }, T.wAboutTitle),
+        h('p', { class: 'welcome-lead' }, T.wAboutLead),
+        profileSection((items, cur, pick, label) => h('div', { class: 'seg', role: 'group', 'aria-label': label },
+          items.map(([val, text]) => h('button', { type: 'button', 'aria-pressed': String(cur === val), onclick: () => pick(val) }, text))), { prefix: 'welcome', compact: true })
+      ];
+    } else {
+      body = [
+        h('p', { class: 'w-kicker' }, T.wStepOf(3, 3)),
+        h('h2', { id: 'welcome-title' }, T.wInterestTitle),
+        h('p', { class: 'welcome-lead' }, T.wInterestLead),
+        usedCategories().length ? h('div', { class: 'welcome-interests' }, interestChips()) : null
+      ];
+    }
+    fill($('#welcome-body'), dots, h('div', { class: 'w-pane' }, body));
+    $('#welcome-example').textContent = wStep === 0 ? T.welcomeExample : T.wBack;
+    $('#welcome-start').textContent = wStep === 0 ? T.welcomeStart : wStep === 1 ? T.wNext : T.wDone;
   }
   function openWelcome() {
+    wStep = 0;
     renderWelcome();
     const dlg = $('#welcome');
     if (!dlg.open) dlg.showModal();
@@ -1590,7 +2081,7 @@
   }
 
   // ---------- 휴대폰 아래 탭 ----------
-  const TABS = ['home', 'notices', 'timetable', 'budget', 'settings'];
+  const TABS = ['home', 'notices', 'track', 'timetable', 'budget', 'settings'];
   function tabFromHash() {
     if (/^#\/n\//.test(location.hash)) return 'notices';
     const m = /^#\/(\w+)$/.exec(location.hash);
@@ -1610,10 +2101,13 @@
     const prev = document.body.dataset.tab;
     if (prev && prev !== tab) scrollMem[prev] = window.scrollY;
     document.body.dataset.tab = tab;
+    const navTab = tab === 'budget' ? 'notices' : tab;          // 시간 맞춤 추천은 공지 화면의 한 보기
     document.querySelectorAll('.tabbar a').forEach((a) => {
-      if (a.dataset.tab === tab) a.setAttribute('aria-current', 'page');
+      if (a.dataset.tab === navTab) a.setAttribute('aria-current', 'page');
       else a.removeAttribute('aria-current');
     });
+    renderViewSwitch();
+    if (tab === 'track') renderBoard();
     // 추천 탭을 처음 열면 저장된 시간으로 바로 계산해 보여 줌
     if (tab === 'budget' && !state.budgetResult) runBudget();
     // 링크 클릭과 주소 바뀜(hashchange)이 같은 화면으로 두 번 부르므로, 화면이 실제로 바뀔 때만 위치를 옮긴다
@@ -1810,21 +2304,22 @@
   }
 
   // ---------- 내 정보 (지원 자격 확인) ----------
-  function profileSection(seg) {
+  function profileSection(seg, opts) {
     const T = t();
     const p = state.profile;
+    const pre = (opts && opts.prefix) || 'profile';                 // 첫 화면 안내에서도 같은 양식을 쓰므로 id 가 겹치지 않게
     const set = (patch) => {
       state.profile = cleanProfile(Object.assign({}, state.profile, patch));
       store.set('profile', state.profile);
       profileChanged();
     };
     const dept = h('input', {
-      type: 'text', id: 'profile-dept', maxlength: '30', value: p.dept || state.dept || '', placeholder: T.profileDeptPh,
-      list: 'dept-list', autocomplete: 'off', 'aria-label': T.profileDept, onchange: (e) => set({ dept: e.target.value })
+      type: 'text', id: pre + '-dept', maxlength: '30', value: p.dept || state.dept || '', placeholder: T.profileDeptPh,
+      list: pre + '-dept-list', autocomplete: 'off', 'aria-label': T.profileDept, onchange: (e) => set({ dept: e.target.value })
     });
-    return h('div', { class: 'my-section profile-section', id: 'profile-section' },
-      h('h3', null, T.profileTitle),
-      h('p', { class: 'help' }, T.profileHelp),
+    return h('div', { class: 'my-section profile-section', id: pre + '-section' },
+      opts && opts.compact ? null : h('h3', null, T.profileTitle),
+      opts && opts.compact ? null : h('p', { class: 'help' }, T.profileHelp),
       h('div', { class: 'profile-grid' },
         h('span', { class: 'pf-label' }, T.profileLevel),
         seg([['undergrad', T.levelUndergrad], ['grad', T.levelGrad]], p.level, (v) => set({ level: v }), T.profileLevel),
@@ -1835,7 +2330,7 @@
         h('span', { class: 'pf-label' }, T.profileDept), dept),
       h('label', { class: 'toggle pf-intl' },
         h('input', { type: 'checkbox', checked: p.intl, onchange: (e) => set({ intl: e.target.checked }) }), h('span', null, T.profileIntl)),
-      h('datalist', { id: 'dept-list' }, deptList().map((d) => h('option', { value: d }))),
+      h('datalist', { id: pre + '-dept-list' }, deptList().map((d) => h('option', { value: d }))),
       p.set ? h('p', { class: 'fine ok-note' }, '✓ ' + T.profileSaved + ' ',
         h('button', { type: 'button', class: 'link-btn', onclick: () => { state.profile = cleanProfile(null); store.set('profile', null); profileChanged(); } }, T.profileClear)) : null);
   }
@@ -1849,6 +2344,7 @@
     return deptCache;
   }
   function profileChanged() {
+    if ($('#welcome').open) renderWelcome();
     renderMyPanel();
     renderList();
     renderHome();
@@ -2007,7 +2503,10 @@
   // 마감(빨강)·행사(초록)·학사일정(파랑)을 월간 달력에 점으로 보여 주고, 날짜를 누르면 그날 목록을 보여 준다
   function refreshCal() {
     const old = document.querySelector('.cal-card');
-    if (old) old.replaceWith(calCard());
+    if (!old) return;
+    const nc = calCard();
+    nc.classList.add('sec');                    // 홈의 편집형 섹션 모양 그대로
+    old.replaceWith(nc);
   }
   function calCard() {
     const T = t();
@@ -2169,6 +2668,7 @@
       budgetSelective: state.budgetSelective, saved: state.saved,
       theme: TH ? TH.get() : undefined, fontScale: TH ? TH.font() : undefined, applied: state.applied, read: state.read,
       keywords: state.keywords, interests: state.interests, recent: state.recent, alertsOn: state.alertsOn,
+      track: state.track,
       ...(planUI ? planUI.values() : {})
     };
     const blob = new Blob([JSON.stringify(SY.makeBackup(values), null, 1)], { type: 'application/json' });
@@ -2188,6 +2688,7 @@
     if (planUI) planUI.load(r.values);
     for (const [k, v] of Object.entries(r.values)) {
       if (['history', 'gradReq', 'planPrefs'].includes(k)) continue;     // 수강 계획 값은 planUI 가 넣음
+      if (k === 'track') { state.track = K ? K.cleanTrack(v) : {}; store.set('track', state.track); continue; }
       if (k === 'theme') { if (TH) TH.setTheme(v); continue; }
       if (k === 'fontScale') { if (TH) TH.setFont(v); continue; }
       state[k] = v;
@@ -2208,6 +2709,8 @@
     renderTimetable();
     renderCurriculum();
     if (planUI) planUI.render();
+    renderBoard();
+    renderViewSwitch();
     renderBudget();
     renderHome();
     renderAlerts();
@@ -2237,6 +2740,20 @@
     });
     $('#sync-btn').addEventListener('click', () => refreshData(true));
     $('#export-mine').addEventListener('click', exportMine);
+    // 시간표를 이미지로 저장 (js/ttimage.js)
+    const ttImg = $('#tt-image');
+    if (ttImg) {
+      if (!window.GongjiTTImage) ttImg.hidden = true;
+      else ttImg.addEventListener('click', () => {
+        if (!state.timetable.length) { toast(t().ttImageEmpty); return; }
+        const names = new Set(state.timetable.map((c) => c.name));
+        const cur = window.GongjiPlan ? window.GongjiPlan.currentTerm(now) : null;
+        window.GongjiTTImage.download(state.timetable, {
+          kicker: t().ttImageTitle, title: cur ? t().termName(cur.year, cur.term) : t().ttImageTitle, sub: t().ttImageCount(names.size),
+          dayName, colorOf: classColor, dark: document.documentElement.dataset.theme === 'dark', filename: 'gongji-timetable.png'
+        }).then((ok) => { if (ok) toast(t().ttImageDone); });
+      });
+    }
     $('#import-mine').addEventListener('change', (e) => {
       const f = e.target.files && e.target.files[0];
       e.target.value = '';
@@ -2355,8 +2872,10 @@
     });
     $('#show-guide').addEventListener('click', openWelcome);
     $('#welcome').addEventListener('close', () => { store.set('onboarded', true); renderMyPanel(); });
-    $('#welcome-start').addEventListener('click', closeWelcome);
-    $('#welcome-example').addEventListener('click', () => { loadExampleTimetable(); closeWelcome(); });
+    $('#welcome-start').addEventListener('click', () => { if (wStep < 2) { wStep += 1; renderWelcome(); } else closeWelcome(); });
+    $('#welcome-example').addEventListener('click', () => {
+      if (wStep === 0) { loadExampleTimetable(); closeWelcome(); } else { wStep -= 1; renderWelcome(); }
+    });
     $('#export-saved-cal').addEventListener('click', () => exportCalendar(DATA.notices.filter((n) => isSaved(n.id)), 'gongji-saved'));
     $('#notice-banner-close').addEventListener('click', () => { store.set('bannerClosed', ov.parsed.banner); renderBanner(); });
     $('#install-btn').addEventListener('click', async () => {
@@ -2536,6 +3055,10 @@
       toast(msg, { label: t().undo, run: () => { state.timetable = before; saveTimetable(); timetableChanged(); } });
     }
   }) : null;
+  // 빠른 실행 (Ctrl+K): 화면 이동·동작·공지·과목을 한 칸에서
+  palette = window.GongjiPalette ? window.GongjiPalette.mount({ h, t, items: paletteItems }) : null;
+  const palBtn = $('#palette-btn');
+  if (palBtn) { if (palette) palBtn.addEventListener('click', () => palette.open()); else palBtn.hidden = true; }
   document.body.classList.toggle('home-collapsed', homeCollapsed);
   renderAll();
   setTab(tabFromHash(), false);

@@ -61,6 +61,17 @@ test('진행 중만 보기에서는 마감된 근로장학 공지가 빠짐', ()
   const ids = L.filterNotices(DATA.notices, { status: 'open' }, now12).map((n) => n.id);
   assert.ok(!ids.includes('sample-04'));
 });
+test('마감 지난 공지만 보기 (보관 기간 동안 마감된 공지 다시 보기): 최근에 끝난 것부터', () => {
+  const past = L.filterNotices(DATA.notices, { status: 'past' }, now12);
+  assert.ok(past.length > 0 && past.every((n) => L.isExpired(n, now12)));
+  const open = L.filterNotices(DATA.notices, { status: 'open' }, now12);
+  assert.equal(past.length + open.length, L.filterNotices(DATA.notices, { status: 'all' }, now12).length, '진행 중 + 마감 지남 = 전체');
+  const end = (n) => (L.parseLocal(n.deadline) || L.parseLocal(n.date)).getTime();
+  const fake = [{ id: 'a', deadline: '2026-10-01T18:00' }, { id: 'b', deadline: '2026-11-10T18:00' }, { id: 'c', date: '2026-10-20', deadline: null }];
+  assert.deepEqual(L.sortNotices(fake, 'recentClosed', now12).map((n) => n.id), ['b', 'c', 'a']);
+  const sorted = L.sortNotices(past, 'recentClosed', now12);
+  for (let i = 1; i < sorted.length; i++) assert.ok(end(sorted[i - 1]) >= end(sorted[i]) || !sorted[i].deadline);
+});
 test('7일 안에 마감만 보기', () => {
   const ids = L.filterNotices(DATA.notices, { status: 'week' }, now12).map((n) => n.id);
   assert.deepEqual(ids.sort(), ['sample-02', 'sample-05', 'sample-06', 'sample-08', 'sample-13']);

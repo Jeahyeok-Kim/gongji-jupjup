@@ -135,10 +135,14 @@
     let stopped = false;
     const titles = [];
 
+    const since = opts.since || '';            // 보관 기간 첫날 (이보다 오래된 글은 본문을 받지 않고 멈춤)
     while (!abortFlag && page <= MAX_PAGES && !stopped) {
       const list = parseList(await getHtml(`${LIST_PATH}${page}`));
-      const items = list.filter((it) => !done.has(it.id));
-      if (list.length === 0 || items.length === 0) break; // 끝 (고정글만 반복되면 새 글이 없다는 뜻)
+      const tooOld = (it) => !!since && !it.pinned && !!it.date && it.date < since;
+      const items = list.filter((it) => !done.has(it.id) && !tooOld(it));
+      const older = list.some(tooOld);
+      // 끝: 고정글만 반복되거나(새 글 없음) 남은 글이 모두 보관 기간보다 오래됨
+      if (list.length === 0 || items.length === 0) break;
       items.forEach((it) => done.add(it.id));
 
       const known = await chrome.storage.local.get(items.map((it) => `n:im-notice-${it.id}`));
@@ -159,6 +163,7 @@
       // 증분 수집: 한 쪽이 전부 이미 아는 글(고정글 제외)이면 더 볼 필요가 없다.
       const normal = items.filter((it) => !it.pinned);
       if (!opts.full && freshInPage === 0 && normal.length > 0) stopped = true;
+      if (older) stopped = true;                          // 보관 기간보다 오래된 글까지 왔다
       page += 1;
       await sleep(DELAY_MS);
     }
@@ -202,7 +207,7 @@
     } else if (msg?.type === 'start') {
       if (running) sendResponse({ ok: false, error: '이미 수집 중입니다.' });
       else {
-        run(msg.menus ?? [], { full: !!msg.opts?.full });
+        run(msg.menus ?? [], { full: !!msg.opts?.full, since: String(msg.opts?.since || '') });
         sendResponse({ ok: true });
       }
     } else if (msg?.type === 'stop') {
@@ -219,7 +224,7 @@
     if (window !== window.top || running || BOARDS.length === 0) return;
     try {
       const res = await chrome.runtime.sendMessage({ type: 'hello', host: location.host });
-      if (res?.run && !running) await run(BOARDS.filter((b) => !b.off).map((b) => b.menu), { full: false, newsLimit: Number(res.newsLimit) || 300 });
+      if (res?.run && !running) await run(BOARDS.filter((b) => !b.off).map((b) => b.menu), { full: false, since: String(res.since || '') });
     } catch {
       /* 확장을 다시 불러온 직후 등: 다음 방문 때 다시 시도 */
     }
