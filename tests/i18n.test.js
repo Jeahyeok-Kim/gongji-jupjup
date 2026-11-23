@@ -5,6 +5,7 @@ require('../js/i18n.js');
 require('../js/i18n2.js');
 require('../js/i18n3.js');
 require('../js/i18n4.js');
+require('../js/i18n5.js');
 const I = globalThis.GongjiI18n;
 
 let passed = 0;

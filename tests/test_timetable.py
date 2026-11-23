@@ -24,17 +24,30 @@ class ParseSlotsTest(unittest.TestCase):
 
 
 class BuildTest(unittest.TestCase):
-    def test_build_skips_without_time_and_dedupes(self):
+    def test_build_keeps_elearning_marks_online_and_dedupes(self):
         rows = [
             {'n': '디지털논리회로', 't': '월1000-1130(공학관 1), 목1300-1430(공학관 1)', 'd': '컴퓨터공학과', 'k': '전필', 'y': '2', 'c': 3, 'h': 'A', 's': '01'},
             {'n': '디지털논리회로', 't': '월1000-1130(공학관 1), 목1300-1430(공학관 1)', 'd': '컴퓨터공학과', 'k': '전필', 'y': '2', 'c': 3, 'h': 'A', 's': '01'},
             {'n': '현장실습', 't': '', 'h': 'B', 's': '01'},
+            {'n': '데이터베이스', 't': '월1000-1300(실시간온라인)', 'h': 'C', 's': '01', 'c': 3},
+            {'n': '깨진과목', 't': '월요일 아침', 'h': 'D', 's': '01'},
         ]
         r = bt.build([{'year': '2026', 'term': 'B01012', 'collectedAt': 1, 'rows': rows}])
-        self.assertEqual(r['meta']['count'], 1)
-        self.assertEqual(r['meta']['skipped'], 1)
+        self.assertEqual(r['meta']['count'], 3, '같은 분반은 한 번, 시간 없는 수업은 남김')
+        self.assertEqual(r['meta']['skipped'], 1, '시간 글자를 읽지 못한 것만 건너뜀')
+        self.assertEqual((r['meta']['live'], r['meta']['elearn']), (1, 1))
         self.assertEqual(r['meta']['termName'], '2학기')
-        self.assertEqual(len(r['courses'][0]['t']), 2)
+        by = {c['n']: c for c in r['courses']}
+        self.assertEqual(len(by['디지털논리회로']['t']), 2)
+        self.assertNotIn('m', by['디지털논리회로'], '강의실 수업은 방식 표시 없음')
+        self.assertEqual(by['디지털논리회로']['h'], 'A', '학수번호 유지')
+        self.assertEqual((by['현장실습']['m'], by['현장실습']['t']), ('elearn', []))
+        self.assertEqual(by['데이터베이스']['m'], 'live')
+
+    def test_class_mode_mixed_rooms_is_classroom(self):
+        slots = bt.parse_slots('월1000-1130(실시간온라인), 수1000-1130(공학관 1)')
+        self.assertEqual(bt.class_mode('x', slots), '', '한 번이라도 강의실에 가면 강의실 수업')
+        self.assertEqual(bt.class_mode('', []), 'elearn')
 
     def test_prefers_regular_semester_over_small_seasonal(self):
         row = lambda i: {'n': f'과목{i}', 't': '월1000-1130', 's': '01', 'h': str(i)}

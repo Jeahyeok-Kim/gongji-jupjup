@@ -91,7 +91,7 @@
 
   // ---- 내 설정 백업(시간표·언어·정렬 등): 이 브라우저에만 있는 것을 파일로 옮기고 다른 기기에서 불러오기 ----
   const BACKUP_KEYS = ['timetable', 'lang', 'sort', 'grouped', 'hideConflicts', 'budgetHours', 'budgetWindow', 'budgetSelective', 'saved',
-    'theme', 'fontScale', 'applied', 'read', 'keywords', 'interests', 'recent', 'alertsOn'];
+    'theme', 'fontScale', 'applied', 'read', 'keywords', 'interests', 'recent', 'alertsOn', 'history', 'gradReq', 'planPrefs'];
   const BACKUP_KIND = 'gongji-jupjup-settings';
 
   function makeBackup(values, nowDate) {
@@ -131,6 +131,11 @@
     if (Array.isArray(v.keywords)) out.keywords = strs(v.keywords, 10, 20);
     if (Array.isArray(v.interests)) out.interests = strs(v.interests, 12, 20);
     if (Array.isArray(v.recent)) out.recent = strs(v.recent, 8, 40);
+    // 수강 계획: 이수 내역(과목 목록)·졸업 기준·추천 조건. 자세한 검사는 js/plan.js 의 cleanHistory 가 한다
+    if (Array.isArray(v.history)) out.history = v.history.filter((x) => x && typeof x === 'object' && typeof x.name === 'string').slice(0, 300);
+    const plainObj = (o) => o && typeof o === 'object' && !Array.isArray(o) && JSON.stringify(o).length < 4000;
+    if (plainObj(v.gradReq)) out.gradReq = v.gradReq;
+    if (plainObj(v.planPrefs)) out.planPrefs = v.planPrefs;
     return { ok: true, values: out, dropped };
   }
 

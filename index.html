@@ -38,7 +38,7 @@
     <div class="brand">
       <span class="logo" aria-hidden="true">줍</span>
       <div>
-        <h1>공지 줍줍</h1>
+        <h1>공지 <em>줍줍</em></h1>
         <p class="tagline" data-i18n="tagline"></p>
       </div>
     </div>
@@ -93,7 +93,10 @@
   <main class="layout">
     <!-- 공지 목록 (휴대폰: '공지' 탭) -->
     <section class="content" data-view="notices" aria-labelledby="list-heading">
-      <h2 id="list-heading" class="visually-hidden" data-i18n="searchLabel"></h2>
+      <div class="view-head">
+        <h2 id="list-heading" data-i18n="tabNotices"></h2>
+        <p class="view-sub" data-i18n="viewNoticesSub"></p>
+      </div>
 
       <div class="toolbar">
         <label class="search">
@@ -172,7 +175,13 @@
 
     <aside class="side">
       <!-- 내 시간표 (휴대폰: '시간표' 탭) -->
-      <section class="panel" id="timetable-panel" data-view="timetable" aria-labelledby="tt-title">
+      <section class="panel" id="timetable-panel" data-view="timetable" data-sub="week" aria-labelledby="tt-title">
+        <!-- 이번 학기 시간표 · 이수 내역(지금까지 들은 과목) · 수강신청 추천 -->
+        <div class="tt-sub" id="tt-sub" role="tablist" data-i18n-aria="planTabsLabel">
+          <button type="button" role="tab" data-sub="week" data-i18n="planTabWeek" aria-selected="true"></button>
+          <button type="button" role="tab" data-sub="history" data-i18n="planTabHistory" aria-selected="false"></button>
+          <button type="button" role="tab" data-sub="plan" data-i18n="planTabPlan" aria-selected="false"></button>
+        </div>
         <div class="panel-head">
           <h2 id="tt-title" data-i18n="timetable"></h2>
           <button type="button" class="btn primary small" id="add-class-btn" data-i18n="addClass"></button>
@@ -194,6 +203,8 @@
           <summary data-i18n="currTitle"></summary>
           <div class="curr-body" id="curr-body"></div>
         </details>
+        <div class="sub-view" id="history-view" role="tabpanel" hidden></div>
+        <div class="sub-view" id="plan-view" role="tabpanel" hidden></div>
       </section>
 
       <!-- 시간 예산 추천 (휴대폰: '추천' 탭) -->
@@ -389,6 +400,7 @@
   <script src="data/config.js" onerror="this.remove()"></script>
   <script src="data/courses.js" onerror="this.remove()"></script>
   <script src="data/timetable.js" onerror="this.remove()"></script>
+  <script src="data/gradreq.js" onerror="this.remove()"></script>
   <script src="js/benefit.js"></script>
   <script src="js/sync.js"></script>
   <script src="js/logic.js"></script>
@@ -403,7 +415,10 @@
   <script src="js/i18n2.js"></script>
   <script src="js/i18n3.js"></script>
   <script src="js/i18n4.js"></script>
+  <script src="js/i18n5.js"></script>
   <script src="js/curriculum.js"></script>
+  <script src="js/plan.js"></script>
+  <script src="js/planui.js"></script>
   <script src="js/theme.js"></script>
   <script src="js/app.js"></script>
 </body>

@@ -19,6 +19,7 @@
   const CU = window.GongjiCurriculum;
   const EL = window.GongjiEligibility;               // 지원 자격 판정
   const AK = window.GongjiAsk;                       // 공지에게 묻기
+  let planUI = null;                                 // 이수 내역 · 수강신청 추천 화면 (아래에서 mount)
   const PAGE = 30;                                   // 목록은 30건씩 보여 주고 '더 보기'로 늘린다
   const $ = (sel) => document.querySelector(sel);
 
@@ -410,8 +411,23 @@
   }
 
   // ---------- 핵심 정보 줄: 모든 공지가 같은 순서(대상 · 마감 · 혜택 · 일정)로 보인다 ----------
-  function keyInfo(n) {
+  // 목록 행 왼쪽의 마감 날짜 칸: 'D-3' 크게, 그 아래 '11.26 (목)'. 마감이 없으면 '마감 없음'
+  function dateCol(n) {
     const T = t();
+    if (!n.deadline) return h('div', { class: 'card-date none' }, h('strong', null, '—'), h('span', null, T.noDeadlineShort));
+    const d = L.parseLocal(n.deadline);
+    const expired = L.isExpired(n, now);
+    const left = L.daysLeft(n.deadline, now);
+    const big = expired ? T.closed : left === 0 ? T.dueToday : left !== null && left > 0 ? `D-${left}` : T.closed;
+    const urgent = !expired && left !== null && left <= 3;
+    return h('div', { class: 'card-date' + (urgent ? ' urgent' : '') + (expired ? ' closed' : '') },
+      h('strong', null, big),
+      h('span', null, `${d.getMonth() + 1}.${String(d.getDate()).padStart(2, '0')} (${dayName(d.getDay())})`));
+  }
+
+  function keyInfo(n, opts) {
+    const T = t();
+    const listRow = opts && opts.listRow;          // 목록 행에서는 마감을 왼쪽 날짜 칸에 보여 주므로 뺀다
     const left = L.daysLeft(n.deadline, now);
     const urgent = !L.isExpired(n, now) && left !== null && left <= 3;
     const item = (cls, label, value, missing) => h('div', { class: 'ki ' + cls + (missing ? ' missing' : '') + (cls === 'deadline' && urgent && !missing ? ' urgent' : '') },
@@ -419,7 +435,7 @@
     const ev = n.events && n.events.length ? formatEvent(n.events[0]) + (n.events.length > 1 ? ` +${n.events.length - 1}` : '') : '';
     return h('div', { class: 'keyinfo' },
       item('who', T.eligibility, n.eligibility ? tr(n.eligibility) : '', !n.eligibility),
-      item('deadline', T.deadline, n.deadline ? I.formatDateTime(L.parseLocal(n.deadline), state.lang) : '', !n.deadline),
+      listRow ? null : item('deadline', T.deadline, n.deadline ? I.formatDateTime(L.parseLocal(n.deadline), state.lang) : '', !n.deadline),
       item('benefit', T.benefit, n.benefit ? tr(n.benefit.text) : '', !n.benefit),
       ev ? item('when', T.when, ev, false) : null);
   }
@@ -436,6 +452,7 @@
       class: 'card' + (expired ? ' is-expired' : '') + (conflicts.length ? ' has-conflict' : '') + (n.pinned ? ' is-pinned' : '') + (fit === 'no' ? ' is-unfit' : '')
         + (isRead(n.id) ? ' is-read' : '') + (isApplied(n.id) ? ' is-applied' : '')
     },
+      dateCol(n),
       h('div', { class: 'card-top' },
         fitBadge(n),
         X.isNew(n, since) ? h('span', { class: 'new-badge' }, t().newBadge) : null,
@@ -445,14 +462,13 @@
         n.aiPending ? h('span', { class: 'pending-badge', title: t().aiPendingNote }, t().aiPendingBadge) : null,
         ...L.classifyBenefit(n).subs.slice(0, 2).map((sb) => subTag(n, sb)),
         h('span', { class: 'board' }, `${catLabel(n.category)} · ${boardsOf(n)}`),
-        ddayBadge(n),
         starButton(n)),
       h('h3', { class: 'card-title' },
         h('button', { type: 'button', class: 'card-link', 'aria-haspopup': 'dialog', onclick: () => openDetail(n.id) }, hl(titleOf(n)))),
       state.lang !== 'ko' ? h('p', { class: 'card-orig', lang: 'ko' }, n.title) : null,
       sm.text ? h('p', { class: 'card-summary' }, hl(sm.text)) : null,
       n.opNote ? h('p', { class: 'op-note' }, `${t().opNoteLabel}: ${n.opNote}`) : null,
-      imageOnly ? null : keyInfo(n),
+      imageOnly ? null : keyInfo(n, { listRow: true }),
       (conflicts.length || imageOnly || fromMedia(n) || n.check) ? h('div', { class: 'badges' },
         n.check ? h('span', { class: 'badge check', title: t().checkNote(I.formatDate(L.parseLocal(n.check.deadline), state.lang)) }, t().checkBadge) : null,
         conflicts.length ? h('span', { class: 'badge conflict' }, t().conflict) : null,
@@ -1086,7 +1102,8 @@
     hits.sort((a, b) => (normName(a.n).startsWith(q) ? 0 : 1) - (normName(b.n).startsWith(q) ? 0 : 1) || mine(a) - mine(b) || a.n.localeCompare(b.n) || a.s.localeCompare(b.s));
     return hits.slice(0, 6).map((c) => ({
       name: c.n, slots: c.t,
-      label: [c.s ? `${c.s}분반` : '', slotText(c.t), c.d, c.k].filter(Boolean).join(' · ')
+      // 이러닝처럼 정해진 시간이 없는 수업은 시간 대신 방식을 보여 준다 (격자에는 넣을 칸이 없음)
+      label: [c.s ? `${c.s}분반` : '', c.t.length ? slotText(c.t) : (t().planModeElearn || ''), c.m === 'live' ? t().planModeLive : '', c.d, c.k].filter(Boolean).join(' · ')
     }));
   }
 
@@ -1131,7 +1148,7 @@
         classEdit.extra = [];
         classEdit.rooms = {};
         renderExtraNote();
-        if (c.slots) pickLecture(c);
+        if (c.slots && c.slots.length) pickLecture(c);
         hideSuggest(); input.focus();
       } }, h('span', {}, c.name), h('small', {}, c.label || '')))));
     box.hidden = shown.length === 0;
@@ -1393,6 +1410,16 @@
       parts.push(h('div', { class: 'home-tip' },
         h('p', null, T.fitHomeTip),
         h('button', { type: 'button', class: 'btn small primary', onclick: goProfile }, T.fitHomeBtn)));
+    }
+    // 수강신청 추천: 이수 내역이 비어 있으면 넣는 곳으로, 있으면 추천으로 안내
+    if (planUI && T.homePlanTip) {
+      const hasHistory = planUI.values().history.length > 0;
+      parts.push(h('div', { class: 'home-tip' },
+        h('p', null, hasHistory ? T.homePlanTipReady : T.homePlanTip),
+        h('button', { type: 'button', class: 'btn small primary', onclick: () => {
+          planUI.setSub(hasHistory ? 'plan' : 'history');
+          location.hash = '#/timetable'; setTab('timetable', true);
+        } }, hasHistory ? T.planTabPlan : T.planTabHistory)));
     }
     const main = [
       todayClassCard(),
@@ -2141,7 +2168,8 @@
       hideConflicts: state.hideConflicts, budgetHours: state.budgetHours, budgetWindow: state.budgetWindow,
       budgetSelective: state.budgetSelective, saved: state.saved,
       theme: TH ? TH.get() : undefined, fontScale: TH ? TH.font() : undefined, applied: state.applied, read: state.read,
-      keywords: state.keywords, interests: state.interests, recent: state.recent, alertsOn: state.alertsOn
+      keywords: state.keywords, interests: state.interests, recent: state.recent, alertsOn: state.alertsOn,
+      ...(planUI ? planUI.values() : {})
     };
     const blob = new Blob([JSON.stringify(SY.makeBackup(values), null, 1)], { type: 'application/json' });
     const url = URL.createObjectURL(blob);
@@ -2157,7 +2185,9 @@
     let r = { ok: false };
     try { r = SY.readBackup(JSON.parse(await file.text()), L.isValidClass, I.LANGS.map((l) => l.code)); } catch (e) { /* 아래에서 안내 */ }
     if (!r.ok) { backupMsg(t().importBad); return; }
+    if (planUI) planUI.load(r.values);
     for (const [k, v] of Object.entries(r.values)) {
+      if (['history', 'gradReq', 'planPrefs'].includes(k)) continue;     // 수강 계획 값은 planUI 가 넣음
       if (k === 'theme') { if (TH) TH.setTheme(v); continue; }
       if (k === 'fontScale') { if (TH) TH.setFont(v); continue; }
       state[k] = v;
@@ -2177,6 +2207,7 @@
     renderList();
     renderTimetable();
     renderCurriculum();
+    if (planUI) planUI.render();
     renderBudget();
     renderHome();
     renderAlerts();
@@ -2490,6 +2521,21 @@
     return;
   }
   bind();
+  // 이수 내역 · 수강신청 추천 (js/planui.js): 시간표 화면 안의 두 보기
+  planUI = window.GongjiPlanUI && window.GongjiPlan ? window.GongjiPlanUI.mount({
+    h, store, toast, t, now, dayName, classColor,
+    getProfile: () => state.profile,
+    getDept: () => state.dept,
+    getTimetable: () => state.timetable,
+    onChange: () => renderHome(),
+    setTimetable: (classes, msg) => {
+      const before = state.timetable;
+      state.timetable = classes.filter(L.isValidClass);
+      saveTimetable();
+      timetableChanged();
+      toast(msg, { label: t().undo, run: () => { state.timetable = before; saveTimetable(); timetableChanged(); } });
+    }
+  }) : null;
   document.body.classList.toggle('home-collapsed', homeCollapsed);
   renderAll();
   setTab(tabFromHash(), false);

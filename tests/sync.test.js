@@ -194,5 +194,16 @@ const good = (stamp, extra) => Object.assign({
     assert.deepEqual(ok.values, { theme: 'auto', fontScale: 'sm', alertsOn: false });
   });
 
+  await test('백업 파일에 이수 내역·졸업 기준·추천 조건이 함께 오간다', () => {
+    const file = S.makeBackup({ history: [{ name: '자료구조', credit: 3, kind: '전필', term: '2025-2' }], gradReq: { mode: 'transfer', major: 54 }, planPrefs: { target: 18, grades: [3, 4] } });
+    const r = S.readBackup(JSON.parse(JSON.stringify(file)), L.isValidClass, ['ko']);
+    assert.equal(r.ok, true);
+    assert.equal(r.values.history.length, 1);
+    assert.deepEqual(r.values.gradReq, { mode: 'transfer', major: 54 });
+    assert.deepEqual(r.values.planPrefs.grades, [3, 4]);
+    const bad = S.readBackup({ kind: file.kind, values: { history: [1, null, { name: 3 }], gradReq: [1], planPrefs: 'x' } }, L.isValidClass);
+    assert.deepEqual(bad.values, { history: [] }, '모양이 틀린 값은 버림');
+  });
+
   console.log(`\n${passed}개 통과${failed ? `, ${failed}개 실패` : ''}`);
 })();
