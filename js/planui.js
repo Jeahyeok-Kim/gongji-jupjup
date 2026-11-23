@@ -326,7 +326,8 @@
     function renderHistory() {
       const Tx = T();
       const box = $('#history-view');
-      box.replaceChildren(
+      // 빈 칸(null)은 빼고 넣는다: replaceChildren 은 null 을 'null' 글자로 그려 버림
+      box.replaceChildren(...[
         h('div', { class: 'plan-head' }, h('h2', null, Tx.histTitle), h('p', { class: 'help' }, Tx.histHelp)),
         ...renderSummary(),
         renderReq(),
@@ -335,7 +336,7 @@
             h('button', { type: 'button', class: 'btn small', onclick: fromTimetable }, Tx.histFromTt)),
           ...renderAdd()),
         renderPaste(),
-        renderTerms());
+        renderTerms()].filter(Boolean));
     }
 
     // ---------- 수강신청 추천 ----------
