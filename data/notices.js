@@ -6,7 +6,7 @@
   const DATA = /*JSON-START*/{
  "meta": {
   "source": "pipeline",
-  "generatedAt": "2026-11-23 21:04",
+  "generatedAt": "2026-11-23 22:22",
   "model": "qwen3:8b",
   "note": "AI가 만든 요약·번역입니다. 근거 문장이 원문에 없는 값은 버렸습니다.",
   "keep": {
@@ -17,16 +17,16 @@
   "stats": {
    "collected": 1702,
    "processed": 1076,
-   "fromCache": 322,
-   "failed": 0,
-   "imageOnly": 2,
-   "droppedValues": 644,
-   "summaryRetried": 8,
-   "summaryDraft": 12,
-   "summaryComposed": 19,
-   "translationLost": 20,
-   "aiPending": 24,
-   "needsCheck": 8
+   "fromCache": 461,
+   "failed": 1,
+   "imageOnly": 4,
+   "droppedValues": 776,
+   "summaryRetried": 9,
+   "summaryDraft": 14,
+   "summaryComposed": 23,
+   "translationLost": 29,
+   "aiPending": 1,
+   "needsCheck": 10
   }
  },
  "categories": [
@@ -23812,27 +23812,59 @@
    "link": "https://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1850&CONTENTS_NO=&SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=27&BOARD_CATEGORY_NO=&BBS_SEQ=120816&pageNo=1",
    "date": "2026-09-02",
    "hits": 74,
-   "bodyStatus": "image",
+   "bodyStatus": "poster",
    "title": "2026년 강북구청소년상담복지센터 '대학생 종합심리검사 신청'",
-   "titleTr": {},
+   "titleTr": {
+    "en": "2026 Gangbuk-gu Youth Counseling and Welfare Center 'College Student Comprehensive Psychological Test Application'",
+    "zh": "2026年江北区青少年咨询福利中心 '大学生综合心理测试申请'",
+    "ja": "2026年江北区青少年相談福祉センター『大学生総合心理検査申請』"
+   },
    "category": "contest",
    "deadline": null,
-   "benefit": null,
-   "eligibility": null,
+   "benefit": {
+    "text": {
+     "ko": "종합심리검사 20만원",
+     "en": "Comprehensive psychological test worth 200,000 won",
+     "zh": "综合心理测试价值韩元20万",
+     "ja": "総合心理検査が韓元20万ウォン"
+    },
+    "points": null,
+    "won": 200000
+   },
+   "eligibility": {
+    "ko": "만 24세 이하 청년",
+    "en": "Youth under 24 years old",
+    "zh": "24岁以下青年",
+    "ja": "24歳未満の青年"
+   },
    "events": [],
    "hours": null,
-   "evidence": {},
-   "evidenceVerified": null,
-   "readFrom": [],
-   "summary": {
-    "ko": "본문이 이미지나 첨부파일로만 올라와 내용을 읽지 못했습니다. 원문을 확인해 주세요.",
-    "en": "The notice body is only an image or attachment, so it could not be read. Please check the original.",
-    "zh": "公告正文仅为图片或附件,无法读取。请查看原文。",
-    "ja": "本文が画像または添付ファイルのみのため読み取れませんでした。原文をご確認ください。"
+   "evidence": {
+    "benefit": "종합심리검사 20만원\n20만원",
+    "eligibility": "만 24세 이하 청년이라면"
    },
-   "terms": [],
-   "regulation": null,
-   "aiPending": true
+   "evidenceVerified": true,
+   "readFrom": [
+    {
+     "kind": "poster",
+     "name": "본문 이미지 1"
+    },
+    {
+     "kind": "poster",
+     "name": "첨부 2026년 대학생 종합심리검사 접수 홍보 포스터(강북구청소년상담복지센터).pdf 이미지"
+    }
+   ],
+   "summary": {
+    "ko": "대학생 종합심리검사를 제공하는 공지예요.",
+    "en": "This is a notice providing the College Student Comprehensive Psychological Test.",
+    "zh": "这是提供大学生综合心理测试的通知。",
+    "ja": "大学生総合心理検査を提供するお知らせです。"
+   },
+   "terms": [
+    "접수",
+    "접수기간"
+   ],
+   "regulation": null
   },
   {
    "id": "2-27-120815",
@@ -23840,29 +23872,47 @@
    "link": "https://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1850&CONTENTS_NO=&SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=27&BOARD_CATEGORY_NO=&BBS_SEQ=120815&pageNo=1",
    "date": "2026-09-02",
    "hits": 24,
-   "bodyStatus": "image",
+   "bodyStatus": "poster",
    "title": "2026년 MICE 역량강화 프로그램 특강 참여자 모집 안내",
-   "titleTr": {},
+   "titleTr": {
+    "en": "2026 MICE Competency Enhancement Program Special Lecture Participant Recruitment Notice",
+    "zh": "2026年MICE能力强化项目特别讲座参与者招募通知",
+    "ja": "2026年MICE能力強化プログラム特別講義参加者募集のお知らせ"
+   },
    "category": "event",
-   "deadline": null,
+   "deadline": "2026-09-10T23:59",
    "benefit": null,
-   "eligibility": null,
+   "eligibility": {
+    "ko": "관광 산업에 관심 있는 대학교 재학생, 졸업생 및 지역청년(만19-34세)",
+    "en": "University students, graduates, and local youths (aged 19-34) who are interested in the tourism industry",
+    "zh": "对旅游业感兴趣的大专院校在读学生、毕业生及本地青年（年龄19-34岁）",
+    "ja": "観光業界に興味がある大学在籍生、卒業生及び地域青年（19歳〜34歳）"
+   },
    "events": [],
    "hours": null,
-   "evidence": {},
-   "evidenceVerified": null,
-   "readFrom": [],
+   "evidence": {
+    "deadline": "신청방법: 2026. 8. 24. ~ 9. 10. 13:00까지 온라인 접수",
+    "eligibility": "참여대상: 관광 산업에 관심 있는 대학교 재학생, 졸업생 및 지역청년(만19-34세)"
+   },
+   "evidenceVerified": true,
+   "readFrom": [
+    {
+     "kind": "poster",
+     "name": "본문 이미지 1"
+    }
+   ],
    "summary": {
-    "ko": "본문이 이미지나 첨부파일로만 올라와 내용을 읽지 못했습니다. 원문을 확인해 주세요.",
-    "en": "The notice body is only an image or attachment, so it could not be read. Please check the original.",
-    "zh": "公告正文仅为图片或附件,无法读取。请查看原文。",
-    "ja": "本文が画像または添付ファイルのみのため読み取れませんでした。原文をご確認ください。"
+    "ko": "관광 산업 관련 특강 참여자를 모집해요. 관광 산업에 관심 있는 대학교 재학생, 졸업생 및 지역청년이 9월 10일까지 신청하면 온라인으로 참여할 수 있어요.",
+    "en": "We are recruiting participants for a special lecture related to the tourism industry. University students, graduates, and local youth who are interested in the tourism industry can apply online until September 10th.",
+    "zh": "我们正在招募与旅游业相关的特别讲座的参与者。对旅游业感兴趣的大专院校在读学生、毕业生及本地青年可在9月10日前在线申请参加。",
+    "ja": "観光業界に関連する特別講義の参加者を募っています。観光業界に興味がある大学在籍生、卒業生及び地域青年は9月10日までにオンラインで申請できます。"
    },
    "terms": [
-    "특강"
+    "특강",
+    "재학생",
+    "접수"
    ],
-   "regulation": null,
-   "aiPending": true
+   "regulation": null
   },
   {
    "id": "2-27-120814",
@@ -23870,28 +23920,44 @@
    "link": "https://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1850&CONTENTS_NO=&SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=27&BOARD_CATEGORY_NO=&BBS_SEQ=120814&pageNo=1",
    "date": "2026-09-02",
    "hits": 27,
-   "bodyStatus": "file",
+   "bodyStatus": "poster",
    "title": "「충청권 특화산업연계 수요기반 ICT현장적용 프로젝트」참가모집",
-   "titleTr": {},
+   "titleTr": {
+    "en": "\"Chungcheonggwan Specialized Industry-Linked ICT Field Application Project\" Participation Recruitment",
+    "zh": "“ Chungcheonggwan 特化产业连结 ICT 现场应用项目” 参与招募",
+    "ja": "「忠清地域特化産業連携ICT現場応用プロジェクト」参加募集"
+   },
    "category": "contest",
    "deadline": "2026-09-11T23:59",
    "benefit": {
     "text": {
-     "ko": "최종 우수 프로젝트 팀 대상 총 상금 200만원 및 부상 수여"
+     "ko": "업스테이지 개발 현장 실무자 멘토링, AI 모델(API) 크레딧 무상 제공, 공식 참가확인증 발급, 우수 5개 팀 기업 현장적용 및 성과공유회·전시 지원, 홍보 동영상 제작 지원, 최종 우수팀 총 상금 200만원 및 업스테이지 인턴십 지원 서류전형 면제",
+     "en": "Mentoring by field practitioners of upstage development, free provision of AI model (API) credits, official participation certificate issuance, support for application in enterprises and outcome sharing event/exhibition for top 5 teams, support for promotional video production, and exemption from document screening for the final outstanding team which will receive a total prize of 2 million won and upstage internship.",
+     "zh": "由现场实务者进行的创业开发指导，免费提供 AI 模型（API）奖励积分，颁发正式参与证明书，对优秀 5 个团队提供企业现场应用及成果分享会·展览支持，提供宣传视频制作支持，最终优秀团队可获得总计 200 万韩元奖金及创业实习的申请文件审查免除。",
+     "ja": "アップステージ開発現場実務者によるメンタリング、AIモデル（API）クレジット無料提供、公式参加確認証発行、優秀5チームへの企業現場応用および成果共有会・展示支援、プロモーション動画制作支援、最終優秀チームには総賞金200万ウォンおよびアップステージインターンシップの書類選考免除を提供します。"
     },
-    "points": 0,
-    "won": 0,
-    "prize": 2000000
+    "points": null,
+    "won": null
    },
-   "eligibility": null,
+   "eligibility": {
+    "ko": "AI·SW·데이터 프로젝트에 관심 있는 참여자",
+    "en": "Participants interested in AI, SW, and data projects",
+    "zh": "对 AI、SW 和数据项目感兴趣的参与者",
+    "ja": "AI・SW・データプロジェクトに興味のある参加者"
+   },
    "events": [],
    "hours": null,
    "evidence": {
-    "deadline": "모집 기간 2026년 9월 11일까지 ※ 참가팀 확정 시 모집을 조기 마감하며, 모집 현황에 따라 기간은 연장될 수 있음",
-    "benefit": "◦ 최종 우수 프로젝트 팀 대상 총 상금 200만원 및 부상 수여"
+    "deadline": "모집마감 | 2026년 9월 11일까지",
+    "benefit": "- 업스테이지 개발 현장 실무자 멘토링\n- AI 모델(API) 크레딧 무상 제공\n- 공식 참가확인증 발급",
+    "eligibility": "모집대상 | AI·SW·데이터 프로젝트에 관심 있는 참여자"
    },
    "evidenceVerified": true,
    "readFrom": [
+    {
+     "kind": "poster",
+     "name": "본문 이미지 1"
+    },
     {
      "kind": "file",
      "name": "붙임1_공고문 및 과업지시서.pdf"
@@ -23902,7 +23968,10 @@
     }
    ],
    "summary": {
-    "ko": "공모전·대외활동 관련 공지예요. 혜택은 최종 우수 프로젝트 팀 대상 총 상금 200만원 및 부상 수여예요. 신청은 9월 11일까지예요."
+    "ko": "충청권 특화산업 연계 ICT 현장적용 프로젝트 참여자를 모집해요. AI·SW·데이터에 관심 있는 대학원생이 9월 11일까지 신청하면 멘토링과 AI 크레딧, 참가증 등을 제공하고 12월 성과공유회에서 상금 200만원을 받을 수 있어요.",
+    "en": "We are recruiting participants for the Chungcheonggwan Specialized Industry-Linked ICT Field Application Project. Graduate students interested in AI, SW, and data can apply until September 11th to receive mentoring, AI credit, participation certificates, and have a chance to receive a prize of 2 million won at the December outcome sharing event.",
+    "zh": "我们正在招募参与 Chungcheonggwan 特化产业连结 ICT 现场应用项目的参与者。对 AI、SW 和数据感兴趣的研究生可在 9 月 11 日前申请，可获得指导、AI 奖励积分、参与证书等，并有机会在 12 月的成果分享会上获得 200 万韩元奖金。",
+    "ja": "忠清地域特化産業連携ICT現場応用プロジェクトの参加者を募っています。AI・SW・データに興味のある大学院生は9月11日まで申請すると、メンタリングやAIクレジット、参加証などを提供し、12月の成果共有会で200万ウォンの賞金を受け取ることができます。"
    },
    "terms": [
     "창업",
@@ -23916,8 +23985,7 @@
     "마감",
     "개인정보"
    ],
-   "regulation": null,
-   "aiPending": true
+   "regulation": null
   },
   {
    "id": "2-18-120177",
@@ -23982,27 +24050,46 @@
    "link": "https://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1740&CONTENTS_NO=&SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=18&BOARD_CATEGORY_NO=&BBS_SEQ=120176&pageNo=1",
    "date": "2026-09-02",
    "hits": 329,
-   "bodyStatus": "image",
+   "bodyStatus": "poster",
    "title": "2026.2학기 (기초)교양 교과목 수강제한 변경 안내",
-   "titleTr": {},
+   "titleTr": {
+    "en": "2026 Second Semester (Basic) Liberal Arts Course Enrollment Restriction Change Notice",
+    "zh": "2026年第二学期（基础）通识课程选课限制变更通知",
+    "ja": "2026年第二学期（基礎）教養科目選択制限変更のお知らせ"
+   },
    "category": "academic",
-   "deadline": null,
+   "deadline": "2026-09-02T23:59",
    "benefit": null,
-   "eligibility": null,
+   "eligibility": {
+    "ko": "전학년, 전학과 수강가능",
+    "en": "Students from other years and departments are eligible",
+    "zh": "其他年级和专业可选",
+    "ja": "他学年・他学科の生徒も選択可能"
+   },
    "events": [],
    "hours": null,
-   "evidence": {},
-   "evidenceVerified": null,
-   "readFrom": [],
-   "summary": {
-    "ko": "본문이 이미지나 첨부파일로만 올라와 내용을 읽지 못했습니다. 원문을 확인해 주세요.",
-    "en": "The notice body is only an image or attachment, so it could not be read. Please check the original.",
-    "zh": "公告正文仅为图片或附件,无法读取。请查看原文。",
-    "ja": "本文が画像または添付ファイルのみのため読み取れませんでした。原文をご確認ください。"
+   "evidence": {
+    "deadline": "수강신청일시 : 2026.9.2.(수) 16:00",
+    "eligibility": "| 7174 | 철학의고전 | 채희도 | 전학년, 전학과 수강가능 |"
    },
-   "terms": [],
-   "regulation": null,
-   "aiPending": true
+   "evidenceVerified": true,
+   "readFrom": [
+    {
+     "kind": "poster",
+     "name": "본문 이미지 1"
+    }
+   ],
+   "summary": {
+    "ko": "2026.2학기 교양 수업 수강제한이 변경된 공지예요. 전학년, 전학과 학생이 9월 2일까지 수강신청하면 철학의고전 과목을 수강할 수 있어요.",
+    "en": "Students from other years and departments can enroll in the 'Classics of Philosophy' course if they apply for enrollment by September 2nd.",
+    "zh": "其他年级和专业的学生在9月2日之前进行选课申请，可以修读《哲学经典》课程。",
+    "ja": "他の学年・学科の学生は9月2日までに選択申請をすれば『哲学の古典』科目を受講できます。"
+   },
+   "terms": [
+    "수강신청",
+    "학수번호"
+   ],
+   "regulation": null
   },
   {
    "id": "2-18-120175",
@@ -24147,34 +24234,54 @@
    "link": "https://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1750&CONTENTS_NO=&SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=1&BOARD_CATEGORY_NO=&BBS_SEQ=119896&pageNo=1",
    "date": "2026-09-02",
    "hits": 472,
-   "bodyStatus": "file",
+   "bodyStatus": "poster",
    "title": "[교외] 2026년 제29기 두을장학재단 두을장학생 선발 안내(~9/30 18:00)",
-   "titleTr": {},
+   "titleTr": {
+    "en": "[Off-campus] Notice of Selection for the Doo-eul Scholarship Foundation Doo-eul Scholarship Students (Deadline: September 30, 18:00)",
+    "zh": "[校外] 2026年第二十九期豆乙奖学金基金会豆乙奖学金生选拔通知（截止至9月30日18:00）",
+    "ja": "[校外] 2026年第29期豆乙奨学金財団豆乙奨学生選抜案内（締切：9月30日18:00）"
+   },
    "category": "scholarship",
-   "deadline": "2026-09-30T23:59",
+   "deadline": "2026-09-30T18:00",
    "benefit": {
     "text": {
-     "ko": "√ 매학기 자기계발비 지원 (학기당 90만원/학점 및 활동평가 후 계속지급 평가)"
+     "ko": "등록금 전액 지원(2학년~졸업 시까지), 자기계발비 지원(학기당 90만원)",
+     "en": "Full tuition support (from second year to graduation), Self-development support (900,000 won per semester)",
+     "zh": "全额学费支持（从二年级到毕业），自我发展支持（每学期90万元）",
+     "ja": "授業料の全額支援（2年次から卒業まで）、自己開発支援（学期ごとに90万ウォン）"
     },
-    "points": 0,
+    "points": null,
     "won": 900000
    },
-   "eligibility": null,
+   "eligibility": {
+    "ko": "대한민국 국적을 가진 국내 4년제 대학교 1학년 2학기 재학 중인 여자 대학생(사이버대학, 방송통신대학 제외), 26년 정규 1학기를 총 15학점 이상 이수하고 성적 3.5/4.5 이상 취득자",
+    "en": "Female undergraduate students currently enrolled in their first semester of the first year at a domestic four-year university in South Korea (excluding cyber universities and broadcasting communication universities), who have completed at least 15 credits and achieved a GPA of 3.5/4.5 or higher during the regular first semester of 2026",
+    "zh": "具有韩国国籍、正在就读于国内四年制大学一年级第二学期的女性大学生（不包括网络大学和广播通信大学），在2026年正规第一学期修满15学分以上，且成绩达到3.5/4.5或以上",
+    "ja": "韓国国籍を有し、国内4年制大学1年生2学期に在籍中の女性大学生（サイバーアカデミー、放送通信大学を除く）、2026年正規1学期に合計15単位以上を修了し、成績3.5/4.5以上を取得している者"
+   },
    "events": [],
    "hours": null,
    "evidence": {
-    "deadline": "√ 외국어 자격증 사본 (유효기간 : 2024.09.01.~2026.09.30.이내 유효성적)",
-    "benefit": "√ 매학기 자기계발비 지원 (학기당 90만원/학점 및 활동평가 후 계속지급 평가)"
+    "deadline": "접수기간\n2026년 9월 1일(화) ~ 9월 30일(수) 18:00\n* 온라인 지원신청만 가능하며, 접수 마감일 18시 자동 마감",
+    "benefit": "선발혜택\n① 2학년 1학기~졸업 시까지 등록금 전액\n② 매학기 자기계발비 지원(학기당 90만원)",
+    "eligibility": "① 두을장학재단의 인재상에 공감하며, 차세대 여성지도자가 되기를 희망하는 자\n② 26년 2학기 기준 국내 4년제 대학교 1학년 2학기 재학 중인 여자 대학생(사이버대학, 방송통신대학 제외)\n③ 26년 정규 1학기를 총 15학점 이상 이수하고,"
    },
    "evidenceVerified": true,
    "readFrom": [
+    {
+     "kind": "poster",
+     "name": "본문 이미지 1"
+    },
     {
      "kind": "file",
      "name": "1. 제29기 두을장학생 선발요강.pdf"
     }
    ],
    "summary": {
-    "ko": "장학 관련 공지예요. 혜택은 √ 매학기 자기계발비 지원 (학기당 90만원/학점 및 활동평가 후 계속지급 평가)예요. 신청은 9월 30일까지예요."
+    "ko": "두을장학재단 장학생 선발 공지예요. 재학생이 9월 30일까지 지원하면 등록금 전액과 자기계발비 90만원을 받고, 2학년~졸업 시까지 혜택을 받을 수 있어요.",
+    "en": "This is a notice about selecting Doo-eul Scholarship Foundation scholarship students. If current students apply by September 30, they will receive full tuition support and 900,000 won for self-development, and can enjoy the benefits from their second year until graduation.",
+    "zh": "这是关于豆乙奖学金基金会奖学金生选拔的通知。如果在籍学生在9月30日前申请，可获得全额学费和90万元的自我发展费用，并可在二年级到毕业期间享受相关福利。",
+    "ja": "これは豆乙奨学金財団奨学生選抜に関するお知らせです。在籍生が9月30日までに応募すれば、授業料を全額支給し、自己開発費として90万ウォンを支給し、2年次から卒業するまでその恩恵を受けられます。"
    },
    "terms": [
     "장학",
@@ -24209,8 +24316,7 @@
      "url": "https://rule.konkuk.ac.kr/lmxsrv/law/lawDetail.do?SEQ=371&LAWGROUP=1&PAGE=1",
      "checked": "2026-11-23"
     }
-   },
-   "aiPending": true
+   }
   },
   {
    "id": "2-1-119895",
@@ -24218,29 +24324,84 @@
    "link": "https://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1750&CONTENTS_NO=&SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=1&BOARD_CATEGORY_NO=&BBS_SEQ=119895&pageNo=1",
    "date": "2026-09-02",
    "hits": 99,
-   "bodyStatus": "image",
+   "bodyStatus": "poster",
    "title": "[교외] 2026년 2학기 통영시 대학생 등록금 전액 지원사업 안내(~9/30)",
-   "titleTr": {},
+   "titleTr": {
+    "en": "[Off-campus] Full Tuition Scholarship for Tongyeong City University Students (2026 Semester, Deadline: September 30)",
+    "zh": "[校外] 2026学年第二学期统营市大学生学费全免项目通知（截至9月30日）",
+    "ja": "[校外] 2026学年第二学期統營市大学生授業料全額支援事業のお知らせ（締切：9月30日）"
+   },
    "category": "scholarship",
-   "deadline": null,
-   "benefit": null,
-   "eligibility": null,
+   "deadline": "2026-09-30T23:59",
+   "benefit": {
+    "text": {
+     "ko": "등록금 전액 지원(최소 30%~최대 100%)",
+     "en": "Full tuition support (minimum 30%~maximum 100%)",
+     "zh": "全额学费资助（最低30%~最高100%）",
+     "ja": "授業料全額支援（最低30%〜最高100%）"
+    },
+    "points": null,
+    "won": null
+   },
+   "eligibility": {
+    "ko": "통영시에 주소를 둔 34세 이하 대학 1~4학년 재학생",
+    "en": "Currently enrolled university students in their first to fourth year who are under 34 years old and have residence in Tongyeong City",
+    "zh": "居住在统营市、年龄在34岁以下的大学一至四年级在校生",
+    "ja": "統營市に住所を置き、34歳未満で大学1～4年生の在籍者"
+   },
    "events": [],
    "hours": null,
-   "evidence": {},
-   "evidenceVerified": null,
-   "readFrom": [],
+   "evidence": {
+    "deadline": "신청기간: 2026.9.1.(화) ~ 9.30.(수)",
+    "benefit": "지원내용 대학등록금 중 본인부담 등록금을 지원하나 관내 출생 및 관내 초·중·고 졸업 여부에 따라 최소 30%~최대 100% 지원",
+    "eligibility": "지원대상 통영시에 주소를 둔 34세 이하 대학 1~4학년 재학생"
+   },
+   "evidenceVerified": true,
+   "readFrom": [
+    {
+     "kind": "poster",
+     "name": "본문 이미지 1"
+    }
+   ],
    "summary": {
-    "ko": "본문이 이미지나 첨부파일로만 올라와 내용을 읽지 못했습니다. 원문을 확인해 주세요.",
-    "en": "The notice body is only an image or attachment, so it could not be read. Please check the original.",
-    "zh": "公告正文仅为图片或附件,无法读取。请查看原文。",
-    "ja": "本文が画像または添付ファイルのみのため読み取れませんでした。原文をご確認ください。"
+    "ko": "통영시 대학생 등록금 지원 사업 참여자를 모집해요. 통영시에 주소를 둔 34세 이하 재학생이 9월 30일까지 신청하면 등록금 전액 지원을 받을 수 있어요.",
+    "en": "We are recruiting participants for the Tongyeong City University Tuition Support Program. If you are a currently enrolled university student under 34 years old with your residence in Tongyeong City and apply by September 30, you can receive full tuition support.",
+    "zh": "我们正在招募统营市大学生学费支持项目的参与者。如果您是居住在统营市、年龄在34岁以下的在校大学生，并于9月30日前申请，即可获得全额学费资助。",
+    "ja": "統營市大学生授業料支援事業の参加者を募っております。統營市に住所を置き、34歳未満で在籍している大学1～4年生が9月30日までに申請すれば、授業料全額を支援いたします。"
    },
    "terms": [
-    "등록금"
+    "등록금",
+    "학점",
+    "장학금",
+    "재학생",
+    "국가장학금",
+    "장학",
+    "제출서류",
+    "접수",
+    "접수기간"
    ],
-   "regulation": null,
-   "aiPending": true
+   "regulation": {
+    "id": "scholarship",
+    "title": {
+     "ko": "장학생 자격 제한",
+     "en": "Scholarship eligibility limits",
+     "zh": "奖学金资格限制",
+     "ja": "奨学生の資格制限"
+    },
+    "rule": {
+     "law": "GLOCAL(글로컬)캠퍼스 장학규정",
+     "no": "8",
+     "article": "자격 제한",
+     "quote": "① 다음 각 호의 1에 해당되는 자는 장학생 선발에서 제외한다. 1. 학칙에 의거하여 징계를 받은 자 2. 8학기를 초과한 자. 다만, 복수학위 프로그램, 프로그램성 장학에 선발된 자, 성인·재직자 전형은 예외로 한다. 3. 장학금 지급 목적을 달성할 수 없다고 판단되는 자",
+     "tr": {
+      "en": "① Students who fall under any of the following categories are excluded from scholarship selection: 1. Those who have been disciplined according to the Student Regulations 2. Those who have exceeded eight semesters. However, students selected for dual-degree programs, program-specific scholarships, adult/reemployed applicant programs are exceptions. 3. Those whose purpose of receiving a scholarship cannot be fulfilled.",
+      "zh": "① 符合以下任一情况的学生不得参与奖学金选拔：1. 根据学生规章受到处分者；2. 超过8学期者。但双学位项目、项目型奖学金及成人/在职人员招生者除外；3. 判定无法实现奖学金发放目的者。",
+      "ja": "① 以下の各号の1に該当する者は奨学金選考から除外される。1. 学則に基づき処分を受けた者 2. 8学期を超えた者。ただし、双学位プログラム、プログラム性奨学金に選ばれた者、成人・再職者入試は例外とする。3. 奨学金支給の目的を達成することができないと判断される者"
+     },
+     "url": "https://rule.konkuk.ac.kr/lmxsrv/law/lawDetail.do?SEQ=371&LAWGROUP=1&PAGE=1",
+     "checked": "2026-11-23"
+    }
+   }
   },
   {
    "id": "2-1-119894",
@@ -24248,33 +24409,54 @@
    "link": "https://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1750&CONTENTS_NO=&SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=1&BOARD_CATEGORY_NO=&BBS_SEQ=119894&pageNo=1",
    "date": "2026-09-02",
    "hits": 214,
-   "bodyStatus": "file",
+   "bodyStatus": "poster",
    "title": "[교외] 2026년 2학기 한국선원복지고용센터 선원가족 장학생 선발 안내(~10/23)",
-   "titleTr": {},
+   "titleTr": {
+    "en": "[Off-campus] Scholarship Recruitment for Seafarers' Family Students for the Second Semester of 2026 (~10/23)",
+    "zh": "[校外] 2026年第二学期韩国海员家属奖学金申请通知(~10/23)",
+    "ja": "[オフキャンパス] 2026年第二学期韓国海員家族奨学金選考案内(~10/23)"
+   },
    "category": "scholarship",
-   "deadline": null,
+   "deadline": "2026-10-23T23:59",
    "benefit": {
     "text": {
-     "ko": "ㅇ 고등학생 : 연간 120만원 이상 사내 학자금 및 타 기관 장학금을 지원받는 경우"
+     "ko": "장학금 지원 (고등학생: 120만원, 대학생: 최대 350만원)",
+     "en": "Scholarship support (High school student: 1,200,000 won, College student: Up to 3,500,000 won)",
+     "zh": "奖学金支持（高中生：120万韩元，大学生：最高达350万韩元）",
+     "ja": "奨学金支援（高校生：120万ウォン、大学生：最大350万ウォン）"
     },
-    "points": 0,
-    "won": 1200000
+    "points": null,
+    "won": 3500000
    },
-   "eligibility": null,
+   "eligibility": {
+    "ko": "선원법 제3조 적용 선박에 승선 및 하선한 선원 및 가족 (고등학생 또는 대학생)",
+    "en": "Seafarers and their family members who have boarded and disembarked from ships subject to Article 3 of the Seafarers Act (High school or college students)",
+    "zh": "根据《海员法》第3条适用的船舶上登船及下船的海员及其家属（高中生或大学生）",
+    "ja": "海員法第3条に適用される船舶に乗船及び下船した海員および家族（高校生または大学生）"
+   },
    "events": [],
    "hours": null,
    "evidence": {
-    "benefit": "ㅇ 고등학생 : 연간 120만원 이상 사내 학자금 및 타 기관 장학금을 지원받는 경우"
+    "deadline": "2026. 09. 01. ~ 10. 23.",
+    "benefit": "120만원\n본인 부담액 기준 최대 350만원*",
+    "eligibility": "선원법 제3조 적용선박에 승선 및 하선한 선원 및 가족\nㅇ (대 상) 선 원 법 제3조 적 용 선 박 에 승 선 및 하 선 한 선 원 및 그 가 족* 중 고 등 학 생 혹 은 대 학 생"
    },
    "evidenceVerified": true,
    "readFrom": [
+    {
+     "kind": "poster",
+     "name": "본문 이미지 1"
+    },
     {
      "kind": "file",
      "name": "2026년 2학기 선원가족장학사업 선발요강.pdf"
     }
    ],
    "summary": {
-    "ko": "장학 관련 공지예요. 혜택은 ㅇ 고등학생 : 연간 120만원 이상 사내 학자금 및 타 기관 장학금을 지원받는 경우예요."
+    "ko": "2026년 2학기 선원가족 장학생을 모집합니다. 재학생 및 휴학생이 10월 23일까지 신청하면 고등학생은 120만원, 대학생은 최대 350만원의 장학금을 받을 수 있어요.",
+    "en": "We are recruiting scholarship recipients for seafarers' family students in the second semester of 2026. Current and suspended students who apply by October 23 can receive a scholarship of 1,200,000 won for high school students and up to 3,500,000 won for college students.",
+    "zh": "2026年第二学期海员家属奖学金招生中。在10月23日前申请的在校生及休学生，可获得高中生120万韩元、大学生最高达350万韩元的奖学金。",
+    "ja": "2026年第二学期の海員家族奨学金を募集しています。10月23日までに申請した在籍者及び休学者は、高校生には120万ウォン、大学生には最大で350万ウォンの奨学金を受け取ることができます。"
    },
    "terms": [
     "장학",
@@ -24309,8 +24491,7 @@
      "url": "https://rule.konkuk.ac.kr/lmxsrv/law/lawDetail.do?SEQ=371&LAWGROUP=1&PAGE=1",
      "checked": "2026-11-23"
     }
-   },
-   "aiPending": true
+   }
   },
   {
    "id": "2-1-119893",
@@ -24398,27 +24579,59 @@
    "link": "https://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1750&CONTENTS_NO=&SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=1&BOARD_CATEGORY_NO=&BBS_SEQ=119892&pageNo=1",
    "date": "2026-09-02",
    "hits": 275,
-   "bodyStatus": "image",
+   "bodyStatus": "poster",
    "title": "[교외] 2026년도 세종연구원 세종이도인재장학금 핵심인재육성 장학생 모집 안내(~9/30 18:00)",
-   "titleTr": {},
+   "titleTr": {
+    "en": "[Campus] 2026 Scholarship Recruitment for the Chosun Institute's Jeongjeong Ido Talent Scholarship (Application Deadline: September 30, 18:00)",
+    "zh": "[校园] 2026年朝鲜研究院崔荣俊人才奖学金核心人才培养奖学金生招募通知（申请截止日期：9月30日18:00）",
+    "ja": "[キャンパス] 2026年朝鮮研究院チェジュンイドンレンドンチカクシュランカイセキ チェジュンイドンタレンチュウ シャンカイニンショウ ジュウセンカイセキ シャンカイニンショウモウセイ（申請締切：9月30日18:00）"
+   },
    "category": "scholarship",
-   "deadline": null,
-   "benefit": null,
-   "eligibility": null,
+   "deadline": "2026-09-30T18:00",
+   "benefit": {
+    "text": {
+     "ko": "장학금 지급",
+     "en": "Scholarship payment",
+     "zh": "奖学金发放",
+     "ja": "奨学金支給"
+    },
+    "points": null,
+    "won": null
+   },
+   "eligibility": {
+    "ko": "초-중-고-대학생, 성적우수, 특기적성, 모범, 공익발전기여, 장애인 모범, 장애인 특기적성, 다문화가정·북한이탈주민, 학교 밖 청소년, 문해교육 학력인정 졸업(예정)자",
+    "en": "Elementary, middle, high school, and university students; academic excellence; special talents; model students; contributions to public welfare; model disabled persons; special talents among disabled persons; multicultural families and North Korean defectors; out-of-school youth; literacy education degree-recognized graduates (expected)",
+    "zh": "小学生、中学生、中学生、大学生；学业优秀；特殊才能；模范生；对公共福利的贡献；残疾模范生；残疾特殊才能者；多元文化家庭·朝鲜脱北者；校外青少年；扫盲教育学历认可毕业生（预计）",
+    "ja": "小学生、中学生、高校生、大学生；成績優秀者；特技的質者；模範生；公益発展貢献者；障害者模範者；障害者特技的質者；多文化家庭・北朝鮮脱走者；学校外青少年；文盲教育学力認定卒業（予定）者"
+   },
    "events": [],
    "hours": null,
-   "evidence": {},
-   "evidenceVerified": null,
-   "readFrom": [],
+   "evidence": {
+    "deadline": "- 핵심인재육성(우수인재, 특기적성): 2026.8.10.(월) ~ 9.30.(수), 18:00까지",
+    "benefit": "세종이도인재 장학금",
+    "eligibility": "| 핵심인재육성 장학사업 | 우수인재 | 성적우수 | 고등학생 | 88명 | 학교장 추천(공문 접수) |\n| | 특기적성 | 초-중-고-대학생 | 35명 | 개별 신청 |\n| 디딤돌 장학사업 | 모범 | 초-중-고등학생 | 148명 | 개별 신청 |"
+   },
+   "evidenceVerified": true,
+   "readFrom": [
+    {
+     "kind": "poster",
+     "name": "본문 이미지 1"
+    }
+   ],
    "summary": {
-    "ko": "본문이 이미지나 첨부파일로만 올라와 내용을 읽지 못했습니다. 원문을 확인해 주세요.",
-    "en": "The notice body is only an image or attachment, so it could not be read. Please check the original.",
-    "zh": "公告正文仅为图片或附件,无法读取。请查看原文。",
-    "ja": "本文が画像または添付ファイルのみのため読み取れませんでした。原文をご確認ください。"
+    "ko": "세종연구원 세종이도인재장학금 신청자를 모집해요. 초-중-고-대학생 등 대상이 9월 30일까지 신청하면 장학금을 받을 수 있어요.",
+    "en": "The Chosun Institute is recruiting applicants for the Jeongjeong Ido Talent Scholarship. Students from elementary to university can apply and receive a scholarship if they submit their applications by September 30.",
+    "zh": "朝鲜研究院正在招募崔荣俊人才奖学金申请人。小学到大学的学生如果在9月30日前提交申请，可以获得奖学金。",
+    "ja": "朝鮮研究院はチェジュンイドンタレンチュウシャンカイニンショウを募集しています。小中高大学生が9月30日までに申請すれば奨学金を受け取ることができます。"
    },
    "terms": [
     "장학금",
-    "장학"
+    "장학",
+    "학자금대출",
+    "제출서류",
+    "접수",
+    "선발",
+    "접수기간"
    ],
    "regulation": {
     "id": "scholarship",
@@ -24441,8 +24654,7 @@
      "url": "https://rule.konkuk.ac.kr/lmxsrv/law/lawDetail.do?SEQ=371&LAWGROUP=1&PAGE=1",
      "checked": "2026-11-23"
     }
-   },
-   "aiPending": true
+   }
   },
   {
    "id": "2-1-119891",
@@ -24450,27 +24662,54 @@
    "link": "https://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1750&CONTENTS_NO=&SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=1&BOARD_CATEGORY_NO=&BBS_SEQ=119891&pageNo=1",
    "date": "2026-09-02",
    "hits": 41,
-   "bodyStatus": "file",
+   "bodyStatus": "poster",
    "title": "[교외] 2026년 하반기 군산시 대학생 학자금 이자지원 안내(~9/4 18:00)",
-   "titleTr": {},
+   "titleTr": {
+    "en": "[Off-campus] Notice on Interest Subsidy for College Students in Gunsan City (until September 4, 18:00)",
+    "zh": "[校外] 2026年下半年 Gunsan市大学生贷款利息补贴通知（~9月4日18:00）",
+    "ja": "[校外] 2026年下半年 グンサン市大学生貸し手利息補助金のお知らせ（～9月4日18:00）"
+   },
    "category": "scholarship",
-   "deadline": "2026-09-04T18:00",
-   "benefit": null,
-   "eligibility": null,
+   "deadline": "2026-09-04T23:59",
+   "benefit": {
+    "text": {
+     "ko": "학자금 이자 지원",
+     "en": "Interest subsidy on student loans",
+     "zh": "贷款利息补贴",
+     "ja": "学資金利息補助"
+    },
+    "points": null,
+    "won": null
+   },
+   "eligibility": {
+    "ko": "군산시 주민등록자 전국 대학(원) 재(휴)학생 및 졸업 후 5년 이내 졸업생",
+    "en": "Residents of Gunsan City who are currently enrolled or on leave of absence at any university nationwide, and graduates within five years after graduation",
+    "zh": "Gunsan市居民登记在册的全国大学(院)在籍(休学)学生及毕业5年以内的毕业生",
+    "ja": "グンサン市在住で、全国の大学(院)に在籍または休学中の学生および卒業後5年以内の卒業生"
+   },
    "events": [],
    "hours": null,
    "evidence": {
-    "deadline": "❍ (접수기간) 2026. 8. 10.(월) ~ 9. 4.(금) 18:00까지"
+    "deadline": "신청기간 2026.8.10.(월) ~ 9.4.(금)\n❍ (접수기간) 2026. 8. 10.(월) ~ 9. 4.(금) 18:00까지",
+    "benefit": "❍ (지원내용) 한국장학재단을 통해 대출받은 학자금(등록금 및 생활비)의\n❍ (지원시기) 2026. 12월 경 지급 ※개인별 금융계좌로 입금 불가",
+    "eligibility": "지원대상 공고일 기준(26.8.4.)군산시에 주민등록\n및 졸업 후 5년이내의 졸업생"
    },
    "evidenceVerified": true,
    "readFrom": [
+    {
+     "kind": "poster",
+     "name": "본문 이미지 1"
+    },
     {
      "kind": "file",
      "name": "[공고]2026년 하반기 군산시 대학생 학자금 이자지원.hwpx"
     }
    ],
    "summary": {
-    "ko": "장학 관련 공지예요. 신청은 9월 4일 18시까지예요."
+    "ko": "군산시 대학생 학자금 이자 지원 신청을 안내해요. 군산시 주민등록자 재(휴)학생 및 졸업 후 5년 이내 졸업생이 9월 4일까지 신청하면 2026년 상반기 발생이자를 지원받아요.",
+    "en": "We are informing you about the application for interest subsidy on college student loans in Gunsan City. Residents of Gunsan City who are currently enrolled or on leave of absence at any university nationwide, and graduates within five years after graduation, can apply by September 4 to receive the interest incurred during the first half of 2026.",
+    "zh": "我们通知您关于Gunsan市大学生贷款利息补贴的申请。Gunsan市居民登记在册的全国大学(院)在籍(休学)学生及毕业5年以内的毕业生，于9月4日前申请可获得2026年上半年产生的贷款利息补贴。",
+    "ja": "グンサン市における大学生の学資金利息補助金申請についてご案内いたします。グンサン市在住で、全国の大学(院)に在籍または休学中の学生および卒業後5年以内の卒業生は、9月4日までに申請することで2026年上半年に発生した利息を補助金として支給いたします。"
    },
    "terms": [
     "휴학",
@@ -24519,8 +24758,7 @@
      "url": "https://rule.konkuk.ac.kr/lmxsrv/law/lawDetail.do?SEQ=409&LAWGROUP=1&PAGE=1",
      "checked": "2026-11-23"
     }
-   },
-   "aiPending": true
+   }
   },
   {
    "id": "2-1-119890",
@@ -24528,27 +24766,54 @@
    "link": "https://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1750&CONTENTS_NO=&SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=1&BOARD_CATEGORY_NO=&BBS_SEQ=119890&pageNo=1",
    "date": "2026-09-02",
    "hits": 59,
-   "bodyStatus": "file",
+   "bodyStatus": "poster",
    "title": "[교외] 2026년 제2회 서울시 대학(원)생  학자금대출이자 지원 신청 안내(~9/15 18:00)",
-   "titleTr": {},
+   "titleTr": {
+    "en": "[Off-campus] Notice on Application for Interest Support of Student Loans for University (Graduate) Students in Seoul City (Second Recruitment, 2026) (~September 15, 18:00)",
+    "zh": "[校外] 2026年第二期首尔市大学(研究生)生教育贷款利息补助申请通知(~9月15日18:00)",
+    "ja": "[校外] 2026年第二回 서울市大学(院)生 学資貸し手の金利補助申請案内(~9月15日18:00)"
+   },
    "category": "scholarship",
-   "deadline": "2026-09-15T18:00",
-   "benefit": null,
-   "eligibility": null,
+   "deadline": "2026-09-15T23:59",
+   "benefit": {
+    "text": {
+     "ko": "학자금 대출 이자 지원",
+     "en": "Interest Support for Student Loans",
+     "zh": "教育贷款利息补助",
+     "ja": "学資貸し手の金利補助"
+    },
+    "points": null,
+    "won": null
+   },
+   "eligibility": {
+    "ko": "서울 거주 대학(원)생, 2026년 상반기 학자금 대출 이자가 발생한 자",
+    "en": "University (Graduate) Students Residing in Seoul, Who Have Incurred Interest on Student Loans for the First Half of 2026",
+    "zh": "居住在首尔的大学（研究生）生，2026年上半年发生教育贷款利息者",
+    "ja": "Seoulに居住する大学（院）生、2026年上半期に学資貸し手の金利が発生した者"
+   },
    "events": [],
    "hours": null,
    "evidence": {
-    "deadline": "4. 신청기간 : 2026. 8. 3.(월) 10:00 ~ 2026. 9. 15.(화) 18:00"
+    "deadline": "접수기간 8월 3일(월) 10:00 ~ 9월 15일(화) 18:00\n2",
+    "benefit": "지원내용 2026년 상반기(1~6월)에 발생한 학자금 대출 이자 지원\n3. 지원내용 : 한국장학재단 학자금대출에 대해 2026년 1월~6월(상반기)에 발생한 이자액을 소득분위별로 지원기준과 같이 지원",
+    "eligibility": "지원대상 한국장학재단에서 학자금 대출을 받은 서울 거주 대학(원)\n- 일반 상환 학자금대출 및 취업 후 상환 학자금대출자 대상(생활비 대출 포함)\n▪ 공고일 기준 주민등록상 주소가 서울이며, 2026년 상반기(1~6월) 국내 대학·대학원 재학생 및 휴학생"
    },
    "evidenceVerified": true,
    "readFrom": [
+    {
+     "kind": "poster",
+     "name": "본문 이미지 1"
+    },
     {
      "kind": "file",
      "name": "2026년 제2회 대학생 학자금대출 이자지원 공고문.hwpx"
     }
    ],
    "summary": {
-    "ko": "장학 관련 공지예요. 신청은 9월 15일 18시까지예요."
+    "ko": "서울시 대학(원)생 학자금 대출 이자 지원 신청을 안내해요. 서울 거주 재학생 및 5년 이내 졸업생이 9월 15일까지 신청하면 2026년 상반기 이자를 지원받을 수 있어요.",
+    "en": "We are informing you about the application for interest support on student loans for university (graduate) students in Seoul. If current students or graduates within five years who reside in Seoul apply by September 15, they can receive support for the interest incurred during the first half of 2026.",
+    "zh": "我们通知您关于首尔市大学（研究生）生教育贷款利息补助的申请。如果居住在首尔的在校生或毕业五年内者于9月15日前申请，可获得2026年上半年的贷款利息补助。",
+    "ja": "Seoul市大学（院）生学資貸し手の金利補助申請についてお知らせします。Seoulに居住する在学生または卒業後5年以内の方は、9月15日までに申請すると2026年上半年分の金利を補助してもらえます。"
    },
    "terms": [
     "학자금대출",
@@ -24597,8 +24862,7 @@
      "url": "https://rule.konkuk.ac.kr/lmxsrv/law/lawDetail.do?SEQ=409&LAWGROUP=1&PAGE=1",
      "checked": "2026-11-23"
     }
-   },
-   "aiPending": true
+   }
   },
   {
    "id": "2-25-119730",
@@ -24606,27 +24870,43 @@
    "link": "https://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1830&CONTENTS_NO=&SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=25&BOARD_CATEGORY_NO=&BBS_SEQ=119730&pageNo=1",
    "date": "2026-09-02",
    "hits": 58,
-   "bodyStatus": "image",
+   "bodyStatus": "poster",
    "title": "2026년 제8회 대흥이네 마을축제 자원봉사자 모집",
-   "titleTr": {},
+   "titleTr": {
+    "en": "2026 8th Daeheungne Village Festival Volunteer Recruitment",
+    "zh": "2026年第8届大兴家村庆典志愿者招募",
+    "ja": "2026年第8回大興家村祭 ボランティア募集"
+   },
    "category": "contest",
-   "deadline": null,
+   "deadline": "2026-09-19T23:59",
    "benefit": null,
-   "eligibility": null,
+   "eligibility": {
+    "ko": "대흥동 주민 및 지역 사회 구성원",
+    "en": "Residents of Daeheung-dong and local community members",
+    "zh": "大兴洞居民及当地社区成员",
+    "ja": "大興洞の住民および地域のコミュニティメンバー"
+   },
    "events": [],
    "hours": null,
-   "evidence": {},
-   "evidenceVerified": null,
-   "readFrom": [],
+   "evidence": {
+    "deadline": "2026. 9.19.(토) 10:30-16:00",
+    "eligibility": "대흥동 주민센터 일대"
+   },
+   "evidenceVerified": true,
+   "readFrom": [
+    {
+     "kind": "poster",
+     "name": "본문 이미지 1"
+    }
+   ],
    "summary": {
-    "ko": "본문이 이미지나 첨부파일로만 올라와 내용을 읽지 못했습니다. 원문을 확인해 주세요.",
-    "en": "The notice body is only an image or attachment, so it could not be read. Please check the original.",
-    "zh": "公告正文仅为图片或附件,无法读取。请查看原文。",
-    "ja": "本文が画像または添付ファイルのみのため読み取れませんでした。原文をご確認ください。"
+    "ko": "대흥이네 마을축제 자원봉사자 모집해요. 대흥동 주민 및 지역 사회 구성원이 9월 19일까지 신청하면 행사 당일 참여 가능해요.",
+    "en": "Daeheungne Village Festival volunteer recruitment. Residents of Daeheung-dong and local community members can apply until September 19th, and will be able to participate on the day of the event.",
+    "zh": "大兴家村庆典志愿者招募。大兴洞居民及当地社区成员可在9月19日前申请，届时可参与活动。",
+    "ja": "大興家村祭のボランティアを募集しています。大興洞の住民および地域のコミュニティメンバーは9月19日までに申請すれば、当日参加可能です。"
    },
    "terms": [],
-   "regulation": null,
-   "aiPending": true
+   "regulation": null
   },
   {
    "id": "2-25-119729",
@@ -24634,27 +24914,43 @@
    "link": "https://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1830&CONTENTS_NO=&SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=25&BOARD_CATEGORY_NO=&BBS_SEQ=119729&pageNo=1",
    "date": "2026-09-02",
    "hits": 54,
-   "bodyStatus": "image",
+   "bodyStatus": "poster",
    "title": "2026년 동작구 어린이 운동회 자원봉사자 모집",
-   "titleTr": {},
+   "titleTr": {
+    "en": "Recruitment of Volunteers for the 2026 Jongno-gu Children's Sports Festival",
+    "zh": "2026年钟路区儿童运动会志愿者招募",
+    "ja": "2026年鐘路区児童スポーツフェスティバルのボランティア募集"
+   },
    "category": "contest",
-   "deadline": null,
+   "deadline": "2026-09-21T23:59",
    "benefit": null,
-   "eligibility": null,
+   "eligibility": {
+    "ko": "동작구 거주자 또는 지역사회 활동에 관심 있는 누구",
+    "en": "Residents of Jongno-gu or anyone interested in local community activities",
+    "zh": "钟路区居民或对本地社区活动感兴趣的人",
+    "ja": "鐘路区在住者または地域コミュニティ活動に興味のある誰でも"
+   },
    "events": [],
    "hours": null,
-   "evidence": {},
-   "evidenceVerified": null,
-   "readFrom": [],
+   "evidence": {
+    "deadline": "일시: 2026.09.21.(월)-23.(수)9:30-13:00",
+    "eligibility": "함께해요!"
+   },
+   "evidenceVerified": true,
+   "readFrom": [
+    {
+     "kind": "poster",
+     "name": "본문 이미지 1"
+    }
+   ],
    "summary": {
-    "ko": "본문이 이미지나 첨부파일로만 올라와 내용을 읽지 못했습니다. 원문을 확인해 주세요.",
-    "en": "The notice body is only an image or attachment, so it could not be read. Please check the original.",
-    "zh": "公告正文仅为图片或附件,无法读取。请查看原文。",
-    "ja": "本文が画像または添付ファイルのみのため読み取れませんでした。原文をご確認ください。"
+    "ko": "동작구 어린이 운동회 자원봉사자를 모집합니다. 동작구 거주자 또는 지역사회 활동에 관심 있는 사람이 9월 21일까지 신청하면 행사일정은 9월 21일부터 23일까지이며, 장소는 노량진 축구장입니다.",
+    "en": "We are recruiting volunteers for the Jongno-gu Children's Sports Festival. Residents of Jongno-gu or people interested in local community activities can apply until September 21. The event schedule is from September 21 to 23, and the venue is Noryangjin Football Stadium.",
+    "zh": "我们正在招募钟路区儿童运动会的志愿者。钟路区居民或对本地社区活动感兴趣的人可在9月21日前申请。活动日期为9月21日至23日，地点是诺良津足球场。",
+    "ja": "鐘路区児童スポーツフェスティバルのボランティアを募っています。鐘路区在住者または地域コミュニティ活動に興味のある人は9月21日までに申請してください。イベント期間は9月21日から23日で、場所はノリャンジンフットボールスタジアムです。"
    },
    "terms": [],
-   "regulation": null,
-   "aiPending": true
+   "regulation": null
   },
   {
    "id": "2-25-119728",
@@ -24662,27 +24958,54 @@
    "link": "https://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1830&CONTENTS_NO=&SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=25&BOARD_CATEGORY_NO=&BBS_SEQ=119728&pageNo=1",
    "date": "2026-09-02",
    "hits": 31,
-   "bodyStatus": "file",
+   "bodyStatus": "poster",
    "title": "2026년 시립성동청소년센터 \"해밀 기획단\" 모집",
-   "titleTr": {},
+   "titleTr": {
+    "en": "2026 Seoul City Seongdong Youth Center 'Hamilton Planning Team' Recruitment",
+    "zh": "2026年首尔市松东青少年中心「汉密尔顿规划团队」招募",
+    "ja": "2026年首爾市松洞青少年センター『ハミルトン・プランニングチーム』募集"
+   },
    "category": "contest",
    "deadline": "2026-08-27T23:59",
-   "benefit": null,
-   "eligibility": null,
+   "benefit": {
+    "text": {
+     "ko": "봉사시간 인정, 프로그램 준비물 및 지원금 일부 지원, 공간 및 회의실 제공, 다양한 친목 활동",
+     "en": "Volunteer hours recognition, partial support for program materials and funds, space and meeting room provision, various social activities",
+     "zh": "志愿服务时长认可，部分程序材料及支持金资助，空间及会议室提供，多样化的联谊活动",
+     "ja": "ボランティア時間の認定、プログラム準備物および支援金一部の支援、空間及び会議室の提供、さまざまな親睦活動"
+    },
+    "points": null,
+    "won": null
+   },
+   "eligibility": {
+    "ko": "만 24세 이하 대학생(휴학생 가능), 교육봉사 및 기획 활동에 관심 있는 자, 1년 이상 성실히 활동 가능한 자",
+    "en": "Under 24 years old university students (leave of absence allowed), individuals interested in educational volunteerism and planning activities, those who can commit to active participation for at least one year",
+    "zh": "24岁以下的大学生（休学生可申请），对教育志愿服务及规划活动感兴趣者，能够持续一年认真参与活动者",
+    "ja": "24歳未満の大学生（休学者も可）、教育ボランティアおよび計画活動に興味がある者、1年以上積極的に活動可能な者"
+   },
    "events": [],
    "hours": null,
    "evidence": {
-    "deadline": "서류 접수 마감: 8월 27일(목) 23:59"
+    "deadline": "- 서류 접수: 8월 18일 (화) ~ 8월 27일 (목)",
+    "benefit": "라. 활동 혜택",
+    "eligibility": "- 만 24세 이하 대학생 (휴학생 가능)"
    },
    "evidenceVerified": true,
    "readFrom": [
+    {
+     "kind": "poster",
+     "name": "본문 이미지 1"
+    },
     {
      "kind": "file",
      "name": "붙임1. 2026년 시립성동청소년센터 해밀 기획단 모집 안내.pdf"
     }
    ],
    "summary": {
-    "ko": "공모전·대외활동 관련 공지예요. 신청은 8월 27일까지예요."
+    "ko": "해밀 기획단 모집 공지예요. 대학생이 8월 27일까지 신청하면 봉사시간 인정과 지원금, 공간 제공 등의 혜택을 받고 9월 5일부터 활동해요.",
+    "en": "Hamilton Planning Team recruitment notice. University students who apply by August 27th will receive benefits such as volunteer hours recognition, support funds, and space provision, and they will start activities from September 5th.",
+    "zh": "汉密尔顿规划团队招募通知。大学生成为申请者，于8月27日前申请可获得志愿服务时长认可、支持金及空间提供等福利，并从9月5日起开始活动。",
+    "ja": "ハミルトン・プランニングチームの募集のお知らせです。大学が8月27日までに申請するとボランティア時間の認定と支援金、空間提供などの特典を受けられ、9月5日から活動を行います。"
    },
    "terms": [
     "휴학",
@@ -24697,18 +25020,18 @@
     "봉사활동"
    ],
    "regulation": {
-    "id": "class-period",
+    "id": "leave",
     "title": {
-     "ko": "수업 교시",
-     "en": "Class periods",
-     "zh": "课时",
-     "ja": "授業時限"
+     "ko": "휴학 가능 학기와 신청 시기",
+     "en": "Leave of absence: limit and timing",
+     "zh": "休学:可休学期与申请时间",
+     "ja": "休学:可能な学期数と申請時期"
     },
-    "quote": "수업시간의 단위는 교시로 표시하며 1개 교시는 30분간(야간강좌 개설학과는 45분간)으로 한다.",
+    "quote": "휴학은 재학기간 동안 총 6학기(편입생은 4학기) 가능하며 등록 미필자는 등록기간 내에 한하여 휴학을 할 수 있으며 등록을 필한 자는 중간고사 시행 전에 휴학을 신청해야 한다.",
     "tr": {
-     "en": "Class time is counted in periods, and one period is 30 minutes (45 minutes for departments offering evening courses).",
-     "zh": "上课时间以课时为单位,1个课时为30分钟(开设夜间课程的学科为45分钟)。",
-     "ja": "授業時間の単位は時限で表し、1時限は30分(夜間講座を開設する学科は45分)とする。"
+     "en": "Leave is allowed for a total of 6 semesters (4 for transfer students). Students who have not registered may take leave only within the registration period; registered students must apply before midterm exams.",
+     "zh": "在学期间最多可休学6个学期(插班生4个学期)。未注册者仅限在注册期间内休学,已注册者须在期中考试前申请休学。",
+     "ja": "休学は在学期間中に計6学期(編入生は4学期)まで可能。未登録者は登録期間内に限り休学でき、登録済みの者は中間試験の前に休学を申請しなければならない。"
     },
     "source": "2026학년도 학사요람 · 학사 안내",
     "sourceTr": {
@@ -24716,10 +25039,22 @@
      "zh": "2026学年度学事要览 · 学事指南",
      "ja": "2026年度 学事要覧 · 学事案内"
     },
-    "page": 11,
-    "year": 2026
-   },
-   "aiPending": true
+    "page": 17,
+    "year": 2026,
+    "rule": {
+     "law": "건국대학교 학칙",
+     "no": "39",
+     "article": "휴학",
+     "quote": "② 휴학은 1회에 2학기(1년)를 초과할 수 없으나, 휴학 중인 자가 가정사정 등의 사유로 인하여 복학하지 못할 경우 본인의 신청에 의하여 휴학기간을 연장할 수 있다.",
+     "tr": {
+      "en": "② A student may take a leave of absence for no more than one semester (one year), but if a student cannot return due to personal circumstances such as family matters, the period of leave can be extended upon their own request.",
+      "zh": "② 休学不得超过1个学期（1年），但如果因家庭等原因无法复学，经本人申请可延长休学时间。",
+      "ja": "② 休学は1回に限り2学期（1年）を超えることはできないが、休学中の者が家庭事情などの理由により復学できなくなった場合、本人の申請により休学期間を延長することが可能である。"
+     },
+     "url": "https://rule.konkuk.ac.kr/lmxsrv/law/lawDetail.do?SEQ=409&LAWGROUP=1&PAGE=1",
+     "checked": "2026-11-23"
+    }
+   }
   },
   {
    "id": "2-18-120173",
@@ -24774,40 +25109,101 @@
    "hits": 196,
    "bodyStatus": "text",
    "title": "[Cogito대학교육혁신원] 2026학년도 2학기 교육혁신센터 학생홍보단 모집 안내_조기마감",
-   "titleTr": {},
-   "category": "event",
+   "titleTr": {
+    "en": "[Cogito University Education Innovation Institute] 2026 Academic Year Second Semester Student Promotion Team Recruitment Notice (Early Closing)",
+    "zh": "[Cogito大学教育创新院] 2026学年第二学期教育创新中心学生宣传队招募通知_提前截止",
+    "ja": "[Cogito大学教育イノベーションセンター] 2026学年度第2学期学生プロモーションチーム募集案内_早期締切"
+   },
+   "category": "dadream",
    "deadline": "2026-09-20T23:59",
-   "benefit": null,
-   "eligibility": null,
+   "benefit": {
+    "text": {
+     "ko": "활동증명서(이수증 발급) 및 다드림 120 포인트 지급",
+     "en": "Activity certificate (certificate of completion) and 120 Dadream points",
+     "zh": "活动证明书（完成证书发放）及达德里姆120积分",
+     "ja": "活動証明書（修了証発行）およびダドリームポイント120"
+    },
+    "points": 120,
+    "won": null
+   },
+   "eligibility": {
+    "ko": "재학생 15명 이내",
+    "en": "Up to 15 enrolled students",
+    "zh": "在籍生最多15人",
+    "ja": "在籍生15名以内"
+   },
    "events": [],
    "hours": null,
    "evidence": {
-    "deadline": "1. 신청기간: 9월 1일(화) ~ 9월 20일(일)"
+    "deadline": "1. 신청기간: 9월 1일(화) ~ 9월 20일(일)\n※신청 인원에 따라 조기 마감될 수 있음",
+    "benefit": "활동증명서(이수증 발급) 및 다드림 120 포인트 지급",
+    "eligibility": "모집대상\n※25년 2학기 E-포트폴리오 학생홍보단 및 26년 1학기 참여자 제외\n※휴학생, 졸업유예자, 학기초과자 등(다드림 자격제한에 해당되는 학생) 참여시 다드림 지급불가"
    },
    "evidenceVerified": true,
    "readFrom": [
+    {
+     "kind": "poster",
+     "name": "본문 이미지 1"
+    },
     {
      "kind": "file",
      "name": "2026학년도 2학기 교육혁신센터 학생홍보단 신청서.hwp"
     }
    ],
    "summary": {
-    "ko": "행사·특강 관련 공지예요. 신청은 9월 20일까지예요."
+    "ko": "교육혁신센터 학생홍보단 모집 공지예요. 재학생 15명 이내가 9월 20일까지 신청하면 활동증명서와 다드림 120 포인트를 받을 수 있어요.",
+    "en": "The Student Promotion Team recruitment notice of the Education Innovation Center. Up to 15 enrolled students can apply by September 20th and receive an activity certificate and 120 Dadream points.",
+    "zh": "教育创新中心学生宣传队招募公告。在籍生最多15人，在9月20日前申请可获得活动证明书和达德里姆120积分。",
+    "ja": "教育イノベーションセンター学生プロモーションチームの募集案内です。在籍生15名以内が9月20日までに申請すると活動証明書とダドリームポイント120をもらえます。"
    },
    "terms": [
     "마감",
+    "휴학",
     "비교과",
     "다드림 포인트",
     "건국대",
     "이음교육시스템",
     "학번",
     "중간고사",
-    "오리엔테이션",
-    "재학생",
-    "공모전"
+    "졸업유예",
+    "오리엔테이션"
    ],
-   "regulation": null,
-   "aiPending": true
+   "regulation": {
+    "id": "attendance",
+    "title": {
+     "ko": "출석과 시험 응시 자격",
+     "en": "Attendance and exam eligibility",
+     "zh": "出勤与考试资格",
+     "ja": "出席と試験の受験資格"
+    },
+    "quote": "수강 신청한 전 과목에 대하여 매 시간 출석하여야 하며 정당한 사유 없이 당해 학기 총 수업시간의 1/3 이상을 결석하는 경우 그 교과목 시험에 응시할 자격이 없다.",
+    "tr": {
+     "en": "You must attend every class for all registered courses; if you are absent for one third or more of the semester's total class hours without a valid reason, you are not eligible to take that course's exams.",
+     "zh": "所有已选课程均须每节课出勤;无正当理由缺勤达到本学期总课时三分之一以上者,无资格参加该课程考试。",
+     "ja": "履修登録した全科目に毎時間出席しなければならず、正当な理由なく当該学期の総授業時間の1/3以上欠席した場合、その科目の試験を受ける資格がない。"
+    },
+    "source": "2026학년도 학사요람 · 학사 안내",
+    "sourceTr": {
+     "en": "2026 Academic Handbook · Academic Guide",
+     "zh": "2026学年度学事要览 · 学事指南",
+     "ja": "2026年度 学事要覧 · 学事案内"
+    },
+    "page": 11,
+    "year": 2026,
+    "rule": {
+     "law": "건국대학교 학칙",
+     "no": "28",
+     "article": "시험응시자격 등",
+     "quote": "① 학생은 당해 교과목 총수업시간수의 3분의 1 이상 결석하면 그 교과목의 시험에 응할 자격이 없다.",
+     "tr": {
+      "en": "① A student is not eligible to take an exam in a course if they have missed more than one-third of the total class hours for that course.",
+      "zh": "① 学生若在某门课程中缺勤超过该课程总授课时数的三分之一，则不具备参加该课程考试的资格。",
+      "ja": "① 学生が当該科目の総講義時間数の3分の1以上欠席した場合、その科目の試験に応じる資格がない。"
+     },
+     "url": "https://rule.konkuk.ac.kr/lmxsrv/law/lawDetail.do?SEQ=409&LAWGROUP=1&PAGE=1",
+     "checked": "2026-11-23"
+    }
+   }
   },
   {
    "id": "2-18-120171",
@@ -24860,22 +25256,35 @@
    "hits": 197,
    "bodyStatus": "text",
    "title": "충북 PRIDE 공유대학 26-2학기 글로벌 비교과과정",
-   "titleTr": {},
-   "category": "etc",
+   "titleTr": {
+    "en": "Chungcheongbuk PRIDE Shared University 26-2 Semester Global Extracurricular Program",
+    "zh": "Chungcheongbuk PRIDE 共享大学 26-2 学期全球非教学课程",
+    "ja": "Chungcheongbuk PRIDE 共享大学 26-2 学期グローバル非教科プログラム"
+   },
+   "category": "contest",
    "deadline": "2026-09-10T23:59",
    "benefit": {
     "text": {
-     "ko": "수강 완료 후 심사를 거쳐, 글로벌 비교과과정 이수 지원금 (30만원 예정) 지급"
+     "ko": "글로벌 비교과과정 이수 지원금 (30만원 예정)",
+     "en": "Scholarship for completing the Global Extracurricular Program (planned at 300,000 won)",
+     "zh": "完成全球非教学课程补助金（预计30万韩元）",
+     "ja": "グローバル非教科プログラム修了支援金（予定30万ウォン）"
     },
-    "points": 0,
+    "points": null,
     "won": 300000
    },
-   "eligibility": null,
+   "eligibility": {
+    "ko": "충북 도내 대학 재학생",
+    "en": "Chungcheongbuk university current students",
+    "zh": "Chungcheongbuk 大学在读学生",
+    "ja": "Chungcheongbuk 大学在籍生"
+   },
    "events": [],
    "hours": null,
    "evidence": {
-    "deadline": "라. 모집일정: 2026. 9. 1.(화) ~ 9. 10.(목)",
-    "benefit": "수강 완료 후 심사를 거쳐, 글로벌 비교과과정 이수 지원금 (30만원 예정) 지급"
+    "deadline": "라. 모집일정: 2026. 9. 1.(화) ~ 9. 10.(목)\n접수방법 e-mail접수 (syoung@chungbuk.ac.kr) 방문접수 불가 문의사항: 043–249-1264",
+    "benefit": "- 수강 완료 후 심사를 거쳐, 글로벌 비교과과정 이수 지원금 (30만원 예정) 지급",
+    "eligibility": "- 충북 도내 대학 재학생\n- 2 -"
    },
    "evidenceVerified": true,
    "readFrom": [
@@ -24884,12 +25293,19 @@
      "name": "충북 PRIDE 공유대학 글로벌 비교과과정 (26-2학기) 수강생 모집 공고.pdf"
     },
     {
+     "kind": "poster",
+     "name": "첨부 충북 PRIDE 공유대학 글로벌 비교과과정 26-2학기 학생모집 홍보 포스터.pdf 이미지"
+    },
+    {
      "kind": "file",
      "name": "충북 PRIDE 공유대학 26-2학기 글로벌 비교과과정 지원서.hwp"
     }
    ],
    "summary": {
-    "ko": "학교에서 알리는 공지예요. 혜택은 수강 완료 후 심사를 거쳐, 글로벌 비교과과정 이수 지원금 (30만원 예정) 지급이에요. 신청은 9월 10일까지예요."
+    "ko": "충북 PRIDE 공유대학 글로벌 비교과과정 참여자를 모집합니다. 충북 도내 대학 재학생이 9월 10일까지 신청하면 30만원 지원금을 받고 10월 6일부터 11월 20일까지 수강할 수 있어요.",
+    "en": "We are recruiting participants for the Chungcheongbuk PRIDE Shared University Global Extracurricular Program. Chungcheongbuk university students who apply by September 10th will receive a 300,000 won scholarship and can take the course from October 6th to November 20th.",
+    "zh": "我们正在招募参与 Chungcheongbuk PRIDE 共享大学全球非教学课程的人选。在9月10日之前申请的 Chungcheongbuk 大学在校生可获得30万韩元补助金，并可在10月6日至11月20日期间修课。",
+    "ja": "Chungcheongbuk PRIDE 共享大学グローバル非教科プログラムの参加者を募集しています。9月10日までに申請した Chungcheongbuk 大学在籍生は、30万ウォンの支援金を受け取り、10月6日から11月20日までの間講義を受けることができます。"
    },
    "terms": [
     "비교과",
@@ -24924,8 +25340,7 @@
      "url": "https://rule.konkuk.ac.kr/lmxsrv/law/lawDetail.do?SEQ=143&LAWGROUP=1&PAGE=1",
      "checked": "2026-11-23"
     }
-   },
-   "aiPending": true
+   }
   },
   {
    "id": "2-27-120813",
@@ -24978,27 +25393,55 @@
    "link": "https://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1850&CONTENTS_NO=&SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=27&BOARD_CATEGORY_NO=&BBS_SEQ=120812&pageNo=1",
    "date": "2026-08-31",
    "hits": 91,
-   "bodyStatus": "file",
+   "bodyStatus": "poster",
    "title": "2026년 문학상주작가 지원사업 제 1회 내를 건너서 숲으로 도서관 시 공모전",
-   "titleTr": {},
+   "titleTr": {
+    "en": "2026 Literature Resident Writer Support Program First Call for Poetry Competition 'Across the River to the Forest Library'",
+    "zh": "2026年文学驻地作家支持计划第一回穿越河流到森林图书馆诗歌征集",
+    "ja": "2026年文学在住作家支援事業第1回川を越えて森へ図書館詩コンテスト"
+   },
    "category": "contest",
-   "deadline": "2026-09-21T18:00",
-   "benefit": null,
-   "eligibility": null,
+   "deadline": "2026-09-21T23:59",
+   "benefit": {
+    "text": {
+     "ko": "상장 및 상금",
+     "en": "Certificate and prize money",
+     "zh": "证书及奖金",
+     "ja": "証書および賞金"
+    },
+    "points": null,
+    "won": null,
+    "prize": 300000
+   },
+   "eligibility": {
+    "ko": "전국민 누구나 (아동부: 2014년 이후 출생자, 청소년부: 2008~2013년 출생자, 성인부: 2007년 이전 출생자)",
+    "en": "Anyone in the country (Children's Division: born after 2014, Teenagers' Division: born between 2008 and 2013, Adults' Division: born before 2007)",
+    "zh": "全国民众（儿童组：2014年后出生者，青少年组：2008~2013年出生者，成人组：2007年前出生者）",
+    "ja": "全国民（児童部：2014年以降生まれ、青少年部：2008〜2013年生まれ、成人部：2007年以前生まれ）"
+   },
    "events": [],
    "hours": null,
    "evidence": {
-    "deadline": "이메일 접수 : nslib2@nslib.or.kr / 제출기간 : 2026. 9. 1.(화) ~ 9. 21.(월) 18:00까지"
+    "deadline": "1차 접수: 2026.9.1.(화) ~ 9.21.(월) 18:00까지",
+    "benefit": "대상 1 상장 및 상금 30만원\n최우수상 3 (부문별) 상장 및 상금 20만원\n우수상 3 (부문별) 상장 및 상금 10만원",
+    "eligibility": "전국민 누구나\n아동부 : 2014년 이후 출생자\n청소년부 : 2008년~2013년 출생자"
    },
    "evidenceVerified": true,
    "readFrom": [
+    {
+     "kind": "poster",
+     "name": "본문 이미지 1"
+    },
     {
      "kind": "file",
      "name": "제1회 내를 건너서 숲으로 도서관 공모 작품 제출양식(시).hwp"
     }
    ],
    "summary": {
-    "ko": "공모전·대외활동 관련 공지예요. 신청은 9월 21일 18시까지예요."
+    "ko": "2026년 문학상주작가 지원사업 시 공모전 참여자를 모집해요. 전국민 누구나 9월 21일까지 이메일로 신청하면 상장 및 상금을 받을 수 있어요.",
+    "en": "We are recruiting participants for the poetry competition of the 2026 Literature Resident Writer Support Program. Anyone in the country can apply by email until September 21st and receive a certificate and prize money.",
+    "zh": "我们正在招募2026年文学驻地作家支持计划诗歌征集的参与者。任何人都可以通过电子邮件在9月21日前申请，可获得证书和奖金。",
+    "ja": "2026年文学在住作家支援事業の詩コンテストに参加者を募集しています。全国民は9月21日までメールで応募すると証書と賞金を受け取ることができます。"
    },
    "terms": [
     "도서관",
@@ -25008,8 +25451,7 @@
     "개인정보",
     "유의사항"
    ],
-   "regulation": null,
-   "aiPending": true
+   "regulation": null
   },
   {
    "id": "2-27-120811",
@@ -25017,35 +25459,55 @@
    "link": "https://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1850&CONTENTS_NO=&SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=27&BOARD_CATEGORY_NO=&BBS_SEQ=120811&pageNo=1",
    "date": "2026-08-31",
    "hits": 24,
-   "bodyStatus": "file",
+   "bodyStatus": "poster",
    "title": "유튜브 콘테스트 2026 대전본색 공모전",
-   "titleTr": {},
+   "titleTr": {
+    "en": "YouTube Contest 2026 Daegu Bonseok Competition",
+    "zh": "YouTube 比赛 2026 大邱本色竞赛",
+    "ja": "ユーチューブコンテスト2026大邱本色コンペティション"
+   },
    "category": "contest",
    "deadline": "2026-09-18T17:00",
    "benefit": {
     "text": {
-     "ko": "m 시상내역: 총 9편 시상, 총상금 20,000,000원"
+     "ko": "상금 2,000만원",
+     "en": "상금 2,000만원",
+     "zh": "2,000万韩元奖金",
+     "ja": "2,000万ウォンの賞金"
     },
-    "points": 0,
-    "won": 0,
+    "points": null,
+    "won": null,
     "prize": 20000000
    },
-   "eligibility": null,
+   "eligibility": {
+    "ko": "대한민국 국민 누구나(개인 또는 팀)",
+    "en": "Any Korean citizen (individual or team)",
+    "zh": "任何韩国公民（个人或团队）",
+    "ja": "韓国の誰でも（個人またはチーム）"
+   },
    "events": [],
    "hours": null,
    "evidence": {
-    "deadline": "m 접수기간: 2026. 8. 19.(수) ~ 2026. 9. 18.(금) 17:00",
-    "benefit": "m 시상내역: 총 9편 시상, 총상금 20,000,000원"
+    "deadline": "2026년 8월 19일 ~ 2026년 9월 18일 17:00",
+    "benefit": "총 9편 시상, 총 상금 2,000만원",
+    "eligibility": "대한민국 국민 누구나\nm 공모자격: 대한민국에 거주하고 있는 누구나(개인 또는 팀)"
    },
    "evidenceVerified": true,
    "readFrom": [
+    {
+     "kind": "poster",
+     "name": "본문 이미지 1"
+    },
     {
      "kind": "file",
      "name": "[붙임1] 유튜브 콘테스트 2026 대전본색 개최공고문.pdf"
     }
    ],
    "summary": {
-    "ko": "공모전·대외활동 관련 공지예요. 혜택은 m 시상내역: 총 9편 시상, 총상금 20,000,000원이에요. 신청은 9월 18일 17시까지예요."
+    "ko": "유튜브 콘테스트 2026 대전본색에 참여할 수 있어요. 대한민국 국민이 9월 18일까지 신청하면 상금 2,000만원을 받을 수 있어요.",
+    "en": "You can participate in YouTube Contest 2026 Daegu Bonseok.",
+    "zh": "您可以参加 YouTube 比赛 2026 大邱本色。在9月18日前申请的韩国公民可获得2,000万韩元奖金。",
+    "ja": "ユーチューブコンテスト2026大邱本色に参加できます。9月18日までに申請した韓国国民には2,000万ウォンの賞金がもらえます。"
    },
    "terms": [
     "공모전",
@@ -25057,8 +25519,7 @@
     "동의서",
     "유의사항"
    ],
-   "regulation": null,
-   "aiPending": true
+   "regulation": null
   },
   {
    "id": "2-27-120810",
@@ -25066,18 +25527,34 @@
    "link": "https://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1850&CONTENTS_NO=&SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=27&BOARD_CATEGORY_NO=&BBS_SEQ=120810&pageNo=1",
    "date": "2026-08-31",
    "hits": 29,
-   "bodyStatus": "file",
+   "bodyStatus": "poster",
    "title": "'26년 공군사관학교 미래 항공우주 학술대회 개최 안내",
-   "titleTr": {},
+   "titleTr": {
+    "en": "'26 Air Force Academy Future Aerospace Academic Conference",
+    "zh": "'26年空军士官学校未来航空航天学术大会举办通知",
+    "ja": "'26年空軍士官学校未来航空宇宙学術大会開催のお知らせ"
+   },
    "category": "contest",
-   "deadline": null,
+   "deadline": "2026-10-26T23:59",
    "benefit": null,
-   "eligibility": null,
+   "eligibility": {
+    "ko": "생도·대학생, 대학원생",
+    "en": "High school students, undergraduate students, graduate students",
+    "zh": "高中生、本科生、研究生",
+    "ja": "高校生、大学本科生、大学院生"
+   },
    "events": [],
    "hours": null,
-   "evidence": {},
-   "evidenceVerified": null,
+   "evidence": {
+    "deadline": "참가 신청 : 2026년 8월 24일(월) ~ 10월 26일(월)",
+    "eligibility": "- 생도·대학생 분과 : 각 군 사관생도 및 대학생\n- 대학원생 분과 : 전국 석사과정 대학원생"
+   },
+   "evidenceVerified": true,
    "readFrom": [
+    {
+     "kind": "poster",
+     "name": "본문 이미지 1"
+    },
     {
      "kind": "file",
      "name": "발표원고 작성 양식.hwp"
@@ -25092,7 +25569,10 @@
     }
    ],
    "summary": {
-    "ko": "공모전·대외활동 관련 공지예요. 자세한 내용은 원문을 확인해 주세요."
+    "ko": "미래 항공우주 학술대회 참여자를 모집해요. 생도·대학생은 10월 26일까지 신청하면 상금을 받을 수 있어요.",
+    "en": "Future Aerospace Academic Conference participants are being recruited. High school students and university students can receive a prize if they apply by October 26th.",
+    "zh": "未来航空航天学术大会参与者正在招募中。高中生和大学生如果在10月26日前申请，可以获得奖金。",
+    "ja": "未来航空宇宙学術大会の参加者を募集しています。高校生・大学生は10月26日までに申請すれば報酬を受け取ることができます。"
    },
    "terms": [
     "본선",
@@ -25101,8 +25581,28 @@
     "선발",
     "유학생"
    ],
-   "regulation": null,
-   "aiPending": true
+   "regulation": {
+    "id": "dorm",
+    "title": {
+     "ko": "생활관 입관 자격",
+     "en": "Dormitory eligibility",
+     "zh": "宿舍入住资格",
+     "ja": "寮の入寮資格"
+    },
+    "rule": {
+     "law": "건국대학교 생활관규정",
+     "no": "6",
+     "article": "입관자격",
+     "quote": "생활관은 재학생에 한하여 입관시키되 관장은 수용능력을 감안하여 대학 또는 학년별로 입관자격을 제한할 수 있다.",
+     "tr": {
+      "en": "Residence halls are available only for currently enrolled students, but the director may limit enrollment based on capacity and by university or grade level.",
+      "zh": "生活馆仅对在校生开放，但馆长可根据容纳能力按大学或年级限制入住资格。",
+      "ja": "生活館は在学者のみに開放されるが、館長は収容能力を考慮して大学または学年ごとに入居資格を制限することができる。"
+     },
+     "url": "https://rule.konkuk.ac.kr/lmxsrv/law/lawDetail.do?SEQ=41&LAWGROUP=1&PAGE=1",
+     "checked": "2026-11-23"
+    }
+   }
   },
   {
    "id": "2-27-120809",
@@ -25110,27 +25610,37 @@
    "link": "https://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1850&CONTENTS_NO=&SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=27&BOARD_CATEGORY_NO=&BBS_SEQ=120809&pageNo=1",
    "date": "2026-08-31",
    "hits": 24,
-   "bodyStatus": "image",
+   "bodyStatus": "poster",
    "title": "9월 서울영테크 재무상담 참여자 모집 안내",
-   "titleTr": {},
+   "titleTr": {
+    "en": "Recruitment for Participants of Seoul Young Tech Financial Counseling in September",
+    "zh": "9月首尔青年科技财务咨询参与者招募通知",
+    "ja": "9月ソウルヤングテック財務相談参加者募集のお知らせ"
+   },
    "category": "contest",
-   "deadline": null,
+   "deadline": "2026-09-15T23:59",
    "benefit": null,
    "eligibility": null,
    "events": [],
    "hours": null,
-   "evidence": {},
-   "evidenceVerified": null,
-   "readFrom": [],
+   "evidence": {
+    "deadline": "1차 8월 26일(수)~9월 1일(화)\n2차 9월 9일(수)~9월 15일(화)"
+   },
+   "evidenceVerified": true,
+   "readFrom": [
+    {
+     "kind": "poster",
+     "name": "본문 이미지 1"
+    }
+   ],
    "summary": {
-    "ko": "본문이 이미지나 첨부파일로만 올라와 내용을 읽지 못했습니다. 원문을 확인해 주세요.",
-    "en": "The notice body is only an image or attachment, so it could not be read. Please check the original.",
-    "zh": "公告正文仅为图片或附件,无法读取。请查看原文。",
-    "ja": "本文が画像または添付ファイルのみのため読み取れませんでした。原文をご確認ください。"
+    "ko": "서울영테크 재무상담 참여자를 모집해요. 재학생이 9월 15일까지 신청하면 1:1 상담 기회를 얻을 수 있어요.",
+    "en": "We are recruiting participants for the Seoul Young Tech Financial Counseling. Students can get a one-on-one counseling opportunity by applying before September 15th.",
+    "zh": "我们正在招募首尔青年科技财务咨询的参与者。学生在9月15日前申请即可获得一对一咨询服务。",
+    "ja": "ソウルヤングテック財務相談の参加者を募っています。学生は9月15日までに申請することで1対1の相談機会を得られます。"
    },
    "terms": [],
-   "regulation": null,
-   "aiPending": true
+   "regulation": null
   },
   {
    "id": "2-18-120170",
@@ -25138,26 +25648,39 @@
    "link": "https://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1740&CONTENTS_NO=&SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=18&BOARD_CATEGORY_NO=&BBS_SEQ=120170&pageNo=1",
    "date": "2026-08-31",
    "hits": 760,
-   "bodyStatus": "image",
+   "bodyStatus": "poster",
    "title": "2026. 2학기 K-MOOC  교과목 수강제한인원 변경 안내",
-   "titleTr": {},
+   "titleTr": {
+    "en": "2026 Second Semester K-MOOC Course Enrollment Quota Change Notice",
+    "zh": "2026年第二学期K-MOOC课程选课人数限制变更通知",
+    "ja": "2026年度第2学期K-MOOC科目受講者数制限変更のお知らせ"
+   },
    "category": "academic",
-   "deadline": null,
+   "deadline": "2026-09-01T23:59",
    "benefit": null,
    "eligibility": null,
    "events": [],
    "hours": null,
-   "evidence": {},
-   "evidenceVerified": null,
-   "readFrom": [],
+   "evidence": {
+    "deadline": "수강신청일시 : 2026. 9. 1.(화) 10:00"
+   },
+   "evidenceVerified": true,
+   "readFrom": [
+    {
+     "kind": "poster",
+     "name": "본문 이미지 1"
+    }
+   ],
    "summary": {
-    "ko": "본문이 이미지나 첨부파일로만 올라와 내용을 읽지 못했습니다. 원문을 확인해 주세요.",
-    "en": "The notice body is only an image or attachment, so it could not be read. Please check the original.",
-    "zh": "公告正文仅为图片或附件,无法读取。请查看原文。",
-    "ja": "本文が画像または添付ファイルのみのため読み取れませんでした。原文をご確認ください。"
+    "ko": "2026.2학기 K-MOOC 교과목 수강 인원이 변경된 공지예요. 재학생이 9월 1일까지 수강신청하면 추가 인원이 늘어나요.",
+    "en": "If current students apply for enrollment by September 1st, the additional quota will be increased.",
+    "zh": "如果在9月1日前，现有学生进行选课申请，则可增加额外名额。",
+    "ja": "9月1日までに在籍生が受講申請をすれば、追加の枠が増えることになります。"
    },
    "terms": [
-    "K-MOOC"
+    "K-MOOC",
+    "수강신청",
+    "학수번호"
    ],
    "regulation": {
     "id": "kmooc",
@@ -25180,8 +25703,7 @@
      "url": "https://rule.konkuk.ac.kr/lmxsrv/law/lawDetail.do?SEQ=137&LAWGROUP=1&PAGE=1",
      "checked": "2026-11-23"
     }
-   },
-   "aiPending": true
+   }
   },
   {
    "id": "2-18-120169",
@@ -25236,29 +25758,68 @@
    "link": "https://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1740&CONTENTS_NO=&SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=18&BOARD_CATEGORY_NO=&BBS_SEQ=120168&pageNo=1",
    "date": "2026-08-31",
    "hits": 270,
-   "bodyStatus": "image",
+   "bodyStatus": "poster",
    "title": "[대학교육혁신원] 2026학년 2학기 전공학습 멘토링 신청 안내",
-   "titleTr": {},
-   "category": "event",
-   "deadline": null,
-   "benefit": null,
-   "eligibility": null,
+   "titleTr": {
+    "en": "[Center for University Education Innovation] Application Notice for Major Learning Mentoring in the Second Semester of 2026",
+    "zh": "[大学教育创新院] 2026学年第二学期专业学习导师申请通知",
+    "ja": "[大学教育創新院] 2026学年第二学期専門科目学習メンタリング申請案内"
+   },
+   "category": "dadream",
+   "deadline": "2026-09-13T23:59",
+   "benefit": {
+    "text": {
+     "ko": "다드림 포인트(멘토 100P, 멘티 70P), 우수 팀 선정 추가 다드림 포인트(최우수 180P, 우수 150P, 장려 120P)",
+     "en": "Dadream points (mentor: 100P, mentee: 70P), additional Dadream points for outstanding teams (excellent: 180P, good: 150P, encouragement: 120P)",
+     "zh": "达德里姆积分（导师100分，被指导者70分），优秀团队额外获得达德里姆积分（优秀180分，良好150分，鼓励120分）",
+     "ja": "ダドリームポイント（メンター100ポイント、メンティ70ポイント）、優秀チーム選定による追加ダドリームポイント（最優秀180ポイント、優秀150ポイント、奨励120ポイント）"
+    },
+    "points": 100,
+    "won": null
+   },
+   "eligibility": {
+    "ko": "본교 재학생 누구나 신청 가능(멘토는 성적 3.6 이상)",
+    "en": "Any current student can apply (mentors must have a GPA of 3.6 or higher)",
+    "zh": "本校在校生均可申请（导师需成绩3.6以上）",
+    "ja": "本学在籍者であれば誰でも申請可能です（メンターは成績3.6以上が必要）"
+   },
    "events": [],
    "hours": null,
-   "evidence": {},
-   "evidenceVerified": null,
-   "readFrom": [],
+   "evidence": {
+    "deadline": "- 본교 재학생 누구나 신청 가능\n- 신청 기간: 2026년 8월 31일(월) ~ 9월 13일(일)",
+    "benefit": "[기본 다드림 포인트 - 이수 완료 시]\n- 멘토 100P\n- 멘티 70P",
+    "eligibility": "- 본교 재학생 누구나 신청 가능\n- 멘토 - 성적 3.6 이상"
+   },
+   "evidenceVerified": true,
+   "readFrom": [
+    {
+     "kind": "poster",
+     "name": "본문 이미지 1"
+    },
+    {
+     "kind": "poster",
+     "name": "본문 이미지 2"
+    }
+   ],
    "summary": {
-    "ko": "본문이 이미지나 첨부파일로만 올라와 내용을 읽지 못했습니다. 원문을 확인해 주세요.",
-    "en": "The notice body is only an image or attachment, so it could not be read. Please check the original.",
-    "zh": "公告正文仅为图片或附件,无法读取。请查看原文。",
-    "ja": "本文が画像または添付ファイルのみのため読み取れませんでした。原文をご確認ください。"
+    "ko": "전공학습 멘토링 신청을 안내해요. 재학생이 9월 13일까지 신청하면 다드림 포인트 100P를 받아요.",
+    "en": "We are informing you about applying for major learning mentoring. Students can receive Dadream points of 100P if they apply by September 13.",
+    "zh": "我们通知您关于专业学习导师的申请。学生在9月13日前申请可获得达德里姆积分100分。",
+    "ja": "専門科目学習メンタリングの申請についてご案内いたします。9月13日までに申請するとダドリームポイント100ポイントを獲得できます。"
    },
    "terms": [
-    "멘토링"
+    "멘토링",
+    "비교과",
+    "다드림 포인트",
+    "이음교육시스템",
+    "재학생",
+    "증명서",
+    "선발",
+    "접수기간",
+    "대면",
+    "비대면"
    ],
-   "regulation": null,
-   "aiPending": true
+   "regulation": null
   },
   {
    "id": "2-18-120167",
@@ -25266,29 +25827,68 @@
    "link": "https://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1740&CONTENTS_NO=&SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=18&BOARD_CATEGORY_NO=&BBS_SEQ=120167&pageNo=1",
    "date": "2026-08-31",
    "hits": 287,
-   "bodyStatus": "image",
+   "bodyStatus": "poster",
    "title": "[대학교육혁신원] 2026학년 2학기 사제이음공동체 신청 안내",
-   "titleTr": {},
-   "category": "event",
-   "deadline": null,
-   "benefit": null,
-   "eligibility": null,
+   "titleTr": {
+    "en": "[Center for University Education Innovation] Application Notice for the Faculty-Student Connection Community in the Second Semester of 2026",
+    "zh": "[大学教育创新院] 2026学年第二学期师生共同体申请通知",
+    "ja": "[大学教育創新院] 2026学年第二学期教員・学生連携共同体申請案内"
+   },
+   "category": "dadream",
+   "deadline": "2026-09-13T23:59",
+   "benefit": {
+    "text": {
+     "ko": "다드림 포인트(리더 100P, 팀원 70P), 우수 팀 추가 다드림 포인트(최우수 180P, 우수 150P, 장려 120P)",
+     "en": "Dadream points (Leader 100P, Team member 70P), Additional Dadream points for outstanding teams (Excellent 180P, Good 150P, Encouragement 120P)",
+     "zh": "达梦想积分（领导者100分，团队成员70分），优秀团队额外达梦想积分（优秀180分，良好150分，鼓励120分）",
+     "ja": "ダドリームポイント（リーダー100ポイント、チームメンバー70ポイント）、優秀チーム追加ダドリームポイント（最優秀180ポイント、優秀150ポイント、奨励120ポイント）"
+    },
+    "points": 100,
+    "won": null
+   },
+   "eligibility": {
+    "ko": "본교 재학생 누구나 신청 가능",
+    "en": "All current students of this university can apply.",
+    "zh": "本校在校生均可申请。",
+    "ja": "本学在籍者であれば誰でも申請可能です。"
+   },
    "events": [],
-   "hours": null,
-   "evidence": {},
-   "evidenceVerified": null,
-   "readFrom": [],
+   "hours": 0.5,
+   "evidence": {
+    "deadline": "- 신청 기간: 2026년 8월 31일(월) ~ 9월 13일(일)",
+    "benefit": "[기본 다드림 포인트 - 이수 완료 시]\n- 리더 100P\n- 팀원 70P",
+    "eligibility": "- 본교 재학생 누구나 신청 가능"
+   },
+   "evidenceVerified": true,
+   "readFrom": [
+    {
+     "kind": "poster",
+     "name": "본문 이미지 1"
+    },
+    {
+     "kind": "poster",
+     "name": "본문 이미지 2"
+    }
+   ],
    "summary": {
-    "ko": "본문이 이미지나 첨부파일로만 올라와 내용을 읽지 못했습니다. 원문을 확인해 주세요.",
-    "en": "The notice body is only an image or attachment, so it could not be read. Please check the original.",
-    "zh": "公告正文仅为图片或附件,无法读取。请查看原文。",
-    "ja": "本文が画像または添付ファイルのみのため読み取れませんでした。原文をご確認ください。"
+    "ko": "사제이음공동체 신청을 안내해요. 재학생이 9월 13일까지 이음교육시스템에서 신청하면 다드림 포인트 100점을 받아요.",
+    "en": "We are informing you about the application for the Faculty-Student Connection Community. Current students can apply through the Eum Education System by September 13th and receive Dadream points of 100.",
+    "zh": "我们通知您关于师生共同体的申请。在校生可在9月13日前通过‘连接教育系统’进行申请，可获得达梦想积分100分。",
+    "ja": "教員・学生連携共同体の申請についてご案内いたします。在籍している学生は9月13日まで「つながり教育システム」で申請するとダドリームポイント100ポイントを獲得できます。"
    },
    "terms": [
-    "이음교육시스템"
+    "이음교육시스템",
+    "비교과",
+    "다드림 포인트",
+    "재학생",
+    "멘토링",
+    "선발",
+    "접수기간",
+    "대면",
+    "비대면",
+    "동의서"
    ],
-   "regulation": null,
-   "aiPending": true
+   "regulation": null
   },
   {
    "id": "2-19-119993",
@@ -25298,40 +25898,66 @@
    "hits": 274,
    "bodyStatus": "text",
    "title": "2026학년도 창업동아리 2학기 추가 모집",
-   "titleTr": {},
-   "category": "career",
+   "titleTr": {
+    "en": "2026 Academic Year Startup Club Second Semester Additional Recruitment",
+    "zh": "2026学年创业社团第二学期增招",
+    "ja": "2026学年度スタートアップクラブ第二学期追加募集"
+   },
+   "category": "contest",
    "deadline": "2026-09-04T23:59",
-   "benefit": null,
-   "eligibility": null,
+   "benefit": {
+    "text": {
+     "ko": "창업 비교과 프로그램 우선 참여 기회, 시제품 전시·판매 활동지원, 창업마일리지(장학금) 부여",
+     "en": "Priority participation opportunity in the startup extracurricular program, activity support for prototype exhibition and sales, and startup mileage (scholarship) grant",
+     "zh": "优先参与创业非教学课程的机会，原型展示与销售活动的支持，以及创业里程（奖学金）授予",
+     "ja": "スタートアップ非教科プログラムへの優先参加機会、プロトタイプ展示・販売活動支援、起業マイルゼロ（奨学金）の付与"
+    },
+    "points": null,
+    "won": null
+   },
+   "eligibility": {
+    "ko": "창업에 관심 있는 KU 재학생",
+    "en": "KU students interested in startups",
+    "zh": "对创业感兴趣的KU在校生",
+    "ja": "創業に興味のあるKU在学生"
+   },
    "events": [],
    "hours": null,
    "evidence": {
-    "deadline": "📌 모집기간: 2026. 08. 31. ~ 09. 04."
+    "deadline": "- 모집기간 : 2026.8.31(월)~9.4(금)",
+    "benefit": "- 창업 비교과 프로그램 우선 참여 기회\n- 시제품 전시·판매 활동지원\n- 창업마일리지(장학금) 부여",
+    "eligibility": "- 창업에 관심있는 KU 재학생"
    },
    "evidenceVerified": true,
    "readFrom": [
+    {
+     "kind": "poster",
+     "name": "본문 이미지 1"
+    },
     {
      "kind": "file",
      "name": "2026. 창업동아리 지원사업 신청서_(팀명).hwp"
     }
    ],
    "summary": {
-    "ko": "취업·창업 관련 공지예요. 신청은 9월 4일까지예요."
+    "ko": "창업동아리 추가 모집을 진행합니다. 창업에 관심 있는 재학생이 9월 4일까지 신청하면 우선 참여 기회와 활동지원, 마일리지 부여받을 수 있어요.",
+    "en": "We are conducting additional recruitment for the startup club. Students who are interested in startups can apply by September 4th and will have priority participation opportunities, activity support, and receive startup mileage.",
+    "zh": "我们正在开展创业社团的增招。对创业感兴趣的学生在9月4日前申请，可获得优先参与机会、活动支持以及创业里程奖励。",
+    "ja": "スタートアップクラブの追加募集を行います。創業に興味のある在学生が9月4日までに申請すると、優先参加機会と活動支援、起業マイルゼロを授与します。"
    },
    "terms": [
     "창업",
     "동아리",
+    "장학금",
+    "비교과",
     "학번",
     "학생증",
     "학사지도교수",
     "재학생",
-    "공모전",
-    "제출서류",
-    "선발",
-    "비자"
+    "장학",
+    "공모전"
    ],
-   "regulation": null,
-   "aiPending": true
+   "regulation": null
   },
   {
    "id": "2-22-119890",
@@ -25398,9 +26024,9 @@
    "bodyStatus": "text",
    "title": "[기간연장][국가근로] 2026학년도 2학기 국가근로장학금 희망근로지 추가신청 안내(교외)",
    "titleTr": {
-    "en": "[Extension][Work-Study] Notice on Additional Application for National Work-Study Scholarship (Outside Campus) for the Second Semester of 2026",
-    "zh": "[延长][工作学习] 2026学年第二学期国家工作学习奖学金校外希望工作地点追加申请通知",
-    "ja": "[期間延長][就労奨学] 2026年度第2学期国家就労奨学金希望就労地追加申請に関するお知らせ（校外）"
+    "en": "[Extension][Work-Study] Notice on Additional Application for the National Work-Study Scholarship (Out-of-Campus)",
+    "zh": "[延长][工作学习] 2026学年第二学期国家工作学习奖学金希望工作地点追加申请通知（校外）",
+    "ja": "[期間延長][就労] 2026年度第2学期国家就労奨学金希望就労地追加申請のお知らせ（校外）"
    },
    "category": "scholarship",
    "deadline": "2026-09-13T23:59",
@@ -25408,17 +26034,17 @@
     "text": {
      "ko": "시간당 12,790원(+시간당 500원 교비대응 추가 지급 예정)",
      "en": "12,790 won per hour (+additional payment of 500 won per hour for tuition fees planned)",
-     "zh": "每小时支付12,790韩元（+计划额外支付每小时500韩元用于学费）",
-     "ja": "時給12,790ウォン（＋時給500ウォンの教科料対応追加支給予定）"
+     "zh": "每小时12,790韩元（+计划额外支付每小时500韩元的学费补助）",
+     "ja": "時給12,790ウォン（＋時給500ウォンの教費対応追加支給予定）"
     },
     "points": null,
     "won": 12790
    },
    "eligibility": {
-    "ko": "재학생(휴학생, 대학원생, 초과학기자 제외), 한국장학재단 학자금지원구간 9분위 이하인 자, 직전학기 백분위 성적 80점 이상인 자, 2026학년도 2학기 국가근로장학금 1차, 2차 신청자, 방학기간까지 근로 진행 가능한 자, 대학생 청소년교육지원장학금 미선발자",
-    "en": "Current students (excluding those on leave of absence, graduate students, and first-term students), individuals within the 9th percentile or below in the Korea Scholarship Foundation's financial support range, students with a grade point of 80 or above in the previous semester, applicants for the first and second rounds of the National Work-Study Scholarship for the second semester of 2026, those who can continue working during the vacation period, and individuals not selected for the University Student Youth Education Support Scholarship",
-    "zh": "在籍学生（休学、研究生、初学者除外），韩国奖学金基金会助学金支持区间9分位以下者，前一学期成绩百分位80分以上者，2026学年第二学期国家工作学习奖学金第一轮、第二轮申请者，可在寒暑假期间继续工作的人员，以及未获得大学生青少年教育支援奖学金者",
-    "ja": "在籍学生（休学、大学院生、初学期生を除く）、韓国奨学基金財団の学資金支援区間9区分以下の方、前学期の百区分80点以上の方、2026年度第2学期国家就労奨学金第1回・第2回申請者、寒暑假期間中も就労可能な方、大学生青少年教育支援奨学金未選考者"
+    "ko": "재학생(휴학생, 대학원생, 초과학기자 제외), 한국장학재단 학자금지원구간 9분위 이하인 자, 직전학기 백분위 성적 80점 이상인 자, 한국장학재단 2026학년도 2학기 국가근로장학금 1차, 2차 신청자, 방학기간까지 근로 진행 가능한 자, 대학생 청소년교육지원장학금 미선발자",
+    "en": "Current students (excluding those on leave of absence, graduate students, and first-term students), individuals within the 9th percentile or below in the Korea Scholarship Foundation's financial support range, students with a grade point of 80 or above in the previous semester, applicants for the first and second rounds of the National Work-Study Scholarship for the second semester of 2026 by the Korea Scholarship Foundation, individuals who can continue working until the summer break, and those not selected for the University Student Youth Education Support Scholarship",
+    "zh": "在籍学生（休学学生、研究生、初学者除外），韩国奖学金基金会助学金支持区间9分位以下者，前一学期成绩百分位80分以上者，韩国奖学金基金会2026学年第二学期国家工作学习奖学金第一轮、第二轮申请者，可在暑假期间继续工作的人员，以及未获得大学生青少年教育支援奖学金者",
+    "ja": "在籍学生（休学中学生、大学院生、初学期学生を除く）、韓国奨学金財団の学資金支援区間9区分以下の方、前学期の百区分80点以上の方、韓国奨学金財団2026年度第2学期国家就労奨学金第1回・第2回申請者、夏休み期間中まで就労可能な方、および大学生青少年教育支援奨学金未選考者"
    },
    "events": [],
    "hours": null,
@@ -25432,13 +26058,37 @@
     {
      "kind": "file",
      "name": "(붙임1) 2026.2학기 추가모집 교외기관 리스트.xlsx"
+    },
+    {
+     "kind": "poster",
+     "name": "첨부 (붙임2) 2026년도 2학기 희망근로지 신청 매뉴얼_홈페이지.pdf 이미지"
+    },
+    {
+     "kind": "poster",
+     "name": "첨부 (붙임2) 2026년도 2학기 희망근로지 신청 매뉴얼_홈페이지.pdf 이미지"
+    },
+    {
+     "kind": "poster",
+     "name": "첨부 (붙임2) 2026년도 2학기 희망근로지 신청 매뉴얼_홈페이지.pdf 이미지"
+    },
+    {
+     "kind": "poster",
+     "name": "첨부 (붙임2) 2026년도 2학기 희망근로지 신청 매뉴얼_홈페이지.pdf 이미지"
+    },
+    {
+     "kind": "poster",
+     "name": "첨부 (붙임3) 2026년도 2학기 희망근로지 신청 매뉴얼_모바일앱.pdf 이미지"
+    },
+    {
+     "kind": "poster",
+     "name": "첨부 (붙임3) 2026년도 2학기 희망근로지 신청 매뉴얼_모바일앱.pdf 이미지"
     }
    ],
    "summary": {
-    "ko": "국가근로장학금 추가신청을 안내해요. 재학생이 9월 13일까지 신청하면 시간당 12,790원을 받고 9월 21일부터 2월 22일까지 근로할 수 있어요.",
-    "en": "We are informing you about the additional application for the National Work-Study Scholarship. Current students who apply by September 13th will receive 12,790 won per hour and can work from September 21st to February 22nd.",
-    "zh": "我们通知您关于国家工作学习奖学金的追加申请。在9月13日前申请的学生每小时可获得12,790韩元，并可在9月21日至2月22日期间进行工作。",
-    "ja": "国家就労奨学金の追加申請についてご案内いたします。9月13日までに申請した在籍学生は、時給12,790ウォンを支給し、9月21日から2月22日までの間就労できます。"
+    "ko": "2026학년도 2학기 국가근로장학금 추가신청을 안내해요. 재학생이 9월 13일까지 신청하면 시간당 12,790원의 장학금을 받고 9월 21일부터 2월 22일까지 근로할 수 있어요.",
+    "en": "We are informing you about the additional application for the National Work-Study Scholarship in the second semester of 2026. Current students who apply by September 13th will receive a scholarship of 12,790 won per hour and can work from September 21st to February 22nd.",
+    "zh": "我们通知您关于2026学年第二学期国家工作学习奖学金的追加申请。在9月13日前申请的学生，每小时可获得12,790韩元奖学金，并可在9月21日至2月22日期间进行工作。",
+    "ja": "2026年度第2学期の国家就労奨学金の追加申請についてご案内いたします。9月13日までに申請した在籍学生は、時給12,790ウォンの奨学金を支給され、9月21日から2月22日までの間、就労することが可能です。"
    },
    "terms": [
     "장학금",
@@ -25446,11 +26096,11 @@
     "장학",
     "휴학",
     "학점",
+    "시간표",
     "학점포기",
     "재학생",
     "휴학생",
-    "대학원생",
-    "국가장학금"
+    "대학원생"
    ],
    "regulation": {
     "id": "scholarship",
@@ -25920,27 +26570,49 @@
    "link": "https://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1850&CONTENTS_NO=&SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=27&BOARD_CATEGORY_NO=&BBS_SEQ=120808&pageNo=1",
    "date": "2026-08-27",
    "hits": 64,
-   "bodyStatus": "image",
+   "bodyStatus": "poster",
    "title": "[충주박물관] 문화예술교육프로그램",
-   "titleTr": {},
-   "category": "event",
-   "deadline": null,
+   "titleTr": {
+    "en": "[Chungju Museum] Cultural and Arts Education Program",
+    "zh": "[ Chungju 博物馆 ] 文化艺术教育项目",
+    "ja": "[チョンジュ博物館] 文化芸術教育プログラム"
+   },
+   "category": "contest",
+   "deadline": "2026-09-10T23:59",
    "benefit": null,
-   "eligibility": null,
+   "eligibility": {
+    "ko": "K-POP을 좋아하는 성인 누구나",
+    "en": "Any adult who likes K-POP",
+    "zh": "任何喜欢K-POP的成年人",
+    "ja": "K-POPが好きなすべての成人"
+   },
    "events": [],
    "hours": null,
-   "evidence": {},
-   "evidenceVerified": null,
-   "readFrom": [],
-   "summary": {
-    "ko": "본문이 이미지나 첨부파일로만 올라와 내용을 읽지 못했습니다. 원문을 확인해 주세요.",
-    "en": "The notice body is only an image or attachment, so it could not be read. Please check the original.",
-    "zh": "公告正文仅为图片或附件,无法读取。请查看原文。",
-    "ja": "本文が画像または添付ファイルのみのため読み取れませんでした。原文をご確認ください。"
+   "evidence": {
+    "deadline": "9.10.-12.3.\n매주 목요일 19:00-22:00 (총11회)",
+    "eligibility": "대상 | K-POP을 좋아하는 성인 누구나"
    },
-   "terms": [],
-   "regulation": null,
-   "aiPending": true
+   "evidenceVerified": true,
+   "readFrom": [
+    {
+     "kind": "poster",
+     "name": "본문 이미지 1"
+    },
+    {
+     "kind": "poster",
+     "name": "본문 이미지 2"
+    }
+   ],
+   "summary": {
+    "ko": "문화예술교육프로그램 참여자를 모집해요. K-POP을 좋아하는 성인은 9월 10일까지 신청하면 선착순 10명에게 참여 가능해요.",
+    "en": "We are recruiting participants for the Cultural and Arts Education Program. Adults who like K-POP can participate if they apply before September 10th on a first-come, first-served basis up to 10 people.",
+    "zh": "我们正在招募文化艺术品教育项目的参与者。喜欢K-POP的成年人在9月10日前申请可参与，按先到先得原则最多10人参加。",
+    "ja": "文化芸術教育プログラムの参加者を募っています。K-POPが好きな成人は9月10日までに申請すれば、先着10名に参加可能です。"
+   },
+   "terms": [
+    "선착순"
+   ],
+   "regulation": null
   },
   {
    "id": "2-18-120163",
@@ -26027,7 +26699,53 @@
    "hits": 171,
    "bodyStatus": "text",
    "title": "[채용정보] 2026. 8월 4주차 공공기관 및 중소기업 채용정보",
-   "titleTr": {},
+   "titleTr": {
+    "en": "[Job Opening] Public Institution and Small-to-Medium Enterprise Recruitment Information for Week 4 of August 2026",
+    "zh": "[招聘信息] 2026年8月第四周 公共机构及中小企业的招聘信息",
+    "ja": "[採用情報] 2026年8月4週目 公共機関及び中小企業の採用情報"
+   },
+   "category": "career",
+   "deadline": "2026-08-27T23:59",
+   "benefit": null,
+   "eligibility": {
+    "ko": "공공기관 및 중소기업 채용 지원 대상자",
+    "en": "Eligible candidates for public institution and small-to-medium enterprise recruitment support",
+    "zh": "公共机构及中小企业招聘支持对象",
+    "ja": "公共機関及び中小企業の採用支援対象者"
+   },
+   "events": [],
+   "hours": null,
+   "evidence": {
+    "deadline": "26. 8. 27. |",
+    "eligibility": "2026년 8월 4주차 공공기관 및 중소기업 채용이 아래와 같이 진행되고 있습니다."
+   },
+   "evidenceVerified": true,
+   "readFrom": [],
+   "summary": {
+    "ko": "공공기관 및 중소기업 채용정보를 안내해요. 재학생이 8월 27일까지 지원하면 관련 기관에서 채용을 진행해요.",
+    "en": "We provide recruitment information for public institutions and small-to-medium enterprises. If current students apply by August 27th, the relevant agencies will conduct the recruitment.",
+    "zh": "我们提供公共机构及中小企业的招聘信息。如果在学生于8月27日前申请，相关机构将进行招聘。",
+    "ja": "公共機関及び中小企業の採用情報をご案内いたします。在学中の学生が8月27日までに応募すれば、関係機関で採用を実施いたします。"
+   },
+   "terms": [
+    "건국대",
+    "마감"
+   ],
+   "regulation": null
+  },
+  {
+   "id": "2-19-119989",
+   "boardName": "취업/창업",
+   "link": "https://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1770&CONTENTS_NO=&SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=19&BOARD_CATEGORY_NO=&BBS_SEQ=119989&pageNo=1",
+   "date": "2026-08-27",
+   "hits": 61,
+   "bodyStatus": "text",
+   "title": "[채용정보] 2026. 8월 4주차 취업 관련 대외활동 정보 안내",
+   "titleTr": {
+    "en": "[Job Information] Notice on External Activities Related to Employment for the Fourth Week of August 2026",
+    "zh": "[招聘信息] 2026年8月第四周就业相关校外活动信息通知",
+    "ja": "[採用情報] 2026年8月4週目就職関連の外部活動情報のお知らせ"
+   },
    "category": "career",
    "deadline": null,
    "benefit": null,
@@ -26038,35 +26756,10 @@
    "evidenceVerified": null,
    "readFrom": [],
    "summary": {
-    "ko": "취업·창업 관련 공지예요. 자세한 내용은 원문을 확인해 주세요."
-   },
-   "terms": [
-    "건국대",
-    "마감"
-   ],
-   "regulation": null,
-   "aiPending": true
-  },
-  {
-   "id": "2-19-119989",
-   "boardName": "취업/창업",
-   "link": "https://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1770&CONTENTS_NO=&SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=19&BOARD_CATEGORY_NO=&BBS_SEQ=119989&pageNo=1",
-   "date": "2026-08-27",
-   "hits": 61,
-   "bodyStatus": "text",
-   "title": "[채용정보] 2026. 8월 4주차 취업 관련 대외활동 정보 안내",
-   "titleTr": {},
-   "category": "contest",
-   "deadline": null,
-   "benefit": null,
-   "eligibility": null,
-   "events": [],
-   "hours": null,
-   "evidence": {},
-   "evidenceVerified": null,
-   "readFrom": [],
-   "summary": {
-    "ko": "공모전·대외활동 관련 공지예요. 자세한 내용은 원문을 확인해 주세요."
+    "ko": "취업 관련 대외활동 정보를 안내해요. 재학생이 8월 26일까지 신청하면 다양한 행사에 참여할 수 있어요.",
+    "en": "We provide information about external activities related to employment. Current students can apply until August 26 and participate in various events.",
+    "zh": "我们提供与就业相关的校外活动信息。在校生可在8月26日前申请，参与各种活动。",
+    "ja": "就職に関連する外部活動情報をご案内いたします。在校生は8月26日までに申請すると、さまざまなイベントに参加できます。"
    },
    "terms": [
     "대외활동",
@@ -26074,8 +26767,7 @@
     "멘토링",
     "채용설명회"
    ],
-   "regulation": null,
-   "aiPending": true
+   "regulation": null
   },
   {
    "id": "2-27-120807",
@@ -26083,27 +26775,59 @@
    "link": "https://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1850&CONTENTS_NO=&SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=27&BOARD_CATEGORY_NO=&BBS_SEQ=120807&pageNo=1",
    "date": "2026-08-26",
    "hits": 101,
-   "bodyStatus": "image",
+   "bodyStatus": "poster",
    "title": "[시립청소년음악센터] 2026 서울청소년댄스페스티벌 [SEOUL CODE:924] PART2&3 참가자 모집",
-   "titleTr": {},
+   "titleTr": {
+    "en": "[City Youth Music Center] 2026 Seoul Youth Dance Festival [SEOUL CODE:924] PART2&3 Participant Recruitment",
+    "zh": "[市立青少年音乐中心] 2026 首尔青少年舞蹈节 [SEOUL CODE:924] PART2&3 参与者招募",
+    "ja": "[市立青少年音楽センター] 2026 ソウル青少年ダンスフェスティバル [SEOUL CODE:924] PART2&3 参加者募集"
+   },
    "category": "contest",
-   "deadline": null,
-   "benefit": null,
+   "deadline": "2026-09-06T23:59",
+   "benefit": {
+    "text": {
+     "ko": "참가비 무료",
+     "en": "Free participation fee",
+     "zh": "免费参与费用",
+     "ja": "参加費無料"
+    },
+    "points": null,
+    "won": null
+   },
    "eligibility": null,
    "events": [],
    "hours": null,
-   "evidence": {},
-   "evidenceVerified": null,
-   "readFrom": [],
+   "evidence": {
+    "deadline": "09.06\n참가비 FREE",
+    "benefit": "REBEL\n참가비 FREE"
+   },
+   "evidenceVerified": true,
+   "readFrom": [
+    {
+     "kind": "poster",
+     "name": "본문 이미지 1"
+    },
+    {
+     "kind": "poster",
+     "name": "본문 이미지 2"
+    },
+    {
+     "kind": "poster",
+     "name": "첨부 1.2026 서울청소년댄스페스티벌 안내문.pdf 이미지"
+    },
+    {
+     "kind": "poster",
+     "name": "첨부 1.2026 서울청소년댄스페스티벌 안내문.pdf 이미지"
+    }
+   ],
    "summary": {
-    "ko": "본문이 이미지나 첨부파일로만 올라와 내용을 읽지 못했습니다. 원문을 확인해 주세요.",
-    "en": "The notice body is only an image or attachment, so it could not be read. Please check the original.",
-    "zh": "公告正文仅为图片或附件,无法读取。请查看原文。",
-    "ja": "本文が画像または添付ファイルのみのため読み取れませんでした。原文をご確認ください。"
+    "ko": "공모전·대외활동 관련 공지예요. 혜택은 참가비 무료예요. 신청은 9월 6일까지예요.",
+    "en": "This is a notice related to competitions and extracurricular activities. The benefit is free participation fee. Applications are due by September 6th.",
+    "zh": "这是关于比赛及课外活动的通知。优惠是免费参与费用。申请截止日期为9月6日。",
+    "ja": "競技・外部活動に関するお知らせです。特典は参加費無料です。申請は9月6日までです。"
    },
    "terms": [],
-   "regulation": null,
-   "aiPending": true
+   "regulation": null
   },
   {
    "id": "2-27-120806",
@@ -26111,27 +26835,56 @@
    "link": "https://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1850&CONTENTS_NO=&SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=27&BOARD_CATEGORY_NO=&BBS_SEQ=120806&pageNo=1",
    "date": "2026-08-26",
    "hits": 43,
-   "bodyStatus": "image",
+   "bodyStatus": "poster",
    "title": "「2026 한국행정연구원 오픈하우스(OPEN HOUSE)」",
-   "titleTr": {},
-   "category": "contest",
-   "deadline": null,
-   "benefit": null,
-   "eligibility": null,
-   "events": [],
-   "hours": null,
-   "evidence": {},
-   "evidenceVerified": null,
-   "readFrom": [],
-   "summary": {
-    "ko": "본문이 이미지나 첨부파일로만 올라와 내용을 읽지 못했습니다. 원문을 확인해 주세요.",
-    "en": "The notice body is only an image or attachment, so it could not be read. Please check the original.",
-    "zh": "公告正文仅为图片或附件,无法读取。请查看原文。",
-    "ja": "本文が画像または添付ファイルのみのため読み取れませんでした。原文をご確認ください。"
+   "titleTr": {
+    "en": "2026 Korea Institute for Administrative Science Open House (OPEN HOUSE)",
+    "zh": "「2026 韩国行政研究院开放日（OPEN HOUSE）」",
+    "ja": "「2026 韓国行政研究院オープンハウス（OPEN HOUSE）」"
    },
-   "terms": [],
-   "regulation": null,
-   "aiPending": true
+   "category": "career",
+   "deadline": "2026-09-06T23:59",
+   "benefit": {
+    "text": {
+     "ko": "아메리카노 모바일 상품권",
+     "en": "Americano mobile gift card",
+     "zh": "美式咖啡移动礼品卡",
+     "ja": "アメリカノモバイルギフトカード"
+    },
+    "points": null,
+    "won": null
+   },
+   "eligibility": {
+    "ko": "정책과 행정에 관심 있는 학부생/대학원생, 국책연구원 취업을 꿈꾸는 예비 연구자, 한국행정연구원의 연구활동이 궁금한 분, 현직 연구자들과 대화하고 싶은 분",
+    "en": "Undergraduate or graduate students interested in policy and administration, aspiring researchers who want to work at a national research institute, people curious about Korea Institute for Administrative Science's research activities, and individuals who would like to converse with current researchers",
+    "zh": "对政策和行政感兴趣的大一学生或研究生、希望在国策研究院工作的预备研究员、想了解韩国行政研究院研究活动的人士、想与在职研究人员交流的人",
+    "ja": "政策や行政に興味がある学部生／大学院生、国策研究機関での就職を夢見る予備研究者、韓国行政研究院の研究活動が気になる方、現役研究者と話したい方"
+   },
+   "events": [],
+   "hours": 2.5,
+   "evidence": {
+    "deadline": "* 사전등록 마감: 2026년 9월 6일(일)",
+    "benefit": "사전등록자 전원에게\n아메리카노 모바일 상품권을 드립니다!",
+    "eligibility": "참여대상\n• 정책과 행정에 관심 있는 학부생/대학원생\n• 국책연구원 취업을 꿈꾸는 예비 연구자"
+   },
+   "evidenceVerified": true,
+   "readFrom": [
+    {
+     "kind": "poster",
+     "name": "본문 이미지 1"
+    }
+   ],
+   "summary": {
+    "ko": "한국행정연구원 오픈하우스 참여자를 모집해요. 정책과 행정에 관심 있는 학부생이 9월 6일까지 신청하면 아메리카노 모바일 상품권을 받고, 9월 16일 15시에 행사에 참석할 수 있어요.",
+    "en": "Korea Institute for Administrative Science is recruiting participants for the Open House. Undergraduate students interested in policy and administration can apply until September 6th and receive an Americano mobile gift card, allowing them to attend the event on September 16th at 3:00 PM.",
+    "zh": "韩国行政研究院正在招募参加开放日的参与者。对政策和行政感兴趣的大一学生可在9月6日前申请，获得美式咖啡移动礼品卡，并可于9月16日下午3点参加活动。",
+    "ja": "韓国行政研究院はオープンハウスの参加者を募集しています。政策や行政に興味がある学部生が9月6日までに申請するとアメリカノモバイルギフトカードを受け取り、9月16日午後3時にイベントに出席できます。"
+   },
+   "terms": [
+    "대학원생",
+    "마감"
+   ],
+   "regulation": null
   },
   {
    "id": "2-18-120161",
@@ -26139,31 +26892,51 @@
    "link": "https://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1740&CONTENTS_NO=&SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=18&BOARD_CATEGORY_NO=&BBS_SEQ=120161&pageNo=1",
    "date": "2026-08-26",
    "hits": 1923,
-   "bodyStatus": "file",
+   "bodyStatus": "poster",
    "title": "2026.2학기 K-MOOC교과목 수강신청 안내",
-   "titleTr": {},
+   "titleTr": {
+    "en": "2026 Second Semester K-MOOC Course Registration Notice",
+    "zh": "2026年第二学期K-MOOC课程选课通知",
+    "ja": "2026年第二学期K-MOOC科目選択登録案内"
+   },
    "category": "academic",
-   "deadline": null,
+   "deadline": "2026-08-31T23:59",
    "benefit": null,
-   "eligibility": null,
+   "eligibility": {
+    "ko": "재학생 (졸업유예자 제외)",
+    "en": "Current students (excluding those on leave of absence)",
+    "zh": "在校生（不包括休学者）",
+    "ja": "在校生（休学者を除く）"
+   },
    "events": [],
    "hours": null,
-   "evidence": {},
-   "evidenceVerified": null,
+   "evidence": {
+    "deadline": "수강신청일시 : 2026. 8. 31.(월) 10:00",
+    "eligibility": "● 재학생 (졸업유예자 제외)"
+   },
+   "evidenceVerified": true,
    "readFrom": [
+    {
+     "kind": "poster",
+     "name": "본문 이미지 1"
+    },
     {
      "kind": "file",
      "name": "2026-2학기 K-MOOC 홍보포스터.pdf"
     }
    ],
    "summary": {
-    "ko": "학사 관련 공지예요. 자세한 내용은 원문을 확인해 주세요."
+    "ko": "2026.2학기 K-MOOC교과목 수강신청을 안내해요. 재학생은 8월 31일까지 종합정보시스템에서 신청하면 학점 인정받고, 이수증도 출력할 수 있어요.",
+    "en": "Current students can apply through the Integrated Information System by August 31, and they will receive credit recognition and be able to print a completion certificate.",
+    "zh": "在校生可在8月31日前通过综合信息系统进行申请，可获得学分认定并打印修课证明。",
+    "ja": "在校生は8月31日までに統合情報システムで申請すると単位認定を受けられ、修了証明書も印刷できます。"
    },
    "terms": [
     "수강신청",
     "K-MOOC",
     "휴학",
     "학점",
+    "학수번호",
     "졸업유예",
     "재학생",
     "학점인정"
@@ -26189,8 +26962,7 @@
      "url": "https://rule.konkuk.ac.kr/lmxsrv/law/lawDetail.do?SEQ=137&LAWGROUP=1&PAGE=1",
      "checked": "2026-11-23"
     }
-   },
-   "aiPending": true
+   }
   },
   {
    "id": "2-18-120159",
@@ -26200,7 +26972,11 @@
    "hits": 311,
    "bodyStatus": "image",
    "title": "[Cogito대학교육혁신원] 2026년 K-MOOC 활성화 이벤트 안내",
-   "titleTr": {},
+   "titleTr": {
+    "en": "[Cogito大学教育创新院] 2026 K-MOOC Activation Event Notice",
+    "zh": "[Cogito大学教育创新院] 2026 K-MOOC 激活活动通知",
+    "ja": "[Cogito大学教育創新院] 2026年K-MOOC活性化イベントのお知らせ"
+   },
    "category": "event",
    "deadline": null,
    "benefit": null,
@@ -26240,8 +27016,7 @@
      "url": "https://rule.konkuk.ac.kr/lmxsrv/law/lawDetail.do?SEQ=137&LAWGROUP=1&PAGE=1",
      "checked": "2026-11-23"
     }
-   },
-   "aiPending": true
+   }
   },
   {
    "id": "2-18-120158",
@@ -26251,26 +27026,34 @@
    "hits": 456,
    "bodyStatus": "text",
    "title": "2026.2학기 교양교과목 수강제한인원 변경 안내(심화,소양)3차",
-   "titleTr": {},
+   "titleTr": {
+    "en": "2026 Second Semester General Education Course Enrollment Limit Change Notice (Advanced, Basic) Third Round",
+    "zh": "2026年第二学期通识课程选课人数限制变更通知（深化、基础）第三轮",
+    "ja": "2026第二学期通識科目選択制限人数変更のお知らせ（深化・基礎）第3回"
+   },
    "category": "academic",
-   "deadline": null,
+   "deadline": "2026-09-04T23:59",
    "benefit": null,
    "eligibility": null,
    "events": [],
    "hours": null,
-   "evidence": {},
-   "evidenceVerified": null,
+   "evidence": {
+    "deadline": "수강신청 일시: 2026. 8. 31 오전 10:00~9.4(수강정정 기간)"
+   },
+   "evidenceVerified": true,
    "readFrom": [],
    "summary": {
-    "ko": "학사 관련 공지예요. 자세한 내용은 원문을 확인해 주세요."
+    "ko": "교양교과목 수강 제한인원 변경을 안내해요. 재학생이 9월 4일까지 신청하면 수강 가능 인원이 늘어나요.",
+    "en": "We are informing you about the change in enrollment limits for general education courses. If currently enrolled students apply by September 4th, they will be able to enroll in an increased number of courses.",
+    "zh": "我们通知您关于通识课程选课人数限制的变更。目前在校生如果在9月4日前申请，将可以增加选课人数。",
+    "ja": "通識科目の選択制限人数について変更を通知いたします。現在在籍している学生が9月4日までに申請すれば、選択可能な人数が増えることになります。"
    },
    "terms": [
     "수강신청",
     "수강정정",
     "학수번호"
    ],
-   "regulation": null,
-   "aiPending": true
+   "regulation": null
   },
   {
    "id": "2-18-120157",
@@ -26280,15 +27063,26 @@
    "hits": 589,
    "bodyStatus": "text",
    "title": "2026.2학기 1차 폐강 교과목 안내",
-   "titleTr": {},
+   "titleTr": {
+    "en": "2026 Second Semester First Round Course Cancellation Notice",
+    "zh": "2026年第二学期第一轮停开课程通知",
+    "ja": "2026年第二学期第一回休講科目案内"
+   },
    "category": "academic",
    "deadline": null,
    "benefit": null,
-   "eligibility": null,
+   "eligibility": {
+    "ko": "폐강 교과목 수강신청을 희망하는 학생",
+    "en": "Students who wish to apply for course cancellation",
+    "zh": "希望申请停开课程的学生",
+    "ja": "休講科目を選択希望する学生"
+   },
    "events": [],
    "hours": null,
-   "evidence": {},
-   "evidenceVerified": null,
+   "evidence": {
+    "eligibility": "- 폐강으로 인하여 다른 교과목 수강신청을 희망하는 학생은 수강정정기간을 이용하여 수강신청하여 주시기 바랍니다."
+   },
+   "evidenceVerified": true,
    "readFrom": [
     {
      "kind": "file",
@@ -26296,7 +27090,10 @@
     }
    ],
    "summary": {
-    "ko": "학사 관련 공지예요. 자세한 내용은 원문을 확인해 주세요."
+    "ko": "2026.2학기 1차 폐강 교과목 수강신청을 안내해요. 재학생이 8월 31일까지 수강정정기간에 신청하면 강의실 및 시간 변경 가능해요.",
+    "en": "If currently enrolled students apply during the course adjustment period until August 31, they can change lecture rooms and times.",
+    "zh": "目前在校学生若在8月31日前的选课调整期内申请，可更改教室及时间。",
+    "ja": "現在在籍している学生が8月31日までの選択調整期間中に申請すれば、教室や時間の変更が可能です。"
    },
    "terms": [
     "학점",
@@ -26331,8 +27128,7 @@
     },
     "page": 9,
     "year": 2026
-   },
-   "aiPending": true
+   }
   },
   {
    "id": "2-22-119882",
@@ -26342,41 +27138,62 @@
    "hits": 158,
    "bodyStatus": "text",
    "title": "2026년 교내 영어특강 가을학기 모집 안내",
-   "titleTr": {},
-   "category": "event",
+   "titleTr": {
+    "en": "2026 Fall Special Lecture Recruitment Notice",
+    "zh": "2026年校内英语特别讲座秋季学期招生通知",
+    "ja": "2026年校内英語特別講義　秋季学期募集のお知らせ"
+   },
+   "category": "contest",
    "deadline": "2026-09-18T23:59",
    "benefit": {
     "text": {
-     "ko": "지원금액 : 1인당 52,500원 지원"
+     "ko": "정기토익 응시료 지원, 녹화강의 제공, 모의테스트 제공",
+     "en": "Support for regular TOEIC exam fees, provision of recorded lectures, provision of mock tests",
+     "zh": "定期托业考试费用支持、录播课程提供、模拟测试提供",
+     "ja": "定期TOEIC受験料支援、録画授業提供、模擬テスト提供"
     },
-    "points": 0,
-    "won": 52500
+    "points": null,
+    "won": null
    },
-   "eligibility": null,
+   "eligibility": {
+    "ko": "재학생",
+    "en": "Current students",
+    "zh": "在校生",
+    "ja": "在籍生"
+   },
    "events": [],
    "hours": null,
    "evidence": {
     "deadline": "3. 접수기간 : 2026. 08. 28.(금) ~ 09. 18.(금)까지",
-    "benefit": "지원금액 : 1인당 52,500원 지원"
+    "benefit": "1) 정기토익 응시료 지원\n2) 녹화강의 제공\n- 토익, 토익스피킹, 오픽과정 2회 / 토플, 아이엘츠과정 1회",
+    "eligibility": "국제교육센터에서는 재학생들의 어학실력 향상을 위해 다양한 어학 강좌들을 모집하고 있습니다. 대면 수업 또는 줌(Zoom) 프로그램을 활용한 실시간 라이브 수업으로 학습을 진행하니 관심 있는 학생들의 많은 참여 바랍니다."
    },
    "evidenceVerified": true,
-   "readFrom": [],
+   "readFrom": [
+    {
+     "kind": "poster",
+     "name": "첨부 이미지: 2026년 가을학기 국제교육센터 교내 영어특강 홍보물.jpg"
+    }
+   ],
    "summary": {
-    "ko": "행사·특강 관련 공지예요. 혜택은 지원금액 : 1인당 52,500원 지원이에요. 신청은 9월 18일까지예요."
+    "ko": "2026년 가을학기 영어특강 신청을 안내해요. 재학생이 9월 18일까지 신청하면 정기토익 응시료 지원, 녹화강의 제공, 모의테스트 제공 혜택을 받을 수 있어요.",
+    "en": "We are announcing the application for the English special lecture in the fall semester of 2026. Current students who apply by September 18th can receive benefits such as support for regular TOEIC exam fees, provision of recorded lectures, and provision of mock tests.",
+    "zh": "我们通知您2026年秋季学期英语特别讲座的申请。在9月18日之前申请的学生可以享受定期托业考试费用支持、录播课程提供以及模拟测试提供的福利。",
+    "ja": "2026年秋学期の英語特別講義の申請についてお知らせします。9月18日までに申請した在籍生には定期TOEIC受験料支援、録画授業提供、模擬テスト提供の特典があります。"
    },
    "terms": [
     "특강",
     "건국대",
     "수강신청",
     "재학생",
+    "원격수업",
     "접수",
     "마감",
     "접수기간",
     "대면",
     "비대면"
    ],
-   "regulation": null,
-   "aiPending": true
+   "regulation": null
   },
   {
    "id": "2-22-119881",
@@ -26386,20 +27203,43 @@
    "hits": 186,
    "bodyStatus": "text",
    "title": "2026.2학기 KU아카데미 골프프로그램 수강생 모집 연장 안내",
-   "titleTr": {},
-   "category": "event",
+   "titleTr": {
+    "en": "2026 Second Semester KU Academy Golf Program Student Recruitment Extended Notice",
+    "zh": "2026年第二学期KU学院高尔夫课程学员招募延长通知",
+    "ja": "2026年第二学期KUアカデミー ゴルフプログラム受講生募集期間延長のお知らせ"
+   },
+   "category": "academic",
    "deadline": "2026-08-30T23:59",
-   "benefit": null,
-   "eligibility": null,
+   "benefit": {
+    "text": {
+     "ko": "55만원",
+     "en": "550,000 won",
+     "zh": "55万韩元",
+     "ja": "55万ウォン"
+    },
+    "points": null,
+    "won": 550000
+   },
+   "eligibility": {
+    "ko": "골프에 관심 있는 분",
+    "en": "People interested in golf",
+    "zh": "对高尔夫感兴趣的人",
+    "ja": "ゴルフに興味がある方"
+   },
    "events": [],
-   "hours": null,
+   "hours": 40.0,
    "evidence": {
-    "deadline": "접수 기간: 2026. 8. 30.(일)까지"
+    "deadline": "- 접수 기간: 2026. 8. 30.(일)까지",
+    "benefit": "55만원 |",
+    "eligibility": "골프에 관심 있는 분들의 많은 신청 바랍니다."
    },
    "evidenceVerified": true,
    "readFrom": [],
    "summary": {
-    "ko": "행사·특강 관련 공지예요. 신청은 8월 30일까지예요."
+    "ko": "KU아카데미 골프프로그램 수강 신청 기간이 연장된 공지예요. 골프에 관심 있는 분이 8월 30일까지 신청하면 55만원 할인 혜택을 받고, 9월 1일부터 운영되요.",
+    "en": "This is a notice that the application period for the KU Academy Golf Program has been extended. If you are interested in golf and apply by August 30, you will receive a discount of 550,000 won, and the program will start on September 1.",
+    "zh": "这是关于KU学院高尔夫课程申请期限延长的通知。如果您对高尔夫感兴趣并在8月30日前申请，可享受55万韩元的折扣优惠，并于9月1日开始运营。",
+    "ja": "KUアカデミー ゴルフプログラムの受講申請期間が延長されたことをご案内いたします。ゴルフに興味がある方で8月30日までに申請すると55万ウォンの割引特典を受けられ、9月1日から運営が始まります。"
    },
    "terms": [
     "건국대",
@@ -26407,8 +27247,7 @@
     "마감",
     "접수기간"
    ],
-   "regulation": null,
-   "aiPending": true
+   "regulation": null
   },
   {
    "id": "2-24-119505",
@@ -26418,7 +27257,11 @@
    "hits": 582,
    "bodyStatus": "text",
    "title": "[Cogito대학교육혁신원] 2026학년도 2학기 K-MOOC 활성화 이벤트 안내",
-   "titleTr": {},
+   "titleTr": {
+    "en": "[Cogito大学教育创新院] 2026 Academic Year Second Semester K-MOOC Activation Event Notice",
+    "zh": "[Cogito大学教育创新院] 2026学年第二学期K-MOOC活化活动通知",
+    "ja": "[Cogito大学教育創新院] 2026学年第二学期K-MOOC活性化イベントのお知らせ"
+   },
    "category": "event",
    "deadline": null,
    "benefit": null,
@@ -26429,7 +27272,10 @@
    "evidenceVerified": null,
    "readFrom": [],
    "summary": {
-    "ko": "행사·특강 관련 공지예요. 자세한 내용은 원문을 확인해 주세요."
+    "ko": "K-MOOC 활성화 이벤트 참여자를 모집해요.",
+    "en": "We are recruiting participants for the K-MOOC Activation Event.",
+    "zh": "我们正在招募K-MOOC活化活动的参与者。",
+    "ja": "K-MOOC活性化イベントの参加者を募集しています。"
    },
    "terms": [
     "K-MOOC",
@@ -26456,8 +27302,7 @@
      "url": "https://rule.konkuk.ac.kr/lmxsrv/law/lawDetail.do?SEQ=137&LAWGROUP=1&PAGE=1",
      "checked": "2026-11-23"
     }
-   },
-   "aiPending": true
+   }
   },
   {
    "id": "7-1-36303",
@@ -26467,27 +27312,43 @@
    "hits": 457,
    "bodyStatus": "text",
    "title": "2026년 가을학기 교내 영어특강 모집 안내",
-   "titleTr": {},
-   "category": "event",
+   "titleTr": {
+    "en": "Notice of Application for Campus English Special Lecture in Fall 2026",
+    "zh": "2026年秋季校内英语特别讲座招募通知",
+    "ja": "2026年秋季校内英語特別講義の募集案内"
+   },
+   "category": "contest",
    "deadline": "2026-09-18T23:59",
    "benefit": {
     "text": {
-     "ko": "지원금액 : 1인당 52,500원 지원"
+     "ko": "정기토익 응시료 지원(52,500원)",
+     "en": "Regular TOEIC exam fee support (52,500 won)",
+     "zh": "定期托福考试费用支持（韩元52,500）",
+     "ja": "定期TOEIC受験料補助（52,500ウォン）"
     },
-    "points": 0,
+    "points": null,
     "won": 52500
    },
-   "eligibility": null,
+   "eligibility": {
+    "ko": "재학생",
+    "en": "Current students",
+    "zh": "在校生",
+    "ja": "在学生"
+   },
    "events": [],
    "hours": null,
    "evidence": {
     "deadline": "3. 접수기간 : 2026. 08. 28.(금) ~ 09. 18.(금)까지",
-    "benefit": "지원금액 : 1인당 52,500원 지원"
+    "benefit": "1) 정기토익 응시료 지원\n- 지원금액 : 1인당 52,500원 지원",
+    "eligibility": "국제교육센터에서는 재학생들의 어학실력 향상을 위해 다양한 어학 강좌들을 모집하고 있습니다."
    },
    "evidenceVerified": true,
    "readFrom": [],
    "summary": {
-    "ko": "행사·특강 관련 공지예요. 혜택은 지원금액 : 1인당 52,500원 지원이에요. 신청은 9월 18일까지예요."
+    "ko": "공모전·대외활동 관련 공지예요. 혜택은 정기토익 응시료 지원(52,500원)이에요. 신청은 9월 18일까지예요.",
+    "en": "This is a notice related to competitions and extracurricular activities. The benefit is regular TOEIC exam fee support (52,500 won). Applications are due by September 18th.",
+    "zh": "这是关于竞赛及课外活动的通知。优惠为定期托福考试费用支持（韩元52,500）。申请截止日期为9月18日。",
+    "ja": "これはコンテストや課外活動に関する通知です。特典は定期TOEIC受験料補助（52,500ウォン）です。申請は9月18日までです。"
    },
    "terms": [
     "특강",
@@ -26500,8 +27361,7 @@
     "대면",
     "비대면"
    ],
-   "regulation": null,
-   "aiPending": true
+   "regulation": null
   },
   {
    "id": "7-1-36302",
@@ -26509,25 +27369,59 @@
    "link": "https://int.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=80&CONTENTS_NO=&SITE_NO=7&P_TAB_NO=&TAB_NO=&BOARD_SEQ=1&BOARD_CATEGORY_NO=&BBS_SEQ=36302&pageNo=1",
    "date": "2026-08-26",
    "hits": 1132,
-   "bodyStatus": "image",
+   "bodyStatus": "poster",
    "title": "2026.2학기 해외파견 프로그램 설명회 개최_2026.9.1.~9.2.",
-   "titleTr": {},
+   "titleTr": {
+    "en": "2026 Second Semester Overseas Dispatch Program Information Session_2026.9.1.~9.2.",
+    "zh": "2026年第二学期海外派遣项目说明会举办_2026.9.1.~9.2.",
+    "ja": "2026年第二学期海外派遣プログラム説明会開催_2026.9.1.〜9.2."
+   },
    "category": "global",
-   "deadline": null,
-   "benefit": null,
-   "eligibility": null,
+   "deadline": "2026-09-02T23:59",
+   "benefit": {
+    "text": {
+     "ko": "해외파견 프로그램 안내 및 교환학생 후기 발표",
+     "en": "Introduction to the overseas dispatch program and exchange student experience presentations",
+     "zh": "海外派遣项目介绍及交换生经验分享",
+     "ja": "海外派遣プログラムの紹介および交換留学生体験発表"
+    },
+    "points": null,
+    "won": null
+   },
+   "eligibility": {
+    "ko": "건국대학교 글로컬캠퍼스 재학생 및 휴학생",
+    "en": "Current and leave of absence students at Gukje Global Campus",
+    "zh": "韩国建国大学全球校区的在读学生及休学学生",
+    "ja": "韓国建国大学グローバルキャンパスの在籍学生および休学学生"
+   },
    "events": [],
    "hours": null,
-   "evidence": {},
-   "evidenceVerified": null,
-   "readFrom": [],
-   "summary": {
-    "ko": "본문이 이미지나 첨부파일로만 올라와 내용을 읽지 못했습니다. 원문을 확인해 주세요.",
-    "en": "The notice body is only an image or attachment, so it could not be read. Please check the original.",
-    "zh": "公告正文仅为图片或附件,无法读取。请查看原文。",
-    "ja": "本文が画像または添付ファイルのみのため読み取れませんでした。原文をご確認ください。"
+   "evidence": {
+    "deadline": "일시 | 2026.9.1.(화) ~ 9.2.(수), 18:15",
+    "benefit": "주요내용 | 해외파견 프로그램 안내 교환학생 이수 후기 발표\n학비, 체류비용, 수업 내용 등등 다양한 정보를 얻을 수 있어요!!",
+    "eligibility": "대상 | 본교 재학생 및 휴학생"
    },
-   "terms": [],
+   "evidenceVerified": true,
+   "readFrom": [
+    {
+     "kind": "poster",
+     "name": "본문 이미지 1"
+    }
+   ],
+   "summary": {
+    "ko": "해외파견 프로그램 설명회가 열립니다. 건국대학교 글로컬캠퍼스 재학생 및 휴학생이 9월 2일까지 참여하면 해외파견 프로그램 안내와 교환학생 후기 발표를 들을 수 있어요.",
+    "en": "An overseas dispatch program information session will be held. Current and leave of absence students at Gukje Global Campus can attend to listen to the program introduction and exchange student experience presentations until September 2nd.",
+    "zh": "将举行海外派遣项目说明会。韩国建国大学全球校区的在读学生及休学学生可在9月2日前参加，听取项目介绍和交换生经验分享。",
+    "ja": "海外派遣プログラムの説明会が行われます。韓国建国大学グローバルキャンパスの在籍学生および休学学生は、9月2日までに参加して、プログラム紹介と交換留学生体験発表を聞くことができます。"
+   },
+   "terms": [
+    "휴학",
+    "교환학생",
+    "건국대",
+    "이음교육시스템",
+    "재학생",
+    "휴학생"
+   ],
    "regulation": {
     "id": "exchange",
     "title": {
@@ -26549,8 +27443,7 @@
      "url": "https://rule.konkuk.ac.kr/lmxsrv/law/lawDetail.do?SEQ=188&LAWGROUP=1&PAGE=1",
      "checked": "2026-11-23"
     }
-   },
-   "aiPending": true
+   }
   },
   {
    "id": "7-1-36301",
@@ -26560,22 +27453,35 @@
    "hits": 3174,
    "bodyStatus": "text",
    "title": "2027. 1학기 국제화(해외파견) 프로그램 참가자 선발 안내_2026.8.26.~9.6.",
-   "titleTr": {},
+   "titleTr": {
+    "en": "2027 First Semester Internationalization (Overseas Dispatch) Program Participant Selection Notice_2026.8.26.~9.6.",
+    "zh": "2027学年第一学期国际化（海外派遣）项目参与者选拔通知_2026.8.26.~9.6.",
+    "ja": "2027学年度第1学期国際化（海外派遣）プログラム参加者選抜案内_2026.8.26.〜9.6."
+   },
    "category": "global",
    "deadline": "2026-09-06T23:59",
    "benefit": {
     "text": {
-     "ko": "파견학생: 본교 등록금 및 상대교 수업료/기숙사비/식비 등 전액 납부 + 장학금 최대 450만원 지급"
+     "ko": "장학금 최대 450만원 지급",
+     "en": "A scholarship of up to 4,500,000 won is provided",
+     "zh": "提供最高450万韩元奖学金",
+     "ja": "最大450万ウォンの奨学金が支給されます"
     },
-    "points": 0,
+    "points": null,
     "won": 4500000
    },
-   "eligibility": null,
+   "eligibility": {
+    "ko": "2026. 2학기 현재 1학기 이상 수료하고, 6학기 이내 재학 중 또는 수료한 학생(휴학생 신청 가능)",
+    "en": "Students who have completed at least one semester as of the second semester of 2026, and are currently enrolled or have graduated within six semesters (students on leave of absence are eligible)",
+    "zh": "2026年第二学期目前完成至少一个学期学习，并且在六学期以内正在就读或已毕业的学生（休学者也可申请）",
+    "ja": "2026年第二学期現在、1学期以上を修了し、6学期以内に在籍または修了している学生（休学者も申請可能です）"
+   },
    "events": [],
    "hours": null,
    "evidence": {
     "deadline": "다. 신청 접수 기간: 2026. 8. 26.(수) ~ 9. 6.(일)",
-    "benefit": "파견학생: 본교 등록금 및 상대교 수업료/기숙사비/식비 등 전액 납부 + 장학금 최대 450만원 지급"
+    "benefit": "- 파견학생: 본교 등록금 및 상대교 수업료/기숙사비/식비 등 전액 납부 + 장학금 최대 450만원 지급",
+    "eligibility": "- 2026. 2학기 현재 1학기 이상 수료하고, 6학기 이내 재학 중 또는 수료한 학생(휴학생 신청 가능)"
    },
    "evidenceVerified": true,
    "readFrom": [
@@ -26585,7 +27491,10 @@
     }
    ],
    "summary": {
-    "ko": "교환·해외 관련 공지예요. 혜택은 파견학생: 본교 등록금 및 상대교 수업료/기숙사비/식비 등 전액 납부 + 장학금 최대 450만원 지급이에요. 신청은 9월 6일까지예요."
+    "ko": "2027학년도 1학기 국제화 프로그램 참가자 선발을 안내해요. 재학생과 휴학생이 8월 26일부터 9월 6일까지 신청하면 장학금 최대 450만원 지급받아요.",
+    "en": "We are informing you about the selection of participants for the internationalization program in the first semester of 2027. Current students and those on leave of absence who apply from August 26 to September 6 will receive a scholarship of up to 4,500,000 won.",
+    "zh": "现向您通告2027学年第一学期国际化项目参与者的选拔信息。目前在校生及休学者可在8月26日至9月6日期间申请，最高可获得450万韩元奖学金。",
+    "ja": "2027年度第1学期の国際化プログラム参加者の選抜についてお知らせします。現在在籍している学生および休学者は、8月26日から9月6日まで申請できます。最高で450万ウォンの奨学金が支給されます。"
    },
    "terms": [
     "선발",
@@ -26620,8 +27529,7 @@
      "url": "https://rule.konkuk.ac.kr/lmxsrv/law/lawDetail.do?SEQ=188&LAWGROUP=1&PAGE=1",
      "checked": "2026-11-23"
     }
-   },
-   "aiPending": true
+   }
   },
   {
    "id": "2-18-120156",
@@ -26631,18 +27539,42 @@
    "hits": 481,
    "bodyStatus": "text",
    "title": "[대학교육혁신원] 2026학년 2학기 KU STAR 학습워크숍(1) AI 200% 활용: 학습기술부터 멀티미디어까지 신청 안내",
-   "titleTr": {},
+   "titleTr": {
+    "en": "[Center for University Education Innovation] 2026 Academic Year Second Semester KU STAR Learning Workshop (1): AI 200% Utilization: From Study Skills to Multimedia - Application Notice",
+    "zh": "[大学教育创新院] 2026学年第二学期KU STAR学习研讨会（1）：AI 200%利用：从学习技巧到多媒体申请通知",
+    "ja": "[大学教育創新院] 2026学年第二学期KU STAR学習ワークショップ（1）：AI 200％活用：学習技術からマルチメディアまで申請案内"
+   },
    "category": "event",
    "deadline": null,
-   "benefit": null,
-   "eligibility": null,
+   "benefit": {
+    "text": {
+     "ko": "다드림포인트 및 상금 지급불가",
+     "en": "No Dadream points or cash prize will be given",
+     "zh": "不给予达德里姆积分及奖金",
+     "ja": "ダドリームポイントおよび現金賞の支給はできません"
+    },
+    "points": null,
+    "won": null
+   },
+   "eligibility": {
+    "ko": "휴학생, 8학기 초과자, 편입생 등 장학생 자격 제한에 해당되는 경우",
+    "en": "Students on leave of absence, those exceeding 8 semesters, transfer students, etc., who are subject to scholarship eligibility restrictions",
+    "zh": "休学生、超过8学期者、转学生等符合奖学金资格限制的情况",
+    "ja": "休学者、8学期を超えた者、編入生など奨学金資格制限に該当する場合"
+   },
    "events": [],
    "hours": null,
-   "evidence": {},
-   "evidenceVerified": null,
+   "evidence": {
+    "benefit": "※ 휴학생, 8학기 초과자, 편입생은 4학기 초과자, 졸업유예자 등 장학생 자격 제한에 해당되는 경우, 다드림포인트 및 상금 지급불가 / 이수증 발급 가능",
+    "eligibility": "※ 휴학생, 8학기 초과자, 편입생은 4학기 초과자, 졸업유예자 등 장학생 자격 제한에 해당되는 경우, 다드림포인트 및 상금 지급불가 / 이수증 발급 가능"
+   },
+   "evidenceVerified": true,
    "readFrom": [],
    "summary": {
-    "ko": "행사·특강 관련 공지예요. 자세한 내용은 원문을 확인해 주세요."
+    "ko": "KU STAR 학습워크숍 참여자를 모집해요. 휴학생 등 장학 제한 대상자는 다드림포인트와 상금을 받지 못하지만 이수증을 발급해요.",
+    "en": "We are recruiting participants for the KU STAR Learning Workshop. Students on leave of absence and others who are restricted from scholarships cannot receive Dadream points and cash prizes, but they will be issued a certificate of completion.",
+    "zh": "我们正在招募KU STAR学习研讨会的参与者。休学生等受奖学金限制的学生无法获得达德里姆积分和奖金，但会颁发结业证书。",
+    "ja": "KU STAR学習ワークショップの参加者を募っています。休学者など奨学金の対象外となる者はダドリームポイントや現金賞を受け取れませんが、修了証を発行します。"
    },
    "terms": [
     "휴학",
@@ -26653,8 +27585,7 @@
     "휴학생",
     "장학"
    ],
-   "regulation": null,
-   "aiPending": true
+   "regulation": null
   },
   {
    "id": "2-18-120155",
@@ -26664,67 +27595,11 @@
    "hits": 563,
    "bodyStatus": "text",
    "title": "[대학교육혁신원] 2026학년 2학기 학습공동체(교우이음공동체) 신청 안내",
-   "titleTr": {},
-   "category": "event",
-   "deadline": null,
-   "benefit": null,
-   "eligibility": null,
-   "events": [],
-   "hours": null,
-   "evidence": {},
-   "evidenceVerified": null,
-   "readFrom": [],
-   "summary": {
-    "ko": "행사·특강 관련 공지예요. 자세한 내용은 원문을 확인해 주세요."
+   "titleTr": {
+    "en": "[University Education Innovation Office] Application Notice for Learning Community (Peer Connection Community) in 2026 Academic Year, Second Semester",
+    "zh": "[大学教育创新院] 2026学年第二学期学习共同体（同窗连接共同体）申请通知",
+    "ja": "[大学教育創新院] 2026年度第2学期学習共同体（同窗連携共同体）申請案内"
    },
-   "terms": [
-    "이음교육시스템",
-    "건국대",
-    "대면",
-    "비대면"
-   ],
-   "regulation": null,
-   "aiPending": true
-  },
-  {
-   "id": "2-18-120154",
-   "boardName": "학사공지",
-   "link": "https://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1740&CONTENTS_NO=&SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=18&BOARD_CATEGORY_NO=&BBS_SEQ=120154&pageNo=1",
-   "date": "2026-08-25",
-   "hits": 589,
-   "bodyStatus": "image",
-   "title": "[대학교육혁신원] 2026학년 2학기 Cogito서포터즈 5기 신청 안내",
-   "titleTr": {},
-   "category": "contest",
-   "deadline": null,
-   "benefit": null,
-   "eligibility": null,
-   "events": [],
-   "hours": null,
-   "evidence": {},
-   "evidenceVerified": null,
-   "readFrom": [],
-   "summary": {
-    "ko": "본문이 이미지나 첨부파일로만 올라와 내용을 읽지 못했습니다. 원문을 확인해 주세요.",
-    "en": "The notice body is only an image or attachment, so it could not be read. Please check the original.",
-    "zh": "公告正文仅为图片或附件,无法读取。请查看原文。",
-    "ja": "本文が画像または添付ファイルのみのため読み取れませんでした。原文をご確認ください。"
-   },
-   "terms": [
-    "서포터즈"
-   ],
-   "regulation": null,
-   "aiPending": true
-  },
-  {
-   "id": "2-18-120153",
-   "boardName": "학사공지",
-   "link": "https://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1740&CONTENTS_NO=&SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=18&BOARD_CATEGORY_NO=&BBS_SEQ=120153&pageNo=1",
-   "date": "2026-08-25",
-   "hits": 153,
-   "bodyStatus": "text",
-   "title": "예비군 대원 신고 안내문",
-   "titleTr": {},
    "category": "academic",
    "deadline": null,
    "benefit": null,
@@ -26735,7 +27610,117 @@
    "evidenceVerified": null,
    "readFrom": [],
    "summary": {
-    "ko": "학사 관련 공지예요. 자세한 내용은 원문을 확인해 주세요."
+    "ko": "학습공동체 참여자를 모집하는 공지예요.",
+    "en": "This is a notice recruiting participants for the learning community.",
+    "zh": "这是招募学习共同体参与者的公告。",
+    "ja": "学習共同体の参加者を募るお知らせです。"
+   },
+   "terms": [
+    "이음교육시스템",
+    "건국대",
+    "대면",
+    "비대면"
+   ],
+   "regulation": null
+  },
+  {
+   "id": "2-18-120154",
+   "boardName": "학사공지",
+   "link": "https://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1740&CONTENTS_NO=&SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=18&BOARD_CATEGORY_NO=&BBS_SEQ=120154&pageNo=1",
+   "date": "2026-08-25",
+   "hits": 589,
+   "bodyStatus": "poster",
+   "title": "[대학교육혁신원] 2026학년 2학기 Cogito서포터즈 5기 신청 안내",
+   "titleTr": {
+    "en": "[Center for University Education Innovation] Application Notice for the 5th Cohort of Cogito Supporters in the 2026 Academic Year, Second Semester",
+    "zh": "[大学教育创新院] 2026学年第二学期Cogito支持者第五期申请通知",
+    "ja": "[大学教育創新院] 2026学年第二学期Cogitoサポート5期の応募案内"
+   },
+   "category": "dadream",
+   "deadline": "2026-09-06T23:59",
+   "benefit": {
+    "text": {
+     "ko": "활동 증명서(이수증) 발급, 다드림 120 포인트 제공",
+     "en": "Issuance of an Activity Certificate (Completion Certificate), Provision of 120 Dadream Points",
+     "zh": "颁发活动证明书（完成证书），提供120个Dadream积分",
+     "ja": "活動証明書（修了証）の発行、ダドリームポイント120ポイントの提供"
+    },
+    "points": 120,
+    "won": null
+   },
+   "eligibility": {
+    "ko": "서포터즈 활동에 관심이 있는 재학생",
+    "en": "Current students who are interested in participating in the Supporters program",
+    "zh": "对支持者活动感兴趣的学生",
+    "ja": "サポート活動に興味がある在籍学生"
+   },
+   "events": [],
+   "hours": null,
+   "evidence": {
+    "deadline": "2026. 8. 24(월) ~ 9. 6(일)",
+    "benefit": "• 활동 증명서(이수증) 발급\n• 다드림 120 포인트 제공",
+    "eligibility": "서포터즈 활동에 관심이 있는 재학생 12명"
+   },
+   "evidenceVerified": true,
+   "readFrom": [
+    {
+     "kind": "poster",
+     "name": "본문 이미지 1"
+    }
+   ],
+   "summary": {
+    "ko": "Cogito서포터즈 5기 신청을 안내해요. 재학생이 9월 6일까지 신청하면 활동 증명서와 다드림 120 포인트를 받고, 9월 21일부터 11월 29일까지 활동하게 되어요.",
+    "en": "We are informing you about the application for the 5th cohort of Cogito Supporters. If a current student applies by September 6, they will receive an activity certificate and 120 Dadream points. The activities will take place from September 21 to November 29.",
+    "zh": "我们通知您关于Cogito支持者第五期的申请。如果在9月6日前，现役学生申请，则可获得活动证明书和120个Dadream积分，并于9月21日至11月29日期间进行活动。",
+    "ja": "Cogitoサポート5期の応募についてお知らせします。9月6日までに在籍学生が応募すると、活動証明書とダドリームポイント120ポイントを獲得し、9月21日から11月29日までの間、活動を行います。"
+   },
+   "terms": [
+    "서포터즈",
+    "비교과",
+    "다드림 포인트",
+    "이음교육시스템",
+    "오리엔테이션",
+    "재학생",
+    "증명서",
+    "멘토링",
+    "선발"
+   ],
+   "regulation": null
+  },
+  {
+   "id": "2-18-120153",
+   "boardName": "학사공지",
+   "link": "https://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1740&CONTENTS_NO=&SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=18&BOARD_CATEGORY_NO=&BBS_SEQ=120153&pageNo=1",
+   "date": "2026-08-25",
+   "hits": 153,
+   "bodyStatus": "text",
+   "title": "예비군 대원 신고 안내문",
+   "titleTr": {
+    "en": "Notice for Reserve Officer Registration",
+    "zh": "预备役军官报到通知",
+    "ja": "予備軍人登録に関するお知らせ"
+   },
+   "category": "academic",
+   "deadline": null,
+   "benefit": null,
+   "eligibility": {
+    "ko": "병역을 필한 신입생, 복학생, 편입생, 교직원(사무원), 고용원",
+    "en": "New students who have fulfilled their military service, returning students, transfer students, staff members (clerks), and employed personnel",
+    "zh": "已完成兵役的新入学学生、复学学生、转学学生、教职员工（职员）、雇员",
+    "ja": "兵役を終えた新入生、復学する学生、編入生、教職員（事務員）、雇用者"
+   },
+   "events": [],
+   "hours": null,
+   "evidence": {
+    "eligibility": "1. 신고 대상 - 병역을 필한 신입생, 복학생, 편입생, 교직원(사무원), 고용원"
+   },
+   "evidenceVerified": true,
+   "readFrom": [],
+   "summary": {
+    "ko": "예비군 대원 신고를 마감일까지 진행해야 하며, 학점 인정 혜택이 있습니다. 신입·복학 등 학적 변동 시 반드시 신고하세요.",
+    "en": "You must complete the reserve officer registration before the deadline, and there is a credit recognition benefit. Be sure to report if you are a new student, returning student, or have any academic status changes.",
+    "zh": "必须在截止日期前完成预备役军官报到，有学分认定的优惠。如为新生、复学等学籍变动情况，请务必进行报到。",
+    "ja": "予備軍人の登録は締切日までに実施する必要があります。学分認定の特典があります。新入生、復学等学籍変更の際は必ず登録してください。"
    },
    "terms": [
     "학점",
@@ -26785,7 +27770,6 @@
      "checked": "2026-11-23"
     }
    },
-   "aiPending": true,
    "alsoIn": [
     "일반공지"
    ]
@@ -26798,22 +27782,35 @@
    "hits": 1339,
    "bodyStatus": "text",
    "title": "[국가근로] 2026학년도 2학기 학기중 국가근로 선발발표 및 안내사항(교내·외)",
-   "titleTr": {},
-   "category": "scholarship",
-   "deadline": "2027-02-18T23:59",
+   "titleTr": {
+    "en": "[National Work-Study] Notice of Selection and Information for the Second Semester of 2026 Academic Year (On-campus and Off-campus)",
+    "zh": "[国家勤工] 2026学年第二学期校内及校外国家勤工选拔通知",
+    "ja": "[国家勤務] 2026年度第2学期の校内・校外国家勤務選考に関するお知らせ"
+   },
+   "category": "career",
+   "deadline": "2026-08-26T23:59",
    "benefit": {
     "text": {
-     "ko": "교외: 시간당 12,790원(교통비 500원 추가지급)"
+     "ko": "시급 10,320원(교내), 12,790원(교외)",
+     "en": "Hourly wage of 10,320 won (on-campus), 12,790 won (off-campus)",
+     "zh": "每小时10,320韩元（校内），12,790韩元（校外）",
+     "ja": "時給10,320ウォン（校内）、12,790ウォン（校外）"
     },
-    "points": 0,
+    "points": null,
     "won": 12790
    },
-   "eligibility": null,
+   "eligibility": {
+    "ko": "재학생(휴학, 자퇴, 졸업 등 학적변동자는 변동일 전일까지 가능)",
+    "en": "Current students (those with academic status changes such as leave of absence, withdrawal, or graduation can apply up to the day before the change)",
+    "zh": "在校生（休学、退学、毕业等学籍变动者可于变动日前申请）",
+    "ja": "在校生（休学・退学・卒業などの学籍変更者は変更日の前日までに申請可能）"
+   },
    "events": [],
    "hours": null,
    "evidence": {
-    "deadline": "(*졸업예정자의 경우 학위수여식 전일인 2027. 2. 18.(목)까지 근로 가능)",
-    "benefit": "2) 교외: 시간당 12,790원(교통비 500원 추가지급)"
+    "deadline": "가. 선발발표: 2026. 8. 26.(수) 16:00",
+    "benefit": "1) 교내: 시간당 10,320원\n2) 교외: 시간당 12,790원(교통비 500원 추가지급)",
+    "eligibility": "가. 국가근로는 재학생만 가능함. ‘재학’에서 휴학, 자퇴, 졸업 등으로 학적이 변동될 경우, 변동일 전일까지만 근로 가능하며 반드시 국가근로 담당자에게 연락바람"
    },
    "evidenceVerified": true,
    "readFrom": [
@@ -26831,7 +27828,10 @@
     }
    ],
    "summary": {
-    "ko": "장학 관련 공지예요. 혜택은 교외: 시간당 12,790원(교통비 500원 추가지급)이에요. 신청은 2월 18일까지예요."
+    "ko": "국가근로 참여자를 선발하는 공지예요. 재학생이 8월 26일까지 신청하면 시급 10,320원(교내), 12,790원(교외)을 받고 9월 1일부터 근로할 수 있어요.",
+    "en": "This is a notice about selecting participants for the National Work-Study program. Current students who apply by August 26th can receive an hourly wage of 10,320 won (on-campus) or 12,790 won (off-campus), and they can start working from September 1st.",
+    "zh": "这是关于选拔国家勤工参与者的公告。在校生在8月26日前申请，可获得每小时10,320韩元（校内）或12,790韩元（校外）的时薪，并可在9月1日起开始工作。",
+    "ja": "これは国家勤務への参加者を募集する通知です。8月26日までに申請した在校生は、時給10,320ウォン（校内）または12,790ウォン（校外）を受け取り、9月1日から勤務できます。"
    },
    "terms": [
     "선발",
@@ -26840,10 +27840,10 @@
     "장학금",
     "근로장학",
     "다자녀",
-    "학번",
     "수강신청",
     "시간표",
-    "휴강"
+    "휴강",
+    "자퇴"
    ],
    "regulation": {
     "id": "leave",
@@ -26881,7 +27881,11 @@
      "checked": "2026-11-23"
     }
    },
-   "aiPending": true
+   "check": {
+    "deadline": "2027-02-18T23:59",
+    "line": "(*졸업예정자의 경우 학위수여식 전일인 2027. 2. 18.(목)까지 근로 가능)",
+    "kind": "differs"
+   }
   },
   {
    "id": "2-27-120805",
@@ -26889,27 +27893,97 @@
    "link": "https://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1850&CONTENTS_NO=&SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=27&BOARD_CATEGORY_NO=&BBS_SEQ=120805&pageNo=1",
    "date": "2026-08-24",
    "hits": 75,
-   "bodyStatus": "image",
+   "bodyStatus": "poster",
    "title": "2026 신촌글로벌대학문화축제 대학생 참가자 모집",
-   "titleTr": {},
+   "titleTr": {
+    "en": "2026 Sinchon Global University Culture Festival Student Participant Recruitment",
+    "zh": "2026 新村全球大学文化祭 大学生参加者募集",
+    "ja": "2026 新村グローバル大学文化祭 学生参加者募集"
+   },
    "category": "contest",
    "deadline": null,
-   "benefit": null,
-   "eligibility": null,
-   "events": [],
-   "hours": null,
-   "evidence": {},
-   "evidenceVerified": null,
-   "readFrom": [],
-   "summary": {
-    "ko": "본문이 이미지나 첨부파일로만 올라와 내용을 읽지 못했습니다. 원문을 확인해 주세요.",
-    "en": "The notice body is only an image or attachment, so it could not be read. Please check the original.",
-    "zh": "公告正文仅为图片或附件,无法读取。请查看原文。",
-    "ja": "本文が画像または添付ファイルのみのため読み取れませんでした。原文をご確認ください。"
+   "benefit": {
+    "text": {
+     "ko": "상금 및 기념품 제공",
+     "en": "Prize money and commemorative gifts will be provided.",
+     "zh": "提供奖金及纪念品",
+     "ja": "賞金および記念品が提供されます。"
+    },
+    "points": null,
+    "won": null
    },
-   "terms": [],
-   "regulation": null,
-   "aiPending": true
+   "eligibility": {
+    "ko": "국내 대학생 외국인 유학생",
+    "en": "Domestic university students including foreign international students",
+    "zh": "国内大学生包括外国留学生",
+    "ja": "国内大学生含む外国人留学生"
+   },
+   "events": [
+    {
+     "date": "2026-09-11",
+     "start": "17:30",
+     "end": "20:00"
+    },
+    {
+     "date": "2026-09-12",
+     "start": "10:00",
+     "end": "19:00"
+    },
+    {
+     "date": "2026-09-13",
+     "start": "12:00",
+     "end": "21:00"
+    }
+   ],
+   "hours": 20.5,
+   "evidence": {
+    "events": "Day1\n09.11 FRI 17:30~20:00\n개막식",
+    "benefit": "이벤트 상금\n참가 기념품 7종 제공\nPrizes for the Event Winners",
+    "eligibility": "국내 대학생 외국인 유학생\nKorean & International University Students"
+   },
+   "evidenceVerified": true,
+   "readFrom": [
+    {
+     "kind": "poster",
+     "name": "본문 이미지 1"
+    },
+    {
+     "kind": "poster",
+     "name": "본문 이미지 2"
+    },
+    {
+     "kind": "poster",
+     "name": "본문 이미지 3"
+    },
+    {
+     "kind": "poster",
+     "name": "본문 이미지 4"
+    },
+    {
+     "kind": "poster",
+     "name": "본문 이미지 5"
+    },
+    {
+     "kind": "poster",
+     "name": "본문 이미지 6"
+    }
+   ],
+   "summary": {
+    "ko": "신촌글로벌대학문화축제 참가자를 모집해요.",
+    "en": "We are recruiting participants for the Sinchon Global University Culture Festival.",
+    "zh": "我们正在招募新村全球大学文化祭的参与者。",
+    "ja": "新村グローバル大学文化祭の参加者を募っています。"
+   },
+   "terms": [
+    "특강",
+    "본선",
+    "동아리",
+    "접수",
+    "선발",
+    "접수기간",
+    "유학생"
+   ],
+   "regulation": null
   },
   {
    "id": "2-27-120804",
@@ -26917,33 +27991,66 @@
    "link": "https://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1850&CONTENTS_NO=&SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=27&BOARD_CATEGORY_NO=&BBS_SEQ=120804&pageNo=1",
    "date": "2026-08-24",
    "hits": 113,
-   "bodyStatus": "file",
+   "bodyStatus": "poster",
    "title": "국립과천과학관 「아티스트를 위한 딥러닝·ComfyUI」 워크숍 신청 안내",
-   "titleTr": {},
-   "category": "event",
-   "deadline": "2026-08-25T23:59",
-   "benefit": null,
-   "eligibility": null,
-   "events": [],
-   "hours": null,
+   "titleTr": {
+    "en": "National Gwangju Science Museum 'Deep Learning for Artists · ComfyUI' Workshop Application Notice",
+    "zh": "国立光州科学馆「艺术家的深度学习·ComfyUI」工作坊申请通知",
+    "ja": "国立光州科学館「アーティスト向けディープラーニング・ComfyUI」ワークショップの応募案内"
+   },
+   "category": "contest",
+   "deadline": "2026-08-18T23:59",
+   "benefit": {
+    "text": {
+     "ko": "무료",
+     "en": "Free",
+     "zh": "免费",
+     "ja": "無料"
+    },
+    "points": null,
+    "won": null
+   },
+   "eligibility": {
+    "ko": "19세 이상 예술·디자인 분야 종사자 및 진로 희망자",
+    "en": "Art and design professionals aged 19 or older, as well as those seeking a career in these fields",
+    "zh": "19岁以上的艺术与设计领域从业者及希望从事该领域的人员",
+    "ja": "19歳以上で芸術・デザイン分野に従事している方や進路を希望する方"
+   },
+   "events": [
+    {
+     "date": "2026-08-29",
+     "start": "14:00",
+     "end": "17:00"
+    }
+   ],
+   "hours": 3.0,
    "evidence": {
-    "deadline": "ㅇ (신청기한) 딥러닝 워크숍 8.18.화, ComfyUI 워크숍 8.25.화"
+    "deadline": "ㅇ (신청기한) 딥러닝 워크숍 8.18.화, ComfyUI 워크숍 8.25.화",
+    "events": "ㅇ (2회차, 8.29.토) 아티스트를 위한 ComfyUI 워크숍",
+    "benefit": "ㅇ (참 가 비) 무 료 ※ 단, 국립과천과학관 입장권 개별 구매 필요(성인 4,000원)",
+    "eligibility": "ㅇ (대 상) 19세 (07년생) 이상 예술·디자인 분야 종사자 및 진로 희망자 30명"
    },
    "evidenceVerified": true,
    "readFrom": [
+    {
+     "kind": "poster",
+     "name": "본문 이미지 1"
+    },
     {
      "kind": "file",
      "name": "아티스트를 위한 딥러닝·ComfyUI 워크숍 신청 안내.pdf"
     }
    ],
    "summary": {
-    "ko": "행사·특강 관련 공지예요. 신청은 8월 25일까지예요."
+    "ko": "아티스트를 위한 딥러닝·ComfyUI 워크숍 참여자를 모집해요. 19세 이상 예술·디자인 분야 종사자 및 진로 희망자가 2026년 8월 18일까지 신청하면 무료로 8월 29일 14시~17시 국립과천과학관에서 참여할 수 있어요.",
+    "en": "We are recruiting participants for the Deep Learning for Artists · ComfyUI workshop. Art and design professionals aged 19 or older, as well as those seeking a career in these fields, can apply for free until August 18, 2026, and will be able to participate in the event on August 29 at 14:00~17:00 at National Gwangju Science Museum.",
+    "zh": "我们正在招募参加「艺术家的深度学习·ComfyUI」工作坊的人选。19岁以上的艺术与设计领域从业者及希望从事该领域的人员，可在2026年8月18日前申请免费参与，并于8月29日14时至17时在国立光州科学馆参加活动。",
+    "ja": "アーティスト向けディープラーニング・ComfyUIワークショップへの参加者を募集しています。19歳以上で芸術・デザイン分野に従事している方や進路を希望する方は、2026年8月18日までに応募すると無料で、8月29日に14時から17時まで国立光州科学館で参加できます。"
    },
    "terms": [
     "시간표"
    ],
-   "regulation": null,
-   "aiPending": true
+   "regulation": null
   },
   {
    "id": "2-27-120803",
@@ -26951,48 +28058,89 @@
    "link": "https://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1850&CONTENTS_NO=&SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=27&BOARD_CATEGORY_NO=&BBS_SEQ=120803&pageNo=1",
    "date": "2026-08-24",
    "hits": 34,
-   "bodyStatus": "file",
+   "bodyStatus": "poster",
    "title": "「2026년 로봇랜드 AI 영상제작 공모전」",
-   "titleTr": {},
+   "titleTr": {
+    "en": "The 2026 Robotland AI Video Production Competition",
+    "zh": "「2026年机器人乐园AI视频制作竞赛」",
+    "ja": "「2026年ロボットランドAI映像制作コンテスト」"
+   },
    "category": "contest",
-   "deadline": "2026-09-13T18:00",
+   "deadline": "2026-09-13T23:59",
    "benefit": {
     "text": {
-     "ko": "시상내용: 5명 450만 원(장려상 5명은 별도 시상 없음)"
+     "ko": "200만원, 100만원, 50만원, 로봇랜드 연간회원권 2매",
+     "en": "200만원, 100만원, 50만원, 로봇랜드 연간회원권 2매",
+     "zh": "200万韩元、100万韩元、50万韩元、2张机器人乐园年度会员资格",
+     "ja": "200万ウォン、100万ウォン、50万ウォン、ロボットランド年間会員資格2枚"
     },
-    "points": 0,
-    "won": 0,
-    "prize": 4500000
+    "points": null,
+    "won": null,
+    "prize": 2000000
    },
-   "eligibility": null,
+   "eligibility": {
+    "ko": "전 국민 누구나 개인 및 최대 4인 팀",
+    "en": "Anyone in South Korea, as an individual or in a team of up to four people",
+    "zh": "韩国全国任何人均可参加，个人或最多4人团队",
+    "ja": "韓国の誰でも個人または最大4人のチームで参加可能"
+   },
    "events": [],
    "hours": null,
    "evidence": {
-    "deadline": "4. 접수기간: 2026. 8. 14.(금)~9. 13.(일) 18:00까지",
-    "benefit": "9. 시상내용: 5명 450만 원(장려상 5명은 별도 시상 없음)"
+    "deadline": "접수일정 | 2026.8.14.(금) ~ 9.13(일)",
+    "benefit": "대상 | 200만원 (1팀)\n최우수상 | 100만원 (1팀)\n우수상 | 50만원 (3팀)",
+    "eligibility": "접수대상 | 전 국민 누구나 개인 및 최대 4인 팀 참가"
    },
    "evidenceVerified": true,
    "readFrom": [
+    {
+     "kind": "poster",
+     "name": "본문 이미지 1"
+    },
     {
      "kind": "file",
      "name": "붙임 1. 로봇랜드 AI 영상 공모전 공고문.hwp"
     }
    ],
    "summary": {
-    "ko": "공모전·대외활동 관련 공지예요. 혜택은 시상내용: 5명 450만 원(장려상 5명은 별도 시상 없음)이에요. 신청은 9월 13일 18시까지예요."
+    "ko": "로봇랜드 AI 영상제작 공모전 참여자를 모집해요. 전 국민이 9월 13일까지 신청하면 상금 200만원, 100만원, 50만원, 로봇랜드 연간회원권을 받을 수 있어요.",
+    "en": "로봇랜드 AI 영상제작 공모전 참여자를 모집해요. 전 국민이 9월 13일까지 신청하면 상금 200만원, 100만원, 50만원, 로봇랜드 연간회원권을 받을 수 있어요.",
+    "zh": "任何人都可以在9月13日之前申请，可获得200万韩元、100万韩元、50万韩元或机器人乐园年度会员资格。",
+    "ja": "ロボットランドAI映像制作コンテストへの参加者を募集しています。9月13日までに全国民が応募すると、200万ウォン、100万ウォン、50万ウォン、ロボットランド年間会員資格を獲得できます。"
    },
    "terms": [
     "공모전",
     "제적",
     "제출서류",
     "접수",
+    "선착순",
     "접수기간",
     "개인정보",
     "동의서",
     "유의사항"
    ],
-   "regulation": null,
-   "aiPending": true
+   "regulation": {
+    "id": "expulsion",
+    "title": {
+     "ko": "제적",
+     "en": "Removal from enrollment",
+     "zh": "除籍",
+     "ja": "除籍"
+    },
+    "rule": {
+     "law": "건국대학교 학칙",
+     "no": "45",
+     "article": "제적",
+     "quote": "학생으로서 다음 각 호의 1에 해당할 때에는 총장은 이를 제적한다. 다만, 수의과대학 및 의과대학은 유급에 의한 제적에 대하여 따로 정한다. 1. 매 학기 초 지정된 기일 내에 등록을 완료하지 않은 자 2. <삭 제(2024.12.17.)> 3. 휴학기간 만료 직후 학기 초 지정된 기간까지 복학하지 않는 자 4. 징계에 따른 퇴학 처분을 받은 자",
+     "tr": {
+      "en": "The President shall dismiss a student who falls under any of the following items: However, the Veterinary Medicine College and the Medical College may separately specify provisions regarding dismissal with deferment. 1. A student who does not complete registration within the designated period at the beginning of each semester. 2. <Revoked (2024.12.17.)> 3. A student who does not return to school within the specified period after the expiration of the leave period. 4. A student who has received a dismissal decision due to disciplinary action.",
+      "zh": "当学生符合下列任一情况时，校长应予以退学处分。但兽医学院及医学院对因有偿退学的处分另有规定。1. 未在每学期初指定日期内完成注册的学生。2. <2024年12月17日废止> 3. 在休学期满后，未在学期初指定期间内复学的学生。4. 因纪律处分而被退学的学生。",
+      "ja": "学生が次の各号のいずれかに該当する場合には、総長はこれを除籍する。ただし、獣医学部及び医学部については有償による除籍について別途定める。1. 各学期初頭に指定された期限内に登録を完了しなかった者 2. <2024年12月17日に廃止> 3. 休学期間満了直後に学期初頭に指定された期間まで復学しない者 4. 紀律処分により退学処分を受けた者"
+     },
+     "url": "https://rule.konkuk.ac.kr/lmxsrv/law/lawDetail.do?SEQ=409&LAWGROUP=1&PAGE=1",
+     "checked": "2026-11-23"
+    }
+   }
   },
   {
    "id": "2-18-120152",
@@ -27002,25 +28150,39 @@
    "hits": 1229,
    "bodyStatus": "text",
    "title": "2026.2학기 교양교과목 수강제한인원 변경 안내(심화,소양)2차",
-   "titleTr": {},
+   "titleTr": {
+    "en": "Notice on Changing the Enrollment Limit for General Education Courses (Advanced, Basic) - Second Round (2026.2 Semester)",
+    "zh": "2026年第二学期通识课程选课人数限制变更通知（深化、基础）第二轮",
+    "ja": "2026年第二学期の教養科目選択人数制限変更のお知らせ（深化・基礎）第2回"
+   },
    "category": "academic",
-   "deadline": null,
+   "deadline": "2026-08-21T23:59",
    "benefit": null,
-   "eligibility": null,
+   "eligibility": {
+    "ko": "교양교과목 수강자",
+    "en": "Students enrolled in general education courses",
+    "zh": "通识课程选课学生",
+    "ja": "教養科目を選択している学生"
+   },
    "events": [],
    "hours": null,
-   "evidence": {},
-   "evidenceVerified": null,
+   "evidence": {
+    "deadline": "수강신청 일시: 2026. 8. 21(금) 오전 10:00",
+    "eligibility": "이수구분 |\n과목번호 |\n교과목명 |"
+   },
+   "evidenceVerified": true,
    "readFrom": [],
    "summary": {
-    "ko": "학사 관련 공지예요. 자세한 내용은 원문을 확인해 주세요."
+    "ko": "교양교과목 수강 제한인원 변경을 안내해요. 교양교과목 수강자가 2026년 8월 21일까지 신청하면 수강 가능 인원이 늘어나요.",
+    "en": "We are informing you about the change in the enrollment limit for general education courses. If students apply by August 21, 2026, they will be able to enroll in more spots.",
+    "zh": "我们通知您关于通识课程选课人数限制的变更。如果学生在2026年8月21日之前申请，将可以增加选课名额。",
+    "ja": "教養科目の選択枠数の変更についてご案内いたします。学生が2026年8月21日までに申請すれば、選択可能な枠数が増えることになります。"
    },
    "terms": [
     "수강신청",
     "학수번호"
    ],
-   "regulation": null,
-   "aiPending": true
+   "regulation": null
   },
   {
    "id": "2-19-119988",
@@ -27030,18 +28192,32 @@
    "hits": 221,
    "bodyStatus": "text",
    "title": "[해외취업] 2026. 8월 해외 채용정보",
-   "titleTr": {},
-   "category": "global",
+   "titleTr": {
+    "en": "[Overseas Employment] Overseas Recruitment Information in August 2026",
+    "zh": "[海外就业] 2026年8月海外招聘信息",
+    "ja": "[海外就職] 2026年8月海外採用情報"
+   },
+   "category": "career",
    "deadline": null,
    "benefit": null,
-   "eligibility": null,
+   "eligibility": {
+    "ko": "해외취업을 희망하는 학생",
+    "en": "Students who wish to work abroad",
+    "zh": "希望到海外工作的学生",
+    "ja": "海外就職を希望する学生"
+   },
    "events": [],
    "hours": null,
-   "evidence": {},
-   "evidenceVerified": null,
+   "evidence": {
+    "eligibility": "2026년 8월 해외 기업 채용이 아래와 같이 진행되고 있습니다."
+   },
+   "evidenceVerified": true,
    "readFrom": [],
    "summary": {
-    "ko": "교환·해외 관련 공지예요. 자세한 내용은 원문을 확인해 주세요."
+    "ko": "해외취업 기회가 있는 채용정보를 안내해요. 해외취업을 희망하는 학생이 8월 중 신청하면 비자와 근무기간 등 혜택을 받을 수 있어요.",
+    "en": "We will introduce recruitment information that offers opportunities for overseas employment. Students who wish to work abroad can apply during August and receive benefits such as a visa and working period.",
+    "zh": "我们将介绍提供海外就业机会的招聘信息。希望到海外工作的学生在8月期间申请，可享受签证和工作期限等福利。",
+    "ja": "海外就職の機会がある採用情報を紹介します。海外就職を希望する学生が8月中に申請すると、ビザや勤務期間などの特典を受けられます。"
    },
    "terms": [
     "건국대",
@@ -27049,8 +28225,7 @@
     "마감",
     "비자"
    ],
-   "regulation": null,
-   "aiPending": true
+   "regulation": null
   },
   {
    "id": "2-1-119887",
@@ -27060,20 +28235,43 @@
    "hits": 374,
    "bodyStatus": "text",
    "title": "[보훈] 2026년 2학기 보훈(가족)장학 신청 안내",
-   "titleTr": {},
+   "titleTr": {
+    "en": "[보훈] Scholarship Application for the Second Semester of 2026",
+    "zh": "[保훈] 2026年第二学期保훈（家族）奖学金申请通知",
+    "ja": "[保訓] 2026年第二学期保訓（家族）奨学金申請案内"
+   },
    "category": "scholarship",
    "deadline": "2026-09-30T23:59",
-   "benefit": null,
-   "eligibility": null,
+   "benefit": {
+    "text": {
+     "ko": "장학금 지원",
+     "en": "Scholarship Support",
+     "zh": "奖学金支持",
+     "ja": "奨学金支援"
+    },
+    "points": null,
+    "won": null
+   },
+   "eligibility": {
+    "ko": "국가유공자 가족 및 장애인 교육대상자",
+    "en": "National martyr's family members and persons with disabilities",
+    "zh": "国家烈士家属及残疾人教育对象",
+    "ja": "国家功労者家族及び障がい者教育対象者"
+   },
    "events": [],
    "hours": null,
    "evidence": {
-    "deadline": "○ 신청서 접수 : 1학기(’26.9.1.~9.30.)"
+    "deadline": "○ 신청서 접수 : 1학기(’26.9.1.~9.30.)",
+    "benefit": "○ 대 학 원(보훈장학) : 학기당 최고 130만원\n○ 특수학교(보훈장학) : 학기당 30만원\n- 실제 납부한 수업료가 장학금 지급액보다 적은 경우 수업료 실납부액만 지원",
+    "eligibility": "○ 신청 대상 : 국가보훈법령에 따라 교육지원을 받는 본인‧배우자‧자녀\n○ 신청 대상\n- 6‧25전몰군경*의 손자녀로서 대학**에 재학 중인 자"
    },
    "evidenceVerified": true,
    "readFrom": [],
    "summary": {
-    "ko": "장학 관련 공지예요. 신청은 9월 30일까지예요."
+    "ko": "2026년 2학기 보훈(가족)장학 지원을 안내해요. 국가유공자 가족 및 장애인 교육대상자가 9월 30일까지 신청하면 장학금 지원을 받을 수 있어요.",
+    "en": "We are informing you about the scholarship support for the second semester of 2026. National martyr's family members and persons with disabilities can receive scholarship support if they apply by September 30.",
+    "zh": "我们通知您关于2026年第二学期保훈（家族）奖学金支持。国家烈士家属及残疾人教育对象在9月30日前申请可获得奖学金支持。",
+    "ja": "2026年第二学期の保訓（家族）奨学金支援についてお知らせします。国家功労者家族及び障がい者教育対象者は9月30日までに申請すれば奨学金支援を受けることができます。"
    },
    "terms": [
     "장학",
@@ -27108,8 +28306,7 @@
      "url": "https://rule.konkuk.ac.kr/lmxsrv/law/lawDetail.do?SEQ=371&LAWGROUP=1&PAGE=1",
      "checked": "2026-11-23"
     }
-   },
-   "aiPending": true
+   }
   },
   {
    "id": "2-27-120802",
@@ -27117,27 +28314,60 @@
    "link": "https://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1850&CONTENTS_NO=&SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=27&BOARD_CATEGORY_NO=&BBS_SEQ=120802&pageNo=1",
    "date": "2026-08-20",
    "hits": 41,
-   "bodyStatus": "image",
+   "bodyStatus": "poster",
    "title": "수원시평생학습관 프로그램 수강생 모집",
-   "titleTr": {},
-   "category": "event",
+   "titleTr": {
+    "en": "Application for Program Participants at Suwon Life-long Learning Center",
+    "zh": "首尔市终身学习馆课程学员招募",
+    "ja": "水原市生涯学習センター プログラム受講生募集"
+   },
+   "category": "contest",
    "deadline": null,
-   "benefit": null,
-   "eligibility": null,
+   "benefit": {
+    "text": {
+     "ko": "수료증 발급 가능 (80% 출석 시)",
+     "en": "Certificate of Completion (Issued upon attending 80% or more)",
+     "zh": "可颁发结业证书（出席率达80%或以上时）",
+     "ja": "修了証発行可能（出席率80％以上の場合）"
+    },
+    "points": null,
+    "won": null
+   },
+   "eligibility": {
+    "ko": "대학생 이상",
+    "en": "University students and above",
+    "zh": "大学以上",
+    "ja": "大学生以上"
+   },
    "events": [],
    "hours": null,
-   "evidence": {},
-   "evidenceVerified": null,
-   "readFrom": [],
-   "summary": {
-    "ko": "본문이 이미지나 첨부파일로만 올라와 내용을 읽지 못했습니다. 원문을 확인해 주세요.",
-    "en": "The notice body is only an image or attachment, so it could not be read. Please check the original.",
-    "zh": "公告正文仅为图片或附件,无法读取。请查看原文。",
-    "ja": "本文が画像または添付ファイルのみのため読み取れませんでした。原文をご確認ください。"
+   "evidence": {
+    "benefit": "수강료: 무료 수료증 발급 가능 (80% 출석 시)",
+    "eligibility": "대상: 자율주행에 관심이 있는 시민누구나 (대학생이상)\n대상: 관심있는 누구나 (대학생 이상)"
    },
-   "terms": [],
-   "regulation": null,
-   "aiPending": true
+   "evidenceVerified": true,
+   "readFrom": [
+    {
+     "kind": "poster",
+     "name": "본문 이미지 1"
+    },
+    {
+     "kind": "poster",
+     "name": "본문 이미지 2"
+    }
+   ],
+   "summary": {
+    "ko": "수원시평생학습관 프로그램 수강생을 모집해요. 대학생 이상이 8월 24일까지 신청하면 수료증을 받을 수 있어요.",
+    "en": "We are recruiting participants for the programs at Suwon Life-long Learning Center. University students and above can apply until August 24th and receive a certificate of completion.",
+    "zh": "首尔市终身学习馆课程学员招募。大学以上学生在8月24日前申请可获得结业证书。",
+    "ja": "水原市生涯学習センターのプログラム受講生を募集中です。大学生以上の皆様は8月24日までに申請すると修了証がもらえます。"
+   },
+   "terms": [
+    "출석",
+    "수료",
+    "접수"
+   ],
+   "regulation": null
   },
   {
    "id": "2-27-120801",
@@ -27145,44 +28375,77 @@
    "link": "https://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1850&CONTENTS_NO=&SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=27&BOARD_CATEGORY_NO=&BBS_SEQ=120801&pageNo=1",
    "date": "2026-08-20",
    "hits": 104,
-   "bodyStatus": "file",
+   "bodyStatus": "poster",
    "title": "'26 하반기「청년 부동산 중개보수 및 이사비 지원 사업」",
-   "titleTr": {},
+   "titleTr": {
+    "en": "'26 Second Half 'Youth Real Estate Commission and Moving Expense Support Program'",
+    "zh": "'26年下半年『青年房地产中介费及搬家费用支援事业』",
+    "ja": "'26下半期『若者不動産仲介手数料及び引越し費用支援事業』"
+   },
    "category": "contest",
-   "deadline": "2026-08-31T18:00",
+   "deadline": "2026-08-31T23:59",
    "benefit": {
     "text": {
-     "ko": "□ 지원금액 : 최대 40만원 한도 내 실비 지원 ※ 생애 1회"
+     "ko": "부동산 중개보수 및 이사비 지원",
+     "en": "Support for real estate commission and moving expenses",
+     "zh": "房地产中介费及搬家费用支援",
+     "ja": "不動産仲介手数料及び引越し費用支援"
     },
-    "points": 0,
-    "won": 400000
+    "points": null,
+    "won": null
    },
-   "eligibility": null,
+   "eligibility": {
+    "ko": "서울시로 전입 또는 서울시 내에서 이사 후 전입신고 완료한 만 19~39세 청년가구",
+    "en": "Young households aged 19 to 39 who moved into Seoul or relocated within Seoul and completed their relocation registration",
+    "zh": "年满19至39岁，迁入首尔或在首尔内搬迁并完成迁入登记的青年家庭",
+    "ja": "19歳〜39歳で、ソウルに移住またはソウル内で引越し後、移住届を完了した青年家庭"
+   },
    "events": [],
    "hours": null,
    "evidence": {
-    "deadline": "ㅇ 신청기간 : 2026. 8. 18.(화) 10:00 ~ 8. 31.(월) 18:00(마감)",
-    "benefit": "□ 지원금액 : 최대 40만원 한도 내 실비 지원 ※ 생애 1회"
+    "deadline": "신청기간 2026.8.18.(화)~8.31.(월)\n※ 제대군인의 경우, 군 복무기간 고려하여 최대 42세까지 연령 상한 연장",
+    "benefit": "최대 40만원 지원\n실제 이사에 소요된 부동산 중개보수, 이사비",
+    "eligibility": "- 주소 24.1.1. 이후 서울시로 전입 또는 서울시 내에서 이사 후 신청 마감일('26.8.31.)까지 전입신고 완료한 청년가구\n- 연령 만 19~39세(1986.1.1.~2007.12.31.)\n※ 제대군인의 경우, 군 복무기간 고려하여 최대 42세까지 연령 상한 연장"
    },
    "evidenceVerified": true,
    "readFrom": [
+    {
+     "kind": "poster",
+     "name": "본문 이미지 1"
+    },
+    {
+     "kind": "poster",
+     "name": "본문 이미지 2"
+    },
+    {
+     "kind": "poster",
+     "name": "본문 이미지 3"
+    },
+    {
+     "kind": "poster",
+     "name": "본문 이미지 4"
+    },
     {
      "kind": "file",
      "name": "1. 2026년 청년 부동산 중개보수 및 이사비 지원사업 참여자 모집 공고.pdf"
     }
    ],
    "summary": {
-    "ko": "공모전·대외활동 관련 공지예요. 혜택은 □ 지원금액 : 최대 40만원 한도 내 실비 지원 ※ 생애 1회예요. 신청은 8월 31일 18시까지예요."
+    "ko": "청년 부동산 중개보수 및 이사비 지원 사업 참여자를 모집해요. 서울시로 전입 또는 이사 후 전입신고 완료한 19~39세 청년가구는 8월 31일까지 신청하면 최대 40만원 지원받을 수 있어요.",
+    "en": "We are recruiting participants for the 'Youth Real Estate Commission and Moving Expense Support Program'. Young households aged 19 to 39 who moved into Seoul or relocated within Seoul and completed their relocation registration can receive up to 400,000 won if they apply by August 31.",
+    "zh": "我们正在招募『青年房地产中介费及搬家费用支援事业』的参与者。年满19至39岁，迁入首尔或在首尔内搬迁并完成迁入登记的青年家庭，在8月31日前申请可获得最多40万韩元的支持。",
+    "ja": "「若者不動産仲介手数料及び引越し費用支援事業」の参加者を募集しています。19歳〜39歳で、ソウルに移住またはソウル内で引越し後、移住届を完了した青年家庭は、8月31日までに申請すると最大40万ウォンの支援を受けられます。"
    },
    "terms": [
     "수료",
+    "제출서류",
+    "접수",
     "선발",
     "마감",
     "접수기간",
     "국민건강보험"
    ],
-   "regulation": null,
-   "aiPending": true
+   "regulation": null
   },
   {
    "id": "2-27-120800",
@@ -27190,32 +28453,61 @@
    "link": "https://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1850&CONTENTS_NO=&SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=27&BOARD_CATEGORY_NO=&BBS_SEQ=120800&pageNo=1",
    "date": "2026-08-20",
    "hits": 38,
-   "bodyStatus": "file",
+   "bodyStatus": "poster",
    "title": "2026 대한민국 청년상소 프로젝트",
-   "titleTr": {},
+   "titleTr": {
+    "en": "2026 Korea Youth Innovation Project",
+    "zh": "2026 韩国青年创新项目",
+    "ja": "2026 韩国青年イノベーションプロジェクト"
+   },
    "category": "contest",
-   "deadline": null,
-   "benefit": null,
-   "eligibility": null,
+   "deadline": "2026-08-31T23:59",
+   "benefit": {
+    "text": {
+     "ko": "상금 200만원 (장원), 100만원 (아원), 50만원 (팀화)",
+     "en": "Prize of 2,000,000 won (First Prize), 1,000,000 won (Second Prize), 500,000 won (Team Award)",
+     "zh": "奖金 200万韩元（一等奖），100万韩元（二等奖），50万韩元（团队奖）",
+     "ja": "賞金 200万ウォン（最優秀賞）、100万ウォン（優秀賞）、50万ウォン（チーム賞）"
+    },
+    "points": null,
+    "won": null,
+    "prize": 2000000
+   },
+   "eligibility": {
+    "ko": "청년 누구나 (만 19세 - 만 39세)",
+    "en": "Anyone aged 19 to 39",
+    "zh": "任何年龄在19至39岁之间的青年",
+    "ja": "19歳から39歳までの誰でも"
+   },
    "events": [],
    "hours": null,
-   "evidence": {},
-   "evidenceVerified": null,
+   "evidence": {
+    "deadline": "예선 | 8월 3일 - 8월 31일 정오",
+    "benefit": "상금 | 200만원 (장원)\n| 100만원 (아원)\n| 50만원 (팀화)",
+    "eligibility": "참여대상 : 청년 누구나 (만 19세 - 만 39세)"
+   },
+   "evidenceVerified": true,
    "readFrom": [
+    {
+     "kind": "poster",
+     "name": "본문 이미지 1"
+    },
     {
      "kind": "file",
      "name": "(붙임2) 2026 청년상소 프로젝트 개요.pdf"
     }
    ],
    "summary": {
-    "ko": "공모전·대외활동 관련 공지예요. 자세한 내용은 원문을 확인해 주세요."
+    "ko": "2026 청년상소 프로젝트 참여자를 모집해요. 청년 누구나 8월 31일까지 신청하면 상금 200만원, 100만원, 50만원을 받을 수 있어요.",
+    "en": "We are recruiting participants for the 2026 Youth Innovation Project. Any youth can apply by August 31st and receive a prize of 2,000,000 won, 1,000,000 won, or 500,000 won.",
+    "zh": "我们正在招募2026年青年创新项目的参与者。",
+    "ja": "2026年青年イノベーションプロジェクトの参加者を募集しています。8月31日までに申請すれば、誰でも200万ウォン、100万ウォン、50万ウォンの賞金を受け取ることができます。"
    },
    "terms": [
     "본선",
     "공모전"
    ],
-   "regulation": null,
-   "aiPending": true
+   "regulation": null
   },
   {
    "id": "2-27-120799",
@@ -27223,27 +28515,50 @@
    "link": "https://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1850&CONTENTS_NO=&SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=27&BOARD_CATEGORY_NO=&BBS_SEQ=120799&pageNo=1",
    "date": "2026-08-20",
    "hits": 45,
-   "bodyStatus": "image",
+   "bodyStatus": "poster",
    "title": "2026년 「서울 보상학교 기초반」대학생 참여 안내",
-   "titleTr": {},
-   "category": "contest",
+   "titleTr": {
+    "en": "2026 Seoul Compensation School Basic Course Participation Notice for University Students",
+    "zh": "2026年「首尔补偿学校基础班」大学生参与指南",
+    "ja": "2026年「ソウル補償学校基礎コース」大学生参加案内"
+   },
+   "category": "academic",
    "deadline": null,
    "benefit": null,
-   "eligibility": null,
-   "events": [],
-   "hours": null,
-   "evidence": {},
-   "evidenceVerified": null,
-   "readFrom": [],
-   "summary": {
-    "ko": "본문이 이미지나 첨부파일로만 올라와 내용을 읽지 못했습니다. 원문을 확인해 주세요.",
-    "en": "The notice body is only an image or attachment, so it could not be read. Please check the original.",
-    "zh": "公告正文仅为图片或附件,无法读取。请查看原文。",
-    "ja": "本文が画像または添付ファイルのみのため読み取れませんでした。原文をご確認ください。"
+   "eligibility": {
+    "ko": "공익사업·토지보상 등에 관심 있는 대학생 및 보상업무 관계자",
+    "en": "University students and professionals related to public welfare projects and land compensation who have an interest in these areas",
+    "zh": "对公益事业、土地补偿等领域感兴趣的大专生及相关从业人员",
+    "ja": "公益事業や土地補償などに関心がある大学生および補償業務に関係のある方"
    },
-   "terms": [],
-   "regulation": null,
-   "aiPending": true
+   "events": [],
+   "hours": 7.0,
+   "evidence": {
+    "eligibility": "○ 공익사업·토지보상 등에 관심 있는 대학생 및 보상업무 관계자 등"
+   },
+   "evidenceVerified": true,
+   "readFrom": [
+    {
+     "kind": "poster",
+     "name": "본문 이미지 1"
+    },
+    {
+     "kind": "poster",
+     "name": "본문 이미지 2"
+    }
+   ],
+   "summary": {
+    "ko": "서울 보상학교 기초반 참여자를 모집해요. 공익사업·토지보상에 관심 있는 대학생이 9월 16일까지 이메일로 신청하면 7시간의 교육을 받을 수 있어요.",
+    "en": "We are recruiting participants for the Seoul Compensation School Basic Course. University students interested in public welfare projects and land compensation can apply by email until September 16th and receive a 7-hour education.",
+    "zh": "我们正在招募「首尔补偿学校基础班」的参与者。对公益事业、土地补偿感兴趣的大学生可在9月16日前通过电子邮件申请，参加7小时的教育课程。",
+    "ja": "「ソウル補償学校基礎コース」の参加者を募集しています。公益事業や土地補償に興味のある大学生は9月16日までメールで申請すると7時間の教育を受けられます。"
+   },
+   "terms": [
+    "전과",
+    "접수",
+    "유의사항"
+   ],
+   "regulation": null
   },
   {
    "id": "2-27-120798",
@@ -27251,27 +28566,57 @@
    "link": "https://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1850&CONTENTS_NO=&SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=27&BOARD_CATEGORY_NO=&BBS_SEQ=120798&pageNo=1",
    "date": "2026-08-20",
    "hits": 28,
-   "bodyStatus": "image",
+   "bodyStatus": "poster",
    "title": "「제6회 그린리모델링 챌린지」",
-   "titleTr": {},
+   "titleTr": {
+    "en": "The 6th Green Remodeling Challenge",
+    "zh": "第六届绿色改造挑战赛",
+    "ja": "第6回グリーンリモ델リングチャレンジ"
+   },
    "category": "contest",
    "deadline": null,
-   "benefit": null,
-   "eligibility": null,
+   "benefit": {
+    "text": {
+     "ko": "3,000만원",
+     "en": "3,000만원",
+     "zh": "3,000만원",
+     "ja": "3,000만원"
+    },
+    "points": null,
+    "won": null,
+    "prize": 30000000
+   },
+   "eligibility": {
+    "ko": "어린이 사생대회: 만 5세 이상 미취학 아동 및 초등학생 / 대학생 해커톤: 대학(원)생 / 온라인 가상공간 만들기: 초등학생 / 온라인 42초 AI 영화제: 만 19세 이상 일반 국민 / 온라인 댄스 챌린지: 대한민국 국민 누구나",
+    "en": "Children's Art Competition: Children aged 5 or older who have not started school and elementary students / University Hackathon: University (and graduate) students / Online Virtual Space Creation: Elementary students / Online 42-Second AI Film Festival: General citizens aged 19 or older / Online Dance Challenge: Anyone who is a citizen of the Republic of Korea",
+    "zh": "儿童美术比赛：5岁及以上未入学儿童及小学生 / 大学生黑客马拉松：大学（研究生）生 / 在线虚拟空间制作：小学生 / 在线42秒AI电影节：19岁以上的一般国民 / 在线舞蹈挑战赛：所有韩国公民",
+    "ja": "児童芸術コンテスト：5歳以上で未就学児と小学校生 / 大学生ハッカソン：大学（院）生 / オンラインバーチャル空間作成：小学校生 / オンライン42秒AIフィルムフェスティバル：19歳以上の一般国民 / オンラインダンスチャレンジ：韓国国籍を持つ誰でも"
+   },
    "events": [],
    "hours": null,
-   "evidence": {},
-   "evidenceVerified": null,
-   "readFrom": [],
-   "summary": {
-    "ko": "본문이 이미지나 첨부파일로만 올라와 내용을 읽지 못했습니다. 원문을 확인해 주세요.",
-    "en": "The notice body is only an image or attachment, so it could not be read. Please check the original.",
-    "zh": "公告正文仅为图片或附件,无法读取。请查看原文。",
-    "ja": "本文が画像または添付ファイルのみのため読み取れませんでした。原文をご確認ください。"
+   "evidence": {
+    "benefit": "총 7개 부문 | 총 상금 3,000만원, 장관상에 도전!",
+    "eligibility": "어린이 사생대회\n대상 대학(원)생\n대상 초등학생"
    },
-   "terms": [],
-   "regulation": null,
-   "aiPending": true
+   "evidenceVerified": true,
+   "readFrom": [
+    {
+     "kind": "poster",
+     "name": "본문 이미지 1"
+    }
+   ],
+   "summary": {
+    "ko": "그린리모델링 챌린지 참여자를 모집해요.",
+    "en": "We are recruiting participants for the Green Remodeling Challenge.",
+    "zh": "我们正在招募绿色改造挑战赛的参与者。",
+    "ja": "グリーンリモ델リングチャレンジの参加者を募集しています。"
+   },
+   "terms": [
+    "본선",
+    "접수",
+    "접수기간"
+   ],
+   "regulation": null
   },
   {
    "id": "2-27-120797",
@@ -27279,27 +28624,42 @@
    "link": "https://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1850&CONTENTS_NO=&SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=27&BOARD_CATEGORY_NO=&BBS_SEQ=120797&pageNo=1",
    "date": "2026-08-20",
    "hits": 24,
-   "bodyStatus": "image",
+   "bodyStatus": "poster",
    "title": "2026 퀸엘리자베스 콩쿠르 위너스 콘서트 in 노원",
-   "titleTr": {},
-   "category": "contest",
+   "titleTr": {
+    "en": "2026 Queen Elizabeth Concours Winners Concert in Nowon",
+    "zh": "2026 平壤女王伊丽莎白競賽獲勝者音樂會在nowon",
+    "ja": "2026 クイーン・エリザベスコンクール・ウィナーズ・コンサート in ノウォン"
+   },
+   "category": "event",
    "deadline": null,
    "benefit": null,
-   "eligibility": null,
+   "eligibility": {
+    "ko": "8세 이상 관람가",
+    "en": "Audience of 8 years and older",
+    "zh": "8歲以上觀眾可觀看",
+    "ja": "8歳以上が鑑賞可能"
+   },
    "events": [],
    "hours": null,
-   "evidence": {},
-   "evidenceVerified": null,
-   "readFrom": [],
+   "evidence": {
+    "eligibility": "입장연령 8세 이상 관람가"
+   },
+   "evidenceVerified": true,
+   "readFrom": [
+    {
+     "kind": "poster",
+     "name": "본문 이미지 1"
+    }
+   ],
    "summary": {
-    "ko": "본문이 이미지나 첨부파일로만 올라와 내용을 읽지 못했습니다. 원문을 확인해 주세요.",
-    "en": "The notice body is only an image or attachment, so it could not be read. Please check the original.",
-    "zh": "公告正文仅为图片或附件,无法读取。请查看原文。",
-    "ja": "本文が画像または添付ファイルのみのため読み取れませんでした。原文をご確認ください。"
+    "ko": "퀸 엘리자베스 콩쿠르 위너스 콘서트를 안내해요. 8세 이상 관람가로 9월 15일에 노원문화예술회관에서 열어요.",
+    "en": "We will guide you to the Queen Elizabeth Concours Winners Concert. It is an audience of 8 years and older, held at Nowon Cultural Arts Center on September 15.",
+    "zh": "我們將為您介紹女王伊麗莎白競賽獲勝者音樂會。這場音樂會是8歲以上觀眾可觀看，於9月15日在노원문화예술회관舉行。",
+    "ja": "クイーン・エリザベスコンクール・ウィナーズ・コンサートを案内します。8歳以上が鑑賞可能で、9月15日にノウォン文化芸術会館で開催されます。"
    },
    "terms": [],
-   "regulation": null,
-   "aiPending": true
+   "regulation": null
   },
   {
    "id": "2-27-120796",
@@ -27307,27 +28667,42 @@
    "link": "https://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1850&CONTENTS_NO=&SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=27&BOARD_CATEGORY_NO=&BBS_SEQ=120796&pageNo=1",
    "date": "2026-08-20",
    "hits": 27,
-   "bodyStatus": "image",
+   "bodyStatus": "poster",
    "title": "「2026 관광 일자리페스타」",
-   "titleTr": {},
-   "category": "contest",
-   "deadline": null,
+   "titleTr": {
+    "en": "\"2026 Tourism Job Fair\"",
+    "zh": "“2026旅游就业博览会”",
+    "ja": "「2026観光雇用フェスティバル」"
+   },
+   "category": "career",
+   "deadline": "2026-11-13T23:59",
    "benefit": null,
    "eligibility": null,
    "events": [],
    "hours": null,
-   "evidence": {},
-   "evidenceVerified": null,
-   "readFrom": [],
-   "summary": {
-    "ko": "본문이 이미지나 첨부파일로만 올라와 내용을 읽지 못했습니다. 원문을 확인해 주세요.",
-    "en": "The notice body is only an image or attachment, so it could not be read. Please check the original.",
-    "zh": "公告正文仅为图片或附件,无法读取。请查看原文。",
-    "ja": "本文が画像または添付ファイルのみのため読み取れませんでした。原文をご確認ください。"
+   "evidence": {
+    "deadline": "온라인 8.10.(월) ~ 11.13.(금)"
    },
-   "terms": [],
-   "regulation": null,
-   "aiPending": true
+   "evidenceVerified": true,
+   "readFrom": [
+    {
+     "kind": "poster",
+     "name": "본문 이미지 1"
+    }
+   ],
+   "summary": {
+    "ko": "관광 일자리페스타 참여자를 모집해요. 재학생이 11월 13일까지 온라인으로 신청하면 현장 채용면접이나 취업상담 기회를 얻을 수 있어요.",
+    "en": "\" As a current student, you can apply online by November 13th and gain opportunities for on-site job interviews or career counseling.",
+    "zh": "作为在读学生，您可以在11月13日前在线申请，并获得现场面试或职业咨询的机会。",
+    "ja": "在籍学生は11月13日までにオンラインで応募することで、現場面接やキャリアカウンセリングの機会を得られます。"
+   },
+   "terms": [
+    "특강",
+    "멘토링",
+    "채용설명회",
+    "면접"
+   ],
+   "regulation": null
   },
   {
    "id": "2-27-120795",
@@ -27335,29 +28710,47 @@
    "link": "https://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1850&CONTENTS_NO=&SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=27&BOARD_CATEGORY_NO=&BBS_SEQ=120795&pageNo=1",
    "date": "2026-08-20",
    "hits": 35,
-   "bodyStatus": "file",
+   "bodyStatus": "poster",
    "title": "2026 충북 - 충주 청년축제 [잠금해제 UNLOCK]",
-   "titleTr": {},
+   "titleTr": {
+    "en": "2026 Chungcheongbuk - Chungju Youth Festival [Lock Release UNLOCK]",
+    "zh": "2026 延边 - 江原道 忠州青年庆典 [锁定解除 UNLOCK]",
+    "ja": "2026 延邊 - 忠州市 ヤングフェスティバル [ロック解除 UNLOCK]"
+   },
    "category": "contest",
    "deadline": null,
    "benefit": null,
    "eligibility": null,
-   "events": [],
-   "hours": null,
-   "evidence": {},
-   "evidenceVerified": null,
+   "events": [
+    {
+     "date": "2026-09-05",
+     "start": "15:00",
+     "end": "21:00"
+    }
+   ],
+   "hours": 6.0,
+   "evidence": {
+    "events": "2026.09.05(토)\n15:00 ~ 21:00"
+   },
+   "evidenceVerified": true,
    "readFrom": [
+    {
+     "kind": "poster",
+     "name": "본문 이미지 1"
+    },
     {
      "kind": "file",
      "name": "20260818 [충주시청년센터] 2026 충북 x 충주 청년센터 운영(안) 요약.hwp"
     }
    ],
    "summary": {
-    "ko": "공모전·대외활동 관련 공지예요. 자세한 내용은 원문을 확인해 주세요."
+    "ko": "충주 청년축제 참여자를 모집해요.",
+    "en": "Participants for the Chungju Youth Festival are being recruited.",
+    "zh": "正在招募忠州青年庆典的参与者。",
+    "ja": "忠州市ヤングフェスティバルの参加者を募集しています。"
    },
    "terms": [],
-   "regulation": null,
-   "aiPending": true
+   "regulation": null
   },
   {
    "id": "2-18-120151",
@@ -27367,26 +28760,34 @@
    "hits": 1100,
    "bodyStatus": "text",
    "title": "2026.2학기 교양교과목 수강제한인원 변경 안내(심화,소양)",
-   "titleTr": {},
+   "titleTr": {
+    "en": "Notice on Changing the Enrollment Limit for General Education Courses (Advanced, Foundation)",
+    "zh": "2026第二学期通识课程选课人数限制变更通知（进阶、基础）",
+    "ja": "2026第2学期通識科目選択制限人数変更のお知らせ（進級、基礎）"
+   },
    "category": "academic",
-   "deadline": null,
+   "deadline": "2026-08-21T23:59",
    "benefit": null,
    "eligibility": null,
    "events": [],
    "hours": null,
-   "evidence": {},
-   "evidenceVerified": null,
+   "evidence": {
+    "deadline": "수강신청 일시: 2026. 8. 21(금) 오전 10:00"
+   },
+   "evidenceVerified": true,
    "readFrom": [],
    "summary": {
-    "ko": "학사 관련 공지예요. 자세한 내용은 원문을 확인해 주세요."
+    "ko": "교양교과목 수강 제한인원 변경을 안내해요. 재학생이 8월 21일까지 신청하면 심화 과목에서 95명에서 100명, 125명으로 인원이 늘어나요.",
+    "en": "We are informing you about the change in enrollment limits for general education courses. Current students who apply by August 21 will have the number of seats increased in advanced courses from 95 to 100 and then to 125.",
+    "zh": "我们通知您关于通识课程选课人数限制的变更。目前在校生在8月21日之前申请，进阶课程的人数将从95人增加到100人，再增加到125人。",
+    "ja": "通識科目の選択制限人数について変更を通知いたします。現在在籍している学生が8月21日までに申請すると、進級コースでは95名から100名へ、さらに125名へと定員が増加します。"
    },
    "terms": [
     "창업",
     "수강신청",
     "학수번호"
    ],
-   "regulation": null,
-   "aiPending": true
+   "regulation": null
   },
   {
    "id": "2-18-120150",
@@ -27394,29 +28795,47 @@
    "link": "https://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1740&CONTENTS_NO=&SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=18&BOARD_CATEGORY_NO=&BBS_SEQ=120150&pageNo=1",
    "date": "2026-08-20",
    "hits": 1267,
-   "bodyStatus": "image",
+   "bodyStatus": "poster",
    "title": "2026.2학기 기초교양 수강제한 변경 안내(2차)",
-   "titleTr": {},
+   "titleTr": {
+    "en": "Notice on the Change of Basic Liberal Arts Course Enrollment Limit for the Second Semester of 2026 (Second Round)",
+    "zh": "2026年第二学期基础通识课程选课限制变更通知（第二次）",
+    "ja": "2026年第二学期基礎教養科目選択制限の変更に関するお知らせ（第2回）"
+   },
    "category": "academic",
-   "deadline": null,
+   "deadline": "2026-08-20T23:59",
    "benefit": null,
-   "eligibility": null,
+   "eligibility": {
+    "ko": "전 학년 전 학과",
+    "en": "All students from all departments",
+    "zh": "所有年级的所有专业",
+    "ja": "すべての学年・すべての学科"
+   },
    "events": [],
    "hours": null,
-   "evidence": {},
-   "evidenceVerified": null,
-   "readFrom": [],
+   "evidence": {
+    "deadline": "수강신청일시 : 2026.8.20.(목) 14:00",
+    "eligibility": "| 7401 | 프로그래밍의기초 | 홍건표 | 전학년 전학과 수강가능 |"
+   },
+   "evidenceVerified": true,
+   "readFrom": [
+    {
+     "kind": "poster",
+     "name": "본문 이미지 1"
+    }
+   ],
    "summary": {
-    "ko": "본문이 이미지나 첨부파일로만 올라와 내용을 읽지 못했습니다. 원문을 확인해 주세요.",
-    "en": "The notice body is only an image or attachment, so it could not be read. Please check the original.",
-    "zh": "公告正文仅为图片或附件,无法读取。请查看原文。",
-    "ja": "本文が画像または添付ファイルのみのため読み取れませんでした。原文をご確認ください。"
+    "ko": "기초교양 수강제한이 변경된 공지예요. 전 학년 전 학과가 8월 20일까지 신청하면 수강 가능해요.",
+    "en": "This is a notice about the change in the basic liberal arts course enrollment limit. All students from all departments can enroll if they apply by August 20.",
+    "zh": "这是关于基础通识课程选课限制变更的通知。所有年级的所有专业学生在8月20日前申请即可选课。",
+    "ja": "これは基礎教養科目選択制限が変更された通知です。すべての学年・すべての学科の学生は8月20日までに申請すれば選択できます。"
    },
    "terms": [
-    "기초교양"
+    "기초교양",
+    "수강신청",
+    "학수번호"
    ],
-   "regulation": null,
-   "aiPending": true
+   "regulation": null
   },
   {
    "id": "2-19-119986",
@@ -27426,15 +28845,27 @@
    "hits": 102,
    "bodyStatus": "text",
    "title": "[채용정보] 2026. 8월 3주차 공공기관 및 중소기업 채용정보",
-   "titleTr": {},
+   "titleTr": {
+    "en": "[Job Opening] Public Institution and Small & Medium Enterprise Recruitment Information for the Third Week of August 2026",
+    "zh": "[招聘信息] 2026年8月第三周 公共机构及中小企业的招聘信息",
+    "ja": "[採用情報] 2026年8月第三週の公共機関および中小企業の採用情報"
+   },
    "category": "career",
-   "deadline": null,
+   "deadline": "2026-08-28T23:59",
    "benefit": null,
-   "eligibility": null,
+   "eligibility": {
+    "ko": "18세 이상(남자의 경우 병역을 필하였거나 면제된 자), 결격사유가 없는 자, 응시자격이 정지되지 않은 자",
+    "en": "Over 18 years old (for males, those who have served or been exempted from military service), individuals without disqualifying circumstances, and those whose eligibility is not suspended",
+    "zh": "18岁以上（男性需已服兵役或被免除兵役），无不符合条件的情况，且资格未被暂停",
+    "ja": "18歳以上（男性の場合、兵役を履行したかまたは免除された者）、不適格な理由がない者、応募資格が停止されていない者"
+   },
    "events": [],
    "hours": null,
-   "evidence": {},
-   "evidenceVerified": null,
+   "evidence": {
+    "deadline": "26. 8. 20. |\n26. 8. 28. |",
+    "eligibility": "∙ 18세 이상(단, 남자의 경우 병역을 필하였거나 면제된 자)\n❍ 자격요건 : 다음 자격요건을 갖춘 사람(기준일 : 면접시험 예정일)\nm 응시연령 : 18세 이상 (2008.12.31. 이전 출생자)"
+   },
+   "evidenceVerified": true,
    "readFrom": [
     {
      "kind": "file",
@@ -27454,7 +28885,10 @@
     }
    ],
    "summary": {
-    "ko": "취업·창업 관련 공지예요. 자세한 내용은 원문을 확인해 주세요."
+    "ko": "8월 3주차 공공기관 및 중소기업 채용정보를 안내해요. 18세 이상인 재학생이 8월 28일까지 지원하면 다드림 포인트 5점을 받아요.",
+    "en": "We provide recruitment information for public institutions and small & medium enterprises during the third week of August. Students who are 18 years old or older can receive 5 points in Daddrim Points if they apply by August 28.",
+    "zh": "18岁以上的学生在8月28日前申请可获得5个达迪姆积分。",
+    "ja": "8月第三週の公共機関および中小企業の採用情報をご案内いたします。18歳以上で在学中の学生が8月28日までに応募すると、ダディムポイント5ポイントを獲得できます。"
    },
    "terms": [
     "건국대",
@@ -27468,8 +28902,7 @@
     "선발",
     "마감"
    ],
-   "regulation": null,
-   "aiPending": true
+   "regulation": null
   },
   {
    "id": "2-19-119985",
@@ -27479,25 +28912,38 @@
    "hits": 75,
    "bodyStatus": "text",
    "title": "[채용정보] 2026. 8월 3주차 취업 관련 대외활동 정보 안내",
-   "titleTr": {},
-   "category": "contest",
+   "titleTr": {
+    "en": "[Job Information] External Activity Opportunities Related to Employment for the Third Week of August 2026",
+    "zh": "[招聘信息] 2026年8月第三周就业相关校外活动信息通知",
+    "ja": "[採用情報] 2026年8月第三週の就職関連校外活動情報のお知らせ"
+   },
+   "category": "career",
    "deadline": null,
    "benefit": null,
-   "eligibility": null,
+   "eligibility": {
+    "ko": "모든 학생",
+    "en": "All students",
+    "zh": "所有学生",
+    "ja": "すべての学生"
+   },
    "events": [],
    "hours": null,
-   "evidence": {},
-   "evidenceVerified": null,
+   "evidence": {
+    "eligibility": "◈주간 취업관련 대외활동 정보안내◈"
+   },
+   "evidenceVerified": true,
    "readFrom": [],
    "summary": {
-    "ko": "공모전·대외활동 관련 공지예요. 자세한 내용은 원문을 확인해 주세요."
+    "ko": "취업 관련 대외활동 참여 기회를 안내해요. 모든 학생이 8월 26일까지 신청하면 일자리 톡톡 행사에 참여할 수 있어요.",
+    "en": "We are informing you about opportunities to participate in employment-related external activities. All students can apply until August 26th and participate in the Job Talk event.",
+    "zh": "我们向您介绍参与与就业相关的校外活动的机会。所有学生在8月26日前申请即可参加就业洽谈活动。",
+    "ja": "就職に関連した校外活動への参加機会をご紹介します。すべての学生は8月26日までに申請すれば「就職トーク」イベントに参加できます。"
    },
    "terms": [
     "대외활동",
     "건국대"
    ],
-   "regulation": null,
-   "aiPending": true
+   "regulation": null
   },
   {
    "id": "2-22-119877",
@@ -27507,20 +28953,33 @@
    "hits": 452,
    "bodyStatus": "text",
    "title": "2026학년도 2학기 학생증 체크카드 신청 및 발급 안내",
-   "titleTr": {},
-   "category": "etc",
+   "titleTr": {
+    "en": "Notice on the Application and Issuance of Student ID Check Card for the Second Semester of 2026",
+    "zh": "2026学年第二学期学生证检查卡申请及发放通知",
+    "ja": "2026学年第二学期学生証チェックカードの申請および発行について"
+   },
+   "category": "academic",
    "deadline": "2026-09-08T23:59",
    "benefit": null,
-   "eligibility": null,
+   "eligibility": {
+    "ko": "대학/대학원 신(편)입생, 미 발급 재학생",
+    "en": "New (transfer) students at the university/graduate school, students who have not yet received their card",
+    "zh": "大学/研究生院新（转）入学学生，尚未领取卡片的在读生",
+    "ja": "大学／大学院新（転）入生、未発行の在籍生"
+   },
    "events": [],
    "hours": null,
    "evidence": {
-    "deadline": "2. 신청일자: 2026. 9.1.(화) ~ 9. 8.(화)"
+    "deadline": "2. 신청일자: 2026. 9.1.(화) ~ 9. 8.(화)",
+    "eligibility": "1. 발급대상: 대학/대학원 신(편)입생, 미 발급 재학생"
    },
    "evidenceVerified": true,
    "readFrom": [],
    "summary": {
-    "ko": "학교에서 알리는 공지예요. 신청은 9월 8일까지예요."
+    "ko": "학생증 체크카드 발급을 안내하는 공지예요. 대학/대학원 신(편)입생과 미 발급 재학생이 9월 8일까지 신한 SOL뱅크 앱으로 신청하면 발급받을 수 있어요.",
+    "en": "This notice informs about the issuance of a student ID check card. New (transfer) students at the university/graduate school and students who have not yet received their card can apply through the Shinhan SOL Bank app by September 8 and receive the card.",
+    "zh": "本通知告知关于学生证检查卡的发放。大学/研究生院新（转）入学的学生和尚未领取卡片的在读生可在9月8日前通过 Shinhan SOL 银行应用程序申请并领取卡片。",
+    "ja": "学生証チェックカードの発行についてのお知らせです。大学／大学院新（転）入生および未発行の在籍生は、9月8日までに Shinhan SOL バンクアプリで申請すると発行できます。"
    },
    "terms": [
     "학생증",
@@ -27534,8 +28993,7 @@
     "대면",
     "비대면"
    ],
-   "regulation": null,
-   "aiPending": true
+   "regulation": null
   },
   {
    "id": "2-27-120794",
@@ -27543,27 +29001,62 @@
    "link": "https://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1850&CONTENTS_NO=&SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=27&BOARD_CATEGORY_NO=&BBS_SEQ=120794&pageNo=1",
    "date": "2026-08-18",
    "hits": 36,
-   "bodyStatus": "image",
+   "bodyStatus": "poster",
    "title": "[광운대학교] 제25회 대학생 안보토론대회",
-   "titleTr": {},
+   "titleTr": {
+    "en": "[Kwangwoon University] 25th Annual Student Security Debate Contest",
+    "zh": "[光云大学] 第25届大学生安全辩论大赛",
+    "ja": "[光雲大学] 第25回大学生安全保障討論大会"
+   },
    "category": "contest",
-   "deadline": null,
-   "benefit": null,
-   "eligibility": null,
+   "deadline": "2026-10-10T23:59",
+   "benefit": {
+    "text": {
+     "ko": "상금 100만원, 상금 50만원, 해외 안보건학경비 1인당 200만원",
+     "en": "상금 100만원, 상금 50만원, 해외 안보건학경비 1인당 200만원",
+     "zh": "奖金100万韩元, 奖金50万韩元, 每人海外安保健康费用200万韩元",
+     "ja": "賞金100万ウォン、賞金50万ウォン、海外安保健康経費1人あたり200万ウォン"
+    },
+    "points": null,
+    "won": null,
+    "prize": 2000000
+   },
+   "eligibility": {
+    "ko": "대학생(재학생, 휴학생 포함) 및 사관생도",
+    "en": "College students (including current students and those on leave of absence) and military cadets",
+    "zh": "大学生（包括在读学生和休学学生）及军校生",
+    "ja": "大学生（在籍者および休学者を含む）および軍校生"
+   },
    "events": [],
    "hours": null,
-   "evidence": {},
-   "evidenceVerified": null,
-   "readFrom": [],
-   "summary": {
-    "ko": "본문이 이미지나 첨부파일로만 올라와 내용을 읽지 못했습니다. 원문을 확인해 주세요.",
-    "en": "The notice body is only an image or attachment, so it could not be read. Please check the original.",
-    "zh": "公告正文仅为图片或附件,无法读取。请查看原文。",
-    "ja": "本文が画像または添付ファイルのみのため読み取れませんでした。原文をご確認ください。"
+   "evidence": {
+    "deadline": "· 신청기간 : 2026. 9. 28.(월) ~ 10. 10.(토)",
+    "benefit": "| 구분 | 내용 |\n| 팀 토론 우승 | 해외 안보건학경비 1인당 200만원 |\n| 개인/특별논객 최우수 | 상금 100만원 |",
+    "eligibility": "대학생(재학생, 휴학생 포함) 및 사관생도"
    },
-   "terms": [],
-   "regulation": null,
-   "aiPending": true
+   "evidenceVerified": true,
+   "readFrom": [
+    {
+     "kind": "poster",
+     "name": "본문 이미지 1"
+    }
+   ],
+   "summary": {
+    "ko": "대학생 안보토론대회 참가자를 모집해요. 대학생과 사관생도가 10월 10일까지 신청하면 상금 100만원, 해외 안보건학경비 200만원 등 혜택을 받을 수 있어요.",
+    "en": "We are recruiting participants for the Student Security Debate Competition. College students and military academy cadets who apply by October 10th can receive benefits such as a prize of 1,000,000 won and overseas security health care expenses of 2,000,000 won.",
+    "zh": "我们正在招募大学生安全辩论大赛的参赛者。在10月10日前申请的大学生和军校学员可获得奖金100万韩元、海外安保健康费用200万韩元等福利。",
+    "ja": "大学生安全討論大会の参加者を募集しています。10月10日までに申請した大学生および軍校生は、賞金100万ウォン、海外安保健康費用200万ウォンなどの特典を受けられます。"
+   },
+   "terms": [
+    "휴학",
+    "본선",
+    "재학생",
+    "휴학생",
+    "서류전형",
+    "접수",
+    "접수기간"
+   ],
+   "regulation": null
   },
   {
    "id": "2-27-120793",
@@ -27571,27 +29064,46 @@
    "link": "https://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1850&CONTENTS_NO=&SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=27&BOARD_CATEGORY_NO=&BBS_SEQ=120793&pageNo=1",
    "date": "2026-08-18",
    "hits": 65,
-   "bodyStatus": "image",
+   "bodyStatus": "poster",
    "title": "「2026년 안양시 공공데이터·AI 활용 대학생 경진대회」",
-   "titleTr": {},
+   "titleTr": {
+    "en": "\"2026 Anyang City Public Data and AI Utilization College Student Competition\"",
+    "zh": "「2026年安양市公共数据·AI应用大学生竞赛」",
+    "ja": "「2026年安양市公共データ・AI活用大学生コンテスト」"
+   },
    "category": "contest",
-   "deadline": null,
+   "deadline": "2026-09-21T23:59",
    "benefit": null,
-   "eligibility": null,
+   "eligibility": {
+    "ko": "안양시에 관심있는 전국 대학생",
+    "en": "Nationwide college students interested in Anyang City",
+    "zh": "对安阳县感兴趣的全国大学生",
+    "ja": "安陽市に関心のある全国の大学生"
+   },
    "events": [],
    "hours": null,
-   "evidence": {},
-   "evidenceVerified": null,
-   "readFrom": [],
-   "summary": {
-    "ko": "본문이 이미지나 첨부파일로만 올라와 내용을 읽지 못했습니다. 원문을 확인해 주세요.",
-    "en": "The notice body is only an image or attachment, so it could not be read. Please check the original.",
-    "zh": "公告正文仅为图片或附件,无法读取。请查看原文。",
-    "ja": "本文が画像または添付ファイルのみのため読み取れませんでした。原文をご確認ください。"
+   "evidence": {
+    "deadline": "접수기간 | 8.10.(월) ~ 9.21.(월)",
+    "eligibility": "참가대상 | 안양시에 관심있는 전국 대학생"
    },
-   "terms": [],
-   "regulation": null,
-   "aiPending": true
+   "evidenceVerified": true,
+   "readFrom": [
+    {
+     "kind": "poster",
+     "name": "본문 이미지 1"
+    }
+   ],
+   "summary": {
+    "ko": "안양시 공공데이터·AI 활용 경진대회 참여자를 모집해요. 전국 대학생이 9월 21일까지 신청하면 상품권과 포인트를 받을 수 있어요.",
+    "en": "Anyang City is recruiting participants for the Public Data and AI Utilization Competition. Nationwide college students can apply until September 21st and receive gift cards and points.",
+    "zh": "安阳县正在招募参加公共数据·AI应用竞赛的参与者。全国大学生可在9月21日前申请，可获得礼品卡和积分。",
+    "ja": "安陽市は公共データ・AI活用コンテストの参加者を募集しています。全国の大学生は9月21日までに申請すると、ギフトカードとポイントを受け取ることができます。"
+   },
+   "terms": [
+    "접수",
+    "접수기간"
+   ],
+   "regulation": null
   },
   {
    "id": "2-27-120792",
@@ -27599,27 +29111,60 @@
    "link": "https://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1850&CONTENTS_NO=&SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=27&BOARD_CATEGORY_NO=&BBS_SEQ=120792&pageNo=1",
    "date": "2026-08-18",
    "hits": 49,
-   "bodyStatus": "image",
+   "bodyStatus": "poster",
    "title": "서울예술단 <청사초롱 불 밝혀라> 공연 학생 관람 제안_한국어학당",
-   "titleTr": {},
+   "titleTr": {
+    "en": "Seoul Arts Troupe <Cheongsajochong Bul Bokhaerya> Performance Student Viewing Proposal_Korean Language Institute",
+    "zh": "首尔艺术团《青纱初灯 灯亮吧》演出 学生观演建议_韩国语学堂",
+    "ja": "ソウル芸術団『青紗初灯 灯をともそう』公演 学生観劇案内_韓国語学舎"
+   },
    "category": "contest",
-   "deadline": null,
-   "benefit": null,
-   "eligibility": null,
+   "deadline": "2026-08-14T23:59",
+   "benefit": {
+    "text": {
+     "ko": "1+1 특별혜택",
+     "en": "1+1 Special Benefit",
+     "zh": "1+1 特别优惠",
+     "ja": "1+1 特別特典"
+    },
+    "points": null,
+    "won": null
+   },
+   "eligibility": {
+    "ko": "외국인 동반 시",
+    "en": "When accompanied by a foreigner",
+    "zh": "与外国人同行时",
+    "ja": "外国人同伴時"
+   },
    "events": [],
    "hours": null,
-   "evidence": {},
-   "evidenceVerified": null,
-   "readFrom": [],
-   "summary": {
-    "ko": "본문이 이미지나 첨부파일로만 올라와 내용을 읽지 못했습니다. 원문을 확인해 주세요.",
-    "en": "The notice body is only an image or attachment, so it could not be read. Please check the original.",
-    "zh": "公告正文仅为图片或附件,无法读取。请查看原文。",
-    "ja": "本文が画像または添付ファイルのみのため読み取れませんでした。原文をご確認ください。"
+   "evidence": {
+    "deadline": "할인예매기간 | 8/14 (금)부터 예매 마감까지",
+    "benefit": "외국인 동반 시 1+1 특별혜택",
+    "eligibility": "외국인 동반 시 1+1 특별혜택"
    },
-   "terms": [],
-   "regulation": null,
-   "aiPending": true
+   "evidenceVerified": true,
+   "readFrom": [
+    {
+     "kind": "poster",
+     "name": "본문 이미지 1"
+    },
+    {
+     "kind": "poster",
+     "name": "본문 이미지 2"
+    }
+   ],
+   "summary": {
+    "ko": "서울예술단 공연을 관람할 수 있는 기회예요. 외국인 동반 시 8월 14일까지 예매하면 1+1 특별혜택을 받을 수 있어요.",
+    "en": "You can watch the Seoul Arts Troupe performance. If you book with a foreign companion until August 14th, you can receive the 1+1 special benefit.",
+    "zh": "您可以观看首尔艺术团的演出。如果与外国人一同购票，于8月14日前预订可享受1+1特别优惠。",
+    "ja": "ソウル芸術団の公演をご鑑賞いただけます。外国人同伴で8月14日までに予約すると、1+1特別特典を受けられます。"
+   },
+   "terms": [
+    "마감",
+    "외국인등록"
+   ],
+   "regulation": null
   },
   {
    "id": "2-27-120791",
@@ -27627,7 +29172,7 @@
    "link": "https://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1850&CONTENTS_NO=&SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=27&BOARD_CATEGORY_NO=&BBS_SEQ=120791&pageNo=1",
    "date": "2026-08-18",
    "hits": 27,
-   "bodyStatus": "file",
+   "bodyStatus": "poster",
    "title": "서울시민먹거리조사 활용 콘텐츠·연구 공모전",
    "titleTr": {},
    "category": "contest",
@@ -27637,10 +29182,18 @@
    "events": [],
    "hours": null,
    "evidence": {
-    "deadline": "2026년 10월 21일(수) ~ 2026년 10월 30일(금) <온라인 접수>"
+    "deadline": "응모기간 : 2026.10.21.(수)~10.30.(금)"
    },
    "evidenceVerified": true,
    "readFrom": [
+    {
+     "kind": "poster",
+     "name": "본문 이미지 1"
+    },
+    {
+     "kind": "poster",
+     "name": "본문 이미지 2"
+    },
     {
      "kind": "file",
      "name": "공고문_서울시민먹거리조사_최종(hwp).hwp"
@@ -27663,7 +29216,6 @@
    },
    "terms": [
     "공모전",
-    "면접",
     "제출서류",
     "접수",
     "접수기간",
@@ -27679,35 +29231,59 @@
    "link": "https://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1850&CONTENTS_NO=&SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=27&BOARD_CATEGORY_NO=&BBS_SEQ=120790&pageNo=1",
    "date": "2026-08-18",
    "hits": 30,
-   "bodyStatus": "file",
+   "bodyStatus": "poster",
    "title": "「컷! 양산」홍보영상 공모전",
-   "titleTr": {},
+   "titleTr": {
+    "en": "\"Cut! Yangsan\" Promotion Video Contest",
+    "zh": "「切断！阳山」宣传视频比赛",
+    "ja": "「カット！陽山」PR動画コンテスト"
+   },
    "category": "contest",
-   "deadline": "2026-10-30T18:00",
+   "deadline": "2026-08-18T23:59",
    "benefit": {
     "text": {
-     "ko": "❍ 시상내역: 총 10작품 선정, 총상금 1,000만원 및 양산시장상 수여"
+     "ko": "상금 1,000만원",
+     "en": "상금 1,000만원",
+     "zh": "상금 1,000만원",
+     "ja": "상금 1,000만원"
     },
-    "points": 0,
-    "won": 0,
+    "points": null,
+    "won": null,
     "prize": 10000000
    },
-   "eligibility": null,
+   "eligibility": {
+    "ko": "양산에 관심이 있는 전 국민 누구나(개인 또는 팀)",
+    "en": "Anyone with an interest in Yangsan (individuals or teams)",
+    "zh": "对阳山有兴趣的全国任何人士（个人或团队）",
+    "ja": "陽山に興味があるすべての国民（個人またはチーム）"
+   },
    "events": [],
    "hours": null,
    "evidence": {
-    "deadline": "❍ 공모 및 접수기간: 2026. 8. 18.(화) ~ 10. 30.(금) 18:00까지",
-    "benefit": "❍ 시상내역: 총 10작품 선정, 총상금 1,000만원 및 양산시장상 수여"
+    "deadline": "2026. 8. 18.(화) - 10. 30.(금)\n공모기간 2026.8.18.(화) - 10.30.(금) 18:00까지",
+    "benefit": "총 상금\n1,000만원!\n시상내역 총 10작품, 총 상금 1,000만원 및 양산시장상 수여",
+    "eligibility": "참여대상 양산에 관심이 있는 전 국민 누구나(개인 또는 팀)"
    },
    "evidenceVerified": true,
    "readFrom": [
+    {
+     "kind": "poster",
+     "name": "본문 이미지 1"
+    },
+    {
+     "kind": "poster",
+     "name": "본문 이미지 2"
+    },
     {
      "kind": "file",
      "name": "컷 양산 홍보영상 공모전 개최 공고.hwpx"
     }
    ],
    "summary": {
-    "ko": "공모전·대외활동 관련 공지예요. 혜택은 ❍ 시상내역: 총 10작품 선정, 총상금 1,000만원 및 양산시장상 수여예요. 신청은 10월 30일 18시까지예요."
+    "ko": "양산 홍보영상 공모전 참여자를 모집해요. 양산에 관심 있는 전 국민이 8월 18일까지 신청하면 상금 1,000만원을 받을 수 있어요.",
+    "en": "We are recruiting participants for the \"Cut! Yangsan\" promotion video contest.",
+    "zh": "我们正在招募「切断！阳山」宣传视频比赛的参与者。",
+    "ja": "「カット！陽山」PR動画コンテストの参加者を募集しています。"
    },
    "terms": [
     "공모전",
@@ -27717,8 +29293,7 @@
     "동의서",
     "유의사항"
    ],
-   "regulation": null,
-   "aiPending": true
+   "regulation": null
   },
   {
    "id": "2-27-120789",
@@ -27726,38 +29301,58 @@
    "link": "https://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1850&CONTENTS_NO=&SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=27&BOARD_CATEGORY_NO=&BBS_SEQ=120789&pageNo=1",
    "date": "2026-08-18",
    "hits": 26,
-   "bodyStatus": "file",
+   "bodyStatus": "poster",
    "title": "안양시 여성친화도시 영상공모전",
-   "titleTr": {},
+   "titleTr": {
+    "en": "Anyang City Women-Friendly City Video Contest",
+    "zh": "安양市女性友好城市影像竞赛",
+    "ja": "安양市女性フレンドリー都市ビデオコンテスト"
+   },
    "category": "contest",
-   "deadline": "2026-09-10T23:59",
+   "deadline": null,
    "benefit": {
     "text": {
-     "ko": "구 분계대 상최우수우 수장 려상 금190만원50만원각 30만원각 20만원각 10만원작품수91224 다. 시…"
+     "ko": "시상금(원)",
+     "en": "Prize (won)",
+     "zh": "奖金（韩元）",
+     "ja": "賞金（ウォン）"
     },
-    "points": 0,
-    "won": 0,
-    "prize": 1900000
+    "points": null,
+    "won": null,
+    "prize": 500000
    },
-   "eligibility": null,
+   "eligibility": {
+    "ko": "전 국민 누구나(개인 또는 팀)",
+    "en": "All citizens (individuals or teams)",
+    "zh": "所有国民（个人或团队）",
+    "ja": "すべての国民（個人またはチーム）"
+   },
    "events": [],
    "hours": null,
    "evidence": {
-    "deadline": "라. 접수기간: 2026. 8. 13.(목) ~ 9. 10.(목) ※ 마감일 18시까지 접수에 한함",
-    "benefit": "구 분계대 상최우수우 수장 려상 금190만원50만원각 30만원각 20만원각 10만원작품수91224 다. 시상내역: 9편 / 상장 및 시상금 190만원"
+    "benefit": "시상내역 | 9편(대상/최우수/우수/장려)\n대상 | 500,000 | 1명(팀)\n최우수 | 300,000 | 2명(팀)",
+    "eligibility": "응모자격 | 전 국민 누구나(개인 또는 팀)\n마. 응모자격: 전 국민 누구나(개인 또는 팀, 연령 및 거주지 제한 없음)"
    },
    "evidenceVerified": true,
    "readFrom": [
+    {
+     "kind": "poster",
+     "name": "본문 이미지 1"
+    },
     {
      "kind": "file",
      "name": "2026년 여성친화 영상공모전 재공고문.hwpx"
     }
    ],
    "summary": {
-    "ko": "공모전·대외활동 관련 공지예요. 혜택은 구 분계대 상최우수우 수장 려상 금190만원50만원각 30만원각 20만원각 10만원작품수91224 다. 시…예요. 신청은 9월 10일까지예요."
+    "ko": "안양시 여성친화도시 영상공모전 참여자를 모집해요. 전 국민이 8월 13일부터 9월 10일까지 응모하면 시상금 50만 원을 받을 수 있어요.",
+    "en": "Anyang City is recruiting participants for the Women-Friendly City Video Contest. Anyone can apply from August 13 to September 10 and receive a prize of 500,000 won.",
+    "zh": "安阳市正在招募「女性友好城市影像竞赛」参与者。自8月13日至9月10日，全民皆可报名，并有机会获得50万韩元奖金。",
+    "ja": "安陽市は「女性フレンドリー都市ビデオコンテスト」の参加者を募集しています。8月13日から9月10日まで、全国民が応募できます。賞金として50万ウォンを支給します。"
    },
    "terms": [
     "공모전",
+    "제출서류",
     "접수",
     "마감",
     "접수기간",
@@ -27766,7 +29361,11 @@
     "유의사항"
    ],
    "regulation": null,
-   "aiPending": true
+   "check": {
+    "deadline": "2026-09-10T23:59",
+    "line": "라. 접수기간: 2026. 8. 13.(목) ~ 9. 10.(목) ※ 마감일 18시까지 접수에 한함",
+    "kind": "missing"
+   }
   },
   {
    "id": "2-27-120788",
@@ -27774,31 +29373,52 @@
    "link": "https://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1850&CONTENTS_NO=&SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=27&BOARD_CATEGORY_NO=&BBS_SEQ=120788&pageNo=1",
    "date": "2026-08-18",
    "hits": 57,
-   "bodyStatus": "file",
+   "bodyStatus": "poster",
    "title": "「2026 오송화장품뷰티엑스포」사전등록 및 단체관람 신청 안내",
-   "titleTr": {},
-   "category": "contest",
+   "titleTr": {
+    "en": "Pre-registration and Group Visit Application for the '2026 Osong Cosmetics Beauty Expo'",
+    "zh": "「2026奥斯松化妆品美容博览会」事前登记及团体参观申请通知",
+    "ja": "「2026オソンコスメティクスビューティーエキスポ」事前登録および団体観覧申請案内"
+   },
+   "category": "event",
    "deadline": null,
    "benefit": null,
-   "eligibility": null,
+   "eligibility": {
+    "ko": "단체관람 신청자 (20인 이상)",
+    "en": "Group visit applicants (20 or more people)",
+    "zh": "团体参观申请人（20人或以上）",
+    "ja": "団体観覧申請者（20人以上）"
+   },
    "events": [],
    "hours": null,
-   "evidence": {},
-   "evidenceVerified": null,
+   "evidence": {
+    "eligibility": "※ 단체관람은 20인 이상 신청시 접수 가능합니다."
+   },
+   "evidenceVerified": true,
    "readFrom": [
+    {
+     "kind": "poster",
+     "name": "본문 이미지 1"
+    },
+    {
+     "kind": "poster",
+     "name": "본문 이미지 2"
+    },
     {
      "kind": "file",
      "name": "단체관람 신청서.xlsx"
     }
    ],
    "summary": {
-    "ko": "공모전·대외활동 관련 공지예요. 자세한 내용은 원문을 확인해 주세요."
+    "ko": "2026 오송화장품뷰티엑스포 단체관람 신청을 안내해요. 20인 이상이 10월 22일부터 24일까지 관람하면 입장이 가능해요.",
+    "en": "We are informing you about the group visit application for the '2026 Osong Cosmetics Beauty Expo'. If 20 or more people visit from October 22 to 24, they can enter.",
+    "zh": "我们通知您关于「2026奥斯松化妆品美容博览会」的团体参观申请。如果20人或以上于10月22日至24日期间参观，即可入场。",
+    "ja": "「2026オソンコスメティクスビューティーエキスポ」の団体観覧申請についてご案内いたします。10月22日から24日にかけて20人以上が観覧すれば入場可能です。"
    },
    "terms": [
     "접수"
    ],
-   "regulation": null,
-   "aiPending": true
+   "regulation": null
   },
   {
    "id": "2-27-120787",
@@ -27806,27 +29426,45 @@
    "link": "https://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1850&CONTENTS_NO=&SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=27&BOARD_CATEGORY_NO=&BBS_SEQ=120787&pageNo=1",
    "date": "2026-08-18",
    "hits": 34,
-   "bodyStatus": "file",
+   "bodyStatus": "poster",
    "title": "제1회 소방정책 아이디어 발굴 경진대회 개최",
-   "titleTr": {},
+   "titleTr": {
+    "en": "First Fire Policy Idea Development Competition",
+    "zh": "第一届消防政策创意发掘竞赛",
+    "ja": "第1回防火政策アイデア発掘コンテスト"
+   },
    "category": "contest",
-   "deadline": null,
+   "deadline": "2026-10-31T23:59",
    "benefit": {
     "text": {
-     "ko": "상장 및 상금 200만원"
+     "ko": "상금(200만원, 100만원, 70만원, 50만원)",
+     "en": "상금(200만원, 100만원, 70만원, 50만원)",
+     "zh": "奖金（200万韩元、100万韩元、70万韩元、50万韩元）",
+     "ja": "賞金（200万ウォン、100万ウォン、70万ウォン、50万ウォン）"
     },
-    "points": 0,
-    "won": 0,
+    "points": null,
+    "won": null,
     "prize": 2000000
    },
-   "eligibility": null,
+   "eligibility": {
+    "ko": "소방 관련학과 대학(원)생·교수 등, 소방청 산하 기관,단체 등 소방안전 분야 종사자",
+    "en": "University and graduate students majoring in fire-related fields, professors, staff working in fire safety areas under the Ministry of Public Safety and Security, and related organizations",
+    "zh": "消防相关学科的大学和研究生、教授等，以及在消防安全领域工作的消防厅下属机构、团体等相关人员",
+    "ja": "消防関連学科の大学・大学院生や教授、消防庁所属機関・団体など消防安全分野に従事する者"
+   },
    "events": [],
    "hours": null,
    "evidence": {
-    "benefit": "상장 및 상금 200만원"
+    "deadline": "2026. 08. 12.(수) ~ 10. 31.(토)",
+    "benefit": "| 대상 | 1명(팀) | 200만원 |\n| 최우수 | 2명(팀) | 각 100만원 |\n| 우수 | 3명(팀) | 각 70만원 |",
+    "eligibility": "- 소방 관련학과 대학(원)생·교수 등\n- 소방청 산하 기관,단체 등 소방안전 분야 종사자"
    },
    "evidenceVerified": true,
    "readFrom": [
+    {
+     "kind": "poster",
+     "name": "본문 이미지 1"
+    },
     {
      "kind": "file",
      "name": "[붙임 2] 제1회 소방정책 아이디어 발굴 경진대회 신청 서류.hwp"
@@ -27834,10 +29472,21 @@
     {
      "kind": "file",
      "name": "[붙임 1] 제1회 소방정책 아이디어 발굴 경진대회 공고.hwp"
+    },
+    {
+     "kind": "poster",
+     "name": "첨부 (한소연2026-35호)제1회 소방정책 아이디어 발굴 경진대회 개최 홍보 및 참가 협조 요청.pdf 이미지"
+    },
+    {
+     "kind": "poster",
+     "name": "첨부 (한소연2026-35호)제1회 소방정책 아이디어 발굴 경진대회 개최 홍보 및 참가 협조 요청.pdf 이미지"
     }
    ],
    "summary": {
-    "ko": "공모전·대외활동 관련 공지예요. 혜택은 상장 및 상금 200만원이에요."
+    "ko": "소방정책 아이디어 경진대회 참여자를 모집해요. 소방 관련학과 대학(원)생 등이 10월 31일까지 신청하면 상금 200만원, 100만원 등을 받을 수 있어요.",
+    "en": "We are recruiting participants for the Fire Policy Idea Competition.",
+    "zh": "我们正在招募参加消防政策创意竞赛的人员。消防相关学科的大学和研究生，以及教授等，在10月31日前申请可获得200万韩元、100万韩元等奖金。",
+    "ja": "防火政策アイデアコンテストへの参加者を募集しています。消防関連学科の大学・大学院生や教授などは、10月31日までに申請すると200万ウォン、100万ウォンなどの賞金を受け取ることができます。"
    },
    "terms": [
     "휴학",
@@ -27851,8 +29500,7 @@
     "접수",
     "마감"
    ],
-   "regulation": null,
-   "aiPending": true
+   "regulation": null
   },
   {
    "id": "2-18-120149",
@@ -27860,27 +29508,46 @@
    "link": "https://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1740&CONTENTS_NO=&SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=18&BOARD_CATEGORY_NO=&BBS_SEQ=120149&pageNo=1",
    "date": "2026-08-18",
    "hits": 1611,
-   "bodyStatus": "image",
+   "bodyStatus": "poster",
    "title": "2026.2학기 교양교과목 수강제한인원 변경 안내",
-   "titleTr": {},
+   "titleTr": {
+    "en": "Notice on Changing the Enrollment Limit for General Education Courses in the Second Semester of 2026",
+    "zh": "2026年第二学期通识课程选课人数限制变更通知",
+    "ja": "2026年第二学期の通識科目の選択人数制限変更のお知らせ"
+   },
    "category": "academic",
-   "deadline": null,
+   "deadline": "2026-08-19T23:59",
    "benefit": null,
-   "eligibility": null,
+   "eligibility": {
+    "ko": "2026.2학기 수강신청을 원하는 학생",
+    "en": "Students who want to apply for course registration in the second semester of 2026",
+    "zh": "希望在2026年第二学期进行选课的学生",
+    "ja": "2026年第二学期に選択を希望する学生"
+   },
    "events": [],
    "hours": null,
-   "evidence": {},
-   "evidenceVerified": null,
-   "readFrom": [],
-   "summary": {
-    "ko": "본문이 이미지나 첨부파일로만 올라와 내용을 읽지 못했습니다. 원문을 확인해 주세요.",
-    "en": "The notice body is only an image or attachment, so it could not be read. Please check the original.",
-    "zh": "公告正文仅为图片或附件,无法读取。请查看原文。",
-    "ja": "本文が画像または添付ファイルのみのため読み取れませんでした。原文をご確認ください。"
+   "evidence": {
+    "deadline": "수강신청일시 : 2026.8.19.(수) 10:00",
+    "eligibility": "2026.2학기 교양교과목 수강제한인원 변경 안내"
    },
-   "terms": [],
-   "regulation": null,
-   "aiPending": true
+   "evidenceVerified": true,
+   "readFrom": [
+    {
+     "kind": "poster",
+     "name": "본문 이미지 1"
+    }
+   ],
+   "summary": {
+    "ko": "교양교과목 수강 인원이 변경된 공지예요. 2026.2학기 수강신청을 원하는 학생이 8월 19일까지 신청하면 금융시장과금융투자의이해 과목 수강제한인원이 60명에서 75명으로 변경돼요.",
+    "en": "This is a notice that the enrollment limit for general education courses has been changed.",
+    "zh": "这是关于通识课程选课人数限制变更的通知。",
+    "ja": "これは通識科目の選択人数制限が変更されたことを通知するものです。"
+   },
+   "terms": [
+    "수강신청",
+    "학수번호"
+   ],
+   "regulation": null
   },
   {
    "id": "2-22-119875",
@@ -27890,32 +29557,52 @@
    "hits": 163,
    "bodyStatus": "text",
    "title": "충북 PRIDE 공유대학 2026학년도 2학기 실무역량인증재 참여학생 모집",
-   "titleTr": {},
-   "category": "etc",
+   "titleTr": {
+    "en": "Chungcheongbuk PRIDE Shared University 2026 Academic Year Second Semester Practical Competency Certification Program Participant Recruitment",
+    "zh": "Chungcheongbuk PRIDE 共享大学 2026学年第二学期实务能力认证参与学生招募",
+    "ja": "Chungcheongbuk PRIDE 共享大学 2026学年第二学期実務能力認証プログラム参加者募集"
+   },
+   "category": "contest",
    "deadline": "2026-09-03T23:59",
    "benefit": {
     "text": {
-     "ko": "이수 지원금 20만원 30만원"
+     "ko": "이수증 발급, 이수지원금 지급 (예정)",
+     "en": "Certificate of Completion Issuance, Support Grant Payment (Planned)",
+     "zh": "颁发修课证明、发放修课支持金（计划中）",
+     "ja": "修了証明書発行、修了支援金支給（予定）"
     },
-    "points": 0,
-    "won": 300000
+    "points": null,
+    "won": null
    },
-   "eligibility": null,
+   "eligibility": {
+    "ko": "충북 도내 17개 대학 재학생",
+    "en": "Current Students at 17 Universities within Chungcheongbuk Province",
+    "zh": "忠清北道内17所大学的在读学生",
+    "ja": "忠清北道内17校の大学在籍学生"
+   },
    "events": [],
    "hours": null,
    "evidence": {
-    "deadline": "라. 모집기간: 2026. 8. 18.(화) ~ 9. 3.(목)",
-    "benefit": "이수 지원금 20만원 30만원"
+    "deadline": "라. 모집기간: 2026. 8. 18.(화) ~ 9. 3.(목)\n- 모집기간 : 2026.08.18.(화) ~ 09.03.(목)",
+    "benefit": "이수혜택\n2. 이수완료 후, 이수지원금 지급 (예정)\n- 1단계(CHALLENGER) : 20만원",
+    "eligibility": "나. 대 상: 충북 도내 17개 대학 재학생\n- 충북 도내 17개 대학 재학생(휴학생 제외)"
    },
    "evidenceVerified": true,
    "readFrom": [
+    {
+     "kind": "poster",
+     "name": "본문 이미지 2"
+    },
     {
      "kind": "file",
      "name": "[충북 PRIDE 공유대학] 2026학년도 2학기 실무역량인증제 참여학생 모집 공고.pdf"
     }
    ],
    "summary": {
-    "ko": "학교에서 알리는 공지예요. 혜택은 이수 지원금 20만원 30만원이에요. 신청은 9월 3일까지예요."
+    "ko": "실무역량인증제 참여자를 모집하는 공지예요. 충북 도내 17개 대학 재학생이 9월 3일까지 신청하면 이수증을 발급하고, 20만원 또는 30만원의 지원금을 받을 수 있어요.",
+    "en": "This is a notice for recruiting participants in the Practical Competency Certification Program. Chungcheongbuk domestic 17 universities' current students can apply until September 3, and they will receive a certificate of completion and a support grant of 200,000 won or 300,000 won.",
+    "zh": "本公告为招募实务能力认证计划参与者。韩国忠清北道内17所大学的在读学生可在9月3日前申请，可获得修课证明及20万韩元或30万韩元的支持金。",
+    "ja": "実務能力認証制度の参加者を募るお知らせです。忠清北道内17校の大学在籍学生が9月3日までに申請すると、修了証明書を発行し、20万ウォンまたは30万ウォンの支援金を支給します。"
    },
    "terms": [
     "휴학",
@@ -27929,8 +29616,7 @@
     "현장실습",
     "멘토링"
    ],
-   "regulation": null,
-   "aiPending": true
+   "regulation": null
   },
   {
    "id": "2-25-119726",
@@ -27938,27 +29624,61 @@
    "link": "https://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1830&CONTENTS_NO=&SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=25&BOARD_CATEGORY_NO=&BBS_SEQ=119726&pageNo=1",
    "date": "2026-08-18",
    "hits": 142,
-   "bodyStatus": "image",
+   "bodyStatus": "poster",
    "title": "슬기로운 청년생활 참여자 모집",
-   "titleTr": {},
+   "titleTr": {
+    "en": "Recruitment for the Smooth Young Life Program Participants",
+    "zh": "平顺青年生活参与计划招募",
+    "ja": "スムーズな若者生活プログラム参加者募集"
+   },
    "category": "contest",
    "deadline": null,
-   "benefit": null,
-   "eligibility": null,
-   "events": [],
-   "hours": null,
-   "evidence": {},
-   "evidenceVerified": null,
-   "readFrom": [],
-   "summary": {
-    "ko": "본문이 이미지나 첨부파일로만 올라와 내용을 읽지 못했습니다. 원문을 확인해 주세요.",
-    "en": "The notice body is only an image or attachment, so it could not be read. Please check the original.",
-    "zh": "公告正文仅为图片或附件,无法读取。请查看原文。",
-    "ja": "本文が画像または添付ファイルのみのため読み取れませんでした。原文をご確認ください。"
+   "benefit": {
+    "text": {
+     "ko": "활동 참여시간 봉사실적 등록, 활동 수료증 발급(80%이상 참여 시), 정책제안&프로그램 기획 전문교육 제공, 청년 관심사 반영 특강 및 청년 커뮤니티 기회제공",
+     "en": "Registration of activity participation time as volunteer hours, certificate of completion (issued if participating in 80% or more), professional education on policy proposal and program planning, special lecture reflecting young people's interests, and opportunities to join youth communities",
+     "zh": "活动参与时间登记为志愿服务时数，完成活动颁发结业证书（参与率达80%以上时），提供政策建议与项目规划的专业教育，举办反映青年兴趣的特别讲座，并提供青年社群交流机会",
+     "ja": "活動参加時間のボランティア実績登録、80％以上の参加時に活動修了証の発行、政策提案・プログラム企画に関する専門教育の提供、若者の関心を反映した特別講義および若者コミュニティへの参加機会の提供"
+    },
+    "points": null,
+    "won": null
    },
-   "terms": [],
-   "regulation": null,
-   "aiPending": true
+   "eligibility": {
+    "ko": "인천거주 및 생활권 20세~39세 청년 (1순위 부평구 거주청년)",
+    "en": "Young people aged 20-39 residing in Incheon and its surrounding areas (first priority: young people living in Bupyeong-gu)",
+    "zh": "居住于仁川及周边地区、年龄在20至39岁之间的青年（优先考虑居住于부평구的青年）",
+    "ja": "仁川市内及び生活圏に住む20歳〜39歳の青年（1位は部坪区に住む青年）"
+   },
+   "events": [],
+   "hours": 0.5,
+   "evidence": {
+    "benefit": "참여특전 | 활동 참여시간 봉사실적 등록\n| 활동 수료증 발급(80%이상 참여 시)\n| 정책제안&프로그램 기획 전문교육 제공",
+    "eligibility": "모집대상 | 인천거주 및 생활권 20세~39세 청년 (1순위 부평구 거주청년)"
+   },
+   "evidenceVerified": true,
+   "readFrom": [
+    {
+     "kind": "poster",
+     "name": "본문 이미지 1"
+    },
+    {
+     "kind": "poster",
+     "name": "첨부 (공문)슬기로운청년생활(청년커뮤니티기반 청년봉사단)홍보협조의 건-26년 하반기(삼산복지관).pdf 이미지"
+    }
+   ],
+   "summary": {
+    "ko": "청년들이 지역 문제를 해결하는 프로그램 참여자를 모집해요.",
+    "en": "We are recruiting participants for a program that helps young people solve local issues.",
+    "zh": "我们正在招募参与帮助年轻人解决本地问题的项目参与者。",
+    "ja": "若い人が地域の問題を解決するためのプログラムの参加者を募っています。"
+   },
+   "terms": [
+    "특강",
+    "수료",
+    "도서관",
+    "접수"
+   ],
+   "regulation": null
   },
   {
    "id": "2-18-120147",
@@ -27966,9 +29686,13 @@
    "link": "https://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1740&CONTENTS_NO=&SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=18&BOARD_CATEGORY_NO=&BBS_SEQ=120147&pageNo=1",
    "date": "2026-08-14",
    "hits": 916,
-   "bodyStatus": "image",
+   "bodyStatus": "poster",
    "title": "2026. 동참형학기제 학생멘토링 챌린지 수상자 안내",
-   "titleTr": {},
+   "titleTr": {
+    "en": "2026 Participatory Semester Program Student Mentoring Challenge Winners Announcement",
+    "zh": "2026 参与式学期制 学生导师挑战赛获奖者通知",
+    "ja": "2026 参加型学期制度 学生メンタリングチャレンジ受賞者案内"
+   },
    "category": "academic",
    "deadline": null,
    "benefit": null,
@@ -27977,18 +29701,22 @@
    "hours": null,
    "evidence": {},
    "evidenceVerified": null,
-   "readFrom": [],
+   "readFrom": [
+    {
+     "kind": "poster",
+     "name": "본문 이미지 1"
+    }
+   ],
    "summary": {
-    "ko": "본문이 이미지나 첨부파일로만 올라와 내용을 읽지 못했습니다. 원문을 확인해 주세요.",
-    "en": "The notice body is only an image or attachment, so it could not be read. Please check the original.",
-    "zh": "公告正文仅为图片或附件,无法读取。请查看原文。",
-    "ja": "本文が画像または添付ファイルのみのため読み取れませんでした。原文をご確認ください。"
+    "ko": "2026 동참형학기제 멘토링 챌린지 수상자 발표예요.",
+    "en": "The winners of the 2026 Participatory Semester Program Mentoring Challenge are announced.",
+    "zh": "2026 参与式学期制 导师挑战赛获奖者公布。",
+    "ja": "2026 参加型学期制度 メンタリングチャレンジ受賞者が発表されます。"
    },
    "terms": [
     "멘토링"
    ],
-   "regulation": null,
-   "aiPending": true
+   "regulation": null
   },
   {
    "id": "2-18-120146",
@@ -27998,24 +29726,37 @@
    "hits": 285,
    "bodyStatus": "text",
    "title": "교원자격무시험검정 결과 안내('26.8월. 졸업대상자)",
-   "titleTr": {},
+   "titleTr": {
+    "en": "Result of Qualification Examination without Written Test ('26. August Graduates)",
+    "zh": "无笔试资格考试结果通知（'26年8月毕业者）",
+    "ja": "教員資格無筆試検定結果のお知らせ（'26年8月卒業者）"
+   },
    "category": "academic",
    "deadline": null,
    "benefit": null,
-   "eligibility": null,
+   "eligibility": {
+    "ko": "2026. 8. 21. 졸업 예정 대상자 중 무시험검정 신청자",
+    "en": "Students who are expected to graduate on August 21, 2026, and have applied for the qualification examination without a written test",
+    "zh": "预计于2026年8月21日毕业的无笔试资格考试申请人",
+    "ja": "2026年8月21日に卒業予定の無筆試検定を申請した者"
+   },
    "events": [],
    "hours": null,
-   "evidence": {},
-   "evidenceVerified": null,
+   "evidence": {
+    "eligibility": "2026. 8. 21. 졸업 예정 대상자 중 무시험검정 신청자에 대해 검정 결과를 아래와 같이 안내드리오니, 대상자는 확인하여 주시기 바랍니다."
+   },
+   "evidenceVerified": true,
    "readFrom": [],
    "summary": {
-    "ko": "학사 관련 공지예요. 자세한 내용은 원문을 확인해 주세요."
+    "ko": "2026년 8월 14일까지 졸업예정자 중 무시험검정 신청자는 자격증 발급 여부를 확인해야 합니다. 자격증 발급은 졸업일인 8월 21일에 학위기와 함께 이루어집니다.",
+    "en": "Students who are expected to graduate by August 14, 2026, and have applied for the qualification examination without a written test must check whether their certificate will be issued. The issuance of the certificate will be done together with the degree certificate on August 21, which is the graduation date.",
+    "zh": "预计于2026年8月14日毕业的学生中，申请无笔试资格考试者需确认证书是否发放。证书将在毕业日期即2026年8月21日与学位证书一同发放。",
+    "ja": "2026年8月14日までに卒業予定の学生で、無筆試検定を申請した者は、証明書が発行されるか確認する必要があります。証明書は卒業日である2026年8月21日に学位証と同時に発行されます。"
    },
    "terms": [
     "유의사항"
    ],
-   "regulation": null,
-   "aiPending": true
+   "regulation": null
   },
   {
    "id": "2-19-119983",
@@ -28025,20 +29766,43 @@
    "hits": 277,
    "bodyStatus": "text",
    "title": "[GSF] CES 2027 부스 참가 지원 프로그램 모집 안내",
-   "titleTr": {},
-   "category": "event",
+   "titleTr": {
+    "en": "[GSF] Recruitment for CES 2027 Booth Participation Support Program",
+    "zh": "[GSF] 招募 CES 2027 展位参与支持计划参与者",
+    "ja": "[GSF] CES 2027 ブース参加支援プログラムの募集"
+   },
+   "category": "contest",
    "deadline": "2026-08-19T23:59",
-   "benefit": null,
-   "eligibility": null,
+   "benefit": {
+    "text": {
+     "ko": "약 1,000만원 상당 지원",
+     "en": "Support of approximately 10 million won",
+     "zh": "约1,000万韩元的支持",
+     "ja": "約1,000万ウォン相当の支援"
+    },
+    "points": null,
+    "won": 10000000
+   },
+   "eligibility": {
+    "ko": "건국대학교 글로컬캠퍼스 재학생(2026-2학기 기준), CES 부스 선정 완료 또는 개인 자격으로 신청 후 선정이 가능한 자",
+    "en": "Current students at Gukje Global Campus of Gachon University (as of the second semester of 2026), who have completed booth selection or can be selected after applying individually",
+    "zh": "韩国明知大学全球校区在读学生（以2026-2学期为准），已完成展位选拔或可申请后被选拔者",
+    "ja": "韓国明知大学グローバルキャンパスに在籍する学生（2026-2学期時点）、ブース選考を完了した者または個人として申請後に選考されることが可能な者"
+   },
    "events": [],
    "hours": null,
    "evidence": {
-    "deadline": "접수기간: ~ 2026. 8. 19.(수)"
+    "deadline": "접수기간: ~ 2026. 8. 19.(수)",
+    "benefit": "약 1,000만원 상당 지원",
+    "eligibility": "대상: 건국대학교 글로컬캠퍼스 재학생(2026-2학기 기준)\nCES 부스 선정 완료 또는 개인 자격으로 신청 후 선정이 가능한 자"
    },
    "evidenceVerified": true,
    "readFrom": [],
    "summary": {
-    "ko": "행사·특강 관련 공지예요. 신청은 8월 19일까지예요."
+    "ko": "CES 2027 부스 참가 지원 프로그램 참여자를 모집해요. 건국대학교 글로컬캠퍼스 재학생이 8월 19일까지 신청하면 약 1,000만원 상당의 항공료·숙박비 등 경비를 지원받을 수 있어요.",
+    "en": "We are recruiting participants for the CES 2027 Booth Participation Support Program. Students enrolled at Gukje Global Campus of Gachon University who apply by August 19th can receive support covering approximately 10 million won in expenses such as airfare and accommodation.",
+    "zh": "我们正在招募CES 2027展位参与支持计划的参与者。韩国明知大学全球校区在读学生，于8月19日前申请可获得约1,000万韩元的费用支持（包括航空费、住宿费等）。",
+    "ja": "CES 2027ブース参加支援プログラムへの参加者を募っています。韓国明知大学グローバルキャンパスに在籍する学生が8月19日までに申請すると、航空券や宿泊費など約1,000万ウォン相当の費用を支給します。"
    },
    "terms": [
     "창업",
@@ -28047,8 +29811,7 @@
     "접수",
     "접수기간"
    ],
-   "regulation": null,
-   "aiPending": true
+   "regulation": null
   },
   {
    "id": "2-22-119874",
@@ -28058,15 +29821,27 @@
    "hits": 265,
    "bodyStatus": "text",
    "title": "2026년도 지역혁신중심 대학지원체계(RISE) 충북 첨단바이오 공동연구센터 산학공동기술개발과제 공고(3차)",
-   "titleTr": {},
-   "category": "etc",
-   "deadline": null,
+   "titleTr": {
+    "en": "2026 RISE Regional Innovation Center University Support System (3rd Call for Industry-Academia Joint Technology Development Projects at Chungcheongbuk Advanced Bio Research Center)",
+    "zh": "2026年度地区创新中心大学支持体系（RISE） Chungcheongbuk先进生物联合研究中心产学共同技术开发项目公告（第3次）",
+    "ja": "2026年度地域イノベーションセンター大学支援制度（RISE） 洋安テクノロジー生物共同研究センター産学共同技術開発プロジェクト公募（第3回）"
+   },
+   "category": "academic",
+   "deadline": "2026-08-14T23:59",
    "benefit": null,
-   "eligibility": null,
+   "eligibility": {
+    "ko": "충북 첨단바이오 공동연구센터 주관 및 참여대학, 충북지역 소재 첨단바이오산업 분야 기업, 충북지역 소재 정부출연연구원, 기업지원공공기관",
+    "en": "Chungcheongbuk Advanced Bio Research Center, participating universities, advanced bio industry companies located in Chungcheongbuk, government-affiliated research institutes located in Chungcheongbuk, and enterprise-support public institutions",
+    "zh": "由 Chungcheongbuk 先进生物联合研究中心主办及参与的大学，位于 Chungcheongbuk 的先进生物科技领域企业，位于 Chungcheongbuk 的政府所属研究机构，以及企业支援公共机构",
+    "ja": "チョンチェンブク先端バイオ共同研究センター主催および参加大学、チョンチェンブク地域に所在する先端バイオ産業分野企業、チョンチェンブク地域に所在する政府出資金研究機関、企業支援公共機関"
+   },
    "events": [],
    "hours": null,
-   "evidence": {},
-   "evidenceVerified": null,
+   "evidence": {
+    "deadline": "2026년 8월 14일",
+    "eligibility": "○ 대 학: 충북 첨단바이오 공동연구센터 주관 및 참여대학\n○ 기 업: 충북지역 소재 첨단바이오산업 분야 기업\n○ 혁신기관: 충북지역 소재 정부출연연구원, 기업지원공공기관"
+   },
+   "evidenceVerified": true,
    "readFrom": [
     {
      "kind": "file",
@@ -28094,7 +29869,10 @@
     }
    ],
    "summary": {
-    "ko": "학교에서 알리는 공지예요. 자세한 내용은 원문을 확인해 주세요."
+    "ko": "충북 첨단바이오 공동연구센터 산학공동기술개발과제 참여자를 모집해요. 충북지역 기업과 대학, 혁신기관이 8월 14일까지 신청하면 지원금을 받을 수 있어요.",
+    "en": "We are recruiting participants for the industry-academia joint technology development projects at the Chungcheongbuk Advanced Bio Research Center. Companies, universities, and innovation institutions in Chungcheongbuk can apply for support funds until August 14.",
+    "zh": "我们正在招募参与 Chungcheongbuk 先进生物联合研究中心产学共同技术开发项目的人员。位于 Chungcheongbuk 的企业、大学和创新机构可在 8 月 14 日前申请支持资金。",
+    "ja": "チョンチェンブクの先端バイオ業界企業、大学、イノベーション機関が8月14日までに申請すれば、支援金を受け取ることができます。"
    },
    "terms": [
     "창업",
@@ -28108,8 +29886,7 @@
     "유의사항",
     "지원자격"
    ],
-   "regulation": null,
-   "aiPending": true
+   "regulation": null
   },
   {
    "id": "2-22-119873",
@@ -28119,20 +29896,43 @@
    "hits": 3981,
    "bodyStatus": "text",
    "title": "2026년도 2학기 KU피트니스 센터 회원 모집 안내",
-   "titleTr": {},
-   "category": "etc",
+   "titleTr": {
+    "en": "2026 Fall KU Fitness Center Membership Recruitment Notice",
+    "zh": "2026年秋季韩国国立庆州大学健身中心会员招募通知",
+    "ja": "2026年秋季KUフィットネスセンター会員募集のお知らせ"
+   },
+   "category": "academic",
    "deadline": "2026-08-27T23:59",
-   "benefit": null,
-   "eligibility": null,
+   "benefit": {
+    "text": {
+     "ko": "피트니스센터 이용권",
+     "en": "Fitness Center Membership",
+     "zh": "健身中心会员资格",
+     "ja": "フィットネスセンター利用権"
+    },
+    "points": null,
+    "won": null
+   },
+   "eligibility": {
+    "ko": "건국대학교 학생 및 교직원",
+    "en": "Kungho University students and staff",
+    "zh": "韩国国立庆州大学在校生及教职工",
+    "ja": "건국대학교の学生および教職員"
+   },
    "events": [],
    "hours": null,
    "evidence": {
-    "deadline": "4. 사전 접수 기간: 2026. 08. 18. (화) 09:00 ~ 08. 27. (목) 24:00까지"
+    "deadline": "4. 사전 접수 기간: 2026. 08. 18. (화) 09:00 ~ 08. 27. (목) 24:00까지",
+    "benefit": "3. 사용료: 50,000원(학생), 60,000원(교직원)",
+    "eligibility": "3. 사용료: 50,000원(학생), 60,000원(교직원)"
    },
    "evidenceVerified": true,
    "readFrom": [],
    "summary": {
-    "ko": "학교에서 알리는 공지예요. 신청은 8월 27일까지예요."
+    "ko": "KU피트니스 센터 회원 모집 공지예요. 학생과 교직원이 8월 27일까지 신청하면 이용권을 받아요.",
+    "en": "This is a notice for recruiting KU Fitness Center members. Students and staff can apply for the membership until August 27th.",
+    "zh": "这是韩国国立庆州大学健身中心会员招募公告。学生和教职员工可在8月27日前申请会员资格。",
+    "ja": "KUフィットネスセンターの会員募集のお知らせです。学生と教職員は8月27日までに申請すると利用権をもらえます。"
    },
    "terms": [
     "건국대",
@@ -28165,8 +29965,7 @@
      "url": "https://rule.konkuk.ac.kr/lmxsrv/law/lawDetail.do?SEQ=409&LAWGROUP=1&PAGE=1",
      "checked": "2026-11-23"
     }
-   },
-   "aiPending": true
+   }
   },
   {
    "id": "2-27-120786",
@@ -28174,20 +29973,38 @@
    "link": "https://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1850&CONTENTS_NO=&SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=27&BOARD_CATEGORY_NO=&BBS_SEQ=120786&pageNo=1",
    "date": "2026-08-13",
    "hits": 61,
-   "bodyStatus": "file",
+   "bodyStatus": "poster",
    "title": "국토안전관리원 「2026년 국토안전 AI 콘텐츠 공모전」",
-   "titleTr": {},
+   "titleTr": {
+    "en": "National Security and Disaster Management Agency '2026 National Security AI Content Contest'",
+    "zh": "国家安全部「2026年国土安全AI内容竞赛」",
+    "ja": "国家安全部「2026年国土安全AIコンテンツコンテスト」"
+   },
    "category": "contest",
    "deadline": "2026-08-30T23:59",
    "benefit": null,
-   "eligibility": null,
+   "eligibility": {
+    "ko": "국토안전관리원 업무에 관심있는 성인 누구나(개인 또는 3인 이하 팀)",
+    "en": "Anyone over 18 (individuals or teams of up to three people) who are interested in the National Security and Disaster Management Agency's operations",
+    "zh": "对国土安全管理部门业务感兴趣的任何成年人都可以（个人或三人以下团队）",
+    "ja": "国家安全部の業務に興味のあるすべての成人（個人または3人以下のチーム）"
+   },
    "events": [],
    "hours": null,
    "evidence": {
-    "deadline": "• 접수기간: 2026년 8월 5일(수) ~ 8월 30일(일)"
+    "deadline": "2026년 8월 5일(수)\n~ 2026년 8월 30일(일)",
+    "eligibility": "대상\n국토안전관리원 업무에 관심있는 성인 누구나\n(개인 또는 3인 이하 팀)"
    },
    "evidenceVerified": true,
    "readFrom": [
+    {
+     "kind": "poster",
+     "name": "본문 이미지 1"
+    },
+    {
+     "kind": "poster",
+     "name": "첨부 이미지: 붙임 4. 디자인 소스(CI 및 마스코트) 사용 안내.png"
+    },
     {
      "kind": "file",
      "name": "붙임 1. 응모요강.pdf"
@@ -28202,19 +30019,19 @@
     }
    ],
    "summary": {
-    "ko": "공모전·대외활동 관련 공지예요. 신청은 8월 30일까지예요."
+    "ko": "국토안전 AI 콘텐츠 공모전 참여자를 모집해요. 성인 누구나 8월 30일까지 신청하면 작품을 제출하고, 상금이 지급돼요.",
+    "en": "We are recruiting participants for the National Security AI Content Contest. Anyone over 18 can apply by August 30th, submit their work, and receive prize money.",
+    "zh": "我们正在招募参加国土安全AI内容竞赛的参与者。任何成年人都可以在8月30日前申请，提交作品并获得奖金。",
+    "ja": "国土安全AIコンテンツコンテストの参加者を募集しています。成人であれば8月30日までに申請し、作品を提出して賞金を受け取ることができます。"
    },
    "terms": [
     "공모전",
     "접수",
-    "선발",
     "접수기간",
-    "개인정보",
     "동의서",
     "유의사항"
    ],
-   "regulation": null,
-   "aiPending": true
+   "regulation": null
   },
   {
    "id": "2-27-120785",
@@ -28399,27 +30216,43 @@
    "hits": 342,
    "bodyStatus": "text",
    "title": "[교양교육센터] 2026학년도 2학기 『지식-나눔 인증제』 신청 안내",
-   "titleTr": {},
+   "titleTr": {
+    "en": "[Center for Liberal Education] Application Notice for the \"Knowledge-Sharing Certification Program\" in the 2026 Academic Year, Second Semester",
+    "zh": "[通识教育中心] 2026学年第二学期『知识-分享认证制』申请通知",
+    "ja": "[通識教育センター] 2026年度第2学期『知識-共有認証制度』申請案内"
+   },
    "category": "dadream",
-   "deadline": "2026-10-16T23:59",
+   "deadline": "2026-10-16T00:00",
    "benefit": {
     "text": {
-     "ko": "① 『지식-나눔 인증서 1급』 (다드림포인트 40DP 지급)"
+     "ko": "다드림포인트 40DP 지급(지식-나눔 인증서 발급자에 한함), 다드림포인트 15DP 지급(지식나눔 인성특강 참여자에 한함)",
+     "en": "Grant of 40 Dadream points (limited to those who received the Knowledge-Sharing Certification Certificate), Grant of 15 Dadream points (limited to participants in the Knowledge-Sharing Personality Special Lecture)",
+     "zh": "给予40个达梦想积分（仅限于获得知识-分享认证证书者），给予15个达梦想积分（仅限于参加知识分享人格特别讲座者）",
+     "ja": "ダドリームポイント40ポイントの支給（知識－共有認証書を取得した者に限る）、ダドリームポイント15ポイントの支給（知識共有人格特別講義に参加した者に限る）"
     },
     "points": 40,
-    "won": 0
+    "won": null
    },
-   "eligibility": null,
+   "eligibility": {
+    "ko": "지식 나눔 인증제 적용 교과 중 총 4학점 이상 이수자",
+    "en": "Students who have completed a total of 4 credits or more in courses applicable to the Knowledge-Sharing Certification Program",
+    "zh": "修满适用于知识分享认证制课程总学分4学分以上的学生",
+    "ja": "知識共有認証制度適用科目で合計4単位以上を履修した者"
+   },
    "events": [],
    "hours": null,
    "evidence": {
-    "deadline": "『지식-나눔 인증서』 신청서(지역활동 계획서) 제출(10/16일까지 이음교육시스템-비교과 제출)",
-    "benefit": "① 『지식-나눔 인증서 1급』 (다드림포인트 40DP 지급)"
+    "deadline": "+ 나눔 : 지역 활동 이후 『지역활동 보고서』 작성 및 제출\n『지식-나눔 인증서』 신청서(지역활동 계획서) 제출(10/16일까지 이음교육시스템-비교과 제출)",
+    "benefit": "② 『지식 나눔 인증서 2급』 (다드림포인트 40DP 지급)\n•『지식 나눔 프로그램』 1개 이상 이수\n(1) 『작은 도서관과 함께하는 슬기로운 봉사생활』: 지역연계 활동",
+    "eligibility": "5-1. 신청 자격: 지식 나눔 인증제 적용 교과 중 총 4학점 이상 이수(이수교과 확인 필수)\n* 신청 학기, 인증제 적용 교과 이수 포함하나, 학점 미이수 시 인증서 발급은 취소됨"
    },
    "evidenceVerified": true,
    "readFrom": [],
    "summary": {
-    "ko": "다드림 포인트 관련 공지예요. 혜택은 ① 『지식-나눔 인증서 1급』 (다드림포인트 40DP 지급)이에요. 신청은 10월 16일까지예요."
+    "ko": "지식-나눔 인증제 신청을 안내해요. 재학생이 10월 16일까지 4학점 이상 이수하면 다드림포인트 40DP 지급받고, 지역활동 보고서 제출 후 심사를 통해 인증서 발급예요.",
+    "en": "We are informing you about the application for the Knowledge-Sharing Certification Program. If a current student completes 4 credits or more by October 16th, they will receive 40 Dadream points. After submitting a regional activity report and passing the review process, a certification certificate will be issued.",
+    "zh": "我们通知您关于『知识-分享认证制』的申请。如果在10月16日之前，注册学生修满4学分以上，则可获得40个达梦想积分，并在提交地区活动报告并通过审核后颁发认证证书。",
+    "ja": "「知識－共有認証制度」の申請についてご案内いたします。在籍学生が10月16日までに4単位以上を履修した場合、ダドリームポイント40ポイントを付与し、地域活動報告書を提出し審査を通過することで認証書が発行されます。"
    },
    "terms": [
     "학점",
@@ -28454,8 +30287,7 @@
      "url": "https://rule.konkuk.ac.kr/lmxsrv/law/lawDetail.do?SEQ=409&LAWGROUP=1&PAGE=1",
      "checked": "2026-11-23"
     }
-   },
-   "aiPending": true
+   }
   },
   {
    "id": "2-18-120143",
@@ -28465,20 +30297,33 @@
    "hits": 851,
    "bodyStatus": "text",
    "title": "2026년 8월 미졸업자 수강신청학점(미졸코드) 변경 및 등록금 납부 안내",
-   "titleTr": {},
+   "titleTr": {
+    "en": "2026 August Credit Change for Incomplete Graduates (Incomplete Code) and Tuition Payment Notice",
+    "zh": "2026年8月未毕业学生选课学分（未毕业代码）变更及学费缴纳通知",
+    "ja": "2026年8月未卒業者向け単位変更（未卒業コード）および授業料支払いのお知らせ"
+   },
    "category": "academic",
    "deadline": "2026-08-26T17:00",
    "benefit": null,
-   "eligibility": null,
+   "eligibility": {
+    "ko": "학점 부족으로 인한 미졸업자, 논문 불합격으로 인한 미졸업자 및 졸업유예생 중 추가 수강 희망자",
+    "en": "Students who did not graduate due to insufficient credits, students who did not graduate due to failed thesis, and those on graduation deferment who wish to take additional courses",
+    "zh": "因学分不足而未毕业的学生、因论文不及格而未毕业的学生及休学后希望修读附加课程的学生",
+    "ja": "学分不足により未卒業となった者、論文不合格により未卒業となった者および休学後追加単位を希望する者"
+   },
    "events": [],
    "hours": null,
    "evidence": {
-    "deadline": "2. 신청기간: 2026. 8. 26.(수) 17:00까지"
+    "deadline": "2. 신청기간: 2026. 8. 26.(수) 17:00까지",
+    "eligibility": "가. 학점 부족으로 인한 미졸업자"
    },
    "evidenceVerified": true,
    "readFrom": [],
    "summary": {
-    "ko": "학사 관련 공지예요. 신청은 8월 26일 17시까지예요."
+    "ko": "미졸업자 수강학점 변경을 안내해요. 학점 부족이나 논문 불합격으로 미졸업한 학생이 8월 26일까지 신청하면 추가 등록금 납부가 가능해요.",
+    "en": "We are informing you about the change of credits for incomplete graduates. Students who did not graduate due to insufficient credits or failed thesis can apply before August 26th and pay additional tuition fees.",
+    "zh": "我们通知您关于未毕业学生的选课学分变更。因学分不足或论文不及格而未毕业的学生，在8月26日前申请可缴纳额外学费。",
+    "ja": "未卒業者の単位変更についてご案内いたします。学分不足や論文不合格により未卒業となった学生は、8月26日までに申請することで追加授業料の支払いが可能です。"
    },
    "terms": [
     "학점",
@@ -28525,8 +30370,7 @@
      "url": "https://rule.konkuk.ac.kr/lmxsrv/law/lawDetail.do?SEQ=409&LAWGROUP=1&PAGE=1",
      "checked": "2026-11-23"
     }
-   },
-   "aiPending": true
+   }
   },
   {
    "id": "2-19-119982",
@@ -28536,26 +30380,40 @@
    "hits": 202,
    "bodyStatus": "text",
    "title": "[채용정보] 2026. 8월 2주차 공공기관 및 중소기업 채용정보",
-   "titleTr": {},
+   "titleTr": {
+    "en": "[Job Opening] Public Institution and Small-to-Medium Enterprise Recruitment Information for the Second Week of August 2026",
+    "zh": "[招聘信息] 2026年8月第二周 公共机构及中小企业的招聘信息",
+    "ja": "[採用情報] 2026年8月第2週 公共機関および中小企業の採用情報"
+   },
    "category": "career",
-   "deadline": null,
+   "deadline": "2026-08-18T23:59",
    "benefit": null,
-   "eligibility": null,
+   "eligibility": {
+    "ko": "공공기관 및 중소기업 채용 지원 대상자",
+    "en": "Applicants supporting recruitment at public institutions and small-to-medium enterprises",
+    "zh": "公共机构及中小企业招聘支持申请人",
+    "ja": "公共機関および中小企業の採用支援対象者"
+   },
    "events": [],
    "hours": null,
-   "evidence": {},
-   "evidenceVerified": null,
+   "evidence": {
+    "deadline": "26. 8. 18. |",
+    "eligibility": "회사"
+   },
+   "evidenceVerified": true,
    "readFrom": [],
    "summary": {
-    "ko": "취업·창업 관련 공지예요. 자세한 내용은 원문을 확인해 주세요."
+    "ko": "공공기관 및 중소기업 채용정보를 안내해요. 재학생이 8월 18일까지 지원하면 관련 혜택을 받을 수 있어요.",
+    "en": "We provide recruitment information for public institutions and small-to-medium enterprises. Students can receive related benefits if they apply by August 18th.",
+    "zh": "我们提供公共机构及中小企业的招聘信息。如果学生在8月18日前申请，可以享受相关福利。",
+    "ja": "公共機関および中小企業の採用情報をご案内いたします。学生が8月18日までに応募すれば、関連する特典を受けられます。"
    },
    "terms": [
     "건국대",
     "인턴",
     "마감"
    ],
-   "regulation": null,
-   "aiPending": true
+   "regulation": null
   },
   {
    "id": "2-19-119981",
@@ -28565,25 +30423,38 @@
    "hits": 96,
    "bodyStatus": "text",
    "title": "[채용정보] 2026. 8월 2주차 취업 관련 대외활동 정보 안내",
-   "titleTr": {},
-   "category": "contest",
+   "titleTr": {
+    "en": "[Job Information] Notice on Overseas Internship Opportunities for Employment in the Second Week of August 2026",
+    "zh": "[招聘信息] 2026年8月第二周就业相关对外活动信息通知",
+    "ja": "[採用情報] 2026年8月第2週の就業関連外部活動情報のお知らせ"
+   },
+   "category": "career",
    "deadline": null,
    "benefit": null,
-   "eligibility": null,
+   "eligibility": {
+    "ko": "경기도일자리재단의 2026년 경기청년 해외진출(일본) 사업(4기)에 해당하는 대상",
+    "en": "Applicants must be eligible for the 4th phase of the Gyeonggi Youth Overseas Expansion (Japan) Program by the Gyeonggi Provincial Employment Foundation in 2026",
+    "zh": "申请人须符合京畿道就业基金会2026年京畿青年海外拓展（日本）项目第4期的资格条件",
+    "ja": "2026年の京畿青年海外進出（日本）プロジェクト第4期に該当する対象者"
+   },
    "events": [],
    "hours": null,
-   "evidence": {},
-   "evidenceVerified": null,
+   "evidence": {
+    "eligibility": "경기도일자리재단 |\n2026년 경기청년 해외진출(일본) 사업(4기) |"
+   },
+   "evidenceVerified": true,
    "readFrom": [],
    "summary": {
-    "ko": "공모전·대외활동 관련 공지예요. 자세한 내용은 원문을 확인해 주세요."
+    "ko": "경기도일자리재단의 해외진출 대외활동 참여자를 모집해요.",
+    "en": "The Gyeonggi Provincial Employment Foundation is recruiting participants for an overseas internship program.",
+    "zh": "京畿道就业基金会正在招募参与海外实习项目的人选。",
+    "ja": "京畿道雇用支援公社は海外インターンシッププログラムへの参加者を募集しています。"
    },
    "terms": [
     "대외활동",
     "건국대"
    ],
-   "regulation": null,
-   "aiPending": true
+   "regulation": null
   },
   {
    "id": "2-27-120782",
@@ -28649,20 +30520,43 @@
    "hits": 167,
    "bodyStatus": "text",
    "title": "2026년 충북 RISE 공동연구센터 시제품제작지원(2차) 공고",
-   "titleTr": {},
-   "category": "etc",
+   "titleTr": {
+    "en": "2026 Chungcheongbuk RISE Joint Research Center Prototype Production Support (Second Call for Proposals)",
+    "zh": "2026年忠清北道RISE联合研究中心原型制作支援（第二轮）公告",
+    "ja": "2026年忠清北道RISE共同研究センタープロトタイプ製造支援（第2回）公募"
+   },
+   "category": "contest",
    "deadline": "2026-08-31T23:59",
-   "benefit": null,
-   "eligibility": null,
+   "benefit": {
+    "text": {
+     "ko": "지원금",
+     "en": "Support funds",
+     "zh": "支持资金",
+     "ja": "サポート資金"
+    },
+    "points": null,
+    "won": null
+   },
+   "eligibility": {
+    "ko": "건국대학교(글로컬) 전임교원, 충북소재 기업·혁신기관 등",
+    "en": "Full-time professors at Gloglobal Kangnung University, Chungcheongbuk-based companies and innovation institutions, etc.",
+    "zh": "韩国国立庆尚大学（Gloglobal）全职教授、忠清北道地区企业及创新机构等",
+    "ja": "慶尚大学（グローカル）の正教授、忠清北道に所在する企業・革新機関など"
+   },
    "events": [],
    "hours": null,
    "evidence": {
-    "deadline": "가. 공고 및 접수기간 : 2026. 08. 10.(월) ~ 08. 31.(월)"
+    "deadline": "가. 공고 및 접수기간 : 2026. 08. 10.(월) ~ 08. 31.(월)",
+    "benefit": "대학 |\n15 |\n10 |",
+    "eligibility": "가. 지원대상 : 건국대학교(글로컬) 전임교원, 충북소재 기업·혁신기관 등"
    },
    "evidenceVerified": true,
    "readFrom": [],
    "summary": {
-    "ko": "학교에서 알리는 공지예요. 신청은 8월 31일까지예요."
+    "ko": "공모전·대외활동 관련 공지예요. 혜택은 지원금이에요. 신청은 8월 31일까지예요.",
+    "en": "This is a notice related to competitions and extracurricular activities. The benefit is support funds. Applications are due by August 31.",
+    "zh": "这是关于竞赛及课外活动的通知。优惠是支持资金。申请截止日期为8月31日。",
+    "ja": "競技や課外活動に関するお知らせです。特典はサポート資金です。申請は8月31日までです。"
    },
    "terms": [
     "건국대",
@@ -28671,8 +30565,7 @@
     "마감",
     "접수기간"
    ],
-   "regulation": null,
-   "aiPending": true
+   "regulation": null
   },
   {
    "id": "2-27-120780",
@@ -28919,8 +30812,12 @@
    "hits": 1358,
    "bodyStatus": "image",
    "title": "[국가][주거비] 2026학년도 2학기 한국장학재단 주거안정장학금 2차 신청 안내(8. 12.(수) ~ 9. 9.(수))",
-   "titleTr": {},
-   "category": "scholarship",
+   "titleTr": {
+    "en": "[Country][Housing] 2026 Academic Year Second Semester Korean Scholarship Foundation Housing Stability Scholarship 2nd Application Notice (August 12. (Wed) ~ September 9. (Wed))",
+    "zh": "[国家][居住费] 2026学年第二学期韩国奖学金基金会住房稳定奖学金第二次申请通知（8. 12.( wed ) ~ 9. 9.(wed)）",
+    "ja": "[国家][居住費] 2026学年第二学期韓国奨学金財団住宅安定奨学金第2回申請案内（8. 12.(水) ~ 9. 9.(水)）"
+   },
+   "category": "dorm",
    "deadline": null,
    "benefit": null,
    "eligibility": null,
@@ -28961,8 +30858,7 @@
      "url": "https://rule.konkuk.ac.kr/lmxsrv/law/lawDetail.do?SEQ=371&LAWGROUP=1&PAGE=1",
      "checked": "2026-11-23"
     }
-   },
-   "aiPending": true
+   }
   },
   {
    "id": "2-1-119885",
@@ -28972,20 +30868,43 @@
    "hits": 746,
    "bodyStatus": "text",
    "title": "[국가] 2026학년도 2학기 국가장학금 2차 신청기간 안내(8. 12.(수)~9. 9.(수))",
-   "titleTr": {},
+   "titleTr": {
+    "en": "[Country] 2026 Academic Year Second Semester National Scholarship Second Application Period Notice (August 12 (Wed) ~ September 9 (Wed))",
+    "zh": "[国家] 2026学年第二学期国家奖学金第二次申请期间通知（8. 12.(水)~9. 9.(水))",
+    "ja": "[国家] 2026年度第2学期国家奨学金第2回申請期間のお知らせ（8.12.(水)～9.9.(水))"
+   },
    "category": "scholarship",
-   "deadline": "2026-09-09T18:00",
-   "benefit": null,
-   "eligibility": null,
+   "deadline": "2026-09-09T23:59",
+   "benefit": {
+    "text": {
+     "ko": "학자금 지원",
+     "en": "Financial aid support",
+     "zh": "学杂费支援",
+     "ja": "学費支援"
+    },
+    "points": null,
+    "won": null
+   },
+   "eligibility": {
+    "ko": "2026학년도 2학기 재학생, 복학생, 신입생, 재입학생 등",
+    "en": "Current students, returning students, new students, and readmitted students for the second semester of the 2026 academic year",
+    "zh": "2026学年第二学期在校生、休学生、新生、复入生等",
+    "ja": "2026年度第2学期に在籍する者、休学者、新入生、再入学者など"
+   },
    "events": [],
    "hours": null,
    "evidence": {
-    "deadline": "3. 학생신청: 2026. 8. 12. (수) 9시 ~ 9. 9.(수) 18시"
+    "deadline": "3. 학생신청: 2026. 8. 12. (수) 9시 ~ 9. 9.(수) 18시",
+    "benefit": "국가장학금 학자금지원구간(소득구간)은 국가장학금 이외 건국희망장학금 등 다른 장학금의 선발기준으로도 활용될 수 있으므로, 많은 신청바랍니다.",
+    "eligibility": "4. 신청대상: 2026학년도 2학기 재학생, 복학생, 신입생, 재입학생 등"
    },
    "evidenceVerified": true,
    "readFrom": [],
    "summary": {
-    "ko": "장학 관련 공지예요. 신청은 9월 9일 18시까지예요."
+    "ko": "국가장학금 2차 신청 기간이 시작된다고 안내해요. 재학생 등이 9월 9일까지 신청하면 학자금 지원을 받을 수 있어요.",
+    "en": "The second application period for the national scholarship has started. Current students, returning students, new students, and readmitted students can receive financial aid by applying before September 9.",
+    "zh": "国家奖学金第二次申请期间已开始。在校生等在9月9日前申请可获得学杂费支援。",
+    "ja": "国家奨学金第2回の申請期間が始まりました。在籍者等が9月9日までに申請すれば学費支援を受けられます。"
    },
    "terms": [
     "장학금",
@@ -29020,8 +30939,7 @@
      "url": "https://rule.konkuk.ac.kr/lmxsrv/law/lawDetail.do?SEQ=371&LAWGROUP=1&PAGE=1",
      "checked": "2026-11-23"
     }
-   },
-   "aiPending": true
+   }
   },
   {
    "id": "2-27-120776",
@@ -29063,7 +30981,11 @@
    "hits": 1333,
    "bodyStatus": "text",
    "title": "교무위원 인사발령(2026.08.11.자)",
-   "titleTr": {},
+   "titleTr": {
+    "en": "Personnel Appointment of Academic Affairs Committee (August 11, 2026)",
+    "zh": "教务委员人事任命（2026.08.11）",
+    "ja": "学務委員の人事異動（2026年8月11日）"
+   },
    "category": "etc",
    "deadline": null,
    "benefit": null,
@@ -29074,13 +30996,15 @@
    "evidenceVerified": null,
    "readFrom": [],
    "summary": {
-    "ko": "학교에서 알리는 공지예요. 자세한 내용은 원문을 확인해 주세요."
+    "ko": "교무위원 인사발령 관련 공지예요.",
+    "en": "This is a notice related to the personnel appointment of the Academic Affairs Committee.",
+    "zh": "这是关于教务委员人事任命的通知。",
+    "ja": "学務委員の人事異動に関するお知らせです。"
    },
    "terms": [
     "도서관"
    ],
-   "regulation": null,
-   "aiPending": true
+   "regulation": null
   },
   {
    "id": "2-22-119869",
@@ -29090,7 +31014,11 @@
    "hits": 895,
    "bodyStatus": "text",
    "title": "일반직원 인사발령(2026.08.11.자)",
-   "titleTr": {},
+   "titleTr": {
+    "en": "General Staff Appointment Notice (August 11, 2026)",
+    "zh": "一般职员任命通知（2026年8月11日）",
+    "ja": "一般職員の人事異動（2026年8月11日）"
+   },
    "category": "etc",
    "deadline": null,
    "benefit": null,
@@ -29101,7 +31029,10 @@
    "evidenceVerified": null,
    "readFrom": [],
    "summary": {
-    "ko": "학교에서 알리는 공지예요. 자세한 내용은 원문을 확인해 주세요."
+    "ko": "일반직원 인사발령 관련 공지예요. GLOCAL캠퍼스 총무처와 생활관 행정실장이 8월 11일 발령해요.",
+    "en": "This is a notice regarding the general staff appointment. The GLOCAL Campus General Affairs Office and the Dormitory Administration Director will issue the appointment on August 11.",
+    "zh": "这是关于一般职员任命的通知。GLOCAL校园总务处与生活馆行政室主任将于8月11日发布任命。",
+    "ja": "一般職員の人事異動に関するお知らせです。GLOCALキャンパス総務課と生活館行政室長が8月11日に発令します。"
    },
    "terms": [
     "기숙사"
@@ -29127,8 +31058,7 @@
      "url": "https://rule.konkuk.ac.kr/lmxsrv/law/lawDetail.do?SEQ=41&LAWGROUP=1&PAGE=1",
      "checked": "2026-11-23"
     }
-   },
-   "aiPending": true
+   }
   },
   {
    "id": "2-27-120775",
@@ -29344,20 +31274,33 @@
    "hits": 716,
    "bodyStatus": "text",
    "title": "2026학년도 2학기 조기졸업 신청 안내",
-   "titleTr": {},
+   "titleTr": {
+    "en": "Notice on Early Graduation Application for the Second Semester of 2026",
+    "zh": "2026学年第二学期提前毕业申请通知",
+    "ja": "2026年度第2学期の早期卒業申請について"
+   },
    "category": "academic",
    "deadline": "2026-08-28T23:59",
    "benefit": null,
-   "eligibility": null,
+   "eligibility": {
+    "ko": "2026학년도 2학기 기준 5학기 등록(예정)자 중 조기졸업 희망자, 4학기 수료학점 이상 취득하고 전체 학년 성적 평점평균 4.0 이상인 자",
+    "en": "Students who are registered (planned) for 5 semesters as of the second semester of 2026, wishing to graduate early, have earned at least 40 credits, and have a GPA of 4.0 or higher for their entire academic year",
+    "zh": "以2026学年第二学期为基准，已注册（计划）5学期的学生中希望提前毕业者，修满40学分以上，并且整体学年成绩平均绩点达到4.0及以上者",
+    "ja": "2026年度第2学期をもとに、5学期登録（予定）している学生で早期卒業を希望する者、40単位以上を取得し、全体学年の成績GPAが4.0以上である者"
+   },
    "events": [],
    "hours": null,
    "evidence": {
-    "deadline": "가. 신청기간: 2026. 8. 24.(월) ~ 8. 28.(금)"
+    "deadline": "가. 신청기간: 2026. 8. 24.(월) ~ 8. 28.(금)\n가. 제출기간: 2026. 8. 31.(월) ~ 9. 4.(금)",
+    "eligibility": "나. 신청대상: 2026학년도 2학기 기준 5학기 등록(예정)자 중 조기졸업 희망자\n다. 신청자격: 4학기 수료학점 이상 취득하고, 전체 학년 성적 평점평균 4.0 이상인 자"
    },
    "evidenceVerified": true,
    "readFrom": [],
    "summary": {
-    "ko": "학사 관련 공지예요. 신청은 8월 28일까지예요."
+    "ko": "조기졸업 신청을 안내하는 공지예요. 재학생이 8월 28일까지 신청하면 다드림 포인트 5점을 받아요.",
+    "en": "This is a notice about early graduation application. Current students who apply by August 28th will receive 5 Dardim points.",
+    "zh": "这是关于提前毕业申请的通知。在8月28日前申请的在校生可获得5个达迪姆积分。",
+    "ja": "これは早期卒業申請に関するお知らせです。8月28日までに申請した在籍生には5ポイントのダーディムポイントが与えられます。"
    },
    "terms": [
     "조기졸업",
@@ -29393,8 +31336,7 @@
     },
     "page": 19,
     "year": 2026
-   },
-   "aiPending": true
+   }
   },
   {
    "id": "2-18-120137",
@@ -29404,18 +31346,33 @@
    "hits": 1754,
    "bodyStatus": "text",
    "title": "★ 2026학년도 1학기 다드림 포인트 장학금 지급 안내 ★",
-   "titleTr": {},
-   "category": "scholarship",
-   "deadline": null,
+   "titleTr": {
+    "en": "* Scholarship Payment Notice for the First Semester of 2026 Academic Year *",
+    "zh": "* 2026学年第一学期达梦想积分奖学金发放通知 *",
+    "ja": "* 2026学年度第1学期ダドリームポイント奨学金支給のお知らせ *"
+   },
+   "category": "dadream",
+   "deadline": "2026-08-05T23:59",
    "benefit": null,
-   "eligibility": null,
+   "eligibility": {
+    "ko": "재학생(선발자 400명)",
+    "en": "Current students (selected candidates: 400 people)",
+    "zh": "在校生（选拔者400名）",
+    "ja": "在学生（選考者400名）"
+   },
    "events": [],
    "hours": null,
-   "evidence": {},
-   "evidenceVerified": null,
+   "evidence": {
+    "deadline": "-선발일 기준: 2026.08.05.기준 재학생 대상",
+    "eligibility": "-장학생 선발 400명에 대해서만 다드림포인트 초기화 예정 *휴학생 및 미선발자는 다드림포인트 누적*"
+   },
+   "evidenceVerified": true,
    "readFrom": [],
    "summary": {
-    "ko": "장학 관련 공지예요. 자세한 내용은 원문을 확인해 주세요."
+    "ko": "다드림 포인트 관련 공지예요. 대상은 재학생(선발자 400명)이에요. 신청은 8월 5일까지예요.",
+    "en": "This is a notice regarding Dadream points. The target is current students (selected candidates: 400 people). Applications are due by August 5th.",
+    "zh": "这是关于达梦想积分的通知。对象是在校生（选拔者400名）。申请截止日期为8月5日。",
+    "ja": "これはダドリームポイントに関するお知らせです。対象は在学生（選考者400名）です。申請は8月5日までです。"
    },
    "terms": [
     "장학금",
@@ -29448,8 +31405,7 @@
      "url": "https://rule.konkuk.ac.kr/lmxsrv/law/lawDetail.do?SEQ=371&LAWGROUP=1&PAGE=1",
      "checked": "2026-11-23"
     }
-   },
-   "aiPending": true
+   }
   },
   {
    "id": "2-22-119868",
