@@ -406,7 +406,7 @@
 
       const transferPresets = req.mode === 'transfer' ? h('div', { class: 'req-presets-wrapper' },
         h('div', { class: 'req-preset-group' },
-          h('span', { class: 'req-preset-group-title' }, '📌 단일전공 기준 (기본 66학점)'),
+          h('span', { class: 'req-preset-group-title' }, Tx.reqPresetSingleTitle || '📌 단일전공 기준 (기본 66학점)'),
           h('div', { class: 'req-presets-bar' },
             h('button', {
               type: 'button',
@@ -655,9 +655,10 @@
         }
       };
 
+      const deptDisplay = (window.GongjiDeptI18n ? window.GongjiDeptI18n.formatDept(req.dept, deps.lang) : req.dept) || req.dept;
       return h('details', { class: 'plan-box req-box', open: !req.found || req.mode === 'transfer' || edited ? true : null },
         h('summary', null, h('span', null, Tx.reqTitle),
-          h('small', null, !req.found ? Tx.reqNoDeptShort : req.mode === 'transfer' ? Tx.reqSourceTransfer(req.dept) : Tx.reqSource(req.dept))),
+          h('small', null, !req.found ? Tx.reqNoDeptShort : req.mode === 'transfer' ? Tx.reqSourceTransfer(deptDisplay) : Tx.reqSource(deptDisplay))),
         h('div', { class: 'seg req-mode', role: 'group' },
           ['regular', 'transfer'].map((m) => h('button', { type: 'button', 'aria-pressed': String(req.mode === m), onclick: () => setMode(m) },
             m === 'transfer' ? Tx.reqModeTransfer : Tx.reqModeRegular))),

@@ -143,18 +143,75 @@
     return p.toString();
   }
 
-  // eXbuilder6 메모리 인스턴스에서 이미 로드된 DataSet 직접 조회
-  function getInMemoryRows() {
+  // eXbuilder6 메모리 인스턴스 (MDI 탭 및 임베디드 앱 포함) 전수 순회
+  function getAllAppInstances() {
+    const res = new Set();
+    function traverseApp(app) {
+      if (!app || res.has(app)) return;
+      res.add(app);
+      if (app.getEmbeddedAppInstances) {
+        try {
+          const emb = app.getEmbeddedAppInstances();
+          if (Array.isArray(emb)) emb.forEach(traverseApp);
+        } catch {}
+      }
+      if (app.getAllRecursiveChildren) {
+        try {
+          const children = app.getAllRecursiveChildren();
+          for (const c of children) {
+            if (c && c.getEmbeddedAppInstance) {
+              const sub = c.getEmbeddedAppInstance();
+              if (sub) traverseApp(sub);
+            }
+          }
+        } catch {}
+      }
+    }
     try {
       if (window.cpr && window.cpr.core && window.cpr.core.Platform) {
         const platform = window.cpr.core.Platform.INSTANCE;
-        const instances = platform._appInstances || (platform.getMountedAppInstances ? platform.getMountedAppInstances() : []);
-        for (const app of instances) {
-          if (!app || !app.lookup) continue;
-          const ds = app.lookup('DS_SUSTTIMETABLE') || app.lookup('DS_LECTUREINFO') || app.lookup('DS_TIMETABLE');
-          if (ds && ds.getRowDataRanged) {
-            const data = ds.getRowDataRanged();
-            if (Array.isArray(data) && data.length > 0) return data;
+        const roots = platform._appInstances || (platform.getMountedAppInstances ? platform.getMountedAppInstances() : []);
+        if (Array.isArray(roots)) roots.forEach(traverseApp);
+      }
+    } catch {}
+    return Array.from(res);
+  }
+
+  // eXbuilder6 메모리 인스턴스에서 이미 로드된 DataSet 직접 조회
+  function getInMemoryRows() {
+    try {
+      const apps = getAllAppInstances();
+      for (const app of apps) {
+        if (!app) continue;
+        // 1. 모든 데이터 컨트롤 전수 조사
+        if (app.getAllDataControls) {
+          try {
+            const controls = app.getAllDataControls();
+            for (const ctrl of controls) {
+              if (ctrl && ctrl.getRowDataRanged) {
+                const data = ctrl.getRowDataRanged();
+                if (Array.isArray(data) && data.length > 0) {
+                  if (data.some(r => r && (r.CORS_KOR_NM || r.TYPL_KOR_NM || r.SBJT_NM || r.HAKSU_ID || r.ROOM_NM || r.LT_DAY_TIME))) {
+                    return data;
+                  }
+                }
+              }
+            }
+          } catch {}
+        }
+        // 2. 알려진 DataSet ID 직접 조회
+        const knownKeys = [
+          'DS_SUSTTIMETABLE', 'dsSustTimeTable', 'dsSustTimetable', 'dsCourTotalTimetableInq',
+          'DS_LECTUREINFO', 'dsLectureInfo', 'DS_TIMETABLE', 'dsTimetable', 'DS_LIST', 'dsList',
+          'dsMain', 'DS_MAIN', 'dsGrid', 'DS_GRID', 'DS_SUGANGINFO', 'dsSugangInfo'
+        ];
+        if (app.lookup) {
+          for (const k of knownKeys) {
+            const ds = app.lookup(k);
+            if (ds && ds.getRowDataRanged) {
+              const data = ds.getRowDataRanged();
+              if (Array.isArray(data) && data.length > 0) return data;
+            }
           }
         }
       }
@@ -162,15 +219,51 @@
     return null;
   }
 
+  // eXbuilder6 화면 Grid DOM 파싱 (최후의 보루 폴백)
+  function getDomRows() {
+    try {
+      const rows = document.querySelectorAll('.cl-grid-row, .cl-grid-body tr, table.grid-table tr');
+      if (!rows || rows.length < 5) return null;
+      const parsed = [];
+      rows.forEach(tr => {
+        const cells = Array.from(tr.querySelectorAll('.cl-grid-cell, td')).map(td => td.textContent.trim());
+        if (cells.length >= 8) {
+          // No, 학년, 학수번호, 이수구분, 과목번호, 교과목명, 비고, 학점, 시간, 개설학과...
+          const haksu = cells.find(c => /^[A-Z0-9]{7,10}$/.test(c)) || '';
+          const name = cells.find(c => c.length >= 2 && !/^\d+$/.test(c) && !/^[A-Z0-9]{7,10}$/.test(c) && !/^(전선|전필|일선|교양|기초|심화|소양)/.test(c)) || '';
+          if (name) {
+            parsed.push({
+              TYPL_KOR_NM: name,
+              CORS_KOR_NM: name,
+              HAKSU_ID: haksu,
+              ROOM_NM: cells.find(c => /(관|호|실|\d{3,4})/.test(c)) || '',
+              LT_DAY_TIME: cells.find(c => /(월|화|수|목|금|토)\d{4}/.test(c)) || '',
+              KOR_NM: cells.find(c => /^[가-힣]{2,4}$/.test(c)) || ''
+            });
+          }
+        }
+      });
+      return parsed.length > 5 ? parsed : null;
+    } catch {}
+    return null;
+  }
+
   async function fetchLectures(year, term) {
-    // 1. 이미 화면(종합강의시간표조회)에 로드된 1474개 데이터셋이 있으면 즉시 전달
+    // 1. 이미 화면(종합강의시간표조회) 메모리에 로드된 데이터셋이 있으면 즉시 전달
     const inMem = getInMemoryRows();
     if (inMem && inMem.length) {
       post({ type: 'lectures', year, term, rows: inMem, isPersonal: false });
       return;
     }
 
-    // 2. 화면에서 가로챈 템플릿 또는 종합강의시간표조회(CourTotalTimetableInq) 엔드포인트 직접 호출
+    // 2. 화면 Grid DOM에 렌더링된 데이터가 있으면 즉시 추출
+    const domRows = getDomRows();
+    if (domRows && domRows.length) {
+      post({ type: 'lectures', year, term, rows: domRows, isPersonal: false });
+      return;
+    }
+
+    // 3. 화면에서 가로챈 템플릿 또는 종합강의시간표조회(CourTotalTimetableInq) 엔드포인트 직접 호출
     const endpoints = [];
     if (template) {
       endpoints.push({ url: template.url, body: template.body, headers: template.headers });
@@ -181,7 +274,22 @@
       headers: {}
     });
     endpoints.push({
+      url: 'CourTotalTimetableInq/find.do',
+      body: totalTimetableBody(year, term),
+      headers: {}
+    });
+    endpoints.push({
+      url: '/kis/CourTotalTimetableInq/find.do',
+      body: totalTimetableBody(year, term),
+      headers: {}
+    });
+    endpoints.push({
       url: '/CourLectureAplyInqPop/find.do',
+      body: defaultBody(year, term),
+      headers: {}
+    });
+    endpoints.push({
+      url: 'CourLectureAplyInqPop/find.do',
       body: defaultBody(year, term),
       headers: {}
     });
@@ -189,7 +297,7 @@
     let success = false;
     for (const ep of endpoints) {
       try {
-        const targetUrl = new URL(ep.url, location.origin).href;
+        const targetUrl = new URL(ep.url, location.href).href;
         const res = await fetch(targetUrl, {
           method: 'POST', credentials: 'same-origin',
           headers: {

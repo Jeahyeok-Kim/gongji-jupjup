@@ -311,6 +311,7 @@
       const brandH1 = $('#brand-title') || document.querySelector('.brand h1');
       if (brandH1) {
         brandH1.title = state.lang === 'ko' ? '공지 줍줍' : `${t().brandName} (원제: 공지 줍줍)`;
+        if (t().brandLogo) brandH1.innerHTML = t().brandLogo;
       }
     }
     const aboutVer = $('#about-ver') || document.querySelector('.settings-about-ver');
@@ -3675,25 +3676,34 @@
       const st = cur >= e ? 'done' : cur >= s ? 'now' : (!nextMarked ? 'next' : '');
       if (st === 'next' || st === 'now') nextMarked = true;
       const prof = c.prof || c.p || '';
-      const meta = [prof ? `${prof} 교수` : '', c.room].filter(Boolean).join(' · ');
+      const DI18n = (typeof window !== 'undefined' && window.GongjiDeptI18n) || root.GongjiDeptI18n;
+      const CR = (typeof window !== 'undefined' && window.GongjiCampusRoute) || root.GongjiCampusRoute;
+      const courseTitle = (DI18n && DI18n.formatCourse) ? DI18n.formatCourse(c.name, state.lang) : (c.name || T.classFallback);
+      const roomFormatted = (CR && CR.formatRoom) ? CR.formatRoom(c.room, state.lang) : (c.room || '');
+      const meta = [prof ? `${prof} 교수` : '', roomFormatted].filter(Boolean).join(' · ');
       rows.push(h('li', { class: 'home-row tc-row' + (st ? ' ' + st : '') },
         h('span', { class: 'tc-time' }, `${c.start}–${c.end}`),
-        h('span', { class: 'tc-name' }, c.name || T.classFallback, meta ? h('small', null, meta) : null),
+        h('span', { class: 'tc-name' }, courseTitle, meta ? h('small', null, meta) : null),
         st === 'now' ? h('span', { class: 'tc-badge now' }, T.classNow) : st === 'next' ? h('span', { class: 'tc-badge' }, T.classNext) : null));
     });
     // 오늘 남은 수업이 없으면 다음 수업이 언제인지 알려 준다
     let foot = '';
+    const DI18n = (typeof window !== 'undefined' && window.GongjiDeptI18n) || root.GongjiDeptI18n;
+    const CR = (typeof window !== 'undefined' && window.GongjiCampusRoute) || root.GongjiCampusRoute;
     if (!today.some((c) => toMin(c.end) > cur)) {
       for (let i = 1; i <= 7 && !foot; i++) {
         const d = (dow + i) % 7;
         const first = tt.filter((c) => c.day === d && !c.elearn && c.start).sort(byStart)[0];
-        if (first) foot = T.nextClass(dayName(d), first.start, first.name || T.classFallback);
+        if (first) {
+          const fn = (DI18n && DI18n.formatCourse) ? DI18n.formatCourse(first.name, state.lang) : (first.name || T.classFallback);
+          foot = T.nextClass(dayName(d), first.start, fn);
+        }
       }
     }
     const elearn = tt.filter((c) => c.elearn || c.m === 'elearn' || !c.start);
     let elearnNote = null;
     if (elearn.length) {
-      const names = elearn.map((ec) => ec.name || T.classFallback).join(' · ');
+      const names = elearn.map((ec) => ((DI18n && DI18n.formatCourse) ? DI18n.formatCourse(ec.name, state.lang) : ec.name) || T.classFallback).join(' · ');
       const labelText = state.lang === 'en' ? `💻 E-learning (${elearn.length})`
         : state.lang === 'zh' ? `💻 网课 (${elearn.length})`
         : state.lang === 'ja' ? `💻 eラーニング (${elearn.length})`
@@ -3723,22 +3733,26 @@
     if (ongoing) {
       const remMin = toMin(ongoing.end) - cur;
       const op = ongoing.prof || ongoing.p || '';
+      const onName = (DI18n && DI18n.formatCourse) ? DI18n.formatCourse(ongoing.name, state.lang) : ongoing.name;
+      const onRoom = (CR && CR.formatRoom) ? CR.formatRoom(ongoing.room, state.lang) : (ongoing.room || '강의실 미지정');
       liveBanner = h('div', { class: 'tc-live-banner is-ongoing' },
         h('span', { class: 'tcl-pulse-dot red' }),
         h('div', { class: 'tcl-info' },
           h('strong', { class: 'tcl-title' }, `지금 수업 중 (${remMin}분 남음)`),
-          h('span', { class: 'tcl-sub' }, `${ongoing.name} · ${ongoing.room || '강의실 미지정'}${op ? ` (${op} 교수)` : ''}`)
+          h('span', { class: 'tcl-sub' }, `${onName} · ${onRoom}${op ? ` (${op} 교수)` : ''}`)
         )
       );
     } else if (upcoming) {
       const waitMin = toMin(upcoming.start) - cur;
       const up = upcoming.prof || upcoming.p || '';
       const waitStr = waitMin >= 60 ? `${Math.floor(waitMin / 60)}시간 ${waitMin % 60}분 전` : `${waitMin}분 전`;
+      const upName = (DI18n && DI18n.formatCourse) ? DI18n.formatCourse(upcoming.name, state.lang) : upcoming.name;
+      const upRoom = (CR && CR.formatRoom) ? CR.formatRoom(upcoming.room, state.lang) : (upcoming.room || '강의실 미지정');
       liveBanner = h('div', { class: 'tc-live-banner is-upcoming' },
         h('span', { class: 'tcl-pulse-dot green' }),
         h('div', { class: 'tcl-info' },
           h('strong', { class: 'tcl-title' }, `다음 수업 (시작 ${waitStr})`),
-          h('span', { class: 'tcl-sub' }, `${upcoming.name} (${upcoming.start}) · ${upcoming.room || '강의실 미지정'}${up ? ` (${up} 교수)` : ''}`)
+          h('span', { class: 'tcl-sub' }, `${upName} (${upcoming.start}) · ${upRoom}${up ? ` (${up} 교수)` : ''}`)
         )
       );
     }
@@ -3760,8 +3774,9 @@
         h('button', {
           type: 'button',
           class: 'link-btn tc-header-link',
+          title: T.seeTimetable || '시간표 보기',
           onclick: () => { location.hash = '#/timetable'; setTab('timetable', true); }
-        }, T.seeTimetable || '시간표 보기')
+        }, h('span', null, T.seeTimetable || '시간표 보기'), h('span', { class: 'tc-link-arrow' }, '↗'))
       )
     );
 
@@ -3839,13 +3854,7 @@
       } else if (g.mode === 'transfer') {
         const majLeft = g.left.major || 0;
         const freeLeft = Math.max(0, g.left.total - majLeft);
-        if (majLeft > 0 && freeLeft > 0) {
-          subText = `전공 ${majLeft} · 자유 ${freeLeft}학점`;
-        } else if (majLeft > 0) {
-          subText = `전공 ${majLeft}학점`;
-        } else {
-          subText = `자유(교양·일선) ${freeLeft}학점`;
-        }
+        subText = T.wGradTransferSub ? T.wGradTransferSub(majLeft, freeLeft) : (majLeft > 0 && freeLeft > 0 ? `전공 ${majLeft} · 자유 ${freeLeft}학점` : majLeft > 0 ? `전공 ${majLeft}학점` : `자유(교양·일선) ${freeLeft}학점`);
       } else {
         subText = T.wGradSub(g.left.major || 0, g.left.general || 0);
       }
@@ -4863,18 +4872,21 @@
       store.set('profile', state.profile);
       profileChanged();
     };
+    const DI18n = (typeof window !== 'undefined' && window.GongjiDeptI18n) || root.GongjiDeptI18n;
+    const curDept = p.dept || state.dept || '';
+    const displayDept = (DI18n && DI18n.formatDept) ? DI18n.formatDept(curDept, state.lang) : curDept;
     const dept = h('input', {
-      type: 'text', id: pre + '-dept', maxlength: '30', value: p.dept || state.dept || '', placeholder: T.profileDeptPh,
+      type: 'text', id: pre + '-dept', maxlength: '60', value: displayDept, placeholder: T.profileDeptPh,
       list: pre + '-dept-list', autocomplete: 'off', 'aria-label': T.profileDept,
       onchange: (e) => {
         const raw = e.target.value.trim();
         const P = window.GongjiPlan;
-        const resolved = (P && P.resolveDept) ? P.resolveDept(raw, DATA.gradreq) : raw;
+        const resolved = (DI18n && DI18n.resolveDept) ? DI18n.resolveDept(raw) : ((P && P.resolveDept) ? P.resolveDept(raw, DATA.gradreq) : raw);
         const val = resolved || raw;
-        e.target.value = val;
         set({ dept: val });
+        e.target.value = (DI18n && DI18n.formatDept) ? DI18n.formatDept(val, state.lang) : val;
         if (resolved && resolved !== raw) {
-          toast(`'${raw}' → [${resolved}] 학과로 자동 인식되었습니다.`);
+          toast(`'${raw}' → [${(DI18n && DI18n.formatDept) ? DI18n.formatDept(resolved, state.lang) : resolved}] 학과로 자동 인식되었습니다.`);
         }
       }
     });
@@ -4891,9 +4903,10 @@
         h('span', { class: 'pf-label' }, T.profileDept), dept),
       h('label', { class: 'toggle pf-intl' },
         h('input', { type: 'checkbox', checked: p.intl, onchange: (e) => set({ intl: e.target.checked }) }), h('span', null, T.profileIntl)),
-      h('datalist', { id: pre + '-dept-list' }, deptList().map((d) => h('option', { value: d }))),
-      p.set ? h('p', { class: 'fine ok-note' }, '✓ ' + T.profileSaved + ' ',
-        h('button', { type: 'button', class: 'link-btn', onclick: () => { state.profile = cleanProfile(null); store.set('profile', null); profileChanged(); } }, T.profileClear)) : null);
+      h('datalist', { id: pre + '-dept-list' }, deptList().map((d) => h('option', { value: (DI18n && DI18n.formatDept) ? DI18n.formatDept(d, state.lang) : d }))),
+      p.set ? h('div', { class: 'profile-save-status' },
+        h('span', { class: 'ok-note' }, '✓ ' + T.profileSaved),
+        h('button', { type: 'button', class: 'link-btn pf-clear-btn', onclick: () => { state.profile = cleanProfile(null); store.set('profile', null); profileChanged(); } }, T.profileClear)) : null);
   }
   // 학과 이름 후보: 강의 시간표(data/timetable.js)의 개설 학과 + 요람 기준 학과
   let deptCache = null;

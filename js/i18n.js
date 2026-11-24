@@ -357,9 +357,9 @@
     },
 
     ja: {
-      brandName: 'お知らせゲット',
-      brandLogo: 'お知らせ <em>ゲット</em>',
-      tagline: '散らばった学校のお知らせから、自分に合うものだけゲット',
+      brandName: 'お知らせポイポイ',
+      brandLogo: 'お知らせ <em>ポイポイ</em>',
+      tagline: '散らばった学校のお知らせから、自分に合うものだけポイポイ拾おう',
       language: 'Language',
       sampleBanner: '表示中のお知らせは開発用のサンプルです。実際の学校のお知らせではありません。',
       today: '基準日',

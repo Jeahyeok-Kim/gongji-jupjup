@@ -7,10 +7,13 @@
   'use strict';
 
   // 1. 캠퍼스 주요 건물 메타데이터 (고저차, 엘리베이터 유무, 층수, 대운동장 정류장 도보 거리)
+  // 1. 캠퍼스 주요 건물 메타데이터 (공식 K/U 건물 번호, 다국어 명칭, 고저차, 엘리베이터 유무, 대운동장 도보 거리)
   const BUILDINGS = {
     '국제교육관': {
+      code: 'U5',
       name: '국제교육관',
-      aliases: ['국제관', '국제교육', '국제'],
+      names: { ko: '국제교육관', en: "Int'l Education Hall", ja: '国際教育館', zh: '国际教育馆' },
+      aliases: ['국제관', '국제교육', '국제', 'U5', 'u5'],
       hasElevator: false, // 사용자 제보 및 실사: 엘리베이터 없음 (전 층 계단 보행)
       floors: 4,
       elevation: 90, // 저지대 (계곡/후문 부근)
@@ -20,8 +23,10 @@
       note: '엘리베이터가 없어 전 층 계단 이동 필요. 캠퍼스 중앙 이동 시 급경사 헐떡고개 진입.'
     },
     '인문학관': {
-      name: '인문학관',
-      aliases: ['인문관', '인문사회관', '인문사회', '인문'],
+      code: 'K6',
+      name: '인문사회관',
+      names: { ko: '인문사회관', en: 'Humanities & Social Sciences Hall', ja: '人文社会館', zh: '人文社科楼' },
+      aliases: ['인문관', '인문학관', '인문사회관', '인문사회', '인문', 'K6', 'k6'],
       hasElevator: true,
       floors: 5,
       elevation: 112,
@@ -31,8 +36,10 @@
       note: '엘리베이터 운행. 종합강의동 및 중원도서관과 연결 완만.'
     },
     '글로벌이음관': {
-      name: '글로벌이음관',
-      aliases: ['이음관', '글로벌이음'],
+      code: 'U11',
+      name: '글로컬이음관',
+      names: { ko: '글로컬이음관', en: 'GLOCAL Ieum Hall', ja: 'グローカルイウム館', zh: 'GLOCAL连接馆' },
+      aliases: ['이음관', '글로벌이음관', '글로컬이음', '글로벌이음', 'U11', 'u11'],
       hasElevator: true,
       floors: 5,
       elevation: 110,
@@ -42,8 +49,10 @@
       note: '최신 시설 및 엘리베이터 운행.'
     },
     '중원도서관': {
+      code: 'U7',
       name: '중원도서관',
-      aliases: ['도서관', '중도'],
+      names: { ko: '중원도서관', en: 'Jungwon Library', ja: '中原図書館', zh: '中原图书馆' },
+      aliases: ['도서관', '중도', 'U7', 'u7'],
       hasElevator: true,
       floors: 6,
       elevation: 115,
@@ -53,19 +62,23 @@
       note: '캠퍼스 중앙 허브. 각 건물 간 지름길 샛길 교차점.'
     },
     '종합강의동': {
-      name: '종합강의동',
-      aliases: ['종강동', '종합관', '종강'],
-      hasElevator: true, // 2대 운행
+      code: 'U5',
+      name: '종합강의동(국제교육관)',
+      names: { ko: '종합강의동(국제교육관)', en: 'General Lecture Hall (U5)', ja: '総合講義棟(U5)', zh: '综合教学楼(U5)' },
+      aliases: ['종강동', '종합관', '종강', '종합강의'],
+      hasElevator: true,
       floors: 6,
       elevation: 122,
       shuttleDistM: 390,
       shuttleWalkMin: 6,
       zone: 'central_high',
-      note: '대형 강의실 다수 배치. 쉬는 시간 엘리베이터 혼잡(계단 병행 권장).'
+      note: '대형 강의실 다수 배치. 쉬는 시간 엘리베이터 혼잡.'
     },
     '공학관': {
-      name: '공학관',
-      aliases: ['공대', '제1공학관', '공학'],
+      code: 'U4',
+      name: '자연과학·공학관',
+      names: { ko: '자연과학·공학관', en: 'Natural Sciences & Engineering Hall', ja: '自然科学・工学館', zh: '自然科学·工学楼' },
+      aliases: ['공대', '제1공학관', '공학', '공학관', '자연과학관', 'U4', 'u4'],
       hasElevator: true,
       floors: 5,
       elevation: 124,
@@ -75,7 +88,9 @@
       note: '엘리베이터 운행. 모빌리티융합관 및 종합강의동과 인접(평지 3분).'
     },
     '모빌리티융합관': {
+      code: 'U4',
       name: '모빌리티융합관',
+      names: { ko: '모빌리티융합관', en: 'Mobility Convergence Hall', ja: 'モビリティ融合館', zh: '移动出行融合楼' },
       aliases: ['모빌리티관', '모빌리티', '신공학관'],
       hasElevator: true,
       floors: 5,
@@ -86,8 +101,10 @@
       note: '엘리베이터 운행. 공학관과 브릿지/인접 보도 연결.'
     },
     '의생명과학관': {
-      name: '의생명과학관',
-      aliases: ['의생명관', '의생명', '자연과학관', '생명관'],
+      code: 'U2',
+      name: '생명과학관',
+      names: { ko: '생명과학관', en: 'Life Sciences Hall', ja: '生命科学館', zh: '生命科学楼' },
+      aliases: ['의생명과학관', '의생명관', '의생명', '생명관', '생명과학관', 'U2', 'u2'],
       hasElevator: true,
       floors: 6,
       elevation: 138, // 최고 지대
@@ -97,19 +114,23 @@
       note: '캠퍼스 상단 위치. 국제교육관 등 저지대에서 도보 이동 시 고저차 48m 등판 필요.'
     },
     '간호대학': {
-      name: '간호대학',
-      aliases: ['간호관', '간호대'],
+      code: 'K2',
+      name: '의학·간호대학',
+      names: { ko: '의학·간호대학', en: 'Medical & Nursing Hall', ja: '医学・看護館', zh: '医学·护理楼' },
+      aliases: ['간호관', '간호대', '의학관', '간호대학', 'K2', 'k2'],
       hasElevator: true,
       floors: 4,
       elevation: 135,
       shuttleDistM: 450,
       shuttleWalkMin: 7,
       zone: 'high',
-      note: '의생명과학관 인근 상단 지대.'
+      note: '생명과학관 인근 상단 지대.'
     },
     '디자인문화관': {
-      name: '디자인문화관',
-      aliases: ['디자인관', '디문관', '디자인'],
+      code: 'U6',
+      name: '창의예술·디자인관',
+      names: { ko: '창의예술·디자인관', en: 'Creative Arts & Design Hall', ja: '創意芸術・デザイン館', zh: '创意艺术·设计楼' },
+      aliases: ['디자인문화관', '디자인관', '디문관', '디자인', '창의예술관', 'U6', 'u6'],
       hasElevator: true,
       floors: 5,
       elevation: 116,
@@ -119,7 +140,9 @@
       note: '실습실 다수. 조형예술관과 인접.'
     },
     '조형예술관': {
+      code: 'U6',
       name: '조형예술관',
+      names: { ko: '조형예술관', en: 'Plastic Arts Hall', ja: '造形芸術館', zh: '造型艺术楼' },
       aliases: ['조형관', '예술관', '조예관'],
       hasElevator: true,
       floors: 4,
@@ -127,11 +150,13 @@
       shuttleDistM: 400,
       shuttleWalkMin: 6,
       zone: 'west',
-      note: '디자인문화관 옆.'
+      note: '창의예술관 옆.'
     },
     '학생회관': {
+      code: 'K1',
       name: '학생회관',
-      aliases: ['학관'],
+      names: { ko: '학생회관', en: 'Student Union', ja: '学生会館', zh: '学生会馆' },
+      aliases: ['학관', '학생회관', 'K1', 'k1'],
       hasElevator: true,
       floors: 4,
       elevation: 110,
@@ -141,8 +166,10 @@
       note: '식당 및 학생 편의시설. 대운동장 셔틀 정류장과 가장 가까움.'
     },
     '대운동장': {
-      name: '대운동장',
-      aliases: ['운동장', '셔틀정류장', '정류장', '스포츠콤플렉스'],
+      code: 'U14',
+      name: '대운동장(셔틀승하차장)',
+      names: { ko: '대운동장(셔틀승하차장)', en: 'Main Stadium & Shuttle Stop', ja: '大運動場(シャトル乗り場)', zh: '大运动场(班车站)' },
+      aliases: ['운동장', '셔틀정류장', '정류장', '스포츠콤플렉스', '건국터미널', 'U14'],
       hasElevator: false,
       floors: 1,
       elevation: 105,
@@ -199,6 +226,32 @@
       floor: floor,
       isOnline: false
     };
+  }
+
+  // 강의실 문자열을 다국어 및 공식 K/U 건물 코드와 함께 포맷
+  // 예: "국제교육관 302-2", 'ja' -> "[U5] 国際教育館 302-2 (국제교육관 302-2)"
+  // 예: "국제교육관 302-2", 'ko' -> "[U5] 국제교육관 302-2"
+  function formatRoom(roomStr, lang) {
+    const raw = String(roomStr || '').trim();
+    if (!raw) return lang === 'en' ? 'TBD' : lang === 'ja' ? '教室未定' : lang === 'zh' ? '教室待定' : '강의실 미정';
+    if (/이러닝|원격|온라인|cyber|사이버/i.test(raw)) {
+      return lang === 'en' ? '💻 E-learning' : lang === 'ja' ? '💻 eラーニング' : lang === 'zh' ? '💻 网课' : '💻 이러닝';
+    }
+    const meta = parseRoom(raw);
+    const b = meta.buildingMeta;
+    if (!b) return raw;
+
+    const code = b.code ? `[${b.code}] ` : '';
+    const localizedBldg = (b.names && b.names[lang]) || b.name;
+    const roomNumMatch = raw.match(/([B\d]+(?:-\d+)?(?:호)?)/);
+    const roomNum = roomNumMatch ? roomNumMatch[1] : '';
+
+    if (!lang || lang === 'ko') {
+      return `${code}${b.name}${roomNum ? ' ' + roomNum : ''}`;
+    }
+    const localized = `${code}${localizedBldg}${roomNum ? ' ' + roomNum : ''}`;
+    const original = `${b.name}${roomNum ? ' ' + roomNum : ''}`;
+    return `${localized} (${original})`;
   }
 
   // 두 강의실 간 이동 동선, 소요 시간, 헐떡고개 경보 계산
@@ -538,6 +591,7 @@
   return {
     BUILDINGS,
     parseRoom,
+    formatRoom,
     calculateRoute,
     TRANSIT_DATA,
     getTransitRecommendation
