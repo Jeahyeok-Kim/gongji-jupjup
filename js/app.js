@@ -343,14 +343,15 @@
     if (state.savedOnly) { const keep = new Set(state.saved); base = base.filter((n) => keep.has(n.id)); }
     if (state.mineOnly) base = base.filter((n) => mineOf(n).any);
     if (state.keywordsOnly) {
-      const kwList = (state.keywords || []).map((k) => k.toLowerCase());
+      const kwList = (state.keywords || []).map((k) => k.toLowerCase()).filter(Boolean);
       if (kwList.length) {
         base = base.filter((n) => {
           const t = (n.title || '').toLowerCase();
           const sm = S.pick(n, state.lang);
           const s = (sm && sm.text ? sm.text : '').toLowerCase();
           const b = (n.bodyText || '').toLowerCase();
-          return kwList.some((k) => t.includes(k) || s.includes(k) || b.includes(k));
+          const haystack = `${t} ${s} ${b}`;
+          return kwList.some((k) => haystack.includes(k));
         });
       }
     }
@@ -695,7 +696,15 @@
           h('input', { type: 'checkbox', checked: c.d ? true : null, onchange: () => setTrack(K.toggleCheck(state.track, n.id, i), n.id) }),
           h('span', null, c.t)),
         h('button', { type: 'button', class: 'icon-x', 'aria-label': `${c.t} ${T.histRemove}`, onclick: () => setTrack(K.removeCheck(state.track, n.id, i), n.id) }, '×')))) : null,
-      h('form', { class: 'check-add', onsubmit: (ev) => { ev.preventDefault(); const v = ev.currentTarget.elements.c.value; if (v.trim()) setTrack(K.addCheck(state.track, n.id, v), n.id); } },
+      h('form', { class: 'check-add', onsubmit: (ev) => {
+        ev.preventDefault();
+        const input = ev.currentTarget.elements.c;
+        const v = input ? input.value : '';
+        if (v && v.trim()) {
+          setTrack(K.addCheck(state.track, n.id, v.trim()), n.id);
+          input.value = '';
+        }
+      } },
         h('input', { name: 'c', type: 'text', maxlength: '40', placeholder: T.checkPh, 'aria-label': T.checkPh }),
         h('button', { type: 'submit', class: 'btn small' }, T.checkAdd)),
       h('div', { class: 'check-sugg' }, (T.checkSuggest || K.SUGGEST).filter((x) => !checks.some((c) => c.t === x)).slice(0, 6)
@@ -4103,6 +4112,7 @@
     renderAskExamples();
     renderAsk();
     renderList();
+    renderFilterPresets();
     renderTimetable();
     renderCurriculum();
     if (planUI) planUI.render();
@@ -4122,6 +4132,10 @@
     if ($('#welcome').open) renderWelcome();
     if (boot.visible && !$('#boot').hidden) renderBoot($('#boot-card').querySelector('.boot-actions') ? 'failed' : 'loading');
     if ($('#detail').open && state.openId) openDetail(state.openId, true);
+    // 향상된 커스텀 위젯들(주간 타임라인, 오늘 마감 투두 등) 언어 동기화 트리거
+    try {
+      window.dispatchEvent(new CustomEvent('gongji:renderall', { detail: { lang: state.lang } }));
+    } catch (_) {}
   }
 
   // ---------- 이벤트 연결 ----------

@@ -386,13 +386,17 @@
   }
 
   /* ═══════════════════════════════════════════════════════
-     8. 주간 마감 타임라인 위젯 (모던 카드 덱 리디자인)
-        모바일 & 데스크톱 모두 시원한 가로 스크롤 카드 덱
+     8. 주간 마감 타임라인 위젯 (모던 프리미엄 리디자인)
+        데스크톱: 7컬럼 모던 칸반 보드
+        모바일: 스마트 요일 캡슐 탭 + 선택 요일 시원한 카드 덱
      ═══════════════════════════════════════════════════════ */
   function renderWeekTimeline() {
     const notices = window.GONGJI_DATA && window.GONGJI_DATA.notices;
     if (!notices || !notices.length) return;
-    if ($('.week-timeline-sec')) return;
+
+    // 언어 변경 및 리프레시 시 기존 위젯 깨끗하게 재구성
+    const existing = $('.week-timeline-sec');
+    if (existing) existing.remove();
 
     const lang = document.documentElement.lang || localStorage.getItem('gongji:lang') || 'ko';
     const I = window.GongjiI18n;
@@ -423,14 +427,11 @@
       return dl >= today && dl <= weekEnd;
     });
 
-    if (withDeadline.length < 2) return; // 2개 미만이면 표시 불필요
+    if (withDeadline.length < 1) return; // 1개 이상이면 표시
 
     const saved = (() => {
       try { return JSON.parse(localStorage.getItem('gongji:saved') || '[]'); } catch { return []; }
     })();
-
-    const timeline = document.createElement('div');
-    timeline.className = 'week-timeline';
 
     const CAT_COLORS = {
       '장학': 'var(--badge-money, #f59e0b)',
@@ -439,6 +440,134 @@
       '행사': '#8b5cf6',
       '기타': 'var(--badge-info, #64748b)'
     };
+
+    // 요일별 공지 매핑
+    const dayMap = {};
+    days.forEach(d => {
+      const dayStr = d.toISOString().slice(0, 10);
+      dayMap[dayStr] = withDeadline.filter(n => n.deadline && n.deadline.startsWith(dayStr));
+    });
+
+    // 섹션 컨테이너
+    const sec = document.createElement('div');
+    sec.className = 'home-card week-timeline-sec';
+    sec.style.marginTop = '0';
+
+    // 1. 헤더 영역
+    const headWrap = document.createElement('div');
+    headWrap.className = 'wt-sec-head';
+
+    const titleWrap = document.createElement('div');
+    titleWrap.className = 'wt-sec-title-wrap';
+
+    const h3 = document.createElement('h3');
+    h3.className = 'wt-sec-title';
+    h3.innerHTML = `📅 <span>${T.timelineTitle || '이번 주 마감 타임라인'}</span>`;
+
+    const count = document.createElement('span');
+    count.className = 'wt-sec-count';
+    count.textContent = T.unitCount ? `${withDeadline.length}${T.unitCount}` : `${withDeadline.length}`;
+    h3.append(count);
+
+    const sub = document.createElement('p');
+    sub.className = 'wt-sec-sub';
+    sub.textContent = T.timelineSub || '다가오는 일주일간의 주요 마감 일정입니다.';
+
+    titleWrap.append(h3, sub);
+
+    const viewAllBtn = document.createElement('button');
+    viewAllBtn.type = 'button';
+    viewAllBtn.className = 'wt-view-all-btn';
+    viewAllBtn.textContent = T.timelineViewAll || (lang === 'en' ? 'View all in list ↗' : lang === 'zh' ? '在列表中查看 ↗' : lang === 'ja' ? '一覧で確認 ↗' : '전체 마감 목록 ↗');
+    viewAllBtn.onclick = () => {
+      location.hash = '#/list';
+      if (window.GongjiApp && window.GongjiApp.goList) {
+        window.GongjiApp.goList({ due: 'soon', sort: 'deadline' });
+      }
+    };
+
+    headWrap.append(titleWrap, viewAllBtn);
+    sec.append(headWrap);
+
+    // 공지 카드 생성 헬퍼 함수
+    function createNoticeCard(n, isCompact = false) {
+      const item = document.createElement('button');
+      item.type = 'button';
+      item.className = 'wt-item' + (isCompact ? ' is-compact' : '');
+
+      const dl = new Date(n.deadline);
+      const hoursLeft = (dl - Date.now()) / 3600_000;
+      if (hoursLeft < 24) item.classList.add('is-urgent');
+      if (saved.includes(n.id)) item.classList.add('is-saved');
+
+      const cat = n.category || '기타';
+      const catColor = CAT_COLORS[cat] || CAT_COLORS['기타'];
+      item.style.setProperty('--wt-cat-color', catColor);
+
+      // 상단 메타 바
+      const metaRow = document.createElement('div');
+      metaRow.className = 'wt-item-meta';
+
+      const catTag = document.createElement('span');
+      catTag.className = 'wt-item-cat';
+      catTag.textContent = cat;
+
+      const ddayTag = document.createElement('span');
+      ddayTag.className = 'wt-item-dday';
+      const daysLeft = Math.ceil(hoursLeft / 24);
+      if (hoursLeft <= 24) {
+        ddayTag.textContent = T.dueToday || '오늘 마감';
+        ddayTag.classList.add('urgent');
+      } else {
+        ddayTag.textContent = `D-${daysLeft}`;
+      }
+
+      metaRow.append(catTag, ddayTag);
+
+      // 제목
+      const titleEl = document.createElement('div');
+      titleEl.className = 'wt-item-title';
+      const title = (lang !== 'ko' && n.titleTr && n.titleTr[lang]) || n.title;
+      titleEl.textContent = title;
+      item.title = title;
+
+      item.append(metaRow, titleEl);
+
+      // 모바일 등 여유 공간이 있을 때 혜택/게시판 배지 추가
+      if (!isCompact && ((n.benefit && n.benefit.text) || n.boardName)) {
+        const extraRow = document.createElement('div');
+        extraRow.className = 'wt-item-extra';
+        if (n.boardName) {
+          const boardTag = document.createElement('span');
+          boardTag.className = 'wt-extra-tag';
+          boardTag.textContent = n.boardName;
+          extraRow.append(boardTag);
+        }
+        if (n.benefit && n.benefit.text) {
+          const benTag = document.createElement('span');
+          benTag.className = 'wt-extra-benefit';
+          benTag.textContent = n.benefit.text;
+          extraRow.append(benTag);
+        }
+        item.append(extraRow);
+      }
+
+      item.addEventListener('click', () => {
+        if (window.GongjiApp && window.GongjiApp.openDetail) {
+          window.GongjiApp.openDetail(n.id);
+        } else {
+          location.hash = '#/n/' + encodeURIComponent(n.id);
+        }
+      });
+
+      return item;
+    }
+
+    // ═══════════════════════════════════════════════════════
+    // [1] 데스크톱 뷰: 7컬럼 모던 칸반 보드
+    // ═══════════════════════════════════════════════════════
+    const desktopTimeline = document.createElement('div');
+    desktopTimeline.className = 'week-timeline wt-grid-desktop';
 
     let todayColEl = null;
 
@@ -449,12 +578,12 @@
       if (isToday) todayColEl = col;
 
       const dayStr = day.toISOString().slice(0, 10);
-      const items = withDeadline.filter(n => n.deadline && n.deadline.startsWith(dayStr));
+      const items = dayMap[dayStr] || [];
       const mm = String(day.getMonth() + 1);
       const dd = String(day.getDate());
       const dateText = `${mm}.${dd}`;
 
-      // 요일 컬럼 상단 헤더
+      // 컬럼 헤더
       const colHead = document.createElement('div');
       colHead.className = 'wt-col-head';
 
@@ -491,7 +620,7 @@
       colHead.append(headLeft, headRight);
       col.append(colHead);
 
-      // 공지 리스트
+      // 컬럼 공지 목록
       const colBody = document.createElement('div');
       colBody.className = 'wt-col-body';
 
@@ -502,112 +631,172 @@
         colBody.append(empty);
       } else {
         items.slice(0, 5).forEach(n => {
-          const item = document.createElement('button');
-          item.type = 'button';
-          item.className = 'wt-item';
-
-          const dl = new Date(n.deadline);
-          const hoursLeft = (dl - Date.now()) / 3600_000;
-          if (hoursLeft < 24) item.classList.add('is-urgent');
-          if (saved.includes(n.id)) item.classList.add('is-saved');
-
-          // 카테고리 액센트 바 색상
-          const cat = n.category || '기타';
-          const catColor = CAT_COLORS[cat] || CAT_COLORS['기타'];
-          item.style.setProperty('--wt-cat-color', catColor);
-
-          // 상단 메타 바 (카테고리 칩 + D-Day)
-          const metaRow = document.createElement('div');
-          metaRow.className = 'wt-item-meta';
-
-          const catTag = document.createElement('span');
-          catTag.className = 'wt-item-cat';
-          catTag.textContent = cat;
-
-          const ddayTag = document.createElement('span');
-          ddayTag.className = 'wt-item-dday';
-          const daysLeft = Math.ceil(hoursLeft / 24);
-          if (hoursLeft <= 24) {
-            ddayTag.textContent = T.dueToday || '오늘 마감';
-            ddayTag.classList.add('urgent');
-          } else {
-            ddayTag.textContent = `D-${daysLeft}`;
-          }
-
-          metaRow.append(catTag, ddayTag);
-
-          // 공지 제목 (언어별 번역 지원)
-          const titleEl = document.createElement('div');
-          titleEl.className = 'wt-item-title';
-          const title = (lang !== 'ko' && n.titleTr && n.titleTr[lang]) || n.title;
-          titleEl.textContent = title;
-          item.title = title;
-
-          item.append(metaRow, titleEl);
-          item.addEventListener('click', () => {
-            location.hash = '#/n/' + encodeURIComponent(n.id);
-          });
-          colBody.append(item);
+          colBody.append(createNoticeCard(n, true));
         });
 
         if (items.length > 5) {
-          const more = document.createElement('p');
-          more.className = 'wt-more-hint';
-          more.textContent = `+${items.length - 5}`;
-          colBody.append(more);
+          const moreBtn = document.createElement('button');
+          moreBtn.type = 'button';
+          moreBtn.className = 'wt-more-hint-btn';
+          moreBtn.textContent = `+${items.length - 5}건 더보기 ↗`;
+          moreBtn.onclick = () => {
+            if (window.GongjiApp && window.GongjiApp.goList) {
+              window.GongjiApp.goList({ due: 'soon', sort: 'deadline' });
+            }
+          };
+          colBody.append(moreBtn);
         }
       }
 
       col.append(colBody);
-      timeline.append(col);
+      desktopTimeline.append(col);
     });
 
-    // 섹션 감싸기
-    const sec = document.createElement('div');
-    sec.className = 'home-card week-timeline-sec';
-    sec.style.marginTop = '0';
+    enableDragScroll(desktopTimeline);
+    sec.append(desktopTimeline);
 
-    const headWrap = document.createElement('div');
-    headWrap.className = 'wt-sec-head';
+    // ═══════════════════════════════════════════════════════
+    // [2] 모바일 뷰: 스마트 요일 캡슐 탭 + 선택 요일 시원한 카드 덱
+    // ═══════════════════════════════════════════════════════
+    const mobileTimeline = document.createElement('div');
+    mobileTimeline.className = 'wt-deck-mobile';
 
-    const titleWrap = document.createElement('div');
-    titleWrap.className = 'wt-sec-title-wrap';
+    // 기본 선택 요일: 오늘(마감 있든 없든) 또는 마감 있는 가장 가까운 요일
+    let selectedDayIdx = days.findIndex(d => d.getTime() === today.getTime());
+    if (selectedDayIdx === -1) selectedDayIdx = 0;
 
-    const h3 = document.createElement('h3');
-    h3.className = 'wt-sec-title';
-    h3.innerHTML = `📅 <span>${T.timelineTitle || '이번 주 마감 타임라인'}</span>`;
+    // 상단 7일 요일 스트립 바
+    const dayStrip = document.createElement('div');
+    dayStrip.className = 'wt-mob-day-strip';
 
-    const count = document.createElement('span');
-    count.className = 'wt-sec-count';
-    count.textContent = T.unitCount ? `${withDeadline.length}${T.unitCount}` : `${withDeadline.length}`;
-    h3.append(count);
+    const dayBtns = [];
+    const cardDeckContainer = document.createElement('div');
+    cardDeckContainer.className = 'wt-mob-cards-container';
 
-    const sub = document.createElement('p');
-    sub.className = 'wt-sec-sub';
-    sub.textContent = T.timelineSub || '다가오는 일주일간의 주요 마감 일정입니다.';
+    function renderMobileCards(dayIndex) {
+      selectedDayIdx = dayIndex;
+      const targetDay = days[dayIndex];
+      const targetDayStr = targetDay.toISOString().slice(0, 10);
+      const items = dayMap[targetDayStr] || [];
+      const isTargetToday = targetDay.getTime() === today.getTime();
 
-    titleWrap.append(h3, sub);
+      // 버튼 활성 상태 갱신
+      dayBtns.forEach((btn, idx) => {
+        btn.classList.toggle('is-active', idx === dayIndex);
+      });
 
-    const scrollHint = document.createElement('span');
-    scrollHint.className = 'wt-scroll-hint';
-    scrollHint.textContent = '← 스크롤하여 요일별 확인 →';
+      cardDeckContainer.innerHTML = '';
 
-    headWrap.append(titleWrap, scrollHint);
+      // 선택 요일 정보 배너
+      const deckHeader = document.createElement('div');
+      deckHeader.className = 'wt-mob-deck-head';
 
-    enableDragScroll(timeline);
-    sec.append(headWrap, timeline);
+      const deckTitle = document.createElement('span');
+      deckTitle.className = 'wt-mob-deck-title';
+      const mm = String(targetDay.getMonth() + 1);
+      const dd = String(targetDay.getDate());
+      deckTitle.textContent = `${mm}월 ${dd}일 (${DOW_NAMES[targetDay.getDay()]})${isTargetToday ? ' · 오늘 마감' : ''}`;
 
+      const deckCount = document.createElement('span');
+      deckCount.className = 'wt-mob-deck-count';
+      deckCount.textContent = items.length > 0 ? (T.unitCount ? `${items.length}${T.unitCount} 마감` : `${items.length}건 마감`) : '마감 없음';
+      if (items.length > 0) deckCount.classList.add('has-items');
+
+      deckHeader.append(deckTitle, deckCount);
+      cardDeckContainer.append(deckHeader);
+
+      if (items.length === 0) {
+        const emptyDeck = document.createElement('div');
+        emptyDeck.className = 'wt-mob-empty';
+        emptyDeck.innerHTML = `
+          <div class="wt-mob-empty-icon">☕</div>
+          <div class="wt-mob-empty-title">${T.timelineNoDeadlines || '마감 공지가 없습니다'}</div>
+          <div class="wt-mob-empty-sub">이 날은 여유롭게 학업과 휴식을 즐겨보세요!</div>
+        `;
+        cardDeckContainer.append(emptyDeck);
+      } else {
+        const listWrap = document.createElement('div');
+        listWrap.className = 'wt-mob-cards-list';
+        items.forEach(n => {
+          listWrap.append(createNoticeCard(n, false));
+        });
+        cardDeckContainer.append(listWrap);
+      }
+    }
+
+    days.forEach((day, idx) => {
+      const isDayToday = day.getTime() === today.getTime();
+      const dayStr = day.toISOString().slice(0, 10);
+      const items = dayMap[dayStr] || [];
+
+      const dayBtn = document.createElement('button');
+      dayBtn.type = 'button';
+      dayBtn.className = 'wt-mob-day-pill' + (isDayToday ? ' is-today' : '') + (idx === selectedDayIdx ? ' is-active' : '');
+
+      const dowSpan = document.createElement('span');
+      dowSpan.className = 'wt-mob-dow';
+      dowSpan.textContent = DOW_NAMES[day.getDay()];
+
+      const numSpan = document.createElement('span');
+      numSpan.className = 'wt-mob-num';
+      numSpan.textContent = String(day.getDate());
+
+      dayBtn.append(dowSpan, numSpan);
+
+      if (items.length > 0) {
+        const dot = document.createElement('span');
+        dot.className = 'wt-mob-dot';
+        dot.textContent = String(items.length);
+        dayBtn.append(dot);
+      }
+
+      dayBtn.addEventListener('click', () => {
+        renderMobileCards(idx);
+      });
+
+      dayBtns.push(dayBtn);
+      dayStrip.append(dayBtn);
+    });
+
+    mobileTimeline.append(dayStrip, cardDeckContainer);
+
+    // 모바일 터치 스와이프로 요일 전환 제스처
+    let touchStartX = 0;
+    let touchStartY = 0;
+    cardDeckContainer.addEventListener('touchstart', (e) => {
+      touchStartX = e.changedTouches[0].screenX;
+      touchStartY = e.changedTouches[0].screenY;
+    }, { passive: true });
+
+    cardDeckContainer.addEventListener('touchend', (e) => {
+      const diffX = e.changedTouches[0].screenX - touchStartX;
+      const diffY = e.changedTouches[0].screenY - touchStartY;
+      if (Math.abs(diffX) > 45 && Math.abs(diffX) > Math.abs(diffY)) {
+        if (diffX < 0 && selectedDayIdx < 6) {
+          // 오른쪽으로 스와이프 -> 다음 요일
+          renderMobileCards(selectedDayIdx + 1);
+        } else if (diffX > 0 && selectedDayIdx > 0) {
+          // 왼쪽으로 스와이프 -> 이전 요일
+          renderMobileCards(selectedDayIdx - 1);
+        }
+      }
+    }, { passive: true });
+
+    renderMobileCards(selectedDayIdx);
+    sec.append(mobileTimeline);
+
+    // 홈 화면 상단에 주입
     const homeWrap = $('.home-wrap, #home-body');
     if (homeWrap) {
       homeWrap.prepend(sec);
     }
 
-    // 오늘 요일 컬럼으로 부드러운 스크롤 포커스
+    // 데스크톱 오늘 컬럼 포커스 스크롤
     if (todayColEl) {
       setTimeout(() => {
         try {
           const offset = todayColEl.offsetLeft - 16;
-          timeline.scrollTo({ left: Math.max(0, offset), behavior: 'smooth' });
+          desktopTimeline.scrollTo({ left: Math.max(0, offset), behavior: 'smooth' });
         } catch (_) {}
       }, 150);
     }
@@ -1046,6 +1235,15 @@
       if (document.body.dataset.tab === 'home') {
         injected = false;
       }
+    });
+
+    // 언어 변경 및 renderAll 이벤트 시 홈 위젯들 즉시 리프레시
+    window.addEventListener('gongji:renderall', () => {
+      setTimeout(() => {
+        try { renderWeekTimeline(); } catch (_) {}
+        try { renderTodayChecklist(); } catch (_) {}
+        try { renderAcademicDdayWidget(); } catch (_) {}
+      }, 50);
     });
   }
 

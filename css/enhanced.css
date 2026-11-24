@@ -514,21 +514,25 @@ input[type="search"]::-webkit-search-cancel-button:hover {
   }
 }
 
-/* ---- 30. 주간 마감 타임라인 (토스·Linear 모던 카드 덱 리디자인) ---- */
+/* ---- 30. 주간 마감 타임라인 (토스·Apple HIG 모던 프리미엄 리디자인) ---- */
 .week-timeline-sec {
   padding: 18px 20px;
-  border-radius: 16px;
+  border-radius: 18px;
   background: var(--surface);
   border: 1px solid var(--border-soft);
-  box-shadow: var(--shadow-sm);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
   margin-top: 14px;
+  position: relative;
+  overflow: hidden;
 }
 .wt-sec-head {
   display: flex;
-  align-items: flex-end;
+  align-items: center;
   justify-content: space-between;
   gap: 12px;
   flex-wrap: wrap;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--border-soft);
 }
 .wt-sec-title-wrap {
   display: flex;
@@ -536,7 +540,7 @@ input[type="search"]::-webkit-search-cancel-button:hover {
   gap: 3px;
 }
 .wt-sec-title {
-  font-size: 16px;
+  font-size: 16.5px;
   font-weight: 800;
   display: flex;
   align-items: center;
@@ -545,10 +549,10 @@ input[type="search"]::-webkit-search-cancel-button:hover {
   letter-spacing: -0.02em;
 }
 .wt-sec-count {
-  font-size: 12.5px;
-  font-weight: 700;
+  font-size: 12px;
+  font-weight: 800;
   color: var(--accent);
-  background: color-mix(in srgb, var(--accent) 12%, transparent);
+  background: color-mix(in srgb, var(--accent) 14%, transparent);
   padding: 2px 8px;
   border-radius: 12px;
   font-variant-numeric: tabular-nums;
@@ -559,43 +563,46 @@ input[type="search"]::-webkit-search-cancel-button:hover {
   margin: 0;
   letter-spacing: -0.01em;
 }
-.wt-scroll-hint {
-  font-size: 11px;
-  font-weight: 600;
-  color: var(--faint);
-  background: var(--fill);
-  padding: 3px 8px;
-  border-radius: 6px;
-  user-select: none;
+.wt-view-all-btn {
+  font-size: 11.5px;
+  font-weight: 700;
+  color: var(--accent);
+  background: color-mix(in srgb, var(--accent) 8%, transparent);
+  border: 1px solid color-mix(in srgb, var(--accent) 25%, transparent);
+  padding: 5px 11px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all .16s ease;
 }
-.week-timeline {
+.wt-view-all-btn:hover {
+  background: color-mix(in srgb, var(--accent) 18%, transparent);
+  transform: translateY(-1px);
+}
+
+/* ───────────────────────────────────────────────────────────
+   [A] 데스크톱 뷰 (화면 너비 > 768px): 7컬럼 모던 칸반 보드
+   ─────────────────────────────────────────────────────────── */
+.wt-grid-desktop {
   position: relative;
   display: flex;
   gap: 12px;
   overflow-x: auto;
-  padding: 10px 2px 14px 2px;
-  margin-top: 10px;
+  padding: 14px 2px 8px 2px;
   scroll-snap-type: x proximity;
   -webkit-overflow-scrolling: touch;
   scrollbar-width: thin;
   scrollbar-color: var(--border-soft) transparent;
 }
-.week-timeline::-webkit-scrollbar {
+.wt-grid-desktop::-webkit-scrollbar {
   height: 5px;
 }
-.week-timeline::-webkit-scrollbar-track {
-  background: transparent;
-}
-.week-timeline::-webkit-scrollbar-thumb {
+.wt-grid-desktop::-webkit-scrollbar-thumb {
   background: var(--border-soft);
   border-radius: 4px;
 }
-.week-timeline::-webkit-scrollbar-thumb:hover {
-  background: var(--faint);
-}
 .wt-col {
-  flex: 0 0 175px;
-  min-width: 175px;
+  flex: 0 0 178px;
+  min-width: 178px;
   max-width: 210px;
   scroll-snap-align: start;
   background: var(--bg);
@@ -610,12 +617,12 @@ input[type="search"]::-webkit-search-cancel-button:hover {
 }
 .wt-col:hover {
   border-color: var(--border);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.07);
 }
 .wt-col.is-today {
   border: 1.5px solid var(--accent);
-  background: color-mix(in srgb, var(--accent) 5%, var(--bg));
-  box-shadow: 0 4px 16px color-mix(in srgb, var(--accent) 14%, transparent);
+  background: color-mix(in srgb, var(--accent) 4%, var(--bg));
+  box-shadow: 0 6px 20px color-mix(in srgb, var(--accent) 16%, transparent);
 }
 .wt-col-head {
   display: flex;
@@ -627,7 +634,7 @@ input[type="search"]::-webkit-search-cancel-button:hover {
 .wt-head-left {
   display: flex;
   align-items: baseline;
-  gap: 4px;
+  gap: 5px;
 }
 .wt-dow {
   font-size: 13.5px;
@@ -639,7 +646,7 @@ input[type="search"]::-webkit-search-cancel-button:hover {
   color: var(--accent);
 }
 .wt-date {
-  font-size: 11.5px;
+  font-size: 11px;
   font-weight: 600;
   color: var(--faint);
   font-variant-numeric: tabular-nums;
@@ -650,12 +657,12 @@ input[type="search"]::-webkit-search-cancel-button:hover {
   gap: 4px;
 }
 .wt-today-pill {
-  font-size: 10px;
+  font-size: 9.5px;
   font-weight: 800;
   color: #fff;
   background: var(--accent);
   padding: 2px 6px;
-  border-radius: 8px;
+  border-radius: 6px;
   letter-spacing: -0.01em;
 }
 .wt-cnt-badge {
@@ -690,15 +697,17 @@ input[type="search"]::-webkit-search-cancel-button:hover {
   font-size: 16px;
   opacity: 0.7;
 }
+
+/* 공통 마감 공지 카드 */
 .wt-item {
   position: relative;
-  padding: 9px 9px 9px 12px;
-  border-radius: 10px;
+  padding: 10px 10px 10px 13px;
+  border-radius: 11px;
   background: var(--surface);
   border: 1px solid var(--border-soft);
   display: flex;
   flex-direction: column;
-  gap: 5px;
+  gap: 6px;
   text-align: left;
   cursor: pointer;
   transition: all .16s ease;
@@ -718,10 +727,11 @@ input[type="search"]::-webkit-search-cancel-button:hover {
 .wt-item:hover {
   transform: translateY(-2px);
   border-color: var(--accent);
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.09);
 }
 .wt-item.is-urgent {
-  border-color: color-mix(in srgb, #ef4444 40%, var(--border-soft));
+  border-color: color-mix(in srgb, #ef4444 45%, var(--border-soft));
+  background: color-mix(in srgb, #ef4444 3%, var(--surface));
 }
 .wt-item.is-saved {
   box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--accent) 45%, transparent);
@@ -742,18 +752,19 @@ input[type="search"]::-webkit-search-cancel-button:hover {
   font-weight: 800;
   color: var(--accent);
   background: color-mix(in srgb, var(--accent) 12%, transparent);
-  padding: 1px 5px;
-  border-radius: 4px;
+  padding: 1.5px 5.5px;
+  border-radius: 5px;
   font-variant-numeric: tabular-nums;
 }
 .wt-item-dday.urgent {
   color: #ef4444;
   background: color-mix(in srgb, #ef4444 14%, transparent);
+  animation: pulse-badge 2s infinite ease-in-out;
 }
 .wt-item-title {
-  font-size: 12px;
+  font-size: 12.5px;
   font-weight: 600;
-  line-height: 1.4;
+  line-height: 1.42;
   color: var(--text);
   display: -webkit-box;
   -webkit-line-clamp: 2;
@@ -762,25 +773,336 @@ input[type="search"]::-webkit-search-cancel-button:hover {
   word-break: keep-all;
   word-wrap: break-word;
 }
-.wt-more-hint {
+.wt-item-extra {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 2px;
+  flex-wrap: wrap;
+}
+.wt-extra-tag {
+  font-size: 10.5px;
+  color: var(--faint);
+  background: var(--fill);
+  padding: 2px 6px;
+  border-radius: 4px;
+}
+.wt-extra-benefit {
+  font-size: 10.5px;
+  font-weight: 700;
+  color: var(--accent);
+  background: color-mix(in srgb, var(--accent) 10%, transparent);
+  padding: 2px 6px;
+  border-radius: 4px;
+}
+.wt-more-hint-btn {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--accent);
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 4px 0;
+  text-align: center;
+}
+.wt-more-hint-btn:hover {
+  text-decoration: underline;
+}
+
+/* ───────────────────────────────────────────────────────────
+   [B] 모바일 뷰: 스마트 요일 캡슐 탭 + 선택 요일 시원한 카드 덱
+   ─────────────────────────────────────────────────────────── */
+.wt-deck-mobile {
+  display: none;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 12px;
+}
+.wt-mob-day-strip {
+  display: flex;
+  gap: 6px;
+  justify-content: space-between;
+  width: 100%;
+  box-sizing: border-box;
+}
+.wt-mob-day-pill {
+  flex: 1;
+  min-width: 0;
+  padding: 8px 4px 7px 4px;
+  border-radius: 12px;
+  background: var(--fill);
+  border: 1px solid var(--border-soft);
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  cursor: pointer;
+  transition: all .2s cubic-bezier(0.16, 1, 0.3, 1);
+  position: relative;
+  box-sizing: border-box;
+}
+.wt-mob-day-pill:hover {
+  background: var(--surface-2);
+  transform: translateY(-1px);
+}
+.wt-mob-dow {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--text-sub);
+}
+.wt-mob-num {
+  font-size: 14.5px;
+  font-weight: 800;
+  color: var(--text);
+  font-variant-numeric: tabular-nums;
+  line-height: 1.1;
+}
+.wt-mob-dot {
+  font-size: 9.5px;
+  font-weight: 800;
+  color: #fff;
+  background: #f59e0b;
+  min-width: 15px;
+  height: 15px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 3px;
+  margin-top: 1px;
+  font-variant-numeric: tabular-nums;
+}
+.wt-mob-day-pill.is-today {
+  border-color: color-mix(in srgb, var(--accent) 50%, var(--border-soft));
+  background: color-mix(in srgb, var(--accent) 7%, var(--fill));
+}
+.wt-mob-day-pill.is-today .wt-mob-dow {
+  color: var(--accent);
+}
+.wt-mob-day-pill.is-active {
+  background: var(--accent) !important;
+  border-color: var(--accent) !important;
+  color: #fff !important;
+  box-shadow: 0 4px 14px color-mix(in srgb, var(--accent) 35%, transparent);
+  transform: translateY(-2px);
+}
+.wt-mob-day-pill.is-active .wt-mob-dow,
+.wt-mob-day-pill.is-active .wt-mob-num {
+  color: #fff !important;
+}
+.wt-mob-day-pill.is-active .wt-mob-dot {
+  background: #fff;
+  color: var(--accent);
+}
+
+.wt-mob-cards-container {
+  background: var(--bg);
+  border: 1px solid var(--border-soft);
+  border-radius: 14px;
+  padding: 12px 10px;
+  min-height: 140px;
+  box-sizing: border-box;
+}
+.wt-mob-deck-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-bottom: 8px;
+  margin-bottom: 10px;
+  border-bottom: 1px solid var(--border-soft);
+}
+.wt-mob-deck-title {
+  font-size: 13.5px;
+  font-weight: 800;
+  color: var(--text);
+  letter-spacing: -0.02em;
+}
+.wt-mob-deck-count {
   font-size: 11px;
   font-weight: 700;
   color: var(--faint);
-  text-align: center;
-  margin: 2px 0 0 0;
+  background: var(--fill);
+  padding: 2px 8px;
+  border-radius: 10px;
 }
-@media (max-width: 600px) {
+.wt-mob-deck-count.has-items {
+  color: var(--accent);
+  background: color-mix(in srgb, var(--accent) 12%, transparent);
+}
+.wt-mob-cards-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.wt-mob-cards-list .wt-item {
+  padding: 12px 12px 12px 15px;
+  border-radius: 12px;
+}
+.wt-mob-cards-list .wt-item-title {
+  font-size: 13.5px;
+  -webkit-line-clamp: 3;
+}
+.wt-mob-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 24px 10px;
+  text-align: center;
+  gap: 6px;
+}
+.wt-mob-empty-icon {
+  font-size: 28px;
+  margin-bottom: 4px;
+}
+.wt-mob-empty-title {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--text);
+}
+.wt-mob-empty-sub {
+  font-size: 12px;
+  color: var(--faint);
+}
+
+/* ───────────────────────────────────────────────────────────
+   화면 크기별 뷰 스위칭 (768px 분기점)
+   ─────────────────────────────────────────────────────────── */
+@media (max-width: 768px) {
+  .wt-grid-desktop {
+    display: none !important;
+  }
+  .wt-deck-mobile {
+    display: flex !important;
+  }
   .week-timeline-sec {
     padding: 14px 12px;
     margin-top: 10px;
   }
-  .wt-col {
-    flex: 0 0 160px;
-    min-width: 160px;
-    padding: 10px 8px;
+}
+
+/* ---- 30-1. 홈 대시보드 4분할 브리핑 카드 토스/애플 모던 플로팅 덱 리디자인 ---- */
+.brief {
+  margin-top: 14px;
+  margin-bottom: 14px;
+}
+.brief ul {
+  list-style: none !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  display: grid !important;
+  grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+  gap: 12px !important;
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  overflow: visible !important;
+}
+.bf {
+  display: flex !important;
+  min-width: 0 !important;
+  background: var(--surface) !important;
+  border: 1px solid var(--border-soft) !important;
+  border-radius: 16px !important;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.04) !important;
+  transition: all .2s cubic-bezier(0.16, 1, 0.3, 1) !important;
+  position: relative !important;
+  overflow: hidden !important;
+}
+.bf::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  right: 0;
+  height: 3px;
+  background: transparent;
+  transition: all .2s ease;
+}
+.bf.bf-today::before { background: linear-gradient(90deg, #ef4444, #f87171); }
+.bf.bf-money::before { background: linear-gradient(90deg, #f59e0b, #fbbf24); }
+.bf.bf-point::before { background: linear-gradient(90deg, #10b981, #34d399); }
+.bf.bf-acad::before { background: linear-gradient(90deg, #6366f1, #818cf8); }
+
+.bf:hover {
+  transform: translateY(-3px) !important;
+  border-color: var(--border) !important;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08) !important;
+}
+.bf button {
+  display: flex !important;
+  flex-direction: column !important;
+  align-content: start !important;
+  gap: 5px !important;
+  width: 100% !important;
+  padding: 16px 18px 16px !important;
+  border: 0 !important;
+  background: transparent !important;
+  color: var(--text) !important;
+  font: inherit !important;
+  text-align: left !important;
+  cursor: pointer !important;
+  box-sizing: border-box !important;
+}
+.bf-label {
+  font-size: 12.5px !important;
+  font-weight: 700 !important;
+  color: var(--text-sub) !important;
+  letter-spacing: -0.01em !important;
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+}
+.bf-big {
+  font-family: var(--font-display, var(--font)) !important;
+  font-size: 27px !important;
+  font-weight: 900 !important;
+  line-height: 1.15 !important;
+  letter-spacing: -0.04em !important;
+  font-variant-numeric: tabular-nums !important;
+  white-space: nowrap !important;
+  color: var(--text) !important;
+}
+.bf-big small {
+  margin-left: 3px !important;
+  font-size: 13.5px !important;
+  font-weight: 700 !important;
+  color: var(--faint) !important;
+  letter-spacing: 0 !important;
+}
+.bf.is-hot .bf-big {
+  color: #ef4444 !important;
+}
+.bf.bf-acad .bf-big {
+  color: var(--accent) !important;
+}
+.bf-sub {
+  font-size: 11.5px !important;
+  color: var(--faint) !important;
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  letter-spacing: -0.01em !important;
+}
+
+@media (max-width: 768px) {
+  .brief ul {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    gap: 9px !important;
   }
-  .wt-scroll-hint {
-    display: none;
+  .bf button {
+    padding: 13px 13px 13px !important;
+    gap: 4px !important;
+  }
+  .bf-big {
+    font-size: 21px !important;
+  }
+  .bf-label {
+    font-size: 11.5px !important;
+  }
+  .bf-sub {
+    font-size: 11px !important;
   }
 }
 

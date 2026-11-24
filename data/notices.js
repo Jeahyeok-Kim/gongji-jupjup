@@ -6,7 +6,7 @@
   const DATA = /*JSON-START*/{
  "meta": {
   "source": "pipeline",
-  "generatedAt": "2026-11-24 03:28",
+  "generatedAt": "2026-11-24 15:18",
   "model": "qwen3:8b",
   "note": "AI가 만든 요약·번역입니다. 근거 문장이 원문에 없는 값은 버렸습니다.",
   "keep": {
@@ -15,17 +15,17 @@
    "since": "2025-11-24"
   },
   "stats": {
-   "collected": 1702,
-   "processed": 1076,
-   "fromCache": 1067,
-   "failed": 2,
+   "collected": 1707,
+   "processed": 1078,
+   "fromCache": 1074,
+   "failed": 0,
    "imageOnly": 7,
    "droppedValues": 1653,
    "summaryRetried": 18,
    "summaryDraft": 26,
    "summaryComposed": 39,
    "translationLost": 57,
-   "aiPending": 2,
+   "aiPending": 0,
    "needsCheck": 39
   }
  },
@@ -113,6 +113,209 @@
   }
  ],
  "notices": [
+  {
+   "id": "2-27-120982",
+   "boardName": "외부행사/공모전",
+   "link": "https://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1850&CONTENTS_NO=&SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=27&BOARD_CATEGORY_NO=&BBS_SEQ=120982&pageNo=1",
+   "date": "2026-11-24",
+   "hits": 5,
+   "bodyStatus": "poster",
+   "title": "[시립청소년문화교류센터] 2027 시드니 글로벌 인재양성 프로그램 참가자 모집",
+   "titleTr": {
+    "en": "[City Youth Culture Exchange Center] Recruitment for the 2027 Sydney Global Talent Development Program",
+    "zh": "[市立青少年文化交流中心] 2027悉尼全球人才培育计划参与者招募",
+    "ja": "[市立青少年文化交流センター] 2027シドニー・グローバル人材育成プログラム参加者募集"
+   },
+   "category": "global",
+   "deadline": "2026-11-23T23:59",
+   "benefit": {
+    "text": {
+     "ko": "참가비 지원 (일반 4,200,000원 / 사회배려 2,100,000원)",
+     "en": "Scholarship for participation (General: 4,200,000 won / Socially Considered: 2,100,000 won)",
+     "zh": "参与费用支持（一般：4,200,000韩元 / 社会关怀：2,100,000韩元）",
+     "ja": "参加費の支援（一般：4,200,000ウォン / 社会的配慮：2,100,000ウォン）"
+    },
+    "points": null,
+    "won": 4200000
+   },
+   "eligibility": {
+    "ko": "초등학교 5학년 ~ 대학생 / 국내 거주 청소년 및 대학생",
+    "en": "Students from elementary school 5th grade to university students / Domestic residents who are teenagers and university students",
+    "zh": "小学五年级至大学学生 / 国内居住的青少年及大学生",
+    "ja": "小学校5年生から大学生まで／国内に居住する青少年および大学生"
+   },
+   "events": [],
+   "hours": null,
+   "evidence": {
+    "deadline": "10.27.(화)\n~11.23.(월)",
+    "benefit": "참가비\n일반참가자 4,200,000원\n사회배려참가자 2,100,000원",
+    "eligibility": "초 5학년 ~ 대학생\n국내 거주 청소년 및 대학생"
+   },
+   "evidenceVerified": true,
+   "readFrom": [
+    {
+     "kind": "poster",
+     "name": "본문 이미지 1"
+    },
+    {
+     "kind": "file",
+     "name": "붙임1. 2027시드니 글로벌 인재양성 프로그램 모집 안내문.pdf"
+    }
+   ],
+   "summary": {
+    "ko": "시드니 글로벌 인재양성 프로그램 참가자를 모집해요. 초등학교 5학년 ~ 대학생이 2026년 11월 23일까지 신청하면 참가비 지원을 받고 2027년 1월 29일부터 2월 4일까지 시드니에서 활동해요.",
+    "en": "We are recruiting participants for the Sydney Global Talent Development Program. Students from elementary school 5th grade to university students can apply before November 23, 2026, and will receive a scholarship for participation. They will engage in activities in Sydney from January 29 to February 4, 2027.",
+    "zh": "我们正在招募悉尼全球人才培育计划的参与者。小学五年级至大学学生可在2026年11月23日前申请，获得参与费用支持，并于2027年1月29日至2月4日期间在悉尼进行活动。",
+    "ja": "シドニー・グローバル人材育成プログラムの参加者を募っています。小学校5年生から大学生まで、2026年11月23日までに申請すると参加費が支給されます。2027年1月29日から2月4日までシドニーで活動します。"
+   },
+   "terms": [
+    "특강",
+    "수료",
+    "버디",
+    "서류전형",
+    "면접",
+    "접수",
+    "최종합격",
+    "국제교류"
+   ],
+   "regulation": null
+  },
+  {
+   "id": "2-18-120251",
+   "boardName": "학사공지",
+   "link": "https://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1740&CONTENTS_NO=&SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=18&BOARD_CATEGORY_NO=&BBS_SEQ=120251&pageNo=1",
+   "date": "2026-11-24",
+   "hits": 57,
+   "bodyStatus": "text",
+   "title": "2027학년도 학교현장실습(교육실습) 희망자 사전 접수 안내",
+   "titleTr": {
+    "en": "Notice on Pre-Registration for School Field Practice (Education Internship) in 2027 Academic Year",
+    "zh": "2027学年学校现场实习（教育实习）希望者事前申请通知",
+    "ja": "2027年度学校現場実習（教育実習）希望者事前申請について"
+   },
+   "category": "academic",
+   "deadline": "2026-12-18T23:59",
+   "benefit": null,
+   "eligibility": {
+    "ko": "2027학년도 교직이수자 중 4학년 재학 예정인 학생(유아교육과 제외)",
+    "en": "Students who are expected to be enrolled in their fourth year among those who have completed education major courses in the 2027 academic year (excluding Early Childhood Education Department)",
+    "zh": "2027学年完成教育专业课程学习的第四学年预计在读学生（幼儿教育专业除外）",
+    "ja": "2027年度に教職課程を修了した4年生として在籍予定の学生（保育科を除く）"
+   },
+   "events": [],
+   "hours": null,
+   "evidence": {
+    "deadline": "가. 사전접수기간 : 2026년 11월 24일(화) ~ 12월 18일(금)\n나. 사전접수대상 : 2027학년도 교직이수자 중 4학년 재학 예정인 학생(유아교육과 제외)",
+    "eligibility": "나. 사전접수대상 : 2027학년도 교직이수자 중 4학년 재학 예정인 학생(유아교육과 제외)"
+   },
+   "evidenceVerified": true,
+   "readFrom": [
+    {
+     "kind": "file",
+     "name": "2027학년도 학교현장실습 사전접수 신청서(교직).hwp"
+    },
+    {
+     "kind": "file",
+     "name": "2027학년도 학교현장실습 동의서 양식(교직).hwp"
+    }
+   ],
+   "summary": {
+    "ko": "2027학년도 교육실습 사전접수를 진행합니다. 4학년 재학 예정자 중 12월 18일까지 신청하면 실습비 지원을 받을 수 있어요.",
+    "en": "We will conduct pre-registration for education internship in the 2027 academic year. Students who are expected to be enrolled in their fourth year and apply by December 18th can receive support for internship fees.",
+    "zh": "我们将进行2027学年的教育实习事前申请。预计在第四学年就读的学生，若于12月18日前申请，可获得实习费用支持。",
+    "ja": "2027年度の教育実習の事前申請を行います。4年生として在籍予定の学生で12月18日までに申請すれば、実習費用を支給します。"
+   },
+   "terms": [
+    "현장실습",
+    "접수",
+    "건국대",
+    "학번",
+    "접수기간",
+    "동의서"
+   ],
+   "regulation": null
+  },
+  {
+   "id": "2-1-119929",
+   "boardName": "장학공지",
+   "link": "https://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1750&CONTENTS_NO=&SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=1&BOARD_CATEGORY_NO=&BBS_SEQ=119929&pageNo=1",
+   "date": "2026-11-24",
+   "hits": 36,
+   "bodyStatus": "text",
+   "title": "[국가근로] 2027학년도 1학기 1차 국가근로장학금 학생신청 기간 안내(11/24~1/7)",
+   "titleTr": {
+    "en": "[Work-Study] Notice on the First Application Period for the National Work-Study Scholarship in the First Semester of 2027 (11/24~1/7)",
+    "zh": "[国家勤工] 2027学年第一学期第一次国家勤工助学金学生申请期间通知(11/24~1/7)",
+    "ja": "[国家勤工] 2027年度第1学期第1回国家勤労奨学金学生申請期間のお知らせ（11/24〜1/7）"
+   },
+   "category": "scholarship",
+   "deadline": "2027-01-07T23:59",
+   "benefit": {
+    "text": {
+     "ko": "학자금 지원",
+     "en": "Financial Aid",
+     "zh": "学杂费资助",
+     "ja": "学費支援"
+    },
+    "points": null,
+    "won": null
+   },
+   "eligibility": {
+    "ko": "2027학년도 1학기 학기 중 근로를 희망하는 학생",
+    "en": "Students who wish to work during the first semester of the 2027 academic year",
+    "zh": "希望在2027学年第一学期期间工作的学生",
+    "ja": "2027年度第1学期に勤務を希望する学生"
+   },
+   "events": [],
+   "hours": null,
+   "evidence": {
+    "deadline": "가. 신청기간: 2026. 11. 24.(화) 9:00 ~ 2027. 1. 7.(목) 18:00까지",
+    "benefit": "가. 학기 중 근로는 1차 신청기간에 신청한 학생만 선발이 가능하오니 반드시 기간 내에 신청하시기 바랍니다.\n(학자금 지원구간 산정 완료된 학생만 선발가능)",
+    "eligibility": "※ 2027-1학기 학기 중 근로는 1차 신청기간에 신청한 학생만 선발이 가능하오니 반드시 기간 내에 신청하시기 바랍니다.\n가. 학기 중 근로는 1차 신청기간에 신청한 학생만 선발이 가능하오니 반드시 기간 내에 신청하시기 바랍니다."
+   },
+   "evidenceVerified": true,
+   "readFrom": [],
+   "summary": {
+    "ko": "국가근로장학금 학생신청 기간이 시작된다고 안내해요. 2027년 1월 7일까지 재학생이 신청하면 학자금 지원을 받을 수 있어요.",
+    "en": "The application period for the National Work-Study Scholarship has started. Students who are enrolled can apply for financial aid until January 7, 2027.",
+    "zh": "国家勤工助学金学生申请期间已开始。2027年1月7日前在读学生可申请获得学杂费资助。",
+    "ja": "国家勤労奨学金学生申請期間が始まりました。2027年1月7日まで在籍している学生は学費支援を受けることができます。"
+   },
+   "terms": [
+    "장학금",
+    "근로장학",
+    "장학",
+    "접수기간",
+    "국가장학금",
+    "면접",
+    "선발",
+    "마감",
+    "방학",
+    "유의사항"
+   ],
+   "regulation": {
+    "id": "scholarship",
+    "title": {
+     "ko": "장학생 자격 제한",
+     "en": "Scholarship eligibility limits",
+     "zh": "奖学金资格限制",
+     "ja": "奨学生の資格制限"
+    },
+    "rule": {
+     "law": "GLOCAL(글로컬)캠퍼스 장학규정",
+     "no": "8",
+     "article": "자격 제한",
+     "quote": "① 다음 각 호의 1에 해당되는 자는 장학생 선발에서 제외한다. 1. 학칙에 의거하여 징계를 받은 자 2. 8학기를 초과한 자. 다만, 복수학위 프로그램, 프로그램성 장학에 선발된 자, 성인·재직자 전형은 예외로 한다. 3. 장학금 지급 목적을 달성할 수 없다고 판단되는 자",
+     "tr": {
+      "en": "① Students who fall under any of the following categories are excluded from scholarship selection: 1. Those who have been disciplined according to the Student Regulations 2. Those who have exceeded eight semesters. However, students selected for dual-degree programs, program-specific scholarships, adult/reemployed applicant programs are exceptions. 3. Those whose purpose of receiving a scholarship cannot be fulfilled.",
+      "zh": "① 符合以下任一情况的学生不得参与奖学金选拔：1. 根据学生规章受到处分者；2. 超过8学期者。但双学位项目、项目型奖学金及成人/在职人员招生者除外；3. 判定无法实现奖学金发放目的者。",
+      "ja": "① 以下の各号の1に該当する者は奨学金選考から除外される。1. 学則に基づき処分を受けた者 2. 8学期を超えた者。ただし、双学位プログラム、プログラム性奨学金に選ばれた者、成人・再職者入試は例外とする。3. 奨学金支給の目的を達成することができないと判断される者"
+     },
+     "url": "https://rule.konkuk.ac.kr/lmxsrv/law/lawDetail.do?SEQ=371&LAWGROUP=1&PAGE=1",
+     "checked": "2026-11-24"
+    }
+   }
+  },
   {
    "id": "2-27-120981",
    "boardName": "외부행사/공모전",
@@ -267,7 +470,7 @@
       "ja": "学生が次の各号のいずれかに該当する場合には、総長はこれを除籍する。ただし、獣医学部及び医学部については有償による除籍について別途定める。1. 各学期初頭に指定された期限内に登録を完了しなかった者 2. <2024年12月17日に廃止> 3. 休学期間満了直後に学期初頭に指定された期間まで復学しない者 4. 紀律処分により退学処分を受けた者"
      },
      "url": "https://rule.konkuk.ac.kr/lmxsrv/law/lawDetail.do?SEQ=409&LAWGROUP=1&PAGE=1",
-     "checked": "2026-11-23"
+     "checked": "2026-11-24"
     }
    }
   },
@@ -944,7 +1147,7 @@
       "ja": "① 以下の各号の1に該当する者は奨学金選考から除外される。1. 学則に基づき処分を受けた者 2. 8学期を超えた者。ただし、双学位プログラム、プログラム性奨学金に選ばれた者、成人・再職者入試は例外とする。3. 奨学金支給の目的を達成することができないと判断される者"
      },
      "url": "https://rule.konkuk.ac.kr/lmxsrv/law/lawDetail.do?SEQ=371&LAWGROUP=1&PAGE=1",
-     "checked": "2026-11-23"
+     "checked": "2026-11-24"
     }
    }
   },
@@ -1499,7 +1702,7 @@
       "ja": "① 以下の各号の1に該当する者は奨学金選考から除外される。1. 学則に基づき処分を受けた者 2. 8学期を超えた者。ただし、双学位プログラム、プログラム性奨学金に選ばれた者、成人・再職者入試は例外とする。3. 奨学金支給の目的を達成することができないと判断される者"
      },
      "url": "https://rule.konkuk.ac.kr/lmxsrv/law/lawDetail.do?SEQ=371&LAWGROUP=1&PAGE=1",
-     "checked": "2026-11-23"
+     "checked": "2026-11-24"
     }
    }
   },
@@ -1578,7 +1781,7 @@
       "ja": "① 以下の各号の1に該当する者は奨学金選考から除外される。1. 学則に基づき処分を受けた者 2. 8学期を超えた者。ただし、双学位プログラム、プログラム性奨学金に選ばれた者、成人・再職者入試は例外とする。3. 奨学金支給の目的を達成することができないと判断される者"
      },
      "url": "https://rule.konkuk.ac.kr/lmxsrv/law/lawDetail.do?SEQ=371&LAWGROUP=1&PAGE=1",
-     "checked": "2026-11-23"
+     "checked": "2026-11-24"
     }
    }
   },
@@ -1664,7 +1867,7 @@
       "ja": "① 以下の各号の1に該当する者は奨学金選考から除外される。1. 学則に基づき処分を受けた者 2. 8学期を超えた者。ただし、双学位プログラム、プログラム性奨学金に選ばれた者、成人・再職者入試は例外とする。3. 奨学金支給の目的を達成することができないと判断される者"
      },
      "url": "https://rule.konkuk.ac.kr/lmxsrv/law/lawDetail.do?SEQ=371&LAWGROUP=1&PAGE=1",
-     "checked": "2026-11-23"
+     "checked": "2026-11-24"
     }
    }
   },
@@ -2474,7 +2677,7 @@
       "ja": "① 以下の各号の1に該当する者は奨学金選考から除外される。1. 学則に基づき処分を受けた者 2. 8学期を超えた者。ただし、双学位プログラム、プログラム性奨学金に選ばれた者、成人・再職者入試は例外とする。3. 奨学金支給の目的を達成することができないと判断される者"
      },
      "url": "https://rule.konkuk.ac.kr/lmxsrv/law/lawDetail.do?SEQ=371&LAWGROUP=1&PAGE=1",
-     "checked": "2026-11-23"
+     "checked": "2026-11-24"
     }
    }
   },
@@ -2622,7 +2825,7 @@
       "ja": "生活館は在学者のみに開放されるが、館長は収容能力を考慮して大学または学年ごとに入居資格を制限することができる。"
      },
      "url": "https://rule.konkuk.ac.kr/lmxsrv/law/lawDetail.do?SEQ=41&LAWGROUP=1&PAGE=1",
-     "checked": "2026-11-23"
+     "checked": "2026-11-24"
     }
    }
   },
@@ -2804,7 +3007,7 @@
       "ja": "本規定で使用する用語の定義は以下の各号と同様である。1. 「非学科プログラム」とは、学点が与えられない「非正式教育課程（非学科教育）」であり、本学が教育目的のために実施しているすべての教育活動を指す。2. 「品質管理」とは、事前調査、要望分析、政策立案、実行、評価の段階に続く非学科プログラムの開発・運営・評価の全段階を事前および事後で管理することを意味する。"
      },
      "url": "https://rule.konkuk.ac.kr/lmxsrv/law/lawDetail.do?SEQ=143&LAWGROUP=1&PAGE=1",
-     "checked": "2026-11-23"
+     "checked": "2026-11-24"
     }
    }
   },
@@ -3126,7 +3329,7 @@
       "ja": "生活館は在学者のみに開放されるが、館長は収容能力を考慮して大学または学年ごとに入居資格を制限することができる。"
      },
      "url": "https://rule.konkuk.ac.kr/lmxsrv/law/lawDetail.do?SEQ=41&LAWGROUP=1&PAGE=1",
-     "checked": "2026-11-23"
+     "checked": "2026-11-24"
     }
    }
   },
@@ -3199,7 +3402,7 @@
       "ja": "① 各学期に指定された科目内で在籍中は、4単位以内で認められる。"
      },
      "url": "https://rule.konkuk.ac.kr/lmxsrv/law/lawDetail.do?SEQ=137&LAWGROUP=1&PAGE=1",
-     "checked": "2026-11-23"
+     "checked": "2026-11-24"
     }
    }
   },
@@ -3393,7 +3596,7 @@
       "ja": "① 各学期に指定された科目内で在籍中は、4単位以内で認められる。"
      },
      "url": "https://rule.konkuk.ac.kr/lmxsrv/law/lawDetail.do?SEQ=137&LAWGROUP=1&PAGE=1",
-     "checked": "2026-11-23"
+     "checked": "2026-11-24"
     }
    }
   },
@@ -3624,7 +3827,7 @@
       "ja": "① 各学期に指定された科目内で在籍中は、4単位以内で認められる。"
      },
      "url": "https://rule.konkuk.ac.kr/lmxsrv/law/lawDetail.do?SEQ=137&LAWGROUP=1&PAGE=1",
-     "checked": "2026-11-23"
+     "checked": "2026-11-24"
     }
    }
   },
@@ -4043,7 +4246,7 @@
       "ja": "① 各学期に指定された科目内で在籍中は、4単位以内で認められる。"
      },
      "url": "https://rule.konkuk.ac.kr/lmxsrv/law/lawDetail.do?SEQ=137&LAWGROUP=1&PAGE=1",
-     "checked": "2026-11-23"
+     "checked": "2026-11-24"
     }
    }
   },
@@ -4585,7 +4788,7 @@
       "ja": "② 休学は1回に限り2学期（1年）を超えることはできないが、休学中の者が家庭事情などの理由により復学できなくなった場合、本人の申請により休学期間を延長することが可能である。"
      },
      "url": "https://rule.konkuk.ac.kr/lmxsrv/law/lawDetail.do?SEQ=409&LAWGROUP=1&PAGE=1",
-     "checked": "2026-11-23"
+     "checked": "2026-11-24"
     }
    }
   },
@@ -4737,7 +4940,7 @@
       "ja": "① 各学期に指定された科目内で在籍中は、4単位以内で認められる。"
      },
      "url": "https://rule.konkuk.ac.kr/lmxsrv/law/lawDetail.do?SEQ=137&LAWGROUP=1&PAGE=1",
-     "checked": "2026-11-23"
+     "checked": "2026-11-24"
     }
    }
   },
@@ -4942,7 +5145,7 @@
       "ja": "学生が次の各号のいずれかに該当する場合には、総長はこれを除籍する。ただし、獣医学部及び医学部については有償による除籍について別途定める。1. 各学期初頭に指定された期限内に登録を完了しなかった者 2. <2024年12月17日に廃止> 3. 休学期間満了直後に学期初頭に指定された期間まで復学しない者 4. 紀律処分により退学処分を受けた者"
      },
      "url": "https://rule.konkuk.ac.kr/lmxsrv/law/lawDetail.do?SEQ=409&LAWGROUP=1&PAGE=1",
-     "checked": "2026-11-23"
+     "checked": "2026-11-24"
     }
    }
   },
@@ -5373,7 +5576,7 @@
       "ja": "学生が次の各号のいずれかに該当する場合には、総長はこれを除籍する。ただし、獣医学部及び医学部については有償による除籍について別途定める。1. 各学期初頭に指定された期限内に登録を完了しなかった者 2. <2024年12月17日に廃止> 3. 休学期間満了直後に学期初頭に指定された期間まで復学しない者 4. 紀律処分により退学処分を受けた者"
      },
      "url": "https://rule.konkuk.ac.kr/lmxsrv/law/lawDetail.do?SEQ=409&LAWGROUP=1&PAGE=1",
-     "checked": "2026-11-23"
+     "checked": "2026-11-24"
     }
    }
   },
@@ -5432,73 +5635,6 @@
     "수료",
     "오리엔테이션",
     "선발"
-   ],
-   "regulation": null
-  },
-  {
-   "id": "2-27-120937",
-   "boardName": "외부행사/공모전",
-   "link": "https://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1850&CONTENTS_NO=&SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=27&BOARD_CATEGORY_NO=&BBS_SEQ=120937&pageNo=1",
-   "date": "2026-11-02",
-   "hits": 4,
-   "bodyStatus": "poster",
-   "title": "[시립청소년문화교류센터] 2027 시드니 글로벌 인재양성 프로그램 참가자 모집",
-   "titleTr": {
-    "en": "[City Youth Culture Exchange Center] Recruitment for the 2027 Sydney Global Talent Development Program",
-    "zh": "[市立青少年文化交流中心] 2027悉尼全球人才培育计划参与者招募",
-    "ja": "[市立青少年文化交換センター] 2027シドニーグローバル人材育成プログラム参加者募集"
-   },
-   "category": "global",
-   "deadline": "2026-11-23T23:59",
-   "benefit": {
-    "text": {
-     "ko": "해외 체험, 글로벌 역량 강화",
-     "en": "Overseas Experience, Enhanced Global Competence",
-     "zh": "海外体验, 全球能力强化",
-     "ja": "海外体験, グローバル能力強化"
-    },
-    "points": null,
-    "won": null
-   },
-   "eligibility": {
-    "ko": "초등학교 5학년 ~ 대학생 / 국내 거주 청소년 및 대학생",
-    "en": "Elementary school 5th grade to university students / Domestic residents of middle school age and university students",
-    "zh": "小学五年级至大学生 / 国内居住的中学生及大学生",
-    "ja": "小学校5年生から大学生 / 国内に居住する中学生および大学生"
-   },
-   "events": [],
-   "hours": null,
-   "evidence": {
-    "deadline": "10.27.(화)\n~11.23.(월)",
-    "benefit": "삶을 대하는 새로운 기준\n글로벌 성장의 7일",
-    "eligibility": "초 5학년 ~ 대학생\n국내 거주 청소년 및 대학생"
-   },
-   "evidenceVerified": true,
-   "readFrom": [
-    {
-     "kind": "poster",
-     "name": "본문 이미지 1"
-    },
-    {
-     "kind": "file",
-     "name": "붙임1. 2027시드니 글로벌 인재양성 프로그램 모집 안내문.pdf"
-    }
-   ],
-   "summary": {
-    "ko": "시드니 글로벌 인재양성 프로그램 참가자를 모집해요. 초등학교 5학년 ~ 대학생이 11월 23일까지 신청하면 해외 체험과 글로벌 역량 강화 혜택을 받고, 1월 29일부터 2월 4일까지 시드니에서 활동해요.",
-    "en": "We are recruiting participants for the Sydney Global Talent Development Program. Students from elementary school 5th grade to university students who apply by November 23 will receive benefits including overseas experience and enhanced global competence, and they will participate in activities in Sydney from January 29 to February 4.",
-    "zh": "我们正在招募悉尼全球人才培育计划的参与者。小学五年级至大学学生在11月23日前申请，将获得海外体验和全球能力提升的福利，并于1月29日至2月4日期间在悉尼参与活动。",
-    "ja": "シドニーグローバル人材育成プログラムの参加者を募っています。小学校5年生から大学生までが11月23日までに申請すると、海外体験とグローバル能力強化の特典を受けられ、1月29日から2月4日までシドニで活動できます。"
-   },
-   "terms": [
-    "특강",
-    "수료",
-    "버디",
-    "서류전형",
-    "면접",
-    "접수",
-    "최종합격",
-    "국제교류"
    ],
    "regulation": null
   },
@@ -6048,7 +6184,7 @@
       "ja": "① 各学期に指定された科目内で在籍中は、4単位以内で認められる。"
      },
      "url": "https://rule.konkuk.ac.kr/lmxsrv/law/lawDetail.do?SEQ=137&LAWGROUP=1&PAGE=1",
-     "checked": "2026-11-23"
+     "checked": "2026-11-24"
     }
    }
   },
@@ -6352,7 +6488,7 @@
       "ja": "① 各学期に指定された科目内で在籍中は、4単位以内で認められる。"
      },
      "url": "https://rule.konkuk.ac.kr/lmxsrv/law/lawDetail.do?SEQ=137&LAWGROUP=1&PAGE=1",
-     "checked": "2026-11-23"
+     "checked": "2026-11-24"
     }
    }
   },
@@ -6432,7 +6568,7 @@
       "ja": "本規定で使用する用語の定義は以下の各号と同様である。1. 「非学科プログラム」とは、学点が与えられない「非正式教育課程（非学科教育）」であり、本学が教育目的のために実施しているすべての教育活動を指す。2. 「品質管理」とは、事前調査、要望分析、政策立案、実行、評価の段階に続く非学科プログラムの開発・運営・評価の全段階を事前および事後で管理することを意味する。"
      },
      "url": "https://rule.konkuk.ac.kr/lmxsrv/law/lawDetail.do?SEQ=143&LAWGROUP=1&PAGE=1",
-     "checked": "2026-11-23"
+     "checked": "2026-11-24"
     }
    }
   },
@@ -6630,7 +6766,7 @@
       "ja": "① 以下の各号の1に該当する者は奨学金選考から除外される。1. 学則に基づき処分を受けた者 2. 8学期を超えた者。ただし、双学位プログラム、プログラム性奨学金に選ばれた者、成人・再職者入試は例外とする。3. 奨学金支給の目的を達成することができないと判断される者"
      },
      "url": "https://rule.konkuk.ac.kr/lmxsrv/law/lawDetail.do?SEQ=371&LAWGROUP=1&PAGE=1",
-     "checked": "2026-11-23"
+     "checked": "2026-11-24"
     }
    }
   },
@@ -6804,7 +6940,7 @@
       "ja": "① 以下の各号の1に該当する者は奨学金選考から除外される。1. 学則に基づき処分を受けた者 2. 8学期を超えた者。ただし、双学位プログラム、プログラム性奨学金に選ばれた者、成人・再職者入試は例外とする。3. 奨学金支給の目的を達成することができないと判断される者"
      },
      "url": "https://rule.konkuk.ac.kr/lmxsrv/law/lawDetail.do?SEQ=371&LAWGROUP=1&PAGE=1",
-     "checked": "2026-11-23"
+     "checked": "2026-11-24"
     }
    }
   },
@@ -7405,7 +7541,7 @@
       "ja": "① 以下の各号の1に該当する者は奨学金選考から除外される。1. 学則に基づき処分を受けた者 2. 8学期を超えた者。ただし、双学位プログラム、プログラム性奨学金に選ばれた者、成人・再職者入試は例外とする。3. 奨学金支給の目的を達成することができないと判断される者"
      },
      "url": "https://rule.konkuk.ac.kr/lmxsrv/law/lawDetail.do?SEQ=371&LAWGROUP=1&PAGE=1",
-     "checked": "2026-11-23"
+     "checked": "2026-11-24"
     }
    }
   },
@@ -7517,7 +7653,7 @@
       "ja": "② 休学は1回に限り2学期（1年）を超えることはできないが、休学中の者が家庭事情などの理由により復学できなくなった場合、本人の申請により休学期間を延長することが可能である。"
      },
      "url": "https://rule.konkuk.ac.kr/lmxsrv/law/lawDetail.do?SEQ=409&LAWGROUP=1&PAGE=1",
-     "checked": "2026-11-23"
+     "checked": "2026-11-24"
     }
    }
   },
@@ -7856,7 +7992,7 @@
       "ja": "② 休学は1回に限り2学期（1年）を超えることはできないが、休学中の者が家庭事情などの理由により復学できなくなった場合、本人の申請により休学期間を延長することが可能である。"
      },
      "url": "https://rule.konkuk.ac.kr/lmxsrv/law/lawDetail.do?SEQ=409&LAWGROUP=1&PAGE=1",
-     "checked": "2026-11-23"
+     "checked": "2026-11-24"
     }
    }
   },
@@ -8300,7 +8436,7 @@
       "ja": "本規定で使用する用語の定義は以下の各号と同様である。1. 「非学科プログラム」とは、学点が与えられない「非正式教育課程（非学科教育）」であり、本学が教育目的のために実施しているすべての教育活動を指す。2. 「品質管理」とは、事前調査、要望分析、政策立案、実行、評価の段階に続く非学科プログラムの開発・運営・評価の全段階を事前および事後で管理することを意味する。"
      },
      "url": "https://rule.konkuk.ac.kr/lmxsrv/law/lawDetail.do?SEQ=143&LAWGROUP=1&PAGE=1",
-     "checked": "2026-11-23"
+     "checked": "2026-11-24"
     }
    }
   },
@@ -8366,7 +8502,7 @@
       "ja": "生活館は在学者のみに開放されるが、館長は収容能力を考慮して大学または学年ごとに入居資格を制限することができる。"
      },
      "url": "https://rule.konkuk.ac.kr/lmxsrv/law/lawDetail.do?SEQ=41&LAWGROUP=1&PAGE=1",
-     "checked": "2026-11-23"
+     "checked": "2026-11-24"
     }
    }
   },
@@ -8995,7 +9131,7 @@
       "ja": "② 休学は1回に限り2学期（1年）を超えることはできないが、休学中の者が家庭事情などの理由により復学できなくなった場合、本人の申請により休学期間を延長することが可能である。"
      },
      "url": "https://rule.konkuk.ac.kr/lmxsrv/law/lawDetail.do?SEQ=409&LAWGROUP=1&PAGE=1",
-     "checked": "2026-11-23"
+     "checked": "2026-11-24"
     }
    }
   },
@@ -9235,7 +9371,7 @@
       "ja": "① 各学期に指定された科目内で在籍中は、4単位以内で認められる。"
      },
      "url": "https://rule.konkuk.ac.kr/lmxsrv/law/lawDetail.do?SEQ=137&LAWGROUP=1&PAGE=1",
-     "checked": "2026-11-23"
+     "checked": "2026-11-24"
     }
    },
    "alsoIn": [
@@ -9429,7 +9565,7 @@
       "ja": "① 以下の各号の1に該当する者は奨学金選考から除外される。1. 学則に基づき処分を受けた者 2. 8学期を超えた者。ただし、双学位プログラム、プログラム性奨学金に選ばれた者、成人・再職者入試は例外とする。3. 奨学金支給の目的を達成することができないと判断される者"
      },
      "url": "https://rule.konkuk.ac.kr/lmxsrv/law/lawDetail.do?SEQ=371&LAWGROUP=1&PAGE=1",
-     "checked": "2026-11-23"
+     "checked": "2026-11-24"
     }
    }
   },
@@ -9605,7 +9741,7 @@
       "ja": "② 休学は1回に限り2学期（1年）を超えることはできないが、休学中の者が家庭事情などの理由により復学できなくなった場合、本人の申請により休学期間を延長することが可能である。"
      },
      "url": "https://rule.konkuk.ac.kr/lmxsrv/law/lawDetail.do?SEQ=409&LAWGROUP=1&PAGE=1",
-     "checked": "2026-11-23"
+     "checked": "2026-11-24"
     }
    }
   },
@@ -9719,7 +9855,7 @@
       "ja": "① 以下の各号の1に該当する者は奨学金選考から除外される。1. 学則に基づき処分を受けた者 2. 8学期を超えた者。ただし、双学位プログラム、プログラム性奨学金に選ばれた者、成人・再職者入試は例外とする。3. 奨学金支給の目的を達成することができないと判断される者"
      },
      "url": "https://rule.konkuk.ac.kr/lmxsrv/law/lawDetail.do?SEQ=371&LAWGROUP=1&PAGE=1",
-     "checked": "2026-11-23"
+     "checked": "2026-11-24"
     }
    }
   },
@@ -9947,7 +10083,7 @@
       "ja": "① 以下の各号の1に該当する者は奨学金選考から除外される。1. 学則に基づき処分を受けた者 2. 8学期を超えた者。ただし、双学位プログラム、プログラム性奨学金に選ばれた者、成人・再職者入試は例外とする。3. 奨学金支給の目的を達成することができないと判断される者"
      },
      "url": "https://rule.konkuk.ac.kr/lmxsrv/law/lawDetail.do?SEQ=371&LAWGROUP=1&PAGE=1",
-     "checked": "2026-11-23"
+     "checked": "2026-11-24"
     }
    }
   },
@@ -10008,7 +10144,7 @@
       "ja": "本規定で使用する用語の定義は以下の各号と同様である。1. 「非学科プログラム」とは、学点が与えられない「非正式教育課程（非学科教育）」であり、本学が教育目的のために実施しているすべての教育活動を指す。2. 「品質管理」とは、事前調査、要望分析、政策立案、実行、評価の段階に続く非学科プログラムの開発・運営・評価の全段階を事前および事後で管理することを意味する。"
      },
      "url": "https://rule.konkuk.ac.kr/lmxsrv/law/lawDetail.do?SEQ=143&LAWGROUP=1&PAGE=1",
-     "checked": "2026-11-23"
+     "checked": "2026-11-24"
     }
    }
   },
@@ -10112,7 +10248,7 @@
       "ja": "② 休学は1回に限り2学期（1年）を超えることはできないが、休学中の者が家庭事情などの理由により復学できなくなった場合、本人の申請により休学期間を延長することが可能である。"
      },
      "url": "https://rule.konkuk.ac.kr/lmxsrv/law/lawDetail.do?SEQ=409&LAWGROUP=1&PAGE=1",
-     "checked": "2026-11-23"
+     "checked": "2026-11-24"
     }
    }
   },
@@ -10207,7 +10343,7 @@
       "ja": "① 各学期に指定された科目内で在籍中は、4単位以内で認められる。"
      },
      "url": "https://rule.konkuk.ac.kr/lmxsrv/law/lawDetail.do?SEQ=137&LAWGROUP=1&PAGE=1",
-     "checked": "2026-11-23"
+     "checked": "2026-11-24"
     }
    },
    "alsoIn": [
@@ -10440,7 +10576,7 @@
       "ja": "② 休学は1回に限り2学期（1年）を超えることはできないが、休学中の者が家庭事情などの理由により復学できなくなった場合、本人の申請により休学期間を延長することが可能である。"
      },
      "url": "https://rule.konkuk.ac.kr/lmxsrv/law/lawDetail.do?SEQ=409&LAWGROUP=1&PAGE=1",
-     "checked": "2026-11-23"
+     "checked": "2026-11-24"
     }
    }
   },
@@ -11043,7 +11179,7 @@
       "ja": "② 休学は1回に限り2学期（1年）を超えることはできないが、休学中の者が家庭事情などの理由により復学できなくなった場合、本人の申請により休学期間を延長することが可能である。"
      },
      "url": "https://rule.konkuk.ac.kr/lmxsrv/law/lawDetail.do?SEQ=409&LAWGROUP=1&PAGE=1",
-     "checked": "2026-11-23"
+     "checked": "2026-11-24"
     }
    }
   },
@@ -11674,7 +11810,7 @@
       "ja": "① 以下の各号の1に該当する者は奨学金選考から除外される。1. 学則に基づき処分を受けた者 2. 8学期を超えた者。ただし、双学位プログラム、プログラム性奨学金に選ばれた者、成人・再職者入試は例外とする。3. 奨学金支給の目的を達成することができないと判断される者"
      },
      "url": "https://rule.konkuk.ac.kr/lmxsrv/law/lawDetail.do?SEQ=371&LAWGROUP=1&PAGE=1",
-     "checked": "2026-11-23"
+     "checked": "2026-11-24"
     }
    }
   },
@@ -11822,7 +11958,7 @@
       "ja": "② 休学は1回に限り2学期（1年）を超えることはできないが、休学中の者が家庭事情などの理由により復学できなくなった場合、本人の申請により休学期間を延長することが可能である。"
      },
      "url": "https://rule.konkuk.ac.kr/lmxsrv/law/lawDetail.do?SEQ=409&LAWGROUP=1&PAGE=1",
-     "checked": "2026-11-23"
+     "checked": "2026-11-24"
     }
    }
   },
@@ -12139,7 +12275,7 @@
       "ja": "① 以下の各号の1に該当する者は奨学金選考から除外される。1. 学則に基づき処分を受けた者 2. 8学期を超えた者。ただし、双学位プログラム、プログラム性奨学金に選ばれた者、成人・再職者入試は例外とする。3. 奨学金支給の目的を達成することができないと判断される者"
      },
      "url": "https://rule.konkuk.ac.kr/lmxsrv/law/lawDetail.do?SEQ=371&LAWGROUP=1&PAGE=1",
-     "checked": "2026-11-23"
+     "checked": "2026-11-24"
     }
    }
   },
@@ -12576,7 +12712,7 @@
       "ja": "① 以下の各号の1に該当する者は奨学金選考から除外される。1. 学則に基づき処分を受けた者 2. 8学期を超えた者。ただし、双学位プログラム、プログラム性奨学金に選ばれた者、成人・再職者入試は例外とする。3. 奨学金支給の目的を達成することができないと判断される者"
      },
      "url": "https://rule.konkuk.ac.kr/lmxsrv/law/lawDetail.do?SEQ=371&LAWGROUP=1&PAGE=1",
-     "checked": "2026-11-23"
+     "checked": "2026-11-24"
     }
    }
   },
@@ -12821,7 +12957,7 @@
       "ja": "① 各学期に指定された科目内で在籍中は、4単位以内で認められる。"
      },
      "url": "https://rule.konkuk.ac.kr/lmxsrv/law/lawDetail.do?SEQ=137&LAWGROUP=1&PAGE=1",
-     "checked": "2026-11-23"
+     "checked": "2026-11-24"
     }
    }
   },
@@ -12908,7 +13044,7 @@
       "ja": "① 学生が当該科目の総講義時間数の3分の1以上欠席した場合、その科目の試験に応じる資格がない。"
      },
      "url": "https://rule.konkuk.ac.kr/lmxsrv/law/lawDetail.do?SEQ=409&LAWGROUP=1&PAGE=1",
-     "checked": "2026-11-23"
+     "checked": "2026-11-24"
     }
    }
   },
@@ -13142,7 +13278,7 @@
       "ja": "② 休学は1回に限り2学期（1年）を超えることはできないが、休学中の者が家庭事情などの理由により復学できなくなった場合、本人の申請により休学期間を延長することが可能である。"
      },
      "url": "https://rule.konkuk.ac.kr/lmxsrv/law/lawDetail.do?SEQ=409&LAWGROUP=1&PAGE=1",
-     "checked": "2026-11-23"
+     "checked": "2026-11-24"
     }
    }
   },
@@ -13281,7 +13417,7 @@
       "ja": "① 以下の各号の1に該当する者は奨学金選考から除外される。1. 学則に基づき処分を受けた者 2. 8学期を超えた者。ただし、双学位プログラム、プログラム性奨学金に選ばれた者、成人・再職者入試は例外とする。3. 奨学金支給の目的を達成することができないと判断される者"
      },
      "url": "https://rule.konkuk.ac.kr/lmxsrv/law/lawDetail.do?SEQ=371&LAWGROUP=1&PAGE=1",
-     "checked": "2026-11-23"
+     "checked": "2026-11-24"
     }
    }
   },
@@ -14185,7 +14321,7 @@
       "ja": "① 以下の各号の1に該当する者は奨学金選考から除外される。1. 学則に基づき処分を受けた者 2. 8学期を超えた者。ただし、双学位プログラム、プログラム性奨学金に選ばれた者、成人・再職者入試は例外とする。3. 奨学金支給の目的を達成することができないと判断される者"
      },
      "url": "https://rule.konkuk.ac.kr/lmxsrv/law/lawDetail.do?SEQ=371&LAWGROUP=1&PAGE=1",
-     "checked": "2026-11-23"
+     "checked": "2026-11-24"
     }
    }
   },
@@ -14266,7 +14402,7 @@
       "ja": "① 以下の各号の1に該当する者は奨学金選考から除外される。1. 学則に基づき処分を受けた者 2. 8学期を超えた者。ただし、双学位プログラム、プログラム性奨学金に選ばれた者、成人・再職者入試は例外とする。3. 奨学金支給の目的を達成することができないと判断される者"
      },
      "url": "https://rule.konkuk.ac.kr/lmxsrv/law/lawDetail.do?SEQ=371&LAWGROUP=1&PAGE=1",
-     "checked": "2026-11-23"
+     "checked": "2026-11-24"
     }
    }
   },
@@ -14347,7 +14483,7 @@
       "ja": "① 以下の各号の1に該当する者は奨学金選考から除外される。1. 学則に基づき処分を受けた者 2. 8学期を超えた者。ただし、双学位プログラム、プログラム性奨学金に選ばれた者、成人・再職者入試は例外とする。3. 奨学金支給の目的を達成することができないと判断される者"
      },
      "url": "https://rule.konkuk.ac.kr/lmxsrv/law/lawDetail.do?SEQ=371&LAWGROUP=1&PAGE=1",
-     "checked": "2026-11-23"
+     "checked": "2026-11-24"
     }
    }
   },
@@ -14428,7 +14564,7 @@
       "ja": "① 以下の各号の1に該当する者は奨学金選考から除外される。1. 学則に基づき処分を受けた者 2. 8学期を超えた者。ただし、双学位プログラム、プログラム性奨学金に選ばれた者、成人・再職者入試は例外とする。3. 奨学金支給の目的を達成することができないと判断される者"
      },
      "url": "https://rule.konkuk.ac.kr/lmxsrv/law/lawDetail.do?SEQ=371&LAWGROUP=1&PAGE=1",
-     "checked": "2026-11-23"
+     "checked": "2026-11-24"
     }
    }
   },
@@ -14557,7 +14693,7 @@
       "ja": "① 以下の各号の1に該当する者は奨学金選考から除外される。1. 学則に基づき処分を受けた者 2. 8学期を超えた者。ただし、双学位プログラム、プログラム性奨学金に選ばれた者、成人・再職者入試は例外とする。3. 奨学金支給の目的を達成することができないと判断される者"
      },
      "url": "https://rule.konkuk.ac.kr/lmxsrv/law/lawDetail.do?SEQ=371&LAWGROUP=1&PAGE=1",
-     "checked": "2026-11-23"
+     "checked": "2026-11-24"
     }
    }
   },
@@ -14647,7 +14783,7 @@
       "ja": "① 以下の各号の1に該当する者は奨学金選考から除外される。1. 学則に基づき処分を受けた者 2. 8学期を超えた者。ただし、双学位プログラム、プログラム性奨学金に選ばれた者、成人・再職者入試は例外とする。3. 奨学金支給の目的を達成することができないと判断される者"
      },
      "url": "https://rule.konkuk.ac.kr/lmxsrv/law/lawDetail.do?SEQ=371&LAWGROUP=1&PAGE=1",
-     "checked": "2026-11-23"
+     "checked": "2026-11-24"
     }
    }
   },
@@ -14894,7 +15030,7 @@
       "ja": "① 各学期に指定された科目内で在籍中は、4単位以内で認められる。"
      },
      "url": "https://rule.konkuk.ac.kr/lmxsrv/law/lawDetail.do?SEQ=137&LAWGROUP=1&PAGE=1",
-     "checked": "2026-11-23"
+     "checked": "2026-11-24"
     }
    }
   },
@@ -15143,7 +15279,7 @@
       "ja": "② 休学は1回に限り2学期（1年）を超えることはできないが、休学中の者が家庭事情などの理由により復学できなくなった場合、本人の申請により休学期間を延長することが可能である。"
      },
      "url": "https://rule.konkuk.ac.kr/lmxsrv/law/lawDetail.do?SEQ=409&LAWGROUP=1&PAGE=1",
-     "checked": "2026-11-23"
+     "checked": "2026-11-24"
     }
    }
   },
@@ -15311,7 +15447,7 @@
       "ja": "入学時に韓国語能力試験（TOPIK）4級以上の証明書を提出しなかった外国人学生は、卒業までにTOPIK 4級以上の証明書を提出するか、国際教育院が主催する韓国語卒業試験に合格しなければ卒業することが出来ない。ただし、KUグローバルイノベーション大学国際学部所属の外国人学生は、校内指定の韓国語コースを修了した場合、卒業に関する韓国語基準を満たしているものと認められる。"
      },
      "url": "https://rule.konkuk.ac.kr/lmxsrv/law/lawDetail.do?SEQ=146&LAWGROUP=1&PAGE=1",
-     "checked": "2026-11-23"
+     "checked": "2026-11-24"
     }
    }
   },
@@ -16364,7 +16500,7 @@
       "ja": "学生が次の各号のいずれかに該当する場合には、総長はこれを除籍する。ただし、獣医学部及び医学部については有償による除籍について別途定める。1. 各学期初頭に指定された期限内に登録を完了しなかった者 2. <2024年12月17日に廃止> 3. 休学期間満了直後に学期初頭に指定された期間まで復学しない者 4. 紀律処分により退学処分を受けた者"
      },
      "url": "https://rule.konkuk.ac.kr/lmxsrv/law/lawDetail.do?SEQ=409&LAWGROUP=1&PAGE=1",
-     "checked": "2026-11-23"
+     "checked": "2026-11-24"
     }
    }
   },
@@ -17175,7 +17311,7 @@
       "ja": "② 休学は1回に限り2学期（1年）を超えることはできないが、休学中の者が家庭事情などの理由により復学できなくなった場合、本人の申請により休学期間を延長することが可能である。"
      },
      "url": "https://rule.konkuk.ac.kr/lmxsrv/law/lawDetail.do?SEQ=409&LAWGROUP=1&PAGE=1",
-     "checked": "2026-11-23"
+     "checked": "2026-11-24"
     }
    },
    "check": {
@@ -17645,7 +17781,7 @@
       "ja": "② 休学は1回に限り2学期（1年）を超えることはできないが、休学中の者が家庭事情などの理由により復学できなくなった場合、本人の申請により休学期間を延長することが可能である。"
      },
      "url": "https://rule.konkuk.ac.kr/lmxsrv/law/lawDetail.do?SEQ=409&LAWGROUP=1&PAGE=1",
-     "checked": "2026-11-23"
+     "checked": "2026-11-24"
     }
    }
   },
@@ -18232,7 +18368,7 @@
       "ja": "② 休学は1回に限り2学期（1年）を超えることはできないが、休学中の者が家庭事情などの理由により復学できなくなった場合、本人の申請により休学期間を延長することが可能である。"
      },
      "url": "https://rule.konkuk.ac.kr/lmxsrv/law/lawDetail.do?SEQ=409&LAWGROUP=1&PAGE=1",
-     "checked": "2026-11-23"
+     "checked": "2026-11-24"
     }
    }
   },
@@ -18317,7 +18453,7 @@
       "ja": "学生が次の各号のいずれかに該当する場合には、総長はこれを除籍する。ただし、獣医学部及び医学部については有償による除籍について別途定める。1. 各学期初頭に指定された期限内に登録を完了しなかった者 2. <2024年12月17日に廃止> 3. 休学期間満了直後に学期初頭に指定された期間まで復学しない者 4. 紀律処分により退学処分を受けた者"
      },
      "url": "https://rule.konkuk.ac.kr/lmxsrv/law/lawDetail.do?SEQ=409&LAWGROUP=1&PAGE=1",
-     "checked": "2026-11-23"
+     "checked": "2026-11-24"
     }
    }
   },
@@ -18411,7 +18547,7 @@
       "ja": "① 以下の各号の1に該当する者は奨学金選考から除外される。1. 学則に基づき処分を受けた者 2. 8学期を超えた者。ただし、双学位プログラム、プログラム性奨学金に選ばれた者、成人・再職者入試は例外とする。3. 奨学金支給の目的を達成することができないと判断される者"
      },
      "url": "https://rule.konkuk.ac.kr/lmxsrv/law/lawDetail.do?SEQ=371&LAWGROUP=1&PAGE=1",
-     "checked": "2026-11-23"
+     "checked": "2026-11-24"
     }
    },
    "check": {
@@ -18631,7 +18767,7 @@
       "ja": "① 各学期に指定された科目内で在籍中は、4単位以内で認められる。"
      },
      "url": "https://rule.konkuk.ac.kr/lmxsrv/law/lawDetail.do?SEQ=137&LAWGROUP=1&PAGE=1",
-     "checked": "2026-11-23"
+     "checked": "2026-11-24"
     }
    }
   },
@@ -18798,7 +18934,7 @@
       "ja": "① 以下の各号の1に該当する者は奨学金選考から除外される。1. 学則に基づき処分を受けた者 2. 8学期を超えた者。ただし、双学位プログラム、プログラム性奨学金に選ばれた者、成人・再職者入試は例外とする。3. 奨学金支給の目的を達成することができないと判断される者"
      },
      "url": "https://rule.konkuk.ac.kr/lmxsrv/law/lawDetail.do?SEQ=371&LAWGROUP=1&PAGE=1",
-     "checked": "2026-11-23"
+     "checked": "2026-11-24"
     }
    }
   },
@@ -19023,7 +19159,7 @@
       "ja": "① 学生が当該科目の総講義時間数の3分の1以上欠席した場合、その科目の試験に応じる資格がない。"
      },
      "url": "https://rule.konkuk.ac.kr/lmxsrv/law/lawDetail.do?SEQ=409&LAWGROUP=1&PAGE=1",
-     "checked": "2026-11-23"
+     "checked": "2026-11-24"
     }
    }
   },
@@ -19127,7 +19263,7 @@
       "ja": "② 休学は1回に限り2学期（1年）を超えることはできないが、休学中の者が家庭事情などの理由により復学できなくなった場合、本人の申請により休学期間を延長することが可能である。"
      },
      "url": "https://rule.konkuk.ac.kr/lmxsrv/law/lawDetail.do?SEQ=409&LAWGROUP=1&PAGE=1",
-     "checked": "2026-11-23"
+     "checked": "2026-11-24"
     }
    }
   },
@@ -19344,7 +19480,7 @@
       "ja": "学生が次の各号のいずれかに該当する場合には、総長はこれを除籍する。ただし、獣医学部及び医学部については有償による除籍について別途定める。1. 各学期初頭に指定された期限内に登録を完了しなかった者 2. <2024年12月17日に廃止> 3. 休学期間満了直後に学期初頭に指定された期間まで復学しない者 4. 紀律処分により退学処分を受けた者"
      },
      "url": "https://rule.konkuk.ac.kr/lmxsrv/law/lawDetail.do?SEQ=409&LAWGROUP=1&PAGE=1",
-     "checked": "2026-11-23"
+     "checked": "2026-11-24"
     }
    }
   },
@@ -19574,7 +19710,7 @@
       "ja": "① 学生が当該科目の総講義時間数の3分の1以上欠席した場合、その科目の試験に応じる資格がない。"
      },
      "url": "https://rule.konkuk.ac.kr/lmxsrv/law/lawDetail.do?SEQ=409&LAWGROUP=1&PAGE=1",
-     "checked": "2026-11-23"
+     "checked": "2026-11-24"
     }
    }
   },
@@ -19643,7 +19779,7 @@
       "ja": "① 各学期に指定された科目内で在籍中は、4単位以内で認められる。"
      },
      "url": "https://rule.konkuk.ac.kr/lmxsrv/law/lawDetail.do?SEQ=137&LAWGROUP=1&PAGE=1",
-     "checked": "2026-11-23"
+     "checked": "2026-11-24"
     }
    },
    "alsoIn": [
@@ -19754,7 +19890,7 @@
       "ja": "② 休学は1回に限り2学期（1年）を超えることはできないが、休学中の者が家庭事情などの理由により復学できなくなった場合、本人の申請により休学期間を延長することが可能である。"
      },
      "url": "https://rule.konkuk.ac.kr/lmxsrv/law/lawDetail.do?SEQ=409&LAWGROUP=1&PAGE=1",
-     "checked": "2026-11-23"
+     "checked": "2026-11-24"
     }
    },
    "check": {
@@ -19966,7 +20102,7 @@
       "ja": "学生が次の各号のいずれかに該当する場合には、総長はこれを除籍する。ただし、獣医学部及び医学部については有償による除籍について別途定める。1. 各学期初頭に指定された期限内に登録を完了しなかった者 2. <2024年12月17日に廃止> 3. 休学期間満了直後に学期初頭に指定された期間まで復学しない者 4. 紀律処分により退学処分を受けた者"
      },
      "url": "https://rule.konkuk.ac.kr/lmxsrv/law/lawDetail.do?SEQ=409&LAWGROUP=1&PAGE=1",
-     "checked": "2026-11-23"
+     "checked": "2026-11-24"
     }
    }
   },
@@ -20122,7 +20258,7 @@
       "ja": "① 過納された納入金については、全額返還する。ただし、追加学期生の場合、学則施行細則I第29条に基づく納入金を基準とする。"
      },
      "url": "https://rule.konkuk.ac.kr/lmxsrv/law/lawDetail.do?SEQ=409&LAWGROUP=1&PAGE=1",
-     "checked": "2026-11-23"
+     "checked": "2026-11-24"
     }
    }
   },
@@ -20462,7 +20598,7 @@
       "ja": "② 休学は1回に限り2学期（1年）を超えることはできないが、休学中の者が家庭事情などの理由により復学できなくなった場合、本人の申請により休学期間を延長することが可能である。"
      },
      "url": "https://rule.konkuk.ac.kr/lmxsrv/law/lawDetail.do?SEQ=409&LAWGROUP=1&PAGE=1",
-     "checked": "2026-11-23"
+     "checked": "2026-11-24"
     }
    }
   },
@@ -21262,7 +21398,7 @@
       "ja": "② 前期の学業注意を受けていた学生は、次の学期に登録可能な最大単位数から2単位を減らした範囲内で授業を履修することが許可される。ただし、未卒者および卒業保留者は例外とし、学業注意を受ける学生向けの科目を履修する場合は、単位制限には含めない。"
      },
      "url": "https://rule.konkuk.ac.kr/lmxsrv/law/lawDetail.do?SEQ=409&LAWGROUP=1&PAGE=1",
-     "checked": "2026-11-23"
+     "checked": "2026-11-24"
     }
    }
   },
@@ -21700,7 +21836,7 @@
       "ja": "② 正規学期における海外派遣プログラムへの応募資格を持つ者は、本学の学部所属学生であり、以下の各号のいずれかの資格を備えていること必須である。1. 1学期以上を修了した者 2. 学則に基づき処分を受けたことがない者 3. 海外旅行に欠格事由がない者 4. 海外派遣プログラム募集要項で定められた応募資格を満たす者"
      },
      "url": "https://rule.konkuk.ac.kr/lmxsrv/law/lawDetail.do?SEQ=188&LAWGROUP=1&PAGE=1",
-     "checked": "2026-11-23"
+     "checked": "2026-11-24"
     }
    }
   },
@@ -21785,7 +21921,7 @@
       "ja": "学生が次の各号のいずれかに該当する場合には、総長はこれを除籍する。ただし、獣医学部及び医学部については有償による除籍について別途定める。1. 各学期初頭に指定された期限内に登録を完了しなかった者 2. <2024年12月17日に廃止> 3. 休学期間満了直後に学期初頭に指定された期間まで復学しない者 4. 紀律処分により退学処分を受けた者"
      },
      "url": "https://rule.konkuk.ac.kr/lmxsrv/law/lawDetail.do?SEQ=409&LAWGROUP=1&PAGE=1",
-     "checked": "2026-11-23"
+     "checked": "2026-11-24"
     }
    }
   },
@@ -22055,7 +22191,7 @@
       "ja": "② 休学は1回に限り2学期（1年）を超えることはできないが、休学中の者が家庭事情などの理由により復学できなくなった場合、本人の申請により休学期間を延長することが可能である。"
      },
      "url": "https://rule.konkuk.ac.kr/lmxsrv/law/lawDetail.do?SEQ=409&LAWGROUP=1&PAGE=1",
-     "checked": "2026-11-23"
+     "checked": "2026-11-24"
     }
    }
   },
@@ -22293,7 +22429,7 @@
       "ja": "本規定で使用する用語の定義は以下の各号と同様である。1. 「非学科プログラム」とは、学点が与えられない「非正式教育課程（非学科教育）」であり、本学が教育目的のために実施しているすべての教育活動を指す。2. 「品質管理」とは、事前調査、要望分析、政策立案、実行、評価の段階に続く非学科プログラムの開発・運営・評価の全段階を事前および事後で管理することを意味する。"
      },
      "url": "https://rule.konkuk.ac.kr/lmxsrv/law/lawDetail.do?SEQ=143&LAWGROUP=1&PAGE=1",
-     "checked": "2026-11-23"
+     "checked": "2026-11-24"
     }
    }
   },
@@ -22473,7 +22609,7 @@
       "ja": "① 各学期に指定された科目内で在籍中は、4単位以内で認められる。"
      },
      "url": "https://rule.konkuk.ac.kr/lmxsrv/law/lawDetail.do?SEQ=137&LAWGROUP=1&PAGE=1",
-     "checked": "2026-11-23"
+     "checked": "2026-11-24"
     }
    }
   },
@@ -22528,7 +22664,7 @@
       "ja": "① 各学期に指定された科目内で在籍中は、4単位以内で認められる。"
      },
      "url": "https://rule.konkuk.ac.kr/lmxsrv/law/lawDetail.do?SEQ=137&LAWGROUP=1&PAGE=1",
-     "checked": "2026-11-23"
+     "checked": "2026-11-24"
     }
    }
   },
@@ -22598,7 +22734,7 @@
       "ja": "本規定で使用する用語の定義は以下の各号と同様である。1. 「非学科プログラム」とは、学点が与えられない「非正式教育課程（非学科教育）」であり、本学が教育目的のために実施しているすべての教育活動を指す。2. 「品質管理」とは、事前調査、要望分析、政策立案、実行、評価の段階に続く非学科プログラムの開発・運営・評価の全段階を事前および事後で管理することを意味する。"
      },
      "url": "https://rule.konkuk.ac.kr/lmxsrv/law/lawDetail.do?SEQ=143&LAWGROUP=1&PAGE=1",
-     "checked": "2026-11-23"
+     "checked": "2026-11-24"
     }
    }
   },
@@ -22724,7 +22860,7 @@
       "ja": "① 各学期に指定された科目内で在籍中は、4単位以内で認められる。"
      },
      "url": "https://rule.konkuk.ac.kr/lmxsrv/law/lawDetail.do?SEQ=137&LAWGROUP=1&PAGE=1",
-     "checked": "2026-11-23"
+     "checked": "2026-11-24"
     }
    }
   },
@@ -22787,7 +22923,7 @@
       "ja": "① 各学期に指定された科目内で在籍中は、4単位以内で認められる。"
      },
      "url": "https://rule.konkuk.ac.kr/lmxsrv/law/lawDetail.do?SEQ=137&LAWGROUP=1&PAGE=1",
-     "checked": "2026-11-23"
+     "checked": "2026-11-24"
     }
    }
   },
@@ -22941,7 +23077,7 @@
       "ja": "② 正規学期における海外派遣プログラムへの応募資格を持つ者は、本学の学部所属学生であり、以下の各号のいずれかの資格を備えていること必須である。1. 1学期以上を修了した者 2. 学則に基づき処分を受けたことがない者 3. 海外旅行に欠格事由がない者 4. 海外派遣プログラム募集要項で定められた応募資格を満たす者"
      },
      "url": "https://rule.konkuk.ac.kr/lmxsrv/law/lawDetail.do?SEQ=188&LAWGROUP=1&PAGE=1",
-     "checked": "2026-11-23"
+     "checked": "2026-11-24"
     }
    }
   },
@@ -23065,7 +23201,7 @@
       "ja": "② 休学は1回に限り2学期（1年）を超えることはできないが、休学中の者が家庭事情などの理由により復学できなくなった場合、本人の申請により休学期間を延長することが可能である。"
      },
      "url": "https://rule.konkuk.ac.kr/lmxsrv/law/lawDetail.do?SEQ=409&LAWGROUP=1&PAGE=1",
-     "checked": "2026-11-23"
+     "checked": "2026-11-24"
     }
    }
   },
@@ -23587,7 +23723,7 @@
       "ja": "② 休学は1回に限り2学期（1年）を超えることはできないが、休学中の者が家庭事情などの理由により復学できなくなった場合、本人の申請により休学期間を延長することが可能である。"
      },
      "url": "https://rule.konkuk.ac.kr/lmxsrv/law/lawDetail.do?SEQ=409&LAWGROUP=1&PAGE=1",
-     "checked": "2026-11-23"
+     "checked": "2026-11-24"
     }
    }
   },
@@ -23691,7 +23827,7 @@
       "ja": "② 休学は1回に限り2学期（1年）を超えることはできないが、休学中の者が家庭事情などの理由により復学できなくなった場合、本人の申請により休学期間を延長することが可能である。"
      },
      "url": "https://rule.konkuk.ac.kr/lmxsrv/law/lawDetail.do?SEQ=409&LAWGROUP=1&PAGE=1",
-     "checked": "2026-11-23"
+     "checked": "2026-11-24"
     }
    }
   },
@@ -24224,7 +24360,7 @@
       "ja": "① 以下の各号の1に該当する者は奨学金選考から除外される。1. 学則に基づき処分を受けた者 2. 8学期を超えた者。ただし、双学位プログラム、プログラム性奨学金に選ばれた者、成人・再職者入試は例外とする。3. 奨学金支給の目的を達成することができないと判断される者"
      },
      "url": "https://rule.konkuk.ac.kr/lmxsrv/law/lawDetail.do?SEQ=371&LAWGROUP=1&PAGE=1",
-     "checked": "2026-11-23"
+     "checked": "2026-11-24"
     }
    }
   },
@@ -24314,7 +24450,7 @@
       "ja": "① 以下の各号の1に該当する者は奨学金選考から除外される。1. 学則に基づき処分を受けた者 2. 8学期を超えた者。ただし、双学位プログラム、プログラム性奨学金に選ばれた者、成人・再職者入試は例外とする。3. 奨学金支給の目的を達成することができないと判断される者"
      },
      "url": "https://rule.konkuk.ac.kr/lmxsrv/law/lawDetail.do?SEQ=371&LAWGROUP=1&PAGE=1",
-     "checked": "2026-11-23"
+     "checked": "2026-11-24"
     }
    }
   },
@@ -24399,7 +24535,7 @@
       "ja": "① 以下の各号の1に該当する者は奨学金選考から除外される。1. 学則に基づき処分を受けた者 2. 8学期を超えた者。ただし、双学位プログラム、プログラム性奨学金に選ばれた者、成人・再職者入試は例外とする。3. 奨学金支給の目的を達成することができないと判断される者"
      },
      "url": "https://rule.konkuk.ac.kr/lmxsrv/law/lawDetail.do?SEQ=371&LAWGROUP=1&PAGE=1",
-     "checked": "2026-11-23"
+     "checked": "2026-11-24"
     }
    }
   },
@@ -24489,7 +24625,7 @@
       "ja": "① 以下の各号の1に該当する者は奨学金選考から除外される。1. 学則に基づき処分を受けた者 2. 8学期を超えた者。ただし、双学位プログラム、プログラム性奨学金に選ばれた者、成人・再職者入試は例外とする。3. 奨学金支給の目的を達成することができないと判断される者"
      },
      "url": "https://rule.konkuk.ac.kr/lmxsrv/law/lawDetail.do?SEQ=371&LAWGROUP=1&PAGE=1",
-     "checked": "2026-11-23"
+     "checked": "2026-11-24"
     }
    }
   },
@@ -24569,7 +24705,7 @@
       "ja": "① 以下の各号の1に該当する者は奨学金選考から除外される。1. 学則に基づき処分を受けた者 2. 8学期を超えた者。ただし、双学位プログラム、プログラム性奨学金に選ばれた者、成人・再職者入試は例外とする。3. 奨学金支給の目的を達成することができないと判断される者"
      },
      "url": "https://rule.konkuk.ac.kr/lmxsrv/law/lawDetail.do?SEQ=371&LAWGROUP=1&PAGE=1",
-     "checked": "2026-11-23"
+     "checked": "2026-11-24"
     }
    }
   },
@@ -24652,7 +24788,7 @@
       "ja": "① 以下の各号の1に該当する者は奨学金選考から除外される。1. 学則に基づき処分を受けた者 2. 8学期を超えた者。ただし、双学位プログラム、プログラム性奨学金に選ばれた者、成人・再職者入試は例外とする。3. 奨学金支給の目的を達成することができないと判断される者"
      },
      "url": "https://rule.konkuk.ac.kr/lmxsrv/law/lawDetail.do?SEQ=371&LAWGROUP=1&PAGE=1",
-     "checked": "2026-11-23"
+     "checked": "2026-11-24"
     }
    }
   },
@@ -24756,7 +24892,7 @@
       "ja": "② 休学は1回に限り2学期（1年）を超えることはできないが、休学中の者が家庭事情などの理由により復学できなくなった場合、本人の申請により休学期間を延長することが可能である。"
      },
      "url": "https://rule.konkuk.ac.kr/lmxsrv/law/lawDetail.do?SEQ=409&LAWGROUP=1&PAGE=1",
-     "checked": "2026-11-23"
+     "checked": "2026-11-24"
     }
    }
   },
@@ -24860,7 +24996,7 @@
       "ja": "② 休学は1回に限り2学期（1年）を超えることはできないが、休学中の者が家庭事情などの理由により復学できなくなった場合、本人の申請により休学期間を延長することが可能である。"
      },
      "url": "https://rule.konkuk.ac.kr/lmxsrv/law/lawDetail.do?SEQ=409&LAWGROUP=1&PAGE=1",
-     "checked": "2026-11-23"
+     "checked": "2026-11-24"
     }
    }
   },
@@ -25052,7 +25188,7 @@
       "ja": "② 休学は1回に限り2学期（1年）を超えることはできないが、休学中の者が家庭事情などの理由により復学できなくなった場合、本人の申請により休学期間を延長することが可能である。"
      },
      "url": "https://rule.konkuk.ac.kr/lmxsrv/law/lawDetail.do?SEQ=409&LAWGROUP=1&PAGE=1",
-     "checked": "2026-11-23"
+     "checked": "2026-11-24"
     }
    }
   },
@@ -25201,7 +25337,7 @@
       "ja": "① 学生が当該科目の総講義時間数の3分の1以上欠席した場合、その科目の試験に応じる資格がない。"
      },
      "url": "https://rule.konkuk.ac.kr/lmxsrv/law/lawDetail.do?SEQ=409&LAWGROUP=1&PAGE=1",
-     "checked": "2026-11-23"
+     "checked": "2026-11-24"
     }
    }
   },
@@ -25338,7 +25474,7 @@
       "ja": "本規定で使用する用語の定義は以下の各号と同様である。1. 「非学科プログラム」とは、学点が与えられない「非正式教育課程（非学科教育）」であり、本学が教育目的のために実施しているすべての教育活動を指す。2. 「品質管理」とは、事前調査、要望分析、政策立案、実行、評価の段階に続く非学科プログラムの開発・運営・評価の全段階を事前および事後で管理することを意味する。"
      },
      "url": "https://rule.konkuk.ac.kr/lmxsrv/law/lawDetail.do?SEQ=143&LAWGROUP=1&PAGE=1",
-     "checked": "2026-11-23"
+     "checked": "2026-11-24"
     }
    }
   },
@@ -25600,7 +25736,7 @@
       "ja": "生活館は在学者のみに開放されるが、館長は収容能力を考慮して大学または学年ごとに入居資格を制限することができる。"
      },
      "url": "https://rule.konkuk.ac.kr/lmxsrv/law/lawDetail.do?SEQ=41&LAWGROUP=1&PAGE=1",
-     "checked": "2026-11-23"
+     "checked": "2026-11-24"
     }
    }
   },
@@ -25701,7 +25837,7 @@
       "ja": "① 各学期に指定された科目内で在籍中は、4単位以内で認められる。"
      },
      "url": "https://rule.konkuk.ac.kr/lmxsrv/law/lawDetail.do?SEQ=137&LAWGROUP=1&PAGE=1",
-     "checked": "2026-11-23"
+     "checked": "2026-11-24"
     }
    }
   },
@@ -26121,7 +26257,7 @@
       "ja": "① 以下の各号の1に該当する者は奨学金選考から除外される。1. 学則に基づき処分を受けた者 2. 8学期を超えた者。ただし、双学位プログラム、プログラム性奨学金に選ばれた者、成人・再職者入試は例外とする。3. 奨学金支給の目的を達成することができないと判断される者"
      },
      "url": "https://rule.konkuk.ac.kr/lmxsrv/law/lawDetail.do?SEQ=371&LAWGROUP=1&PAGE=1",
-     "checked": "2026-11-23"
+     "checked": "2026-11-24"
     }
    }
   },
@@ -26190,7 +26326,7 @@
       "ja": "本規定で使用する用語の定義は以下の各号と同様である。1. 「非学科プログラム」とは、学点が与えられない「非正式教育課程（非学科教育）」であり、本学が教育目的のために実施しているすべての教育活動を指す。2. 「品質管理」とは、事前調査、要望分析、政策立案、実行、評価の段階に続く非学科プログラムの開発・運営・評価の全段階を事前および事後で管理することを意味する。"
      },
      "url": "https://rule.konkuk.ac.kr/lmxsrv/law/lawDetail.do?SEQ=143&LAWGROUP=1&PAGE=1",
-     "checked": "2026-11-23"
+     "checked": "2026-11-24"
     }
    }
   },
@@ -26341,7 +26477,7 @@
       "ja": "① 以下の各号の1に該当する者は奨学金選考から除外される。1. 学則に基づき処分を受けた者 2. 8学期を超えた者。ただし、双学位プログラム、プログラム性奨学金に選ばれた者、成人・再職者入試は例外とする。3. 奨学金支給の目的を達成することができないと判断される者"
      },
      "url": "https://rule.konkuk.ac.kr/lmxsrv/law/lawDetail.do?SEQ=371&LAWGROUP=1&PAGE=1",
-     "checked": "2026-11-23"
+     "checked": "2026-11-24"
     }
    }
   },
@@ -26465,7 +26601,7 @@
       "ja": "生活館は在学者のみに開放されるが、館長は収容能力を考慮して大学または学年ごとに入居資格を制限することができる。"
      },
      "url": "https://rule.konkuk.ac.kr/lmxsrv/law/lawDetail.do?SEQ=41&LAWGROUP=1&PAGE=1",
-     "checked": "2026-11-23"
+     "checked": "2026-11-24"
     }
    }
   },
@@ -26687,7 +26823,7 @@
       "ja": "学生が次の各号のいずれかに該当する場合には、総長はこれを除籍する。ただし、獣医学部及び医学部については有償による除籍について別途定める。1. 各学期初頭に指定された期限内に登録を完了しなかった者 2. <2024年12月17日に廃止> 3. 休学期間満了直後に学期初頭に指定された期間まで復学しない者 4. 紀律処分により退学処分を受けた者"
      },
      "url": "https://rule.konkuk.ac.kr/lmxsrv/law/lawDetail.do?SEQ=409&LAWGROUP=1&PAGE=1",
-     "checked": "2026-11-23"
+     "checked": "2026-11-24"
     }
    }
   },
@@ -26960,7 +27096,7 @@
       "ja": "① 各学期に指定された科目内で在籍中は、4単位以内で認められる。"
      },
      "url": "https://rule.konkuk.ac.kr/lmxsrv/law/lawDetail.do?SEQ=137&LAWGROUP=1&PAGE=1",
-     "checked": "2026-11-23"
+     "checked": "2026-11-24"
     }
    }
   },
@@ -27014,7 +27150,7 @@
       "ja": "① 各学期に指定された科目内で在籍中は、4単位以内で認められる。"
      },
      "url": "https://rule.konkuk.ac.kr/lmxsrv/law/lawDetail.do?SEQ=137&LAWGROUP=1&PAGE=1",
-     "checked": "2026-11-23"
+     "checked": "2026-11-24"
     }
    }
   },
@@ -27300,7 +27436,7 @@
       "ja": "① 各学期に指定された科目内で在籍中は、4単位以内で認められる。"
      },
      "url": "https://rule.konkuk.ac.kr/lmxsrv/law/lawDetail.do?SEQ=137&LAWGROUP=1&PAGE=1",
-     "checked": "2026-11-23"
+     "checked": "2026-11-24"
     }
    }
   },
@@ -27441,7 +27577,7 @@
       "ja": "② 正規学期における海外派遣プログラムへの応募資格を持つ者は、本学の学部所属学生であり、以下の各号のいずれかの資格を備えていること必須である。1. 1学期以上を修了した者 2. 学則に基づき処分を受けたことがない者 3. 海外旅行に欠格事由がない者 4. 海外派遣プログラム募集要項で定められた応募資格を満たす者"
      },
      "url": "https://rule.konkuk.ac.kr/lmxsrv/law/lawDetail.do?SEQ=188&LAWGROUP=1&PAGE=1",
-     "checked": "2026-11-23"
+     "checked": "2026-11-24"
     }
    }
   },
@@ -27527,7 +27663,7 @@
       "ja": "② 正規学期における海外派遣プログラムへの応募資格を持つ者は、本学の学部所属学生であり、以下の各号のいずれかの資格を備えていること必須である。1. 1学期以上を修了した者 2. 学則に基づき処分を受けたことがない者 3. 海外旅行に欠格事由がない者 4. 海外派遣プログラム募集要項で定められた応募資格を満たす者"
      },
      "url": "https://rule.konkuk.ac.kr/lmxsrv/law/lawDetail.do?SEQ=188&LAWGROUP=1&PAGE=1",
-     "checked": "2026-11-23"
+     "checked": "2026-11-24"
     }
    }
   },
@@ -27767,7 +27903,7 @@
       "ja": "休学者は、復学申請期間中に規定された復学手続きを完了して登録を終了することで復学することができる。第43条 <2017年9月11日に廃止>"
      },
      "url": "https://rule.konkuk.ac.kr/lmxsrv/law/lawDetail.do?SEQ=409&LAWGROUP=1&PAGE=1",
-     "checked": "2026-11-23"
+     "checked": "2026-11-24"
     }
    },
    "alsoIn": [
@@ -27878,7 +28014,7 @@
       "ja": "② 休学は1回に限り2学期（1年）を超えることはできないが、休学中の者が家庭事情などの理由により復学できなくなった場合、本人の申請により休学期間を延長することが可能である。"
      },
      "url": "https://rule.konkuk.ac.kr/lmxsrv/law/lawDetail.do?SEQ=409&LAWGROUP=1&PAGE=1",
-     "checked": "2026-11-23"
+     "checked": "2026-11-24"
     }
    },
    "check": {
@@ -28138,7 +28274,7 @@
       "ja": "学生が次の各号のいずれかに該当する場合には、総長はこれを除籍する。ただし、獣医学部及び医学部については有償による除籍について別途定める。1. 各学期初頭に指定された期限内に登録を完了しなかった者 2. <2024年12月17日に廃止> 3. 休学期間満了直後に学期初頭に指定された期間まで復学しない者 4. 紀律処分により退学処分を受けた者"
      },
      "url": "https://rule.konkuk.ac.kr/lmxsrv/law/lawDetail.do?SEQ=409&LAWGROUP=1&PAGE=1",
-     "checked": "2026-11-23"
+     "checked": "2026-11-24"
     }
    }
   },
@@ -28304,7 +28440,7 @@
       "ja": "① 以下の各号の1に該当する者は奨学金選考から除外される。1. 学則に基づき処分を受けた者 2. 8学期を超えた者。ただし、双学位プログラム、プログラム性奨学金に選ばれた者、成人・再職者入試は例外とする。3. 奨学金支給の目的を達成することができないと判断される者"
      },
      "url": "https://rule.konkuk.ac.kr/lmxsrv/law/lawDetail.do?SEQ=371&LAWGROUP=1&PAGE=1",
-     "checked": "2026-11-23"
+     "checked": "2026-11-24"
     }
    }
   },
@@ -29174,15 +29310,35 @@
    "hits": 27,
    "bodyStatus": "poster",
    "title": "서울시민먹거리조사 활용 콘텐츠·연구 공모전",
-   "titleTr": {},
+   "titleTr": {
+    "en": "Seoul Citizen Food Survey Utilization Contents and Research Contest",
+    "zh": "首尔市民饮食调查利用内容·研究竞赛",
+    "ja": "Seoul市民食調査活用コンテンツ・研究コンテスト"
+   },
    "category": "contest",
-   "deadline": "2026-10-30T23:59",
-   "benefit": null,
-   "eligibility": null,
+   "deadline": "2026-10-30T18:00",
+   "benefit": {
+    "text": {
+     "ko": "서울특별시장상",
+     "en": "Mayor's Award of Seoul Special City",
+     "zh": "首尔特别市市长奖",
+     "ja": "ソウル特別市長賞"
+    },
+    "points": null,
+    "won": null
+   },
+   "eligibility": {
+    "ko": "전 국민(청소년, 성인), 대학(원)생, 연구자, 일반 시민 등",
+    "en": "All citizens (youth, adults), university (college) students, researchers, general citizens, etc.",
+    "zh": "全体国民（青少年、成年人）、大学生、研究人员、一般市民等",
+    "ja": "全市民（青少年、成人）、大学生、研究者、一般市民など"
+   },
    "events": [],
    "hours": null,
    "evidence": {
-    "deadline": "응모기간 : 2026.10.21.(수)~10.30.(금)"
+    "deadline": "응모기간 : 2026.10.21.(수)~10.30.(금)\n수상작 발표",
+    "benefit": "시상규모 : 서울특별시장상 9편 ※ 상금없음\n- 시상규모 : 서울특별시장상 5편 ※상금없음",
+    "eligibility": "전 국민(청소년, 성인)\n- 대학(원)생, 연구자, 일반 시민 등\n전 국민 (청소년, 성인)"
    },
    "evidenceVerified": true,
    "readFrom": [
@@ -29212,7 +29368,10 @@
     }
    ],
    "summary": {
-    "ko": "공모전·대외활동 관련 공지예요. 신청은 10월 30일까지예요."
+    "ko": "서울시민먹거리조사 활용 콘텐츠·연구 공모전 참여자를 모집해요. 전 국민이 10월 21일부터 30일까지 이메일로 신청하면 서울특별시장상이 주어져요.",
+    "en": "We are recruiting participants for the Seoul Citizen Food Survey Utilization Contents and Research Contest. All citizens who apply via email from October 21 to 30 will receive the Mayor's Award of Seoul Special City.",
+    "zh": "我们正在招募参加首尔市民饮食调查利用内容·研究竞赛的参与者。所有公民在10月21日至30日期间通过电子邮件申请，将获得首尔特别市市长奖。",
+    "ja": "Seoul市民食調査活用コンテンツ・研究コンテストの参加者を募集しています。10月21日から30日にかけてメールで応募した全国民はソウル特別市長賞が与えられます。"
    },
    "terms": [
     "공모전",
@@ -29222,8 +29381,7 @@
     "개인정보",
     "동의서"
    ],
-   "regulation": null,
-   "aiPending": true
+   "regulation": null
   },
   {
    "id": "2-27-120790",
@@ -29963,7 +30121,7 @@
       "ja": "① 過納された納入金については、全額返還する。ただし、追加学期生の場合、学則施行細則I第29条に基づく納入金を基準とする。"
      },
      "url": "https://rule.konkuk.ac.kr/lmxsrv/law/lawDetail.do?SEQ=409&LAWGROUP=1&PAGE=1",
-     "checked": "2026-11-23"
+     "checked": "2026-11-24"
     }
    }
   },
@@ -30283,7 +30441,7 @@
       "ja": "② 休学は1回に限り2学期（1年）を超えることはできないが、休学中の者が家庭事情などの理由により復学できなくなった場合、本人の申請により休学期間を延長することが可能である。"
      },
      "url": "https://rule.konkuk.ac.kr/lmxsrv/law/lawDetail.do?SEQ=409&LAWGROUP=1&PAGE=1",
-     "checked": "2026-11-23"
+     "checked": "2026-11-24"
     }
    }
   },
@@ -30410,7 +30568,7 @@
       "ja": "学生が次の各号のいずれかに該当する場合には、総長はこれを除籍する。ただし、獣医学部及び医学部については有償による除籍について別途定める。1. 各学期初頭に指定された期限内に登録を完了しなかった者 2. <2024年12月17日に廃止> 3. 休学期間満了直後に学期初頭に指定された期間まで復学しない者 4. 紀律処分により退学処分を受けた者"
      },
      "url": "https://rule.konkuk.ac.kr/lmxsrv/law/lawDetail.do?SEQ=409&LAWGROUP=1&PAGE=1",
-     "checked": "2026-11-23"
+     "checked": "2026-11-24"
     }
    }
   },
@@ -30493,7 +30651,7 @@
       "ja": "学生が次の各号のいずれかに該当する場合には、総長はこれを除籍する。ただし、獣医学部及び医学部については有償による除籍について別途定める。1. 各学期初頭に指定された期限内に登録を完了しなかった者 2. <2024年12月17日に廃止> 3. 休学期間満了直後に学期初頭に指定された期間まで復学しない者 4. 紀律処分により退学処分を受けた者"
      },
      "url": "https://rule.konkuk.ac.kr/lmxsrv/law/lawDetail.do?SEQ=409&LAWGROUP=1&PAGE=1",
-     "checked": "2026-11-23"
+     "checked": "2026-11-24"
     }
    }
   },
@@ -30759,7 +30917,7 @@
       "ja": "入学時に韓国語能力試験（TOPIK）4級以上の証明書を提出しなかった外国人学生は、卒業までにTOPIK 4級以上の証明書を提出するか、国際教育院が主催する韓国語卒業試験に合格しなければ卒業することが出来ない。ただし、KUグローバルイノベーション大学国際学部所属の外国人学生は、校内指定の韓国語コースを修了した場合、卒業に関する韓国語基準を満たしているものと認められる。"
      },
      "url": "https://rule.konkuk.ac.kr/lmxsrv/law/lawDetail.do?SEQ=146&LAWGROUP=1&PAGE=1",
-     "checked": "2026-11-23"
+     "checked": "2026-11-24"
     }
    }
   },
@@ -31226,7 +31384,7 @@
       "ja": "学生が次の各号のいずれかに該当する場合には、総長はこれを除籍する。ただし、獣医学部及び医学部については有償による除籍について別途定める。1. 各学期初頭に指定された期限内に登録を完了しなかった者 2. <2024年12月17日に廃止> 3. 休学期間満了直後に学期初頭に指定された期間まで復学しない者 4. 紀律処分により退学処分を受けた者"
      },
      "url": "https://rule.konkuk.ac.kr/lmxsrv/law/lawDetail.do?SEQ=409&LAWGROUP=1&PAGE=1",
-     "checked": "2026-11-23"
+     "checked": "2026-11-24"
     }
    }
   },
@@ -31282,7 +31440,7 @@
       "ja": "① 以下の各号の1に該当する者は奨学金選考から除外される。1. 学則に基づき処分を受けた者 2. 8学期を超えた者。ただし、双学位プログラム、プログラム性奨学金に選ばれた者、成人・再職者入試は例外とする。3. 奨学金支給の目的を達成することができないと判断される者"
      },
      "url": "https://rule.konkuk.ac.kr/lmxsrv/law/lawDetail.do?SEQ=371&LAWGROUP=1&PAGE=1",
-     "checked": "2026-11-23"
+     "checked": "2026-11-24"
     }
    }
   },
@@ -31363,7 +31521,7 @@
       "ja": "① 以下の各号の1に該当する者は奨学金選考から除外される。1. 学則に基づき処分を受けた者 2. 8学期を超えた者。ただし、双学位プログラム、プログラム性奨学金に選ばれた者、成人・再職者入試は例外とする。3. 奨学金支給の目的を達成することができないと判断される者"
      },
      "url": "https://rule.konkuk.ac.kr/lmxsrv/law/lawDetail.do?SEQ=371&LAWGROUP=1&PAGE=1",
-     "checked": "2026-11-23"
+     "checked": "2026-11-24"
     }
    }
   },
@@ -31513,7 +31671,7 @@
       "ja": "生活館は在学者のみに開放されるが、館長は収容能力を考慮して大学または学年ごとに入居資格を制限することができる。"
      },
      "url": "https://rule.konkuk.ac.kr/lmxsrv/law/lawDetail.do?SEQ=41&LAWGROUP=1&PAGE=1",
-     "checked": "2026-11-23"
+     "checked": "2026-11-24"
     }
    }
   },
@@ -32007,7 +32165,7 @@
       "ja": "① 以下の各号の1に該当する者は奨学金選考から除外される。1. 学則に基づき処分を受けた者 2. 8学期を超えた者。ただし、双学位プログラム、プログラム性奨学金に選ばれた者、成人・再職者入試は例外とする。3. 奨学金支給の目的を達成することができないと判断される者"
      },
      "url": "https://rule.konkuk.ac.kr/lmxsrv/law/lawDetail.do?SEQ=371&LAWGROUP=1&PAGE=1",
-     "checked": "2026-11-23"
+     "checked": "2026-11-24"
     }
    }
   },
@@ -32211,7 +32369,7 @@
       "ja": "② 休学は1回に限り2学期（1年）を超えることはできないが、休学中の者が家庭事情などの理由により復学できなくなった場合、本人の申請により休学期間を延長することが可能である。"
      },
      "url": "https://rule.konkuk.ac.kr/lmxsrv/law/lawDetail.do?SEQ=409&LAWGROUP=1&PAGE=1",
-     "checked": "2026-11-23"
+     "checked": "2026-11-24"
     }
    }
   },
@@ -32352,7 +32510,7 @@
       "ja": "② 休学は1回に限り2学期（1年）を超えることはできないが、休学中の者が家庭事情などの理由により復学できなくなった場合、本人の申請により休学期間を延長することが可能である。"
      },
      "url": "https://rule.konkuk.ac.kr/lmxsrv/law/lawDetail.do?SEQ=409&LAWGROUP=1&PAGE=1",
-     "checked": "2026-11-23"
+     "checked": "2026-11-24"
     }
    }
   },
@@ -32577,7 +32735,7 @@
       "ja": "② 休学は1回に限り2学期（1年）を超えることはできないが、休学中の者が家庭事情などの理由により復学できなくなった場合、本人の申請により休学期間を延長することが可能である。"
      },
      "url": "https://rule.konkuk.ac.kr/lmxsrv/law/lawDetail.do?SEQ=409&LAWGROUP=1&PAGE=1",
-     "checked": "2026-11-23"
+     "checked": "2026-11-24"
     }
    }
   },
@@ -32741,7 +32899,7 @@
       "ja": "② 休学は1回に限り2学期（1年）を超えることはできないが、休学中の者が家庭事情などの理由により復学できなくなった場合、本人の申請により休学期間を延長することが可能である。"
      },
      "url": "https://rule.konkuk.ac.kr/lmxsrv/law/lawDetail.do?SEQ=409&LAWGROUP=1&PAGE=1",
-     "checked": "2026-11-23"
+     "checked": "2026-11-24"
     }
    }
   },
@@ -32923,7 +33081,7 @@
       "ja": "① 以下の各号の1に該当する者は奨学金選考から除外される。1. 学則に基づき処分を受けた者 2. 8学期を超えた者。ただし、双学位プログラム、プログラム性奨学金に選ばれた者、成人・再職者入試は例外とする。3. 奨学金支給の目的を達成することができないと判断される者"
      },
      "url": "https://rule.konkuk.ac.kr/lmxsrv/law/lawDetail.do?SEQ=371&LAWGROUP=1&PAGE=1",
-     "checked": "2026-11-23"
+     "checked": "2026-11-24"
     }
    }
   },
@@ -33014,7 +33172,7 @@
       "ja": "① 以下の各号の1に該当する者は奨学金選考から除外される。1. 学則に基づき処分を受けた者 2. 8学期を超えた者。ただし、双学位プログラム、プログラム性奨学金に選ばれた者、成人・再職者入試は例外とする。3. 奨学金支給の目的を達成することができないと判断される者"
      },
      "url": "https://rule.konkuk.ac.kr/lmxsrv/law/lawDetail.do?SEQ=371&LAWGROUP=1&PAGE=1",
-     "checked": "2026-11-23"
+     "checked": "2026-11-24"
     }
    }
   },
@@ -33195,7 +33353,7 @@
       "ja": "学生が次の各号のいずれかに該当する場合には、総長はこれを除籍する。ただし、獣医学部及び医学部については有償による除籍について別途定める。1. 各学期初頭に指定された期限内に登録を完了しなかった者 2. <2024年12月17日に廃止> 3. 休学期間満了直後に学期初頭に指定された期間まで復学しない者 4. 紀律処分により退学処分を受けた者"
      },
      "url": "https://rule.konkuk.ac.kr/lmxsrv/law/lawDetail.do?SEQ=409&LAWGROUP=1&PAGE=1",
-     "checked": "2026-11-23"
+     "checked": "2026-11-24"
     }
    }
   },
@@ -33960,7 +34118,7 @@
       "ja": "① 以下の各号の1に該当する者は奨学金選考から除外される。1. 学則に基づき処分を受けた者 2. 8学期を超えた者。ただし、双学位プログラム、プログラム性奨学金に選ばれた者、成人・再職者入試は例外とする。3. 奨学金支給の目的を達成することができないと判断される者"
      },
      "url": "https://rule.konkuk.ac.kr/lmxsrv/law/lawDetail.do?SEQ=371&LAWGROUP=1&PAGE=1",
-     "checked": "2026-11-23"
+     "checked": "2026-11-24"
     }
    }
   },
@@ -35184,7 +35342,7 @@
       "ja": "生活館は在学者のみに開放されるが、館長は収容能力を考慮して大学または学年ごとに入居資格を制限することができる。"
      },
      "url": "https://rule.konkuk.ac.kr/lmxsrv/law/lawDetail.do?SEQ=41&LAWGROUP=1&PAGE=1",
-     "checked": "2026-11-23"
+     "checked": "2026-11-24"
     }
    }
   },
@@ -35292,7 +35450,7 @@
       "ja": "② 休学は1回に限り2学期（1年）を超えることはできないが、休学中の者が家庭事情などの理由により復学できなくなった場合、本人の申請により休学期間を延長することが可能である。"
      },
      "url": "https://rule.konkuk.ac.kr/lmxsrv/law/lawDetail.do?SEQ=409&LAWGROUP=1&PAGE=1",
-     "checked": "2026-11-23"
+     "checked": "2026-11-24"
     }
    }
   },
@@ -35551,7 +35709,7 @@
       "ja": "本規定で使用する用語の定義は以下の各号と同様である。1. 「非学科プログラム」とは、学点が与えられない「非正式教育課程（非学科教育）」であり、本学が教育目的のために実施しているすべての教育活動を指す。2. 「品質管理」とは、事前調査、要望分析、政策立案、実行、評価の段階に続く非学科プログラムの開発・運営・評価の全段階を事前および事後で管理することを意味する。"
      },
      "url": "https://rule.konkuk.ac.kr/lmxsrv/law/lawDetail.do?SEQ=143&LAWGROUP=1&PAGE=1",
-     "checked": "2026-11-23"
+     "checked": "2026-11-24"
     }
    }
   },
@@ -35844,7 +36002,7 @@
       "ja": "① 以下の各号の1に該当する者は奨学金選考から除外される。1. 学則に基づき処分を受けた者 2. 8学期を超えた者。ただし、双学位プログラム、プログラム性奨学金に選ばれた者、成人・再職者入試は例外とする。3. 奨学金支給の目的を達成することができないと判断される者"
      },
      "url": "https://rule.konkuk.ac.kr/lmxsrv/law/lawDetail.do?SEQ=371&LAWGROUP=1&PAGE=1",
-     "checked": "2026-11-23"
+     "checked": "2026-11-24"
     }
    }
   },
@@ -35958,7 +36116,7 @@
       "ja": "① 以下の各号の1に該当する者は奨学金選考から除外される。1. 学則に基づき処分を受けた者 2. 8学期を超えた者。ただし、双学位プログラム、プログラム性奨学金に選ばれた者、成人・再職者入試は例外とする。3. 奨学金支給の目的を達成することができないと判断される者"
      },
      "url": "https://rule.konkuk.ac.kr/lmxsrv/law/lawDetail.do?SEQ=371&LAWGROUP=1&PAGE=1",
-     "checked": "2026-11-23"
+     "checked": "2026-11-24"
     }
    }
   },
@@ -36377,7 +36535,7 @@
       "ja": "① 学生が当該科目の総講義時間数の3分の1以上欠席した場合、その科目の試験に応じる資格がない。"
      },
      "url": "https://rule.konkuk.ac.kr/lmxsrv/law/lawDetail.do?SEQ=409&LAWGROUP=1&PAGE=1",
-     "checked": "2026-11-23"
+     "checked": "2026-11-24"
     }
    }
   },
@@ -37032,7 +37190,7 @@
       "ja": "① 過納された納入金については、全額返還する。ただし、追加学期生の場合、学則施行細則I第29条に基づく納入金を基準とする。"
      },
      "url": "https://rule.konkuk.ac.kr/lmxsrv/law/lawDetail.do?SEQ=409&LAWGROUP=1&PAGE=1",
-     "checked": "2026-11-23"
+     "checked": "2026-11-24"
     }
    }
   },
@@ -37253,7 +37411,7 @@
       "ja": "① 以下の各号の1に該当する者は奨学金選考から除外される。1. 学則に基づき処分を受けた者 2. 8学期を超えた者。ただし、双学位プログラム、プログラム性奨学金に選ばれた者、成人・再職者入試は例外とする。3. 奨学金支給の目的を達成することができないと判断される者"
      },
      "url": "https://rule.konkuk.ac.kr/lmxsrv/law/lawDetail.do?SEQ=371&LAWGROUP=1&PAGE=1",
-     "checked": "2026-11-23"
+     "checked": "2026-11-24"
     }
    }
   },
@@ -37606,7 +37764,7 @@
       "ja": "① 以下の各号の1に該当する者は奨学金選考から除外される。1. 学則に基づき処分を受けた者 2. 8学期を超えた者。ただし、双学位プログラム、プログラム性奨学金に選ばれた者、成人・再職者入試は例外とする。3. 奨学金支給の目的を達成することができないと判断される者"
      },
      "url": "https://rule.konkuk.ac.kr/lmxsrv/law/lawDetail.do?SEQ=371&LAWGROUP=1&PAGE=1",
-     "checked": "2026-11-23"
+     "checked": "2026-11-24"
     }
    }
   },
@@ -37692,7 +37850,7 @@
       "ja": "① 以下の各号の1に該当する者は奨学金選考から除外される。1. 学則に基づき処分を受けた者 2. 8学期を超えた者。ただし、双学位プログラム、プログラム性奨学金に選ばれた者、成人・再職者入試は例外とする。3. 奨学金支給の目的を達成することができないと判断される者"
      },
      "url": "https://rule.konkuk.ac.kr/lmxsrv/law/lawDetail.do?SEQ=371&LAWGROUP=1&PAGE=1",
-     "checked": "2026-11-23"
+     "checked": "2026-11-24"
     }
    }
   },
@@ -38235,7 +38393,7 @@
       "ja": "① 以下の各号の1に該当する者は奨学金選考から除外される。1. 学則に基づき処分を受けた者 2. 8学期を超えた者。ただし、双学位プログラム、プログラム性奨学金に選ばれた者、成人・再職者入試は例外とする。3. 奨学金支給の目的を達成することができないと判断される者"
      },
      "url": "https://rule.konkuk.ac.kr/lmxsrv/law/lawDetail.do?SEQ=371&LAWGROUP=1&PAGE=1",
-     "checked": "2026-11-23"
+     "checked": "2026-11-24"
     }
    }
   },
@@ -38451,15 +38609,36 @@
    "hits": 33,
    "bodyStatus": "poster",
    "title": "2026년도 학생 대상 안전한 개인정보보호 사례 공모전",
-   "titleTr": {},
+   "titleTr": {
+    "en": "2026 Student Safety in Personal Information Protection Case Competition",
+    "zh": "2026年学生安全个人信息保护案例征集比赛",
+    "ja": "2026年 学生向け安全な個人情報保護事例コンテスト"
+   },
    "category": "contest",
-   "deadline": "2026-09-18T23:59",
-   "benefit": null,
-   "eligibility": null,
+   "deadline": "2026-07-21T23:59",
+   "benefit": {
+    "text": {
+     "ko": "500,000원, 1,000,000원, 2,000,000원",
+     "en": "500,000 won, 1,000,000 won, 2,000,000 won",
+     "zh": "500,000韩元, 1,000,000韩元, 2,000,000韩元",
+     "ja": "500,000ウォン, 1,000,000ウォン, 2,000,000ウォン"
+    },
+    "points": null,
+    "won": null,
+    "prize": 2000000
+   },
+   "eligibility": {
+    "ko": "초·중·고등학생(동일연령 청소년 포함), 대학생",
+    "en": "Middle school, high school, and vocational students (including same-age youth), university students",
+    "zh": "初中生、高中生和职业学生（包括同龄青少年），大学生",
+    "ja": "中学生、高校生、職業学生（同年代の青少年を含む）、大学生"
+   },
    "events": [],
    "hours": null,
    "evidence": {
-    "deadline": "접수기간. 2026.7.21.화-9.18.금"
+    "deadline": "접수기간. 2026.7.21.화-9.18.금",
+    "benefit": "| 구분 | 초등학생 (동일연령 청소년) | 중·고등학생 (동일연령 청소년) | 대학생 |\n| 최우수상 (200만원) | 1점 | 1점 | 교육부장관상 |\n| 우수상 (100만원) | 1점 | 1점 | KERIS원장상 |",
+    "eligibility": "참가대상\n대학생"
    },
    "evidenceVerified": true,
    "readFrom": [
@@ -38485,7 +38664,10 @@
     }
    ],
    "summary": {
-    "ko": "공모전·대외활동 관련 공지예요. 신청은 9월 18일까지예요."
+    "ko": "안전한 개인정보보호 사례 공모전 참여자를 모집해요. 초·중·고생과 대학생이 7월 21일까지 신청하면 상금 50만~200만원을 받을 수 있어요.",
+    "en": "We are recruiting participants for the Safety in Personal Information Protection Case Competition. Middle school, high school, and university students can apply until July 21st and receive prizes of 500,000 to 2,000,000 won.",
+    "zh": "我们正在招募安全个人信息保护案例征集比赛的参与者。初中生、高中生和大学生可在7月21日前申请，可获得50万至200万韩元奖金。",
+    "ja": "安全な個人情報保護事例コンテストの参加者を募っています。中高生と大学生は7月21日までに申請すると、50万ウォンから200万ウォンの賞金を受け取ることができます。"
    },
    "terms": [
     "공모전",
@@ -38496,8 +38678,7 @@
     "동의서",
     "유의사항"
    ],
-   "regulation": null,
-   "aiPending": true
+   "regulation": null
   },
   {
    "id": "2-27-120706",
@@ -38727,7 +38908,7 @@
       "ja": "① 過納された納入金については、全額返還する。ただし、追加学期生の場合、学則施行細則I第29条に基づく納入金を基準とする。"
      },
      "url": "https://rule.konkuk.ac.kr/lmxsrv/law/lawDetail.do?SEQ=409&LAWGROUP=1&PAGE=1",
-     "checked": "2026-11-23"
+     "checked": "2026-11-24"
     }
    }
   },
@@ -38991,7 +39172,7 @@
       "ja": "学生が次の各号のいずれかに該当する場合には、総長はこれを除籍する。ただし、獣医学部及び医学部については有償による除籍について別途定める。1. 各学期初頭に指定された期限内に登録を完了しなかった者 2. <2024年12月17日に廃止> 3. 休学期間満了直後に学期初頭に指定された期間まで復学しない者 4. 紀律処分により退学処分を受けた者"
      },
      "url": "https://rule.konkuk.ac.kr/lmxsrv/law/lawDetail.do?SEQ=409&LAWGROUP=1&PAGE=1",
-     "checked": "2026-11-23"
+     "checked": "2026-11-24"
     }
    }
   },
@@ -39072,7 +39253,7 @@
       "ja": "① 以下の各号の1に該当する者は奨学金選考から除外される。1. 学則に基づき処分を受けた者 2. 8学期を超えた者。ただし、双学位プログラム、プログラム性奨学金に選ばれた者、成人・再職者入試は例外とする。3. 奨学金支給の目的を達成することができないと判断される者"
      },
      "url": "https://rule.konkuk.ac.kr/lmxsrv/law/lawDetail.do?SEQ=371&LAWGROUP=1&PAGE=1",
-     "checked": "2026-11-23"
+     "checked": "2026-11-24"
     }
    }
   },
@@ -39233,7 +39414,7 @@
       "ja": "② 前期の学業注意を受けていた学生は、次の学期に登録可能な最大単位数から2単位を減らした範囲内で授業を履修することが許可される。ただし、未卒者および卒業保留者は例外とし、学業注意を受ける学生向けの科目を履修する場合は、単位制限には含めない。"
      },
      "url": "https://rule.konkuk.ac.kr/lmxsrv/law/lawDetail.do?SEQ=409&LAWGROUP=1&PAGE=1",
-     "checked": "2026-11-23"
+     "checked": "2026-11-24"
     }
    }
   },
@@ -39306,7 +39487,7 @@
       "ja": "生活館は在学者のみに開放されるが、館長は収容能力を考慮して大学または学年ごとに入居資格を制限することができる。"
      },
      "url": "https://rule.konkuk.ac.kr/lmxsrv/law/lawDetail.do?SEQ=41&LAWGROUP=1&PAGE=1",
-     "checked": "2026-11-23"
+     "checked": "2026-11-24"
     }
    }
   },
@@ -39461,7 +39642,7 @@
       "ja": "① 以下の各号の1に該当する者は奨学金選考から除外される。1. 学則に基づき処分を受けた者 2. 8学期を超えた者。ただし、双学位プログラム、プログラム性奨学金に選ばれた者、成人・再職者入試は例外とする。3. 奨学金支給の目的を達成することができないと判断される者"
      },
      "url": "https://rule.konkuk.ac.kr/lmxsrv/law/lawDetail.do?SEQ=371&LAWGROUP=1&PAGE=1",
-     "checked": "2026-11-23"
+     "checked": "2026-11-24"
     }
    }
   },
@@ -40077,7 +40258,7 @@
       "ja": "学生が次の各号のいずれかに該当する場合には、総長はこれを除籍する。ただし、獣医学部及び医学部については有償による除籍について別途定める。1. 各学期初頭に指定された期限内に登録を完了しなかった者 2. <2024年12月17日に廃止> 3. 休学期間満了直後に学期初頭に指定された期間まで復学しない者 4. 紀律処分により退学処分を受けた者"
      },
      "url": "https://rule.konkuk.ac.kr/lmxsrv/law/lawDetail.do?SEQ=409&LAWGROUP=1&PAGE=1",
-     "checked": "2026-11-23"
+     "checked": "2026-11-24"
     }
    },
    "alsoIn": []
@@ -40223,7 +40404,7 @@
       "ja": "学生が次の各号のいずれかに該当する場合には、総長はこれを除籍する。ただし、獣医学部及び医学部については有償による除籍について別途定める。1. 各学期初頭に指定された期限内に登録を完了しなかった者 2. <2024年12月17日に廃止> 3. 休学期間満了直後に学期初頭に指定された期間まで復学しない者 4. 紀律処分により退学処分を受けた者"
      },
      "url": "https://rule.konkuk.ac.kr/lmxsrv/law/lawDetail.do?SEQ=409&LAWGROUP=1&PAGE=1",
-     "checked": "2026-11-23"
+     "checked": "2026-11-24"
     }
    }
   },
@@ -40373,7 +40554,7 @@
       "ja": "学生が次の各号のいずれかに該当する場合には、総長はこれを除籍する。ただし、獣医学部及び医学部については有償による除籍について別途定める。1. 各学期初頭に指定された期限内に登録を完了しなかった者 2. <2024年12月17日に廃止> 3. 休学期間満了直後に学期初頭に指定された期間まで復学しない者 4. 紀律処分により退学処分を受けた者"
      },
      "url": "https://rule.konkuk.ac.kr/lmxsrv/law/lawDetail.do?SEQ=409&LAWGROUP=1&PAGE=1",
-     "checked": "2026-11-23"
+     "checked": "2026-11-24"
     }
    }
   },
@@ -40454,7 +40635,7 @@
       "ja": "① 以下の各号の1に該当する者は奨学金選考から除外される。1. 学則に基づき処分を受けた者 2. 8学期を超えた者。ただし、双学位プログラム、プログラム性奨学金に選ばれた者、成人・再職者入試は例外とする。3. 奨学金支給の目的を達成することができないと判断される者"
      },
      "url": "https://rule.konkuk.ac.kr/lmxsrv/law/lawDetail.do?SEQ=371&LAWGROUP=1&PAGE=1",
-     "checked": "2026-11-23"
+     "checked": "2026-11-24"
     }
    }
   },
@@ -40530,7 +40711,7 @@
       "ja": "① 以下の各号の1に該当する者は奨学金選考から除外される。1. 学則に基づき処分を受けた者 2. 8学期を超えた者。ただし、双学位プログラム、プログラム性奨学金に選ばれた者、成人・再職者入試は例外とする。3. 奨学金支給の目的を達成することができないと判断される者"
      },
      "url": "https://rule.konkuk.ac.kr/lmxsrv/law/lawDetail.do?SEQ=371&LAWGROUP=1&PAGE=1",
-     "checked": "2026-11-23"
+     "checked": "2026-11-24"
     }
    }
   },
@@ -40757,7 +40938,7 @@
       "ja": "① 以下の各号の1に該当する者は奨学金選考から除外される。1. 学則に基づき処分を受けた者 2. 8学期を超えた者。ただし、双学位プログラム、プログラム性奨学金に選ばれた者、成人・再職者入試は例外とする。3. 奨学金支給の目的を達成することができないと判断される者"
      },
      "url": "https://rule.konkuk.ac.kr/lmxsrv/law/lawDetail.do?SEQ=371&LAWGROUP=1&PAGE=1",
-     "checked": "2026-11-23"
+     "checked": "2026-11-24"
     }
    }
   },
@@ -40843,7 +41024,7 @@
       "ja": "① 過納された納入金については、全額返還する。ただし、追加学期生の場合、学則施行細則I第29条に基づく納入金を基準とする。"
      },
      "url": "https://rule.konkuk.ac.kr/lmxsrv/law/lawDetail.do?SEQ=409&LAWGROUP=1&PAGE=1",
-     "checked": "2026-11-23"
+     "checked": "2026-11-24"
     }
    }
   },
@@ -40937,7 +41118,7 @@
       "ja": "② 休学は1回に限り2学期（1年）を超えることはできないが、休学中の者が家庭事情などの理由により復学できなくなった場合、本人の申請により休学期間を延長することが可能である。"
      },
      "url": "https://rule.konkuk.ac.kr/lmxsrv/law/lawDetail.do?SEQ=409&LAWGROUP=1&PAGE=1",
-     "checked": "2026-11-23"
+     "checked": "2026-11-24"
     }
    }
   },
@@ -41090,7 +41271,7 @@
       "ja": "② 休学は1回に限り2学期（1年）を超えることはできないが、休学中の者が家庭事情などの理由により復学できなくなった場合、本人の申請により休学期間を延長することが可能である。"
      },
      "url": "https://rule.konkuk.ac.kr/lmxsrv/law/lawDetail.do?SEQ=409&LAWGROUP=1&PAGE=1",
-     "checked": "2026-11-23"
+     "checked": "2026-11-24"
     }
    }
   },
@@ -41725,7 +41906,7 @@
       "ja": "① 以下の各号の1に該当する者は奨学金選考から除外される。1. 学則に基づき処分を受けた者 2. 8学期を超えた者。ただし、双学位プログラム、プログラム性奨学金に選ばれた者、成人・再職者入試は例外とする。3. 奨学金支給の目的を達成することができないと判断される者"
      },
      "url": "https://rule.konkuk.ac.kr/lmxsrv/law/lawDetail.do?SEQ=371&LAWGROUP=1&PAGE=1",
-     "checked": "2026-11-23"
+     "checked": "2026-11-24"
     }
    }
   },
@@ -42692,7 +42873,7 @@
       "ja": "① 以下の各号の1に該当する者は奨学金選考から除外される。1. 学則に基づき処分を受けた者 2. 8学期を超えた者。ただし、双学位プログラム、プログラム性奨学金に選ばれた者、成人・再職者入試は例外とする。3. 奨学金支給の目的を達成することができないと判断される者"
      },
      "url": "https://rule.konkuk.ac.kr/lmxsrv/law/lawDetail.do?SEQ=371&LAWGROUP=1&PAGE=1",
-     "checked": "2026-11-23"
+     "checked": "2026-11-24"
     }
    }
   },
@@ -43522,7 +43703,7 @@
       "ja": "休学者は、復学申請期間中に規定された復学手続きを完了して登録を終了することで復学することができる。第43条 <2017年9月11日に廃止>"
      },
      "url": "https://rule.konkuk.ac.kr/lmxsrv/law/lawDetail.do?SEQ=409&LAWGROUP=1&PAGE=1",
-     "checked": "2026-11-23"
+     "checked": "2026-11-24"
     }
    }
   },
@@ -43667,7 +43848,7 @@
       "ja": "① 以下の各号の1に該当する者は奨学金選考から除外される。1. 学則に基づき処分を受けた者 2. 8学期を超えた者。ただし、双学位プログラム、プログラム性奨学金に選ばれた者、成人・再職者入試は例外とする。3. 奨学金支給の目的を達成することができないと判断される者"
      },
      "url": "https://rule.konkuk.ac.kr/lmxsrv/law/lawDetail.do?SEQ=371&LAWGROUP=1&PAGE=1",
-     "checked": "2026-11-23"
+     "checked": "2026-11-24"
     }
    }
   },
@@ -44499,7 +44680,7 @@
       "ja": "② 休学は1回に限り2学期（1年）を超えることはできないが、休学中の者が家庭事情などの理由により復学できなくなった場合、本人の申請により休学期間を延長することが可能である。"
      },
      "url": "https://rule.konkuk.ac.kr/lmxsrv/law/lawDetail.do?SEQ=409&LAWGROUP=1&PAGE=1",
-     "checked": "2026-11-23"
+     "checked": "2026-11-24"
     }
    }
   },
@@ -44607,7 +44788,7 @@
       "ja": "② 休学は1回に限り2学期（1年）を超えることはできないが、休学中の者が家庭事情などの理由により復学できなくなった場合、本人の申請により休学期間を延長することが可能である。"
      },
      "url": "https://rule.konkuk.ac.kr/lmxsrv/law/lawDetail.do?SEQ=409&LAWGROUP=1&PAGE=1",
-     "checked": "2026-11-23"
+     "checked": "2026-11-24"
     }
    }
   },
@@ -45235,7 +45416,7 @@
       "ja": "① 以下の各号の1に該当する者は奨学金選考から除外される。1. 学則に基づき処分を受けた者 2. 8学期を超えた者。ただし、双学位プログラム、プログラム性奨学金に選ばれた者、成人・再職者入試は例外とする。3. 奨学金支給の目的を達成することができないと判断される者"
      },
      "url": "https://rule.konkuk.ac.kr/lmxsrv/law/lawDetail.do?SEQ=371&LAWGROUP=1&PAGE=1",
-     "checked": "2026-11-23"
+     "checked": "2026-11-24"
     }
    },
    "check": {
@@ -46629,7 +46810,7 @@
       "ja": "① 各学期に指定された科目内で在籍中は、4単位以内で認められる。"
      },
      "url": "https://rule.konkuk.ac.kr/lmxsrv/law/lawDetail.do?SEQ=137&LAWGROUP=1&PAGE=1",
-     "checked": "2026-11-23"
+     "checked": "2026-11-24"
     }
    }
   },
@@ -46851,7 +47032,7 @@
       "ja": "② 休学は1回に限り2学期（1年）を超えることはできないが、休学中の者が家庭事情などの理由により復学できなくなった場合、本人の申請により休学期間を延長することが可能である。"
      },
      "url": "https://rule.konkuk.ac.kr/lmxsrv/law/lawDetail.do?SEQ=409&LAWGROUP=1&PAGE=1",
-     "checked": "2026-11-23"
+     "checked": "2026-11-24"
     }
    },
    "check": {
@@ -47834,7 +48015,7 @@
       "ja": "学生が次の各号のいずれかに該当する場合には、総長はこれを除籍する。ただし、獣医学部及び医学部については有償による除籍について別途定める。1. 各学期初頭に指定された期限内に登録を完了しなかった者 2. <2024年12月17日に廃止> 3. 休学期間満了直後に学期初頭に指定された期間まで復学しない者 4. 紀律処分により退学処分を受けた者"
      },
      "url": "https://rule.konkuk.ac.kr/lmxsrv/law/lawDetail.do?SEQ=409&LAWGROUP=1&PAGE=1",
-     "checked": "2026-11-23"
+     "checked": "2026-11-24"
     }
    }
   },
@@ -48321,7 +48502,7 @@
       "ja": "① 各学期に指定された科目内で在籍中は、4単位以内で認められる。"
      },
      "url": "https://rule.konkuk.ac.kr/lmxsrv/law/lawDetail.do?SEQ=137&LAWGROUP=1&PAGE=1",
-     "checked": "2026-11-23"
+     "checked": "2026-11-24"
     }
    }
   },
@@ -48376,7 +48557,7 @@
       "ja": "① 各学期に指定された科目内で在籍中は、4単位以内で認められる。"
      },
      "url": "https://rule.konkuk.ac.kr/lmxsrv/law/lawDetail.do?SEQ=137&LAWGROUP=1&PAGE=1",
-     "checked": "2026-11-23"
+     "checked": "2026-11-24"
     }
    }
   },
@@ -48585,7 +48766,7 @@
       "ja": "① 各学期に指定された科目内で在籍中は、4単位以内で認められる。"
      },
      "url": "https://rule.konkuk.ac.kr/lmxsrv/law/lawDetail.do?SEQ=137&LAWGROUP=1&PAGE=1",
-     "checked": "2026-11-23"
+     "checked": "2026-11-24"
     }
    }
   },
@@ -48645,7 +48826,7 @@
       "ja": "① 以下の各号の1に該当する者は奨学金選考から除外される。1. 学則に基づき処分を受けた者 2. 8学期を超えた者。ただし、双学位プログラム、プログラム性奨学金に選ばれた者、成人・再職者入試は例外とする。3. 奨学金支給の目的を達成することができないと判断される者"
      },
      "url": "https://rule.konkuk.ac.kr/lmxsrv/law/lawDetail.do?SEQ=371&LAWGROUP=1&PAGE=1",
-     "checked": "2026-11-23"
+     "checked": "2026-11-24"
     }
    }
   },
@@ -49152,7 +49333,7 @@
       "ja": "② 休学は1回に限り2学期（1年）を超えることはできないが、休学中の者が家庭事情などの理由により復学できなくなった場合、本人の申請により休学期間を延長することが可能である。"
      },
      "url": "https://rule.konkuk.ac.kr/lmxsrv/law/lawDetail.do?SEQ=409&LAWGROUP=1&PAGE=1",
-     "checked": "2026-11-23"
+     "checked": "2026-11-24"
     }
    }
   },
@@ -49235,7 +49416,7 @@
       "ja": "休学者は、復学申請期間中に規定された復学手続きを完了して登録を終了することで復学することができる。第43条 <2017年9月11日に廃止>"
      },
      "url": "https://rule.konkuk.ac.kr/lmxsrv/law/lawDetail.do?SEQ=409&LAWGROUP=1&PAGE=1",
-     "checked": "2026-11-23"
+     "checked": "2026-11-24"
     }
    }
   },
@@ -49304,7 +49485,7 @@
       "ja": "① 各学期に指定された科目内で在籍中は、4単位以内で認められる。"
      },
      "url": "https://rule.konkuk.ac.kr/lmxsrv/law/lawDetail.do?SEQ=137&LAWGROUP=1&PAGE=1",
-     "checked": "2026-11-23"
+     "checked": "2026-11-24"
     }
    }
   },
@@ -49373,7 +49554,7 @@
       "ja": "① 各学期に指定された科目内で在籍中は、4単位以内で認められる。"
      },
      "url": "https://rule.konkuk.ac.kr/lmxsrv/law/lawDetail.do?SEQ=137&LAWGROUP=1&PAGE=1",
-     "checked": "2026-11-23"
+     "checked": "2026-11-24"
     }
    }
   },
@@ -49713,7 +49894,7 @@
       "ja": "① 以下の各号の1に該当する者は奨学金選考から除外される。1. 学則に基づき処分を受けた者 2. 8学期を超えた者。ただし、双学位プログラム、プログラム性奨学金に選ばれた者、成人・再職者入試は例外とする。3. 奨学金支給の目的を達成することができないと判断される者"
      },
      "url": "https://rule.konkuk.ac.kr/lmxsrv/law/lawDetail.do?SEQ=371&LAWGROUP=1&PAGE=1",
-     "checked": "2026-11-23"
+     "checked": "2026-11-24"
     }
    }
   },
@@ -49849,7 +50030,7 @@
       "ja": "① 以下の各号の1に該当する者は奨学金選考から除外される。1. 学則に基づき処分を受けた者 2. 8学期を超えた者。ただし、双学位プログラム、プログラム性奨学金に選ばれた者、成人・再職者入試は例外とする。3. 奨学金支給の目的を達成することができないと判断される者"
      },
      "url": "https://rule.konkuk.ac.kr/lmxsrv/law/lawDetail.do?SEQ=371&LAWGROUP=1&PAGE=1",
-     "checked": "2026-11-23"
+     "checked": "2026-11-24"
     }
    }
   },
@@ -49926,7 +50107,7 @@
       "ja": "① 以下の各号の1に該当する者は奨学金選考から除外される。1. 学則に基づき処分を受けた者 2. 8学期を超えた者。ただし、双学位プログラム、プログラム性奨学金に選ばれた者、成人・再職者入試は例外とする。3. 奨学金支給の目的を達成することができないと判断される者"
      },
      "url": "https://rule.konkuk.ac.kr/lmxsrv/law/lawDetail.do?SEQ=371&LAWGROUP=1&PAGE=1",
-     "checked": "2026-11-23"
+     "checked": "2026-11-24"
     }
    }
   },
@@ -50335,7 +50516,7 @@
       "ja": "学生が次の各号のいずれかに該当する場合には、総長はこれを除籍する。ただし、獣医学部及び医学部については有償による除籍について別途定める。1. 各学期初頭に指定された期限内に登録を完了しなかった者 2. <2024年12月17日に廃止> 3. 休学期間満了直後に学期初頭に指定された期間まで復学しない者 4. 紀律処分により退学処分を受けた者"
      },
      "url": "https://rule.konkuk.ac.kr/lmxsrv/law/lawDetail.do?SEQ=409&LAWGROUP=1&PAGE=1",
-     "checked": "2026-11-23"
+     "checked": "2026-11-24"
     }
    }
   },
@@ -50704,7 +50885,7 @@
       "ja": "① 以下の各号の1に該当する者は奨学金選考から除外される。1. 学則に基づき処分を受けた者 2. 8学期を超えた者。ただし、双学位プログラム、プログラム性奨学金に選ばれた者、成人・再職者入試は例外とする。3. 奨学金支給の目的を達成することができないと判断される者"
      },
      "url": "https://rule.konkuk.ac.kr/lmxsrv/law/lawDetail.do?SEQ=371&LAWGROUP=1&PAGE=1",
-     "checked": "2026-11-23"
+     "checked": "2026-11-24"
     }
    }
   },
@@ -51195,7 +51376,7 @@
       "ja": "① 以下の各号の1に該当する者は奨学金選考から除外される。1. 学則に基づき処分を受けた者 2. 8学期を超えた者。ただし、双学位プログラム、プログラム性奨学金に選ばれた者、成人・再職者入試は例外とする。3. 奨学金支給の目的を達成することができないと判断される者"
      },
      "url": "https://rule.konkuk.ac.kr/lmxsrv/law/lawDetail.do?SEQ=371&LAWGROUP=1&PAGE=1",
-     "checked": "2026-11-23"
+     "checked": "2026-11-24"
     }
    }
   },
@@ -51277,7 +51458,7 @@
       "ja": "① 以下の各号の1に該当する者は奨学金選考から除外される。1. 学則に基づき処分を受けた者 2. 8学期を超えた者。ただし、双学位プログラム、プログラム性奨学金に選ばれた者、成人・再職者入試は例外とする。3. 奨学金支給の目的を達成することができないと判断される者"
      },
      "url": "https://rule.konkuk.ac.kr/lmxsrv/law/lawDetail.do?SEQ=371&LAWGROUP=1&PAGE=1",
-     "checked": "2026-11-23"
+     "checked": "2026-11-24"
     }
    }
   },
@@ -51357,7 +51538,7 @@
       "ja": "① 以下の各号の1に該当する者は奨学金選考から除外される。1. 学則に基づき処分を受けた者 2. 8学期を超えた者。ただし、双学位プログラム、プログラム性奨学金に選ばれた者、成人・再職者入試は例外とする。3. 奨学金支給の目的を達成することができないと判断される者"
      },
      "url": "https://rule.konkuk.ac.kr/lmxsrv/law/lawDetail.do?SEQ=371&LAWGROUP=1&PAGE=1",
-     "checked": "2026-11-23"
+     "checked": "2026-11-24"
     }
    }
   },
@@ -51467,7 +51648,7 @@
       "ja": "① 以下の各号の1に該当する者は奨学金選考から除外される。1. 学則に基づき処分を受けた者 2. 8学期を超えた者。ただし、双学位プログラム、プログラム性奨学金に選ばれた者、成人・再職者入試は例外とする。3. 奨学金支給の目的を達成することができないと判断される者"
      },
      "url": "https://rule.konkuk.ac.kr/lmxsrv/law/lawDetail.do?SEQ=371&LAWGROUP=1&PAGE=1",
-     "checked": "2026-11-23"
+     "checked": "2026-11-24"
     }
    }
   },
@@ -51792,7 +51973,7 @@
       "ja": "① 以下の各号の1に該当する者は奨学金選考から除外される。1. 学則に基づき処分を受けた者 2. 8学期を超えた者。ただし、双学位プログラム、プログラム性奨学金に選ばれた者、成人・再職者入試は例外とする。3. 奨学金支給の目的を達成することができないと判断される者"
      },
      "url": "https://rule.konkuk.ac.kr/lmxsrv/law/lawDetail.do?SEQ=371&LAWGROUP=1&PAGE=1",
-     "checked": "2026-11-23"
+     "checked": "2026-11-24"
     }
    }
   },
@@ -52117,7 +52298,7 @@
       "ja": "学生が次の各号のいずれかに該当する場合には、総長はこれを除籍する。ただし、獣医学部及び医学部については有償による除籍について別途定める。1. 各学期初頭に指定された期限内に登録を完了しなかった者 2. <2024年12月17日に廃止> 3. 休学期間満了直後に学期初頭に指定された期間まで復学しない者 4. 紀律処分により退学処分を受けた者"
      },
      "url": "https://rule.konkuk.ac.kr/lmxsrv/law/lawDetail.do?SEQ=409&LAWGROUP=1&PAGE=1",
-     "checked": "2026-11-23"
+     "checked": "2026-11-24"
     }
    }
   },
@@ -52253,7 +52434,7 @@
       "ja": "② 休学は1回に限り2学期（1年）を超えることはできないが、休学中の者が家庭事情などの理由により復学できなくなった場合、本人の申請により休学期間を延長することが可能である。"
      },
      "url": "https://rule.konkuk.ac.kr/lmxsrv/law/lawDetail.do?SEQ=409&LAWGROUP=1&PAGE=1",
-     "checked": "2026-11-23"
+     "checked": "2026-11-24"
     }
    }
   },
@@ -52336,7 +52517,7 @@
       "ja": "① 各学期に指定された科目内で在籍中は、4単位以内で認められる。"
      },
      "url": "https://rule.konkuk.ac.kr/lmxsrv/law/lawDetail.do?SEQ=137&LAWGROUP=1&PAGE=1",
-     "checked": "2026-11-23"
+     "checked": "2026-11-24"
     }
    }
   },
@@ -52822,7 +53003,7 @@
       "ja": "① 過納された納入金については、全額返還する。ただし、追加学期生の場合、学則施行細則I第29条に基づく納入金を基準とする。"
      },
      "url": "https://rule.konkuk.ac.kr/lmxsrv/law/lawDetail.do?SEQ=409&LAWGROUP=1&PAGE=1",
-     "checked": "2026-11-23"
+     "checked": "2026-11-24"
     }
    }
   },
@@ -54066,7 +54247,7 @@
       "ja": "学生が次の各号のいずれかに該当する場合には、総長はこれを除籍する。ただし、獣医学部及び医学部については有償による除籍について別途定める。1. 各学期初頭に指定された期限内に登録を完了しなかった者 2. <2024年12月17日に廃止> 3. 休学期間満了直後に学期初頭に指定された期間まで復学しない者 4. 紀律処分により退学処分を受けた者"
      },
      "url": "https://rule.konkuk.ac.kr/lmxsrv/law/lawDetail.do?SEQ=409&LAWGROUP=1&PAGE=1",
-     "checked": "2026-11-23"
+     "checked": "2026-11-24"
     }
    }
   },
@@ -54405,7 +54586,7 @@
       "ja": "① 以下の各号の1に該当する者は奨学金選考から除外される。1. 学則に基づき処分を受けた者 2. 8学期を超えた者。ただし、双学位プログラム、プログラム性奨学金に選ばれた者、成人・再職者入試は例外とする。3. 奨学金支給の目的を達成することができないと判断される者"
      },
      "url": "https://rule.konkuk.ac.kr/lmxsrv/law/lawDetail.do?SEQ=371&LAWGROUP=1&PAGE=1",
-     "checked": "2026-11-23"
+     "checked": "2026-11-24"
     }
    }
   },
@@ -54495,7 +54676,7 @@
       "ja": "① 以下の各号の1に該当する者は奨学金選考から除外される。1. 学則に基づき処分を受けた者 2. 8学期を超えた者。ただし、双学位プログラム、プログラム性奨学金に選ばれた者、成人・再職者入試は例外とする。3. 奨学金支給の目的を達成することができないと判断される者"
      },
      "url": "https://rule.konkuk.ac.kr/lmxsrv/law/lawDetail.do?SEQ=371&LAWGROUP=1&PAGE=1",
-     "checked": "2026-11-23"
+     "checked": "2026-11-24"
     }
    }
   },
@@ -54871,7 +55052,7 @@
       "ja": "② 休学は1回に限り2学期（1年）を超えることはできないが、休学中の者が家庭事情などの理由により復学できなくなった場合、本人の申請により休学期間を延長することが可能である。"
      },
      "url": "https://rule.konkuk.ac.kr/lmxsrv/law/lawDetail.do?SEQ=409&LAWGROUP=1&PAGE=1",
-     "checked": "2026-11-23"
+     "checked": "2026-11-24"
     }
    }
   },
@@ -54935,7 +55116,7 @@
       "ja": "① 以下の各号の1に該当する者は奨学金選考から除外される。1. 学則に基づき処分を受けた者 2. 8学期を超えた者。ただし、双学位プログラム、プログラム性奨学金に選ばれた者、成人・再職者入試は例外とする。3. 奨学金支給の目的を達成することができないと判断される者"
      },
      "url": "https://rule.konkuk.ac.kr/lmxsrv/law/lawDetail.do?SEQ=371&LAWGROUP=1&PAGE=1",
-     "checked": "2026-11-23"
+     "checked": "2026-11-24"
     }
    }
   },
@@ -55175,7 +55356,7 @@
       "ja": "② 休学は1回に限り2学期（1年）を超えることはできないが、休学中の者が家庭事情などの理由により復学できなくなった場合、本人の申請により休学期間を延長することが可能である。"
      },
      "url": "https://rule.konkuk.ac.kr/lmxsrv/law/lawDetail.do?SEQ=409&LAWGROUP=1&PAGE=1",
-     "checked": "2026-11-23"
+     "checked": "2026-11-24"
     }
    }
   },
@@ -55544,7 +55725,7 @@
       "ja": "② 休学は1回に限り2学期（1年）を超えることはできないが、休学中の者が家庭事情などの理由により復学できなくなった場合、本人の申請により休学期間を延長することが可能である。"
      },
      "url": "https://rule.konkuk.ac.kr/lmxsrv/law/lawDetail.do?SEQ=409&LAWGROUP=1&PAGE=1",
-     "checked": "2026-11-23"
+     "checked": "2026-11-24"
     }
    }
   },
@@ -55854,7 +56035,7 @@
       "ja": "生活館は在学者のみに開放されるが、館長は収容能力を考慮して大学または学年ごとに入居資格を制限することができる。"
      },
      "url": "https://rule.konkuk.ac.kr/lmxsrv/law/lawDetail.do?SEQ=41&LAWGROUP=1&PAGE=1",
-     "checked": "2026-11-23"
+     "checked": "2026-11-24"
     }
    }
   },
@@ -56356,7 +56537,7 @@
       "ja": "① 以下の各号の1に該当する者は奨学金選考から除外される。1. 学則に基づき処分を受けた者 2. 8学期を超えた者。ただし、双学位プログラム、プログラム性奨学金に選ばれた者、成人・再職者入試は例外とする。3. 奨学金支給の目的を達成することができないと判断される者"
      },
      "url": "https://rule.konkuk.ac.kr/lmxsrv/law/lawDetail.do?SEQ=371&LAWGROUP=1&PAGE=1",
-     "checked": "2026-11-23"
+     "checked": "2026-11-24"
     }
    }
   },
@@ -56454,7 +56635,7 @@
       "ja": "① 以下の各号の1に該当する者は奨学金選考から除外される。1. 学則に基づき処分を受けた者 2. 8学期を超えた者。ただし、双学位プログラム、プログラム性奨学金に選ばれた者、成人・再職者入試は例外とする。3. 奨学金支給の目的を達成することができないと判断される者"
      },
      "url": "https://rule.konkuk.ac.kr/lmxsrv/law/lawDetail.do?SEQ=371&LAWGROUP=1&PAGE=1",
-     "checked": "2026-11-23"
+     "checked": "2026-11-24"
     }
    }
   },
@@ -56525,7 +56706,7 @@
       "ja": "① 以下の各号の1に該当する者は奨学金選考から除外される。1. 学則に基づき処分を受けた者 2. 8学期を超えた者。ただし、双学位プログラム、プログラム性奨学金に選ばれた者、成人・再職者入試は例外とする。3. 奨学金支給の目的を達成することができないと判断される者"
      },
      "url": "https://rule.konkuk.ac.kr/lmxsrv/law/lawDetail.do?SEQ=371&LAWGROUP=1&PAGE=1",
-     "checked": "2026-11-23"
+     "checked": "2026-11-24"
     }
    }
   },
@@ -56611,7 +56792,7 @@
       "ja": "生活館は在学者のみに開放されるが、館長は収容能力を考慮して大学または学年ごとに入居資格を制限することができる。"
      },
      "url": "https://rule.konkuk.ac.kr/lmxsrv/law/lawDetail.do?SEQ=41&LAWGROUP=1&PAGE=1",
-     "checked": "2026-11-23"
+     "checked": "2026-11-24"
     }
    }
   },
@@ -56812,7 +56993,7 @@
       "ja": "学生が次の各号のいずれかに該当する場合には、総長はこれを除籍する。ただし、獣医学部及び医学部については有償による除籍について別途定める。1. 各学期初頭に指定された期限内に登録を完了しなかった者 2. <2024年12月17日に廃止> 3. 休学期間満了直後に学期初頭に指定された期間まで復学しない者 4. 紀律処分により退学処分を受けた者"
      },
      "url": "https://rule.konkuk.ac.kr/lmxsrv/law/lawDetail.do?SEQ=409&LAWGROUP=1&PAGE=1",
-     "checked": "2026-11-23"
+     "checked": "2026-11-24"
     }
    }
   },
@@ -57134,7 +57315,7 @@
       "ja": "本規定で使用する用語の定義は以下の各号と同様である。1. 「非学科プログラム」とは、学点が与えられない「非正式教育課程（非学科教育）」であり、本学が教育目的のために実施しているすべての教育活動を指す。2. 「品質管理」とは、事前調査、要望分析、政策立案、実行、評価の段階に続く非学科プログラムの開発・運営・評価の全段階を事前および事後で管理することを意味する。"
      },
      "url": "https://rule.konkuk.ac.kr/lmxsrv/law/lawDetail.do?SEQ=143&LAWGROUP=1&PAGE=1",
-     "checked": "2026-11-23"
+     "checked": "2026-11-24"
     }
    }
   },
@@ -57294,7 +57475,7 @@
       "ja": "① 以下の各号の1に該当する者は奨学金選考から除外される。1. 学則に基づき処分を受けた者 2. 8学期を超えた者。ただし、双学位プログラム、プログラム性奨学金に選ばれた者、成人・再職者入試は例外とする。3. 奨学金支給の目的を達成することができないと判断される者"
      },
      "url": "https://rule.konkuk.ac.kr/lmxsrv/law/lawDetail.do?SEQ=371&LAWGROUP=1&PAGE=1",
-     "checked": "2026-11-23"
+     "checked": "2026-11-24"
     }
    }
   },
@@ -57384,7 +57565,7 @@
       "ja": "① 以下の各号の1に該当する者は奨学金選考から除外される。1. 学則に基づき処分を受けた者 2. 8学期を超えた者。ただし、双学位プログラム、プログラム性奨学金に選ばれた者、成人・再職者入試は例外とする。3. 奨学金支給の目的を達成することができないと判断される者"
      },
      "url": "https://rule.konkuk.ac.kr/lmxsrv/law/lawDetail.do?SEQ=371&LAWGROUP=1&PAGE=1",
-     "checked": "2026-11-23"
+     "checked": "2026-11-24"
     }
    }
   },
@@ -57465,7 +57646,7 @@
       "ja": "① 以下の各号の1に該当する者は奨学金選考から除外される。1. 学則に基づき処分を受けた者 2. 8学期を超えた者。ただし、双学位プログラム、プログラム性奨学金に選ばれた者、成人・再職者入試は例外とする。3. 奨学金支給の目的を達成することができないと判断される者"
      },
      "url": "https://rule.konkuk.ac.kr/lmxsrv/law/lawDetail.do?SEQ=371&LAWGROUP=1&PAGE=1",
-     "checked": "2026-11-23"
+     "checked": "2026-11-24"
     }
    }
   },
@@ -57647,7 +57828,7 @@
       "ja": "① 以下の各号の1に該当する者は奨学金選考から除外される。1. 学則に基づき処分を受けた者 2. 8学期を超えた者。ただし、双学位プログラム、プログラム性奨学金に選ばれた者、成人・再職者入試は例外とする。3. 奨学金支給の目的を達成することができないと判断される者"
      },
      "url": "https://rule.konkuk.ac.kr/lmxsrv/law/lawDetail.do?SEQ=371&LAWGROUP=1&PAGE=1",
-     "checked": "2026-11-23"
+     "checked": "2026-11-24"
     }
    }
   },
@@ -58685,7 +58866,7 @@
       "ja": "学生が次の各号のいずれかに該当する場合には、総長はこれを除籍する。ただし、獣医学部及び医学部については有償による除籍について別途定める。1. 各学期初頭に指定された期限内に登録を完了しなかった者 2. <2024年12月17日に廃止> 3. 休学期間満了直後に学期初頭に指定された期間まで復学しない者 4. 紀律処分により退学処分を受けた者"
      },
      "url": "https://rule.konkuk.ac.kr/lmxsrv/law/lawDetail.do?SEQ=409&LAWGROUP=1&PAGE=1",
-     "checked": "2026-11-23"
+     "checked": "2026-11-24"
     }
    }
   },
@@ -59232,7 +59413,7 @@
       "ja": "② 休学は1回に限り2学期（1年）を超えることはできないが、休学中の者が家庭事情などの理由により復学できなくなった場合、本人の申請により休学期間を延長することが可能である。"
      },
      "url": "https://rule.konkuk.ac.kr/lmxsrv/law/lawDetail.do?SEQ=409&LAWGROUP=1&PAGE=1",
-     "checked": "2026-11-23"
+     "checked": "2026-11-24"
     }
    }
   },
@@ -59419,7 +59600,7 @@
       "ja": "学生が次の各号のいずれかに該当する場合には、総長はこれを除籍する。ただし、獣医学部及び医学部については有償による除籍について別途定める。1. 各学期初頭に指定された期限内に登録を完了しなかった者 2. <2024年12月17日に廃止> 3. 休学期間満了直後に学期初頭に指定された期間まで復学しない者 4. 紀律処分により退学処分を受けた者"
      },
      "url": "https://rule.konkuk.ac.kr/lmxsrv/law/lawDetail.do?SEQ=409&LAWGROUP=1&PAGE=1",
-     "checked": "2026-11-23"
+     "checked": "2026-11-24"
     }
    }
   },
@@ -59585,7 +59766,7 @@
       "ja": "① 以下の各号の1に該当する者は奨学金選考から除外される。1. 学則に基づき処分を受けた者 2. 8学期を超えた者。ただし、双学位プログラム、プログラム性奨学金に選ばれた者、成人・再職者入試は例外とする。3. 奨学金支給の目的を達成することができないと判断される者"
      },
      "url": "https://rule.konkuk.ac.kr/lmxsrv/law/lawDetail.do?SEQ=371&LAWGROUP=1&PAGE=1",
-     "checked": "2026-11-23"
+     "checked": "2026-11-24"
     }
    }
   },
@@ -59780,7 +59961,7 @@
       "ja": "① 以下の各号の1に該当する者は奨学金選考から除外される。1. 学則に基づき処分を受けた者 2. 8学期を超えた者。ただし、双学位プログラム、プログラム性奨学金に選ばれた者、成人・再職者入試は例外とする。3. 奨学金支給の目的を達成することができないと判断される者"
      },
      "url": "https://rule.konkuk.ac.kr/lmxsrv/law/lawDetail.do?SEQ=371&LAWGROUP=1&PAGE=1",
-     "checked": "2026-11-23"
+     "checked": "2026-11-24"
     }
    }
   },
@@ -59884,7 +60065,7 @@
       "ja": "② 休学は1回に限り2学期（1年）を超えることはできないが、休学中の者が家庭事情などの理由により復学できなくなった場合、本人の申請により休学期間を延長することが可能である。"
      },
      "url": "https://rule.konkuk.ac.kr/lmxsrv/law/lawDetail.do?SEQ=409&LAWGROUP=1&PAGE=1",
-     "checked": "2026-11-23"
+     "checked": "2026-11-24"
     }
    }
   },
@@ -59986,7 +60167,7 @@
       "ja": "① 以下の各号の1に該当する者は奨学金選考から除外される。1. 学則に基づき処分を受けた者 2. 8学期を超えた者。ただし、双学位プログラム、プログラム性奨学金に選ばれた者、成人・再職者入試は例外とする。3. 奨学金支給の目的を達成することができないと判断される者"
      },
      "url": "https://rule.konkuk.ac.kr/lmxsrv/law/lawDetail.do?SEQ=371&LAWGROUP=1&PAGE=1",
-     "checked": "2026-11-23"
+     "checked": "2026-11-24"
     }
    }
   },
@@ -60307,7 +60488,7 @@
       "ja": "② 休学は1回に限り2学期（1年）を超えることはできないが、休学中の者が家庭事情などの理由により復学できなくなった場合、本人の申請により休学期間を延長することが可能である。"
      },
      "url": "https://rule.konkuk.ac.kr/lmxsrv/law/lawDetail.do?SEQ=409&LAWGROUP=1&PAGE=1",
-     "checked": "2026-11-23"
+     "checked": "2026-11-24"
     }
    }
   },
@@ -60415,7 +60596,7 @@
       "ja": "② 休学は1回に限り2学期（1年）を超えることはできないが、休学中の者が家庭事情などの理由により復学できなくなった場合、本人の申請により休学期間を延長することが可能である。"
      },
      "url": "https://rule.konkuk.ac.kr/lmxsrv/law/lawDetail.do?SEQ=409&LAWGROUP=1&PAGE=1",
-     "checked": "2026-11-23"
+     "checked": "2026-11-24"
     }
    }
   },
@@ -60599,7 +60780,7 @@
       "ja": "学生が次の各号のいずれかに該当する場合には、総長はこれを除籍する。ただし、獣医学部及び医学部については有償による除籍について別途定める。1. 各学期初頭に指定された期限内に登録を完了しなかった者 2. <2024年12月17日に廃止> 3. 休学期間満了直後に学期初頭に指定された期間まで復学しない者 4. 紀律処分により退学処分を受けた者"
      },
      "url": "https://rule.konkuk.ac.kr/lmxsrv/law/lawDetail.do?SEQ=409&LAWGROUP=1&PAGE=1",
-     "checked": "2026-11-23"
+     "checked": "2026-11-24"
     }
    }
   },
@@ -60899,7 +61080,7 @@
       "ja": "本規定で使用する用語の定義は以下の各号と同様である。1. 「非学科プログラム」とは、学点が与えられない「非正式教育課程（非学科教育）」であり、本学が教育目的のために実施しているすべての教育活動を指す。2. 「品質管理」とは、事前調査、要望分析、政策立案、実行、評価の段階に続く非学科プログラムの開発・運営・評価の全段階を事前および事後で管理することを意味する。"
      },
      "url": "https://rule.konkuk.ac.kr/lmxsrv/law/lawDetail.do?SEQ=143&LAWGROUP=1&PAGE=1",
-     "checked": "2026-11-23"
+     "checked": "2026-11-24"
     }
    }
   },
@@ -61042,7 +61223,7 @@
       "ja": "① 以下の各号の1に該当する者は奨学金選考から除外される。1. 学則に基づき処分を受けた者 2. 8学期を超えた者。ただし、双学位プログラム、プログラム性奨学金に選ばれた者、成人・再職者入試は例外とする。3. 奨学金支給の目的を達成することができないと判断される者"
      },
      "url": "https://rule.konkuk.ac.kr/lmxsrv/law/lawDetail.do?SEQ=371&LAWGROUP=1&PAGE=1",
-     "checked": "2026-11-23"
+     "checked": "2026-11-24"
     }
    }
   },
@@ -61132,7 +61313,7 @@
       "ja": "① 以下の各号の1に該当する者は奨学金選考から除外される。1. 学則に基づき処分を受けた者 2. 8学期を超えた者。ただし、双学位プログラム、プログラム性奨学金に選ばれた者、成人・再職者入試は例外とする。3. 奨学金支給の目的を達成することができないと判断される者"
      },
      "url": "https://rule.konkuk.ac.kr/lmxsrv/law/lawDetail.do?SEQ=371&LAWGROUP=1&PAGE=1",
-     "checked": "2026-11-23"
+     "checked": "2026-11-24"
     }
    }
   },
@@ -61462,7 +61643,7 @@
       "ja": "① 以下の各号の1に該当する者は奨学金選考から除外される。1. 学則に基づき処分を受けた者 2. 8学期を超えた者。ただし、双学位プログラム、プログラム性奨学金に選ばれた者、成人・再職者入試は例外とする。3. 奨学金支給の目的を達成することができないと判断される者"
      },
      "url": "https://rule.konkuk.ac.kr/lmxsrv/law/lawDetail.do?SEQ=371&LAWGROUP=1&PAGE=1",
-     "checked": "2026-11-23"
+     "checked": "2026-11-24"
     }
    }
   },
@@ -61735,7 +61916,7 @@
       "ja": "② 休学は1回に限り2学期（1年）を超えることはできないが、休学中の者が家庭事情などの理由により復学できなくなった場合、本人の申請により休学期間を延長することが可能である。"
      },
      "url": "https://rule.konkuk.ac.kr/lmxsrv/law/lawDetail.do?SEQ=409&LAWGROUP=1&PAGE=1",
-     "checked": "2026-11-23"
+     "checked": "2026-11-24"
     }
    }
   },
@@ -62032,7 +62213,7 @@
       "ja": "② 休学は1回に限り2学期（1年）を超えることはできないが、休学中の者が家庭事情などの理由により復学できなくなった場合、本人の申請により休学期間を延長することが可能である。"
      },
      "url": "https://rule.konkuk.ac.kr/lmxsrv/law/lawDetail.do?SEQ=409&LAWGROUP=1&PAGE=1",
-     "checked": "2026-11-23"
+     "checked": "2026-11-24"
     }
    }
   },
@@ -62565,7 +62746,7 @@
       "ja": "① 以下の各号の1に該当する者は奨学金選考から除外される。1. 学則に基づき処分を受けた者 2. 8学期を超えた者。ただし、双学位プログラム、プログラム性奨学金に選ばれた者、成人・再職者入試は例外とする。3. 奨学金支給の目的を達成することができないと判断される者"
      },
      "url": "https://rule.konkuk.ac.kr/lmxsrv/law/lawDetail.do?SEQ=371&LAWGROUP=1&PAGE=1",
-     "checked": "2026-11-23"
+     "checked": "2026-11-24"
     }
    }
   },
@@ -62713,7 +62894,7 @@
       "ja": "② 休学は1回に限り2学期（1年）を超えることはできないが、休学中の者が家庭事情などの理由により復学できなくなった場合、本人の申請により休学期間を延長することが可能である。"
      },
      "url": "https://rule.konkuk.ac.kr/lmxsrv/law/lawDetail.do?SEQ=409&LAWGROUP=1&PAGE=1",
-     "checked": "2026-11-23"
+     "checked": "2026-11-24"
     }
    }
   },
@@ -63256,7 +63437,7 @@
       "ja": "① 以下の各号の1に該当する者は奨学金選考から除外される。1. 学則に基づき処分を受けた者 2. 8学期を超えた者。ただし、双学位プログラム、プログラム性奨学金に選ばれた者、成人・再職者入試は例外とする。3. 奨学金支給の目的を達成することができないと判断される者"
      },
      "url": "https://rule.konkuk.ac.kr/lmxsrv/law/lawDetail.do?SEQ=371&LAWGROUP=1&PAGE=1",
-     "checked": "2026-11-23"
+     "checked": "2026-11-24"
     }
    }
   },
@@ -63363,7 +63544,7 @@
       "ja": "② 休学は1回に限り2学期（1年）を超えることはできないが、休学中の者が家庭事情などの理由により復学できなくなった場合、本人の申請により休学期間を延長することが可能である。"
      },
      "url": "https://rule.konkuk.ac.kr/lmxsrv/law/lawDetail.do?SEQ=409&LAWGROUP=1&PAGE=1",
-     "checked": "2026-11-23"
+     "checked": "2026-11-24"
     }
    },
    "check": {
@@ -63449,7 +63630,7 @@
       "ja": "① 以下の各号の1に該当する者は奨学金選考から除外される。1. 学則に基づき処分を受けた者 2. 8学期を超えた者。ただし、双学位プログラム、プログラム性奨学金に選ばれた者、成人・再職者入試は例外とする。3. 奨学金支給の目的を達成することができないと判断される者"
      },
      "url": "https://rule.konkuk.ac.kr/lmxsrv/law/lawDetail.do?SEQ=371&LAWGROUP=1&PAGE=1",
-     "checked": "2026-11-23"
+     "checked": "2026-11-24"
     }
    }
   },
@@ -63902,7 +64083,7 @@
       "ja": "① 以下の各号の1に該当する者は奨学金選考から除外される。1. 学則に基づき処分を受けた者 2. 8学期を超えた者。ただし、双学位プログラム、プログラム性奨学金に選ばれた者、成人・再職者入試は例外とする。3. 奨学金支給の目的を達成することができないと判断される者"
      },
      "url": "https://rule.konkuk.ac.kr/lmxsrv/law/lawDetail.do?SEQ=371&LAWGROUP=1&PAGE=1",
-     "checked": "2026-11-23"
+     "checked": "2026-11-24"
     }
    }
   },
@@ -63992,7 +64173,7 @@
       "ja": "① 以下の各号の1に該当する者は奨学金選考から除外される。1. 学則に基づき処分を受けた者 2. 8学期を超えた者。ただし、双学位プログラム、プログラム性奨学金に選ばれた者、成人・再職者入試は例外とする。3. 奨学金支給の目的を達成することができないと判断される者"
      },
      "url": "https://rule.konkuk.ac.kr/lmxsrv/law/lawDetail.do?SEQ=371&LAWGROUP=1&PAGE=1",
-     "checked": "2026-11-23"
+     "checked": "2026-11-24"
     }
    }
   },
@@ -64224,7 +64405,7 @@
       "ja": "② 休学は1回に限り2学期（1年）を超えることはできないが、休学中の者が家庭事情などの理由により復学できなくなった場合、本人の申請により休学期間を延長することが可能である。"
      },
      "url": "https://rule.konkuk.ac.kr/lmxsrv/law/lawDetail.do?SEQ=409&LAWGROUP=1&PAGE=1",
-     "checked": "2026-11-23"
+     "checked": "2026-11-24"
     }
    },
    "check": {
@@ -64841,7 +65022,7 @@
       "ja": "① 以下の各号の1に該当する者は奨学金選考から除外される。1. 学則に基づき処分を受けた者 2. 8学期を超えた者。ただし、双学位プログラム、プログラム性奨学金に選ばれた者、成人・再職者入試は例外とする。3. 奨学金支給の目的を達成することができないと判断される者"
      },
      "url": "https://rule.konkuk.ac.kr/lmxsrv/law/lawDetail.do?SEQ=371&LAWGROUP=1&PAGE=1",
-     "checked": "2026-11-23"
+     "checked": "2026-11-24"
     }
    }
   },
@@ -64935,7 +65116,7 @@
       "ja": "① 以下の各号の1に該当する者は奨学金選考から除外される。1. 学則に基づき処分を受けた者 2. 8学期を超えた者。ただし、双学位プログラム、プログラム性奨学金に選ばれた者、成人・再職者入試は例外とする。3. 奨学金支給の目的を達成することができないと判断される者"
      },
      "url": "https://rule.konkuk.ac.kr/lmxsrv/law/lawDetail.do?SEQ=371&LAWGROUP=1&PAGE=1",
-     "checked": "2026-11-23"
+     "checked": "2026-11-24"
     }
    }
   },
@@ -65016,7 +65197,7 @@
       "ja": "① 以下の各号の1に該当する者は奨学金選考から除外される。1. 学則に基づき処分を受けた者 2. 8学期を超えた者。ただし、双学位プログラム、プログラム性奨学金に選ばれた者、成人・再職者入試は例外とする。3. 奨学金支給の目的を達成することができないと判断される者"
      },
      "url": "https://rule.konkuk.ac.kr/lmxsrv/law/lawDetail.do?SEQ=371&LAWGROUP=1&PAGE=1",
-     "checked": "2026-11-23"
+     "checked": "2026-11-24"
     }
    }
   },
@@ -65102,7 +65283,7 @@
       "ja": "① 以下の各号の1に該当する者は奨学金選考から除外される。1. 学則に基づき処分を受けた者 2. 8学期を超えた者。ただし、双学位プログラム、プログラム性奨学金に選ばれた者、成人・再職者入試は例外とする。3. 奨学金支給の目的を達成することができないと判断される者"
      },
      "url": "https://rule.konkuk.ac.kr/lmxsrv/law/lawDetail.do?SEQ=371&LAWGROUP=1&PAGE=1",
-     "checked": "2026-11-23"
+     "checked": "2026-11-24"
     }
    }
   },
@@ -65586,7 +65767,7 @@
       "ja": "① 以下の各号の1に該当する者は奨学金選考から除外される。1. 学則に基づき処分を受けた者 2. 8学期を超えた者。ただし、双学位プログラム、プログラム性奨学金に選ばれた者、成人・再職者入試は例外とする。3. 奨学金支給の目的を達成することができないと判断される者"
      },
      "url": "https://rule.konkuk.ac.kr/lmxsrv/law/lawDetail.do?SEQ=371&LAWGROUP=1&PAGE=1",
-     "checked": "2026-11-23"
+     "checked": "2026-11-24"
     }
    }
   },
@@ -65641,7 +65822,7 @@
       "ja": "① 以下の各号の1に該当する者は奨学金選考から除外される。1. 学則に基づき処分を受けた者 2. 8学期を超えた者。ただし、双学位プログラム、プログラム性奨学金に選ばれた者、成人・再職者入試は例外とする。3. 奨学金支給の目的を達成することができないと判断される者"
      },
      "url": "https://rule.konkuk.ac.kr/lmxsrv/law/lawDetail.do?SEQ=371&LAWGROUP=1&PAGE=1",
-     "checked": "2026-11-23"
+     "checked": "2026-11-24"
     }
    }
   },
@@ -65731,7 +65912,7 @@
       "ja": "① 以下の各号の1に該当する者は奨学金選考から除外される。1. 学則に基づき処分を受けた者 2. 8学期を超えた者。ただし、双学位プログラム、プログラム性奨学金に選ばれた者、成人・再職者入試は例外とする。3. 奨学金支給の目的を達成することができないと判断される者"
      },
      "url": "https://rule.konkuk.ac.kr/lmxsrv/law/lawDetail.do?SEQ=371&LAWGROUP=1&PAGE=1",
-     "checked": "2026-11-23"
+     "checked": "2026-11-24"
     }
    }
   },
@@ -65886,7 +66067,7 @@
       "ja": "① 以下の各号の1に該当する者は奨学金選考から除外される。1. 学則に基づき処分を受けた者 2. 8学期を超えた者。ただし、双学位プログラム、プログラム性奨学金に選ばれた者、成人・再職者入試は例外とする。3. 奨学金支給の目的を達成することができないと判断される者"
      },
      "url": "https://rule.konkuk.ac.kr/lmxsrv/law/lawDetail.do?SEQ=371&LAWGROUP=1&PAGE=1",
-     "checked": "2026-11-23"
+     "checked": "2026-11-24"
     }
    }
   },
@@ -66042,7 +66223,7 @@
       "ja": "② 休学は1回に限り2学期（1年）を超えることはできないが、休学中の者が家庭事情などの理由により復学できなくなった場合、本人の申請により休学期間を延長することが可能である。"
      },
      "url": "https://rule.konkuk.ac.kr/lmxsrv/law/lawDetail.do?SEQ=409&LAWGROUP=1&PAGE=1",
-     "checked": "2026-11-23"
+     "checked": "2026-11-24"
     }
    }
   },
@@ -66204,7 +66385,7 @@
       "ja": "① 以下の各号の1に該当する者は奨学金選考から除外される。1. 学則に基づき処分を受けた者 2. 8学期を超えた者。ただし、双学位プログラム、プログラム性奨学金に選ばれた者、成人・再職者入試は例外とする。3. 奨学金支給の目的を達成することができないと判断される者"
      },
      "url": "https://rule.konkuk.ac.kr/lmxsrv/law/lawDetail.do?SEQ=371&LAWGROUP=1&PAGE=1",
-     "checked": "2026-11-23"
+     "checked": "2026-11-24"
     }
    }
   },
@@ -66295,7 +66476,7 @@
       "ja": "① 学生が当該科目の総講義時間数の3分の1以上欠席した場合、その科目の試験に応じる資格がない。"
      },
      "url": "https://rule.konkuk.ac.kr/lmxsrv/law/lawDetail.do?SEQ=409&LAWGROUP=1&PAGE=1",
-     "checked": "2026-11-23"
+     "checked": "2026-11-24"
     }
    }
   },
@@ -66399,7 +66580,7 @@
       "ja": "② 休学は1回に限り2学期（1年）を超えることはできないが、休学中の者が家庭事情などの理由により復学できなくなった場合、本人の申請により休学期間を延長することが可能である。"
      },
      "url": "https://rule.konkuk.ac.kr/lmxsrv/law/lawDetail.do?SEQ=409&LAWGROUP=1&PAGE=1",
-     "checked": "2026-11-23"
+     "checked": "2026-11-24"
     }
    }
   },
@@ -66454,7 +66635,7 @@
       "ja": "① 以下の各号の1に該当する者は奨学金選考から除外される。1. 学則に基づき処分を受けた者 2. 8学期を超えた者。ただし、双学位プログラム、プログラム性奨学金に選ばれた者、成人・再職者入試は例外とする。3. 奨学金支給の目的を達成することができないと判断される者"
      },
      "url": "https://rule.konkuk.ac.kr/lmxsrv/law/lawDetail.do?SEQ=371&LAWGROUP=1&PAGE=1",
-     "checked": "2026-11-23"
+     "checked": "2026-11-24"
     }
    }
   },
@@ -66552,7 +66733,7 @@
       "ja": "② 休学は1回に限り2学期（1年）を超えることはできないが、休学中の者が家庭事情などの理由により復学できなくなった場合、本人の申請により休学期間を延長することが可能である。"
      },
      "url": "https://rule.konkuk.ac.kr/lmxsrv/law/lawDetail.do?SEQ=409&LAWGROUP=1&PAGE=1",
-     "checked": "2026-11-23"
+     "checked": "2026-11-24"
     }
    }
   },
@@ -66804,7 +66985,7 @@
       "ja": "① 学生が当該科目の総講義時間数の3分の1以上欠席した場合、その科目の試験に応じる資格がない。"
      },
      "url": "https://rule.konkuk.ac.kr/lmxsrv/law/lawDetail.do?SEQ=409&LAWGROUP=1&PAGE=1",
-     "checked": "2026-11-23"
+     "checked": "2026-11-24"
     }
    }
   },
@@ -66940,7 +67121,7 @@
       "ja": "① 学生が当該科目の総講義時間数の3分の1以上欠席した場合、その科目の試験に応じる資格がない。"
      },
      "url": "https://rule.konkuk.ac.kr/lmxsrv/law/lawDetail.do?SEQ=409&LAWGROUP=1&PAGE=1",
-     "checked": "2026-11-23"
+     "checked": "2026-11-24"
     }
    }
   },
@@ -67091,7 +67272,7 @@
       "ja": "② 休学は1回に限り2学期（1年）を超えることはできないが、休学中の者が家庭事情などの理由により復学できなくなった場合、本人の申請により休学期間を延長することが可能である。"
      },
      "url": "https://rule.konkuk.ac.kr/lmxsrv/law/lawDetail.do?SEQ=409&LAWGROUP=1&PAGE=1",
-     "checked": "2026-11-23"
+     "checked": "2026-11-24"
     }
    }
   },
@@ -67245,7 +67426,7 @@
       "ja": "② 正規学期における海外派遣プログラムへの応募資格を持つ者は、本学の学部所属学生であり、以下の各号のいずれかの資格を備えていること必須である。1. 1学期以上を修了した者 2. 学則に基づき処分を受けたことがない者 3. 海外旅行に欠格事由がない者 4. 海外派遣プログラム募集要項で定められた応募資格を満たす者"
      },
      "url": "https://rule.konkuk.ac.kr/lmxsrv/law/lawDetail.do?SEQ=188&LAWGROUP=1&PAGE=1",
-     "checked": "2026-11-23"
+     "checked": "2026-11-24"
     }
    }
   },
@@ -67330,7 +67511,7 @@
       "ja": "① 以下の各号の1に該当する者は奨学金選考から除外される。1. 学則に基づき処分を受けた者 2. 8学期を超えた者。ただし、双学位プログラム、プログラム性奨学金に選ばれた者、成人・再職者入試は例外とする。3. 奨学金支給の目的を達成することができないと判断される者"
      },
      "url": "https://rule.konkuk.ac.kr/lmxsrv/law/lawDetail.do?SEQ=371&LAWGROUP=1&PAGE=1",
-     "checked": "2026-11-23"
+     "checked": "2026-11-24"
     }
    }
   },
@@ -67385,7 +67566,7 @@
       "ja": "① 以下の各号の1に該当する者は奨学金選考から除外される。1. 学則に基づき処分を受けた者 2. 8学期を超えた者。ただし、双学位プログラム、プログラム性奨学金に選ばれた者、成人・再職者入試は例外とする。3. 奨学金支給の目的を達成することができないと判断される者"
      },
      "url": "https://rule.konkuk.ac.kr/lmxsrv/law/lawDetail.do?SEQ=371&LAWGROUP=1&PAGE=1",
-     "checked": "2026-11-23"
+     "checked": "2026-11-24"
     }
    }
   },
@@ -67590,7 +67771,7 @@
       "ja": "① 以下の各号の1に該当する者は奨学金選考から除外される。1. 学則に基づき処分を受けた者 2. 8学期を超えた者。ただし、双学位プログラム、プログラム性奨学金に選ばれた者、成人・再職者入試は例外とする。3. 奨学金支給の目的を達成することができないと判断される者"
      },
      "url": "https://rule.konkuk.ac.kr/lmxsrv/law/lawDetail.do?SEQ=371&LAWGROUP=1&PAGE=1",
-     "checked": "2026-11-23"
+     "checked": "2026-11-24"
     }
    }
   },
@@ -67784,7 +67965,7 @@
       "ja": "本規定で使用する用語の定義は以下の各号と同様である。1. 「非学科プログラム」とは、学点が与えられない「非正式教育課程（非学科教育）」であり、本学が教育目的のために実施しているすべての教育活動を指す。2. 「品質管理」とは、事前調査、要望分析、政策立案、実行、評価の段階に続く非学科プログラムの開発・運営・評価の全段階を事前および事後で管理することを意味する。"
      },
      "url": "https://rule.konkuk.ac.kr/lmxsrv/law/lawDetail.do?SEQ=143&LAWGROUP=1&PAGE=1",
-     "checked": "2026-11-23"
+     "checked": "2026-11-24"
     }
    }
   },
@@ -67843,7 +68024,7 @@
       "ja": "② 正規学期における海外派遣プログラムへの応募資格を持つ者は、本学の学部所属学生であり、以下の各号のいずれかの資格を備えていること必須である。1. 1学期以上を修了した者 2. 学則に基づき処分を受けたことがない者 3. 海外旅行に欠格事由がない者 4. 海外派遣プログラム募集要項で定められた応募資格を満たす者"
      },
      "url": "https://rule.konkuk.ac.kr/lmxsrv/law/lawDetail.do?SEQ=188&LAWGROUP=1&PAGE=1",
-     "checked": "2026-11-23"
+     "checked": "2026-11-24"
     }
    }
   },
@@ -67924,7 +68105,7 @@
       "ja": "② 正規学期における海外派遣プログラムへの応募資格を持つ者は、本学の学部所属学生であり、以下の各号のいずれかの資格を備えていること必須である。1. 1学期以上を修了した者 2. 学則に基づき処分を受けたことがない者 3. 海外旅行に欠格事由がない者 4. 海外派遣プログラム募集要項で定められた応募資格を満たす者"
      },
      "url": "https://rule.konkuk.ac.kr/lmxsrv/law/lawDetail.do?SEQ=188&LAWGROUP=1&PAGE=1",
-     "checked": "2026-11-23"
+     "checked": "2026-11-24"
     }
    }
   },
@@ -67987,7 +68168,7 @@
       "ja": "② 正規学期における海外派遣プログラムへの応募資格を持つ者は、本学の学部所属学生であり、以下の各号のいずれかの資格を備えていること必須である。1. 1学期以上を修了した者 2. 学則に基づき処分を受けたことがない者 3. 海外旅行に欠格事由がない者 4. 海外派遣プログラム募集要項で定められた応募資格を満たす者"
      },
      "url": "https://rule.konkuk.ac.kr/lmxsrv/law/lawDetail.do?SEQ=188&LAWGROUP=1&PAGE=1",
-     "checked": "2026-11-23"
+     "checked": "2026-11-24"
     }
    }
   },
@@ -68042,7 +68223,7 @@
       "ja": "① 以下の各号の1に該当する者は奨学金選考から除外される。1. 学則に基づき処分を受けた者 2. 8学期を超えた者。ただし、双学位プログラム、プログラム性奨学金に選ばれた者、成人・再職者入試は例外とする。3. 奨学金支給の目的を達成することができないと判断される者"
      },
      "url": "https://rule.konkuk.ac.kr/lmxsrv/law/lawDetail.do?SEQ=371&LAWGROUP=1&PAGE=1",
-     "checked": "2026-11-23"
+     "checked": "2026-11-24"
     }
    }
   },
@@ -68108,7 +68289,7 @@
       "ja": "② 正規学期における海外派遣プログラムへの応募資格を持つ者は、本学の学部所属学生であり、以下の各号のいずれかの資格を備えていること必須である。1. 1学期以上を修了した者 2. 学則に基づき処分を受けたことがない者 3. 海外旅行に欠格事由がない者 4. 海外派遣プログラム募集要項で定められた応募資格を満たす者"
      },
      "url": "https://rule.konkuk.ac.kr/lmxsrv/law/lawDetail.do?SEQ=188&LAWGROUP=1&PAGE=1",
-     "checked": "2026-11-23"
+     "checked": "2026-11-24"
     }
    }
   },
@@ -68314,7 +68495,7 @@
       "ja": "② 休学は1回に限り2学期（1年）を超えることはできないが、休学中の者が家庭事情などの理由により復学できなくなった場合、本人の申請により休学期間を延長することが可能である。"
      },
      "url": "https://rule.konkuk.ac.kr/lmxsrv/law/lawDetail.do?SEQ=409&LAWGROUP=1&PAGE=1",
-     "checked": "2026-11-23"
+     "checked": "2026-11-24"
     }
    }
   },
@@ -68510,7 +68691,7 @@
       "ja": "② 正規学期における海外派遣プログラムへの応募資格を持つ者は、本学の学部所属学生であり、以下の各号のいずれかの資格を備えていること必須である。1. 1学期以上を修了した者 2. 学則に基づき処分を受けたことがない者 3. 海外旅行に欠格事由がない者 4. 海外派遣プログラム募集要項で定められた応募資格を満たす者"
      },
      "url": "https://rule.konkuk.ac.kr/lmxsrv/law/lawDetail.do?SEQ=188&LAWGROUP=1&PAGE=1",
-     "checked": "2026-11-23"
+     "checked": "2026-11-24"
     }
    }
   },
@@ -68677,7 +68858,7 @@
       "ja": "学生が次の各号のいずれかに該当する場合には、総長はこれを除籍する。ただし、獣医学部及び医学部については有償による除籍について別途定める。1. 各学期初頭に指定された期限内に登録を完了しなかった者 2. <2024年12月17日に廃止> 3. 休学期間満了直後に学期初頭に指定された期間まで復学しない者 4. 紀律処分により退学処分を受けた者"
      },
      "url": "https://rule.konkuk.ac.kr/lmxsrv/law/lawDetail.do?SEQ=409&LAWGROUP=1&PAGE=1",
-     "checked": "2026-11-23"
+     "checked": "2026-11-24"
     }
    }
   },
@@ -68757,7 +68938,7 @@
       "ja": "① 以下の各号の1に該当する者は奨学金選考から除外される。1. 学則に基づき処分を受けた者 2. 8学期を超えた者。ただし、双学位プログラム、プログラム性奨学金に選ばれた者、成人・再職者入試は例外とする。3. 奨学金支給の目的を達成することができないと判断される者"
      },
      "url": "https://rule.konkuk.ac.kr/lmxsrv/law/lawDetail.do?SEQ=371&LAWGROUP=1&PAGE=1",
-     "checked": "2026-11-23"
+     "checked": "2026-11-24"
     }
    }
   },
@@ -68813,7 +68994,7 @@
       "ja": "① 以下の各号の1に該当する者は奨学金選考から除外される。1. 学則に基づき処分を受けた者 2. 8学期を超えた者。ただし、双学位プログラム、プログラム性奨学金に選ばれた者、成人・再職者入試は例外とする。3. 奨学金支給の目的を達成することができないと判断される者"
      },
      "url": "https://rule.konkuk.ac.kr/lmxsrv/law/lawDetail.do?SEQ=371&LAWGROUP=1&PAGE=1",
-     "checked": "2026-11-23"
+     "checked": "2026-11-24"
     }
    }
   },
@@ -69046,7 +69227,7 @@
       "ja": "① 以下の各号の1に該当する者は奨学金選考から除外される。1. 学則に基づき処分を受けた者 2. 8学期を超えた者。ただし、双学位プログラム、プログラム性奨学金に選ばれた者、成人・再職者入試は例外とする。3. 奨学金支給の目的を達成することができないと判断される者"
      },
      "url": "https://rule.konkuk.ac.kr/lmxsrv/law/lawDetail.do?SEQ=371&LAWGROUP=1&PAGE=1",
-     "checked": "2026-11-23"
+     "checked": "2026-11-24"
     }
    }
   },
@@ -69140,7 +69321,7 @@
       "ja": "① 学生が当該科目の総講義時間数の3分の1以上欠席した場合、その科目の試験に応じる資格がない。"
      },
      "url": "https://rule.konkuk.ac.kr/lmxsrv/law/lawDetail.do?SEQ=409&LAWGROUP=1&PAGE=1",
-     "checked": "2026-11-23"
+     "checked": "2026-11-24"
     }
    }
   },
@@ -69216,7 +69397,7 @@
       "ja": "① 以下の各号の1に該当する者は奨学金選考から除外される。1. 学則に基づき処分を受けた者 2. 8学期を超えた者。ただし、双学位プログラム、プログラム性奨学金に選ばれた者、成人・再職者入試は例外とする。3. 奨学金支給の目的を達成することができないと判断される者"
      },
      "url": "https://rule.konkuk.ac.kr/lmxsrv/law/lawDetail.do?SEQ=371&LAWGROUP=1&PAGE=1",
-     "checked": "2026-11-23"
+     "checked": "2026-11-24"
     }
    }
   },
@@ -69511,7 +69692,7 @@
       "ja": "① 以下の各号の1に該当する者は奨学金選考から除外される。1. 学則に基づき処分を受けた者 2. 8学期を超えた者。ただし、双学位プログラム、プログラム性奨学金に選ばれた者、成人・再職者入試は例外とする。3. 奨学金支給の目的を達成することができないと判断される者"
      },
      "url": "https://rule.konkuk.ac.kr/lmxsrv/law/lawDetail.do?SEQ=371&LAWGROUP=1&PAGE=1",
-     "checked": "2026-11-23"
+     "checked": "2026-11-24"
     }
    }
   },
@@ -69725,7 +69906,7 @@
       "ja": "① 以下の各号の1に該当する者は奨学金選考から除外される。1. 学則に基づき処分を受けた者 2. 8学期を超えた者。ただし、双学位プログラム、プログラム性奨学金に選ばれた者、成人・再職者入試は例外とする。3. 奨学金支給の目的を達成することができないと判断される者"
      },
      "url": "https://rule.konkuk.ac.kr/lmxsrv/law/lawDetail.do?SEQ=371&LAWGROUP=1&PAGE=1",
-     "checked": "2026-11-23"
+     "checked": "2026-11-24"
     }
    }
   },
@@ -69802,7 +69983,7 @@
       "ja": "① 学生が当該科目の総講義時間数の3分の1以上欠席した場合、その科目の試験に応じる資格がない。"
      },
      "url": "https://rule.konkuk.ac.kr/lmxsrv/law/lawDetail.do?SEQ=409&LAWGROUP=1&PAGE=1",
-     "checked": "2026-11-23"
+     "checked": "2026-11-24"
     }
    }
   },
@@ -70003,7 +70184,7 @@
       "ja": "① 以下の各号の1に該当する者は奨学金選考から除外される。1. 学則に基づき処分を受けた者 2. 8学期を超えた者。ただし、双学位プログラム、プログラム性奨学金に選ばれた者、成人・再職者入試は例外とする。3. 奨学金支給の目的を達成することができないと判断される者"
      },
      "url": "https://rule.konkuk.ac.kr/lmxsrv/law/lawDetail.do?SEQ=371&LAWGROUP=1&PAGE=1",
-     "checked": "2026-11-23"
+     "checked": "2026-11-24"
     }
    }
   },
@@ -70105,7 +70286,7 @@
       "ja": "生活館は在学者のみに開放されるが、館長は収容能力を考慮して大学または学年ごとに入居資格を制限することができる。"
      },
      "url": "https://rule.konkuk.ac.kr/lmxsrv/law/lawDetail.do?SEQ=41&LAWGROUP=1&PAGE=1",
-     "checked": "2026-11-23"
+     "checked": "2026-11-24"
     }
    }
   },
@@ -70187,7 +70368,7 @@
       "ja": "② 休学は1回に限り2学期（1年）を超えることはできないが、休学中の者が家庭事情などの理由により復学できなくなった場合、本人の申請により休学期間を延長することが可能である。"
      },
      "url": "https://rule.konkuk.ac.kr/lmxsrv/law/lawDetail.do?SEQ=409&LAWGROUP=1&PAGE=1",
-     "checked": "2026-11-23"
+     "checked": "2026-11-24"
     }
    }
   },
@@ -70282,7 +70463,7 @@
       "ja": "① 学生が当該科目の総講義時間数の3分の1以上欠席した場合、その科目の試験に応じる資格がない。"
      },
      "url": "https://rule.konkuk.ac.kr/lmxsrv/law/lawDetail.do?SEQ=409&LAWGROUP=1&PAGE=1",
-     "checked": "2026-11-23"
+     "checked": "2026-11-24"
     }
    }
   },
