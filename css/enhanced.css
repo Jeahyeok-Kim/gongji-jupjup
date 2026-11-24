@@ -5850,6 +5850,157 @@ dialog[open]::backdrop {
   padding: 6px 10px !important;
 }
 
+.tl-actions {
+  display: flex !important;
+  align-items: center !important;
+  gap: 4px !important;
+}
+
+.tl-edit-btn {
+  width: 28px !important;
+  height: 28px !important;
+  border: none !important;
+  background: none !important;
+  cursor: pointer !important;
+  font-size: 13px !important;
+  border-radius: 6px !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  opacity: 0.65 !important;
+  transition: opacity 0.15s, background 0.15s !important;
+  padding: 0 !important;
+}
+
+.tl-edit-btn:hover {
+  opacity: 1 !important;
+  background: var(--fill, rgba(0, 0, 0, 0.06)) !important;
+}
+
+[data-theme="dark"] .tl-edit-btn:hover {
+  background: rgba(255, 255, 255, 0.1) !important;
+}
+
+.term-drop-active {
+  outline: 2px dashed var(--accent, #00d26a) !important;
+  outline-offset: -2px !important;
+  background: color-mix(in srgb, var(--accent, #00d26a) 8%, transparent) !important;
+  border-radius: 12px !important;
+}
+
+.term-list li {
+  grid-template-columns: minmax(0, 1fr) auto 64px 3ch 62px !important;
+}
+
+@media (max-width: 640px) {
+  .term-list li {
+    grid-template-columns: minmax(0, 1fr) 56px 3ch 58px !important;
+  }
+}
+
+.course-edit-modal-backdrop {
+  position: fixed !important;
+  inset: 0 !important;
+  background: rgba(0, 0, 0, 0.55) !important;
+  backdrop-filter: blur(4px) !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  z-index: 10000 !important;
+  padding: 16px !important;
+}
+
+.course-edit-modal-card {
+  width: 100% !important;
+  max-width: 440px !important;
+  background: var(--surface, #ffffff) !important;
+  border: 1px solid var(--border, #e5e8eb) !important;
+  border-radius: 18px !important;
+  box-shadow: 0 16px 36px rgba(0, 0, 0, 0.22) !important;
+  padding: 22px !important;
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 14px !important;
+  animation: modalPopIn 0.18s cubic-bezier(0.16, 1, 0.3, 1) !important;
+}
+
+[data-theme="dark"] .course-edit-modal-card {
+  background: var(--surface-1, #1a2026) !important;
+  border-color: rgba(255, 255, 255, 0.12) !important;
+  box-shadow: 0 20px 48px rgba(0, 0, 0, 0.45) !important;
+}
+
+@keyframes modalPopIn {
+  from { opacity: 0; transform: scale(0.96) translateY(6px); }
+  to { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+.cem-head {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  border-bottom: 1px solid var(--border, #e5e8eb) !important;
+  padding-bottom: 10px !important;
+}
+
+.cem-title {
+  margin: 0 !important;
+  font-size: 16.5px !important;
+  font-weight: 700 !important;
+  color: var(--text) !important;
+}
+
+.cem-fields {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 12px !important;
+}
+
+.cem-field-group {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 4px !important;
+}
+
+.cem-field-group label {
+  font-size: 12.5px !important;
+  font-weight: 600 !important;
+  color: var(--text-muted, #71717a) !important;
+}
+
+.cem-field-group input,
+.cem-field-group select {
+  padding: 9px 12px !important;
+  border-radius: 9px !important;
+  border: 1px solid var(--border, #e5e8eb) !important;
+  background: var(--surface-2, #f4f5f7) !important;
+  color: var(--text) !important;
+  font-size: 14px !important;
+  font-family: inherit !important;
+}
+
+[data-theme="dark"] .cem-field-group input,
+[data-theme="dark"] .cem-field-group select {
+  background: var(--surface-2, #232a32) !important;
+  border-color: rgba(255, 255, 255, 0.12) !important;
+}
+
+.cem-row {
+  display: grid !important;
+  grid-template-columns: 1fr 1fr !important;
+  gap: 10px !important;
+}
+
+.cem-actions {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: flex-end !important;
+  gap: 8px !important;
+  margin-top: 6px !important;
+  padding-top: 12px !important;
+  border-top: 1px solid var(--border, #e5e8eb) !important;
+}
+
 .tmc-add-btn {
   padding: 7px 14px !important;
   border-radius: 9px !important;

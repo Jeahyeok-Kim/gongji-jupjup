@@ -1024,14 +1024,189 @@
       return box;
     }
 
+    function openCourseEditDialog(courseItem) {
+      const Tx = T();
+      const existing = document.querySelector('.course-edit-modal-backdrop');
+      if (existing) existing.remove();
+
+      const terms = termOptions();
+      const allKinds = KINDS;
+
+      let backdrop = null;
+
+      const onSave = (e) => {
+        e.preventDefault();
+        const f = e.currentTarget;
+        const newName = (f.elements.editName.value || '').trim();
+        const newTerm = f.elements.editTerm.value;
+        const newKind = f.elements.editKind.value;
+        const newCredit = Number(f.elements.editCredit.value) || 3;
+        const newGrade = f.elements.editGrade.value;
+
+        if (!newName) { toast('과목명을 입력해 주세요.'); return; }
+        if (newCredit <= 0) { toast('학점은 0보다 커야 합니다.'); return; }
+
+        st.history = st.history.map((y) => {
+          if (y === courseItem || (y.id && y.id === courseItem.id)) {
+            return Object.assign({}, y, {
+              name: newName,
+              term: newTerm,
+              kind: newKind,
+              credit: newCredit,
+              grade: newGrade
+            });
+          }
+          return y;
+        });
+        st.history = P.cleanHistory(st.history);
+        save();
+        render();
+        if (backdrop) backdrop.remove();
+        toast(`[${newName}] 과목 정보가 수정되었습니다.`);
+      };
+
+      const onDelete = () => {
+        if (!confirm(`[${courseItem.name}] 과목을 이수 내역에서 삭제하시겠습니까?`)) return;
+        st.history = st.history.filter((y) => y !== courseItem && (!y.id || y.id !== courseItem.id));
+        save();
+        render();
+        if (backdrop) backdrop.remove();
+        toast(`[${courseItem.name}] 과목이 삭제되었습니다.`);
+      };
+
+      backdrop = h('div', {
+        class: 'course-edit-modal-backdrop',
+        onclick: (ev) => { if (ev.target === backdrop) backdrop.remove(); }
+      },
+        h('form', { class: 'course-edit-modal-card', onsubmit: onSave },
+          h('div', { class: 'cem-head' },
+            h('h3', { class: 'cem-title' }, `✏️ 과목 정보 수정`),
+            h('button', {
+              type: 'button',
+              class: 'icon-x',
+              title: '닫기',
+              onclick: () => backdrop.remove()
+            }, '×')
+          ),
+          h('div', { class: 'cem-fields' },
+            h('div', { class: 'cem-field-group' },
+              h('label', null, '과목명'),
+              h('input', {
+                type: 'text',
+                name: 'editName',
+                value: courseItem.name,
+                required: true,
+                maxlength: '60',
+                placeholder: '과목명'
+              })
+            ),
+            h('div', { class: 'cem-field-group' },
+              h('label', null, '이수 학기 (학기 변경 시 해당 학기로 바로 이동)'),
+              h('select', { name: 'editTerm' },
+                h('option', { value: '', selected: !courseItem.term ? true : null }, '학기 모름'),
+                terms.map((t) => h('option', {
+                  value: t,
+                  selected: courseItem.term === t ? true : null
+                }, termName(t)))
+              )
+            ),
+            h('div', { class: 'cem-row' },
+              h('div', { class: 'cem-field-group' },
+                h('label', null, '이수구분'),
+                h('select', { name: 'editKind' },
+                  allKinds.map((k) => h('option', {
+                    value: k,
+                    selected: courseItem.kind === k ? true : null
+                  }, kindLabel(k)))
+                )
+              ),
+              h('div', { class: 'cem-field-group' },
+                h('label', null, '학점'),
+                h('input', {
+                  type: 'number',
+                  name: 'editCredit',
+                  min: '0.5',
+                  max: '9',
+                  step: '0.5',
+                  value: String(courseItem.credit || 3),
+                  required: true
+                })
+              )
+            ),
+            h('div', { class: 'cem-field-group' },
+              h('label', null, '취득 성적'),
+              h('select', { name: 'editGrade' },
+                h('option', { value: '', selected: !courseItem.grade ? true : null }, '— (미입력/재학 중)'),
+                P.GRADES.concat('F').map((g) => h('option', {
+                  value: g,
+                  selected: courseItem.grade === g ? true : null
+                }, g))
+              )
+            )
+          ),
+          h('div', { class: 'cem-actions' },
+            h('button', {
+              type: 'button',
+              class: 'btn small',
+              style: 'margin-right: auto; color: var(--danger, #ef4444); border-color: rgba(239, 68, 68, 0.3);',
+              onclick: onDelete
+            }, '과목 삭제'),
+            h('button', {
+              type: 'button',
+              class: 'btn small',
+              onclick: () => backdrop.remove()
+            }, '취소'),
+            h('button', {
+              type: 'submit',
+              class: 'btn small primary'
+            }, '수정 저장')
+          )
+        )
+      );
+
+      document.body.appendChild(backdrop);
+    }
+
     function renderTerms() {
       const Tx = T();
       if (!st.history.length) return h('p', { class: 'empty' }, Tx.histEmpty);
-      return h('div', { class: 'terms' }, P.byTerm(st.history).map((g) => h('section', { class: 'term' },
+      return h('div', { class: 'terms' }, P.byTerm(st.history).map((g) => h('section', {
+        class: 'term',
+        ondragover: (e) => {
+          e.preventDefault();
+          e.dataTransfer.dropEffect = 'move';
+          e.currentTarget.classList.add('term-drop-active');
+        },
+        ondragleave: (e) => {
+          e.currentTarget.classList.remove('term-drop-active');
+        },
+        ondrop: (e) => {
+          e.preventDefault();
+          e.currentTarget.classList.remove('term-drop-active');
+          const targetIdOrName = e.dataTransfer.getData('text/plain');
+          const hit = st.history.find(y => (y.id && y.id === targetIdOrName) || y.name === targetIdOrName);
+          if (hit && hit.term !== g.term) {
+            hit.term = g.term;
+            save(); render();
+            toast(`[${hit.name}] 과목이 ${termName(g.term)}(으)로 이동되었습니다.`);
+          }
+        }
+      },
         h('h4', { class: 'term-head' }, h('span', null, termName(g.term)),
           h('span', { class: 'term-sum' }, [Tx.histCredits(g.credits), (() => { const v = P.gpa(g.items); return v ? Tx.gpaLabel(v.gpa.toFixed(2)) : ''; })()].filter(Boolean).join(' · '))),
-        h('ul', { class: 'term-list' }, g.items.map((x) => h('li', null,
-          h('span', { class: 'tl-name' }, x.name),
+        h('ul', { class: 'term-list' }, g.items.map((x) => h('li', {
+          draggable: 'true',
+          ondragstart: (e) => {
+            e.dataTransfer.setData('text/plain', x.id || x.name);
+            e.dataTransfer.effectAllowed = 'move';
+          }
+        },
+          h('span', {
+            class: 'tl-name',
+            title: '클릭하여 과목 정보(학기·학점·이수구분) 수정',
+            style: 'cursor: pointer;',
+            onclick: () => openCourseEditDialog(x)
+          }, x.name),
           h('span', { class: 'tl-kind' }, kindLabel(x.kind)),
           h('select', { class: 'tl-grade', 'aria-label': `${x.name} ${Tx.histGrade}`, onchange: (e) => {
             st.history = st.history.map((y) => (y === x ? Object.assign({}, y, { grade: e.target.value }) : y));
@@ -1039,12 +1214,28 @@
             save(); render();
           } }, h('option', { value: '' }, '—'), P.GRADES.concat('F').map((gr) => h('option', { value: gr, selected: x.grade === gr ? true : null }, gr))),
           h('span', { class: 'tl-credit' }, String(x.credit)),
-          h('button', { type: 'button', class: 'icon-x', 'aria-label': `${x.name} ${Tx.histRemove}`, title: Tx.histRemove, onclick: () => {
-            const before = st.history;
-            st.history = st.history.filter((y) => y !== x);
-            save(); render();
-            toast(Tx.histRemoved(x.name), { label: Tx.undo, run: () => { st.history = before; save(); render(); } });
-          } }, '×')))))));
+          h('div', { class: 'tl-actions' },
+            h('button', {
+              type: 'button',
+              class: 'tl-edit-btn',
+              'aria-label': `${x.name} 수정`,
+              title: `${x.name} 수정 (학기 이동, 학점, 이수구분 변경)`,
+              onclick: () => openCourseEditDialog(x)
+            }, '✏️'),
+            h('button', {
+              type: 'button',
+              class: 'icon-x',
+              'aria-label': `${x.name} ${Tx.histRemove}`,
+              title: Tx.histRemove,
+              onclick: () => {
+                const before = st.history;
+                st.history = st.history.filter((y) => y !== x);
+                save(); render();
+                toast(Tx.histRemoved(x.name), { label: Tx.undo, run: () => { st.history = before; save(); render(); } });
+              }
+            }, '×')
+          )
+        ))))));
     }
 
     function renderGpaSimulator() {

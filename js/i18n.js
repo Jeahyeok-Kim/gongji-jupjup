@@ -12,6 +12,8 @@
 
   const T = {
     ko: {
+      brandName: '공지 줍줍',
+      brandLogo: '공지 <em>줍줍</em>',
       tagline: '흩어진 학교 공지, 나에게 맞는 것만 줍줍',
       language: 'Language',
       sampleBanner: '지금 보이는 공지는 화면 개발용 샘플입니다. 실제 학교 공지가 아닙니다.',
@@ -125,6 +127,8 @@
     },
 
     en: {
+      brandName: 'Notice Grab',
+      brandLogo: 'Notice <em>Grab</em>',
       tagline: 'Scattered campus notices, picked just for you',
       language: 'Language',
       sampleBanner: 'These are sample notices for development, not real school notices.',
@@ -146,7 +150,7 @@
       backupTitle: 'Back up my settings', backupHelp: 'Your timetable, language and sort settings are saved only in this browser. Export them to a file to load on another device or browser.',
       exportMine: 'Export', importMine: 'Import', exportDone: 'Exported to a file.',
       importOk: (n, d) => `Imported (${n} timetable slots${d ? `, ${d} invalid slots skipped` : ''})`,
-      importBad: 'This is not a settings file exported from Gongji Jupjup.',
+      importBad: 'This is not a settings file exported from Notice Grab.',
       categoryFilter: 'Benefit type', allCategories: 'All',
       groupView: 'Group by what you get',
       count: (n) => `${n} notice${n === 1 ? '' : 's'}`,
@@ -215,7 +219,7 @@
       exportSavedCal: 'Saved notices to calendar', pickCalendar: 'Picks to calendar',
       copyLink: 'Copy link', share: 'Share', linkCopied: 'Link copied.',
       resetFilters: 'Reset filters',
-      welcomeTitle: 'Welcome to Gongji Jupjup',
+      welcomeTitle: 'Welcome to Notice Grab',
       welcomeLead: 'We gather scattered campus notices and show only what fits you.',
       welcomeSteps: [
         { t: 'Add your timetable', d: 'Events that clash with your classes are hidden, and notices that fit your free time are picked for you.' },
@@ -231,13 +235,15 @@
       overridesStatus: (n) => `${n} correction(s) applied`,
       tabsLabel: 'Screens', tabNotices: 'Notices', tabTimetable: 'Timetable', tabBudget: 'Picks', tabSettings: 'Settings',
       settings: 'Settings',
-      about: 'Gongji Jupjup gathers notices scattered across school boards and picks the ones that fit your timetable and free time. International students can read them in English, Chinese or Japanese.',
-      footer: 'Gongji Jupjup · Konkuk Univ. GLOCAL Dept. of Computer Engineering Final Project · Jaehyeok Kim',
+      about: 'Notice Grab gathers notices scattered across school boards and picks the ones that fit your timetable and free time. International students can read them in English, Chinese or Japanese.',
+      footer: 'Notice Grab (공지 줍줍) · Konkuk Univ. GLOCAL Dept. of Computer Engineering Final Project · Jaehyeok Kim',
       footerNote: 'Based on official Konkuk Univ. GLOCAL notices · Smart Academic Support',
       dataInfo: (m) => (m.source === 'sample' ? 'Sample data · ' : 'Last updated: ') + m.generatedAt + ' · AI Smart Summaries'
     },
 
     zh: {
+      brandName: '公告捡漏',
+      brandLogo: '公告 <em>捡漏</em>',
       tagline: '分散的学校公告,只挑适合我的',
       language: 'Language',
       sampleBanner: '当前显示的是用于开发的示例公告,并非学校实际公告。',
@@ -259,7 +265,7 @@
       backupTitle: '备份我的设置', backupHelp: '课表、语言、排序设置只保存在此浏览器中。导出为文件后,可在其他设备或浏览器中导入。',
       exportMine: '导出', importMine: '导入', exportDone: '已导出为文件。',
       importOk: (n, d) => `已导入(课表 ${n} 格${d ? `,已排除 ${d} 个无效格` : ''})`,
-      importBad: '这不是从“공지 줍줍”导出的设置文件。',
+      importBad: '这不是从“公告捡漏”导出的设置文件。',
       categoryFilter: '福利类型', allCategories: '全部',
       groupView: '按可获得内容分组',
       count: (n) => `${n}条公告`,
@@ -328,7 +334,7 @@
       exportSavedCal: '收藏的公告加入日历', pickCalendar: '推荐结果加入日历',
       copyLink: '复制链接', share: '分享', linkCopied: '链接已复制。',
       resetFilters: '重置筛选',
-      welcomeTitle: '欢迎使用公告捡捡',
+      welcomeTitle: '欢迎使用公告捡漏',
       welcomeLead: '把分散的学校公告集中起来,只显示适合你的内容。',
       welcomeSteps: [
         { t: '填写课表', d: '与课程冲突的活动会自动隐藏,并按空闲时间挑选公告。' },
@@ -344,14 +350,16 @@
       overridesStatus: (n) => `已应用运营更正 ${n} 条`,
       tabsLabel: '页面切换', tabNotices: '公告', tabTimetable: '课表', tabBudget: '推荐', tabSettings: '设置',
       settings: '设置',
-      about: '公告捡捡收集分散在学校各公告栏的公告,只挑出适合你课表和空闲时间的内容。留学生可以用英语、中文或日语阅读。',
-      footer: '公告捡捡(공지 줍줍) · 建国大学GLOCAL校区 计算机工程概论期末项目 · 金在赫',
+      about: '“公告捡漏”收集分散在学校各公告栏的公告,只挑出适合你课表和空闲时间的内容。留学生可以用英语、中文或日语阅读。',
+      footer: '公告捡漏(공지 줍줍) · 建国大学GLOCAL校区 计算机工程概论期末项目 · 金在赫',
       footerNote: '基于建国大学GLOCAL校区官方公告 · 智能学事支持',
       dataInfo: (m) => (m.source === 'sample' ? '示例数据 · ' : '数据更新: ') + m.generatedAt + ' · AI智能摘要'
     },
 
     ja: {
-      tagline: '散らばった学校のお知らせから、自分に合うものだけ',
+      brandName: 'お知らせゲット',
+      brandLogo: 'お知らせ <em>ゲット</em>',
+      tagline: '散らばった学校のお知らせから、自分に合うものだけゲット',
       language: 'Language',
       sampleBanner: '表示中のお知らせは開発用のサンプルです。実際の学校のお知らせではありません。',
       today: '基準日',
@@ -372,7 +380,7 @@
       backupTitle: 'マイ設定のバックアップ', backupHelp: '時間割・言語・並び替えの設定はこのブラウザにだけ保存されます。ファイルに書き出すと、別の端末やブラウザで読み込めます。',
       exportMine: '書き出し', importMine: '読み込み', exportDone: 'ファイルに書き出しました。',
       importOk: (n, d) => `読み込みました(時間割${n}コマ${d ? `、不正な${d}コマは除外` : ''})`,
-      importBad: '「공지 줍줍」から書き出した設定ファイルではありません。',
+      importBad: '「お知らせゲット」から書き出した設定ファイルではありません。',
       categoryFilter: '特典の種類', allCategories: 'すべて',
       groupView: 'もらえるもの別にまとめる',
       count: (n) => `お知らせ${n}件`,
@@ -441,7 +449,7 @@
       exportSavedCal: '保存分をカレンダーへ', pickCalendar: 'おすすめをカレンダーへ',
       copyLink: 'リンクをコピー', share: '共有', linkCopied: 'リンクをコピーしました。',
       resetFilters: '絞り込みを解除',
-      welcomeTitle: 'コンジ・ジュプジュプへようこそ',
+      welcomeTitle: '「お知らせゲット」へようこそ',
       welcomeLead: '散らばった学内のお知らせを集めて、あなたに合うものだけ表示します。',
       welcomeSteps: [
         { t: '時間割を入れる', d: '授業と重なる行事は自動で隠れ、空き時間に合うお知らせを選びます。' },
@@ -457,8 +465,8 @@
       overridesStatus: (n) => `運営の訂正を${n}件適用中`,
       tabsLabel: '画面切り替え', tabNotices: 'お知らせ', tabTimetable: '時間割', tabBudget: 'おすすめ', tabSettings: '設定',
       settings: '設定',
-      about: 'コンジ・ジュプジュプは学校の掲示板に散らばったお知らせを集め、時間割と空き時間に合うものだけを選ぶサービスです。留学生は英語・中国語・日本語で読めます。',
-      footer: 'コンジ・ジュプジュプ(공지 줍줍) · 建国大学GLOCALキャンパス コンピュータ工学概論 期末プロジェクト · キム・ジェヒョク',
+      about: '「お知らせゲット」は学校の掲示板に散らばったお知らせを集め、時間割と空き時間に合うものだけを選ぶサービスです。留学生は英語・中国語・日本語で読めます。',
+      footer: 'お知らせゲット(공지 줍줍) · 建国大学GLOCALキャンパス コンピュータ工学概論 期末プロジェクト · キム・ジェヒョク',
       footerNote: '建国大学GLOCALキャンパス公式お知らせ連携 · スマート学事支援',
       dataInfo: (m) => (m.source === 'sample' ? 'サンプルデータ · ' : '最終更新: ') + m.generatedAt + ' · AIスマート要約'
     }

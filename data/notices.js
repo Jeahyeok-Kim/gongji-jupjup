@@ -6,18 +6,18 @@
   const DATA = /*JSON-START*/{
  "meta": {
   "source": "pipeline",
-  "generatedAt": "2026-11-24 23:04",
+  "generatedAt": "2026-11-25 00:03",
   "model": "qwen3:8b",
   "note": "AI가 만든 요약·번역입니다. 근거 문장이 원문에 없는 값은 버렸습니다.",
   "keep": {
    "months": 12,
    "days": null,
-   "since": "2025-11-24"
+   "since": "2025-11-25"
   },
   "stats": {
    "collected": 1709,
-   "processed": 1080,
-   "fromCache": 1080,
+   "processed": 1079,
+   "fromCache": 1079,
    "failed": 0,
    "imageOnly": 7,
    "droppedValues": 1654,
@@ -70751,72 +70751,6 @@
     "방학"
    ],
    "regulation": null
-  },
-  {
-   "id": "45-1-36584",
-   "boardName": "AX융합학부 공지사항",
-   "link": "https://ids.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=950&CONTENTS_NO=&SITE_NO=45&P_TAB_NO=&TAB_NO=&BOARD_SEQ=1&BOARD_CATEGORY_NO=&BBS_SEQ=36584&pageNo=1",
-   "date": "2025-11-24",
-   "hits": 137,
-   "bodyStatus": "text",
-   "title": "2025학년도 2학기 기말 강의평가 실시 협조 요청",
-   "titleTr": {
-    "en": "Request for Assistance in Conducting Final Course Evaluations for the Second Semester of 2025",
-    "zh": "2025学年第二学期期末课程评价实施协助请求",
-    "ja": "2025年度第2学期期末授業評価の実施に関する協力依頼"
-   },
-   "category": "academic",
-   "deadline": "2025-12-14T23:59",
-   "benefit": null,
-   "eligibility": {
-    "ko": "2025학년도 2학기 학부 재학생",
-    "en": "Current undergraduate students for the second semester of 2025",
-    "zh": "2025学年第二学期本科生",
-    "ja": "2025年度第2学期の学部在籍者"
-   },
-   "events": [],
-   "hours": null,
-   "evidence": {
-    "deadline": "1. 참여기간: 2025년 12월 1일(월) 09:00 ~ 12월 14일(일) 18:00 (14일간)",
-    "eligibility": "2. 참여대상: 2025학년도 2학기 학부 재학생"
-   },
-   "evidenceVerified": true,
-   "readFrom": [],
-   "summary": {
-    "ko": "기말 강의평가 참여를 요청하는 공지예요. 재학생이 12월 1일부터 14일까지 학사정보시스템에서 평가해요.",
-    "en": "This is a notice requesting participation in final course evaluations. Current students are requested to complete the evaluation through the academic information system from December 1st to 14th.",
-    "zh": "这是请求参与期末课程评价的通知。在校学生请于12月1日至14日期间通过学术信息系统完成评价。",
-    "ja": "期末授業評価への参加を求める通知です。在籍学生は12月1日から14日まで学務情報システムで評価を行ってください。"
-   },
-   "terms": [
-    "학사정보시스템",
-    "성적이의신청",
-    "재학생",
-    "접수기간"
-   ],
-   "regulation": {
-    "id": "appeal",
-    "title": {
-     "ko": "성적 이의신청",
-     "en": "Grade appeals",
-     "zh": "成绩异议申请",
-     "ja": "成績異議申立て"
-    },
-    "quote": "매 학기 성적 또는 학점에 대하여 이의가 있을 때에는 별도 정한 기간 내에 학업성적 정정원을 소정의 절차를 밟아 교무처에 제출하여 승인되면 성적에 대한 착오를 정정할 수 있는 기회가 있다.",
-    "tr": {
-     "en": "If you disagree with a grade or credit in any semester, you may submit a grade-correction request to the Office of Academic Affairs within the separately set period; if approved, errors in your grade can be corrected.",
-     "zh": "每学期如对成绩或学分有异议,可在另行规定的期间内按程序向教务处提交学业成绩更正申请,获批后可更正成绩错误。",
-     "ja": "各学期の成績または単位に異議がある場合は、別途定める期間内に所定の手続きで学業成績訂正願を教務処に提出し、承認されれば成績の誤りを訂正できる。"
-    },
-    "source": "2026학년도 학사요람 · 학사 안내",
-    "sourceTr": {
-     "en": "2026 Academic Handbook · Academic Guide",
-     "zh": "2026学年度学事要览 · 学事指南",
-     "ja": "2026年度 学事要覧 · 学事案内"
-    },
-    "page": 16,
-    "year": 2026
-   }
   }
  ]
 }/*JSON-END*/;

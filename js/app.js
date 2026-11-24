@@ -296,12 +296,25 @@
       const v = t()[el.dataset.i18n];
       if (typeof v === 'string') el.textContent = v;
     });
+    document.querySelectorAll('[data-i18n-html]').forEach((el) => {
+      const v = t()[el.dataset.i18nHtml];
+      if (typeof v === 'string') el.innerHTML = v;
+    });
     document.querySelectorAll('[data-i18n-placeholder]').forEach((el) => {
       el.placeholder = t()[el.dataset.i18nPlaceholder];
     });
     document.querySelectorAll('[data-i18n-aria]').forEach((el) => {
       el.setAttribute('aria-label', t()[el.dataset.i18nAria]);
     });
+    if (t().brandName) {
+      document.title = state.lang === 'ko' ? t().brandName : `${t().brandName} (공지 줍줍)`;
+      const brandH1 = $('#brand-title') || document.querySelector('.brand h1');
+      if (brandH1) {
+        brandH1.title = state.lang === 'ko' ? '공지 줍줍' : `${t().brandName} (원제: 공지 줍줍)`;
+      }
+    }
+    const aboutVer = $('#about-ver') || document.querySelector('.settings-about-ver');
+    if (aboutVer) aboutVer.textContent = `${t().brandName || '공지 줍줍'} v67`;
     document.querySelectorAll('.today-text').forEach((el) => { el.textContent = I.formatDate(now, state.lang); });
     const keep = DATA.meta.keep;
     const keepText = keep && keep.months && keep.since ? ' · ' + t().keepNote(keep.months, String(keep.since).replace(/-/g, '.')) : '';
@@ -1446,8 +1459,8 @@
       }, isApplied(n.id) ? '✓ ' + T.appliedBadge : T.appliedMark),
       n.deadline ? h('a', {
         href: gcalUrl(n), target: '_blank', rel: 'noopener noreferrer',
-        class: 'btn small btn-gcal', title: '구글 캘린더에 마감 일정 등록'
-      }, '📅 구글 캘린더') : null,
+        class: 'btn small btn-gcal', title: T.gcalHint || 'Google 캘린더에 마감 일정 등록'
+      }, `📅 ${T.gcalAdd || 'Google 캘린더'}`) : null,
       h('button', { type: 'button', class: 'btn small', onclick: () => exportCalendar([n], 'gongji-' + n.id) }, T.addToCalendar),
       h('button', { type: 'button', class: 'btn small btn-copy-card', onclick: () => copyNoticeCard(n), title: T.copySummary || '요약 복사' }, T.copySummary || '📋 요약 복사'),
       h('button', { type: 'button', class: 'btn small btn-tts-speak', onclick: () => speakNoticeSummary(n), title: T.speakSummary || '요약 듣기' }, T.speakSummary || '🔊 요약 듣기'),
@@ -3278,13 +3291,26 @@
       )
     );
 
+    const header = h('header', { class: 'sec-head tc-head' },
+      h('div', { class: 'tc-title-wrap' },
+        h('h3', null, T.todayClasses),
+        today.length ? h('span', { class: 'group-count' }, ` ${today.length}`) : null
+      ),
+      h('div', { class: 'sec-tools' },
+        h('button', {
+          type: 'button',
+          class: 'link-btn tc-header-link',
+          onclick: () => { location.hash = '#/timetable'; setTab('timetable', true); }
+        }, T.seeTimetable || '시간표 보기')
+      )
+    );
+
     return h('section', { class: 'home-card today-classes' },
-      h('h3', null, T.todayClasses, today.length ? h('span', { class: 'group-count' }, ` ${today.length}`) : null),
+      header,
       liveBanner,
       today.length ? h('ul', { class: 'home-list' }, rows) : restingCard,
       (today.length && foot) ? h('p', { class: 'fine' }, foot) : null,
-      elearnNote,
-      h('button', { type: 'button', class: 'link-btn', onclick: () => { location.hash = '#/timetable'; setTab('timetable', true); } }, T.seeTimetable));
+      elearnNote ? h('div', { class: 'tc-elearn-wrap' }, elearnNote) : null);
   }
 
   // ---------- 오늘 (홈): 큰 헤드라인 + 위젯 격자 (애플 위젯·토스 홈 방식) ----------
@@ -4326,13 +4352,20 @@
         h('div', { class: 'kw-suggest-wrap' },
           h('span', { class: 'kw-suggest-label' }, T.kwSuggestLabel || '💡 추천 키워드:'),
           h('div', { class: 'kw-suggest-chips' },
-            ['기숙사', '국가장학', '근로', '토익', '교환학생', '현장실습', '해외봉사', '인턴', '졸업'].filter((k) => !state.keywords.includes(k)).map((k) =>
+            ((state.lang === 'ja'
+              ? [{ l: '寮 (기숙사)', v: '기숙사' }, { l: '国家奨学金 (국가장학)', v: '국가장학' }, { l: '勤労 (근로)', v: '근로' }, { l: 'TOEIC (토익)', v: '토익' }, { l: '交換留学 (교환학생)', v: '교환학생' }, { l: '現場実習 (현장실습)', v: '현장실습' }, { l: '海外ボランティア (해외봉사)', v: '해외봉사' }, { l: 'インターン (인턴)', v: '인턴' }, { l: '卒業 (졸업)', v: '졸업' }]
+              : state.lang === 'zh'
+              ? [{ l: '宿舍 (기숙사)', v: '기숙사' }, { l: '国家奖学金 (국가장학)', v: '국가장학' }, { l: '勤工助学 (근로)', v: '근로' }, { l: '托业 (토익)', v: '토익' }, { l: '交换生 (교환학생)', v: '교환학생' }, { l: '实习实训 (현장실습)', v: '현장실습' }, { l: '海外志愿 (해외봉사)', v: '해외봉사' }, { l: '实习 (인턴)', v: '인턴' }, { l: '毕业 (졸업)', v: '졸업' }]
+              : state.lang === 'en'
+              ? [{ l: 'Dorm (기숙사)', v: '기숙사' }, { l: 'National Scholarship (국가장학)', v: '국가장학' }, { l: 'Work-Study (근로)', v: '근로' }, { l: 'TOEIC (토익)', v: '토익' }, { l: 'Exchange Student (교환학생)', v: '교환학생' }, { l: 'Internship (현장실습)', v: '현장실습' }, { l: 'Global Volunteer (해외봉사)', v: '해외봉사' }, { l: 'Intern (인턴)', v: '인턴' }, { l: 'Graduation (졸업)', v: '졸업' }]
+              : [{ l: '기숙사', v: '기숙사' }, { l: '국가장학', v: '국가장학' }, { l: '근로', v: '근로' }, { l: '토익', v: '토익' }, { l: '교환학생', v: '교환학생' }, { l: '현장실습', v: '현장실습' }, { l: '해외봉사', v: '해외봉사' }, { l: '인턴', v: '인턴' }, { l: '졸업', v: '졸업' }]
+            ).filter((item) => !state.keywords.includes(item.v)).map((item) =>
               h('button', {
                 type: 'button',
                 class: 'kw-suggest-chip',
-                onclick: () => addKeyword(k)
-              }, `+ ${k}`)
-            )
+                onclick: () => addKeyword(item.v)
+              }, `+ ${item.l}`)
+            ))
           )
         )),
       h('div', { class: 'my-section' },
