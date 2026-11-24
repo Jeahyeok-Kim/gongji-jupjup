@@ -647,6 +647,8 @@
       const neededSum = targetSum - curSum;
       const neededGpa = neededSum / rem;
       const maxPossible = Math.min(4.5, (curSum + rem * 4.5) / (curCredits + rem));
+      const maxRounded = Math.round(maxPossible * 100) / 100;
+      const targetRounded = Math.round(target * 100) / 100;
 
       let resultBadge = '';
       let resultClass = '';
@@ -657,14 +659,19 @@
         resultClass = 'is-achieved';
         resultBadge = Tx.gpaSimDoneBadge || '🎉 목표 달성 완료';
         resultDesc = Tx.gpaSimDoneDesc ? Tx.gpaSimDoneDesc(target.toFixed(2)) : `축하합니다! 이미 목표 평점(${target.toFixed(2)})을 달성했습니다.`;
-      } else if (neededGpa <= 4.50) {
+      } else if (targetRounded <= maxRounded && neededGpa > 4.495) {
+        // 남은 학점 전과목 A+(4.5) 취득 시 소수점 둘째 자리 반올림으로 정확히 목표 달성 가능한 최고 난도 케이스
+        resultClass = 'is-all-aplus';
+        resultBadge = Tx.gpaSimAllAplusBadge || '🔥 전과목 A+(4.5) 필요';
+        resultDesc = Tx.gpaSimAllAplusDesc ? Tx.gpaSimAllAplusDesc(rem, target.toFixed(2)) : `남은 ${rem}학점을 전과목 A+(4.5)로 취득하면 졸업 평점 ${target.toFixed(2)} 달성이 가능합니다! (단, 한 과목이라도 A0 이하면 미달)`;
+      } else if (neededGpa <= 4.495) {
         resultClass = 'is-possible';
         resultBadge = `✨ ${neededGpa.toFixed(2)}`;
         resultDesc = Tx.gpaSimNeedDesc ? Tx.gpaSimNeedDesc(rem, neededGpa.toFixed(2), target.toFixed(2)) : `남은 ${rem}학점 동안 평균 ${neededGpa.toFixed(2)} 이상을 취득하면 졸업 평점 ${target.toFixed(2)}에 도달합니다!`;
       } else {
         resultClass = 'is-impossible';
-        resultBadge = Tx.gpaSimHardBadge || '⚠️ 달성 난도 높음';
-        resultDesc = Tx.gpaSimHardDesc ? Tx.gpaSimHardDesc(maxPossible.toFixed(2)) : `남은 학점을 모두 A+(4.5) 받아도 최대 ${maxPossible.toFixed(2)}까지 가능합니다. 목표 평점을 조정해보세요.`;
+        resultBadge = Tx.gpaSimHardBadge || '⚠️ 목표 조정 필요';
+        resultDesc = Tx.gpaSimHardDesc ? Tx.gpaSimHardDesc(rem, maxRounded.toFixed(2)) : `남은 ${rem}학점을 모두 A+(4.5) 받아도 취득 가능한 최고 졸업 평점은 ${maxRounded.toFixed(2)}입니다. 목표 평점을 ${maxRounded.toFixed(2)} 이하로 조정해보세요.`;
       }
 
       return h('section', { class: `plan-box gpa-sim-box ${resultClass}` },

@@ -6,7 +6,7 @@
   const DATA = /*JSON-START*/{
  "meta": {
   "source": "pipeline",
-  "generatedAt": "2026-11-24 17:22",
+  "generatedAt": "2026-11-24 17:23",
   "model": "qwen3:8b",
   "note": "AI가 만든 요약·번역입니다. 근거 문장이 원문에 없는 값은 버렸습니다.",
   "keep": {
@@ -15,12 +15,12 @@
    "since": "2025-11-24"
   },
   "stats": {
-   "collected": 1707,
-   "processed": 1078,
+   "collected": 1709,
+   "processed": 1080,
    "fromCache": 1078,
    "failed": 0,
    "imageOnly": 7,
-   "droppedValues": 1653,
+   "droppedValues": 1654,
    "summaryRetried": 18,
    "summaryDraft": 26,
    "summaryComposed": 39,
@@ -315,6 +315,117 @@
      "checked": "2026-11-24"
     }
    }
+  },
+  {
+   "id": "2-24-119525",
+   "boardName": "행사안내",
+   "link": "https://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1820&CONTENTS_NO=&SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=24&BOARD_CATEGORY_NO=&BBS_SEQ=119525&pageNo=1",
+   "date": "2026-11-24",
+   "hits": 3,
+   "bodyStatus": "text",
+   "title": "[중원도서관] 2026학년도 중원도서관 이용자 만족도 조사",
+   "titleTr": {
+    "en": "[Jongmoon Library] 2026 Academic Year Jongmoon Library User Satisfaction Survey",
+    "zh": "[中元图书馆] 2026学年中元图书馆用户满意度调查",
+    "ja": "[中元図書館] 2026学年中元図書館利用者満足度調査"
+   },
+   "category": "contest",
+   "deadline": "2026-12-04T23:59",
+   "benefit": {
+    "text": {
+     "ko": "아이패드 1명, 로지텍 무선 마우스 3명, 커피쿠폰 30명 등 그 외 경품 다수!",
+     "en": "iPad for 1 person, Logitech wireless mouse for 3 people, coffee coupons for 30 people, and many other prizes!",
+     "zh": "iPad 1名，罗技无线鼠标3名，咖啡券30名，及其他众多奖品！",
+     "ja": "iPad 1名、ロジテック無線マウス3名、コーヒークーポン30名など多数の景品があります！"
+    },
+    "points": null,
+    "won": null
+   },
+   "eligibility": {
+    "ko": "건국대학교 글로컬캠퍼스 교내 구성원",
+    "en": "Members of the Glocal Campus at Konkuk University",
+    "zh": "韩国建国大学全球校区成员",
+    "ja": "韓国建国大学グローバルキャンパスの構成員"
+   },
+   "events": [],
+   "hours": null,
+   "evidence": {
+    "deadline": "• 설문기간: 2026. 11. 23.(월) ~ 12. 4.(금)",
+    "benefit": "• 경품추첨: 설문 참여자 중 추첨 (아이패드 1명, 로지텍 무선 마우스 3명, 커피쿠폰 30명 등 그 외 경품 다수!)",
+    "eligibility": "• 참여대상: 건국대학교 글로컬캠퍼스 교내 구성원"
+   },
+   "evidenceVerified": true,
+   "readFrom": [],
+   "summary": {
+    "ko": "중원도서관 이용자 만족도 조사 참여를 안내해요. 건국대학교 글로컬캠퍼스 구성원이 12월 4일까지 참여하면 아이패드, 마우스, 커피쿠폰 등 경품을 받을 수 있어요.",
+    "en": "We are informing you about participation in the Jongmoon Library User Satisfaction Survey. Members of the Glocal Campus at Konkuk University who participate by December 4th can receive prizes such as an iPad, a Logitech wireless mouse, and coffee coupons.",
+    "zh": "我们通知您参与中元图书馆用户满意度调查。韩国建国大学全球校区成员在12月4日前参与可获得iPad、鼠标、咖啡券等礼品。",
+    "ja": "中元図書館利用者満足度調査への参加を案内いたします。韓国建国大学グローバルキャンパスの構成員が12月4日までに参加するとiPad、マウス、コーヒークーポンなどの景品を受け取ることができます。"
+   },
+   "terms": [
+    "도서관",
+    "건국대"
+   ],
+   "regulation": null
+  },
+  {
+   "id": "2-24-119524",
+   "boardName": "행사안내",
+   "link": "https://www.kku.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=1820&CONTENTS_NO=&SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=24&BOARD_CATEGORY_NO=&BBS_SEQ=119524&pageNo=1",
+   "date": "2026-11-24",
+   "hits": 9,
+   "bodyStatus": "text",
+   "title": "[중원도서관] 2026 산타KU와 함께하는 미리크리스마스",
+   "titleTr": {
+    "en": "[Jongno Library] 2026 Santa KU: Enjoy a Christmas Ahead",
+    "zh": "[中元图书馆] 2026 圣诞KU与你共度提前圣诞节",
+    "ja": "[中元図書館] 2026 サンタKUと一緒におもてなしクリスマス"
+   },
+   "category": "event",
+   "deadline": "2026-12-03T23:59",
+   "benefit": {
+    "text": {
+     "ko": "선착순 선물, 경품 추첨",
+     "en": "First-come, first-served gifts, prize draw",
+     "zh": "限量礼物, 抽奖",
+     "ja": "先着順のプレゼント、景品当選"
+    },
+    "points": null,
+    "won": null
+   },
+   "eligibility": null,
+   "events": [
+    {
+     "date": "2026-12-01",
+     "start": "14:00",
+     "end": "16:00"
+    },
+    {
+     "date": "2026-12-01",
+     "start": "15:40",
+     "end": "16:00"
+    }
+   ],
+   "hours": 2.5,
+   "evidence": {
+    "deadline": "5. 트리사진 SNS 공유 이벤트: 11월 23일(월) ~ 12월 3일(목)",
+    "events": "- 12월 1일(화) 14:00~16:00",
+    "benefit": "- 점등식 행사 참가자 한정 선물추첨 및 선착순 선물 이벤트\n*스토리 업로드 시 중원도서관 계정 언급 필수, 완료 후 추첨을 통해 경품 지급예정"
+   },
+   "evidenceVerified": true,
+   "readFrom": [],
+   "summary": {
+    "ko": "중원도서관에서 크리스마스 이벤트를 진행해요. 재학생이 12월 3일까지 참여하면 선착순 선물과 경품을 받을 수 있어요.",
+    "en": "Jongno Library is holding a Christmas event. Undergraduate students who participate by December 3rd can receive gifts and prizes on a first-come, first-served basis.",
+    "zh": "中元图书馆将举办圣诞节活动。研究生在12月3日前参与可获得限量礼物和抽奖机会。",
+    "ja": "中元図書館ではクリスマスイベントを開催します。12月3日までに参加すると、先着順でプレゼントや景品をもらえます。"
+   },
+   "terms": [
+    "도서관",
+    "건국대",
+    "선착순"
+   ],
+   "regulation": null
   },
   {
    "id": "2-27-120981",

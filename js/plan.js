@@ -714,6 +714,34 @@
     return out;
   }
 
+  // 목표 졸업 평점 역산기 계산: 현재 이수학점, 현재 평점, 잔여 학점, 목표 평점
+  function simGpa(curCredits, curGpa, remCredits, targetGpa) {
+    const curC = Math.max(0, Number(curCredits) || 0);
+    const curG = Math.max(0, Math.min(4.5, Number(curGpa) || 0));
+    const rem = Math.max(1, Number(remCredits) || 18);
+    const target = Math.max(0, Math.min(4.5, Number(targetGpa) || 4.0));
+
+    const curSum = curC * curG;
+    const targetSum = (curC + rem) * target;
+    const neededSum = targetSum - curSum;
+    const neededGpa = neededSum / rem;
+    const maxPossible = Math.min(4.5, (curSum + rem * 4.5) / (curC + rem));
+    const maxRounded = Math.round(maxPossible * 100) / 100;
+    const targetRounded = Math.round(target * 100) / 100;
+
+    if (neededGpa <= 0) {
+      return { status: 'achieved', neededGpa: 0, maxPossible, maxRounded, target };
+    }
+    if (targetRounded <= maxRounded && neededGpa > 4.495) {
+      // 전과목 A+(4.5) 취득 시 소수점 둘째 자리 반올림으로 정확히 목표 달성 가능한 최고 난도 케이스
+      return { status: 'all-aplus', neededGpa: 4.5, maxPossible, maxRounded, target };
+    }
+    if (neededGpa <= 4.495) {
+      return { status: 'possible', neededGpa, maxPossible, maxRounded, target };
+    }
+    return { status: 'impossible', neededGpa, maxPossible, maxRounded, target };
+  }
+
   // 결과의 시간을 내 시간표 수업 형식으로: [{ name, prof, day, start, end, room }] (이러닝은 elearn: true)
   function toClasses(picks) {
     const out = [];
@@ -734,6 +762,6 @@
     normName, cleanKind, area, genArea, cleanHistory, totals, byTerm, termKey, requirement, remaining,
     currentTerm, semestersLeft, pace, nextTerm, buildCatalog, parsePaste, overlaps, groupOffered, modeOf, split,
     candidates, recommend, toClasses, deptMatch, alternatives, roadmap, daysUsed, earliest,
-    GRADES, cleanGrade, gpa, requiredLeft
+    GRADES, cleanGrade, gpa, requiredLeft, simGpa
   };
 }));

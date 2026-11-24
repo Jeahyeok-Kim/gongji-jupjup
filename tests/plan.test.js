@@ -278,3 +278,27 @@ test('실제 개설 과목(data/timetable.js)으로도 시간 안에 끝난다',
   const cls = P.toClasses(r.picks);
   assert.ok(cls.every((c) => c.day >= 0 && c.day <= 6 && c.start < c.end));
 });
+
+test('목표 졸업 평점 역산기: 12학점 4.25에서 35학점 남았을 때 4.44는 전과목 A+(4.5)로 달성 가능', () => {
+  // 유저 실제 피드백 케이스: 12학점 4.25 누적, 35학점 남음, 목표 평점 4.44
+  // (12*4.25 + 35*4.5) / 47 = 208.5 / 47 = 4.43617... -> 소수점 둘째 자리 반올림 시 4.44로 달성 가능!
+  const res44 = P.simGpa(12, 4.25, 35, 4.44);
+  assert.strictEqual(res44.status, 'all-aplus', '4.44는 전과목 A+로 달성 가능(불가능이 아님)');
+  assert.strictEqual(res44.maxRounded, 4.44);
+
+  // 4.00은 현실적인 평점(3.91)으로 가능
+  const res40 = P.simGpa(12, 4.25, 35, 4.00);
+  assert.strictEqual(res40.status, 'possible');
+  assert.strictEqual(Number(res40.neededGpa.toFixed(2)), 3.91);
+
+  // 4.45는 전과목 A+를 받아도 4.436...이므로 4.44를 초과하여 달성 불가
+  const res45 = P.simGpa(12, 4.25, 35, 4.45);
+  assert.strictEqual(res45.status, 'impossible', '4.45는 전과목 A+ 받아도 초과하므로 목표 조정 필요');
+  assert.strictEqual(res45.maxRounded, 4.44);
+
+  // 이미 달성한 경우
+  const resDone = P.simGpa(12, 4.25, 35, 3.50);
+  assert.strictEqual(resDone.status, 'possible');
+  const resZero = P.simGpa(12, 4.25, 35, 0.50);
+  assert.strictEqual(resZero.status, 'achieved');
+});
