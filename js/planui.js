@@ -500,31 +500,32 @@
       let resultClass = '';
       let resultDesc = '';
 
+      const Tx = T();
       if (neededGpa <= 0) {
         resultClass = 'is-achieved';
-        resultBadge = '🎉 목표 달성 완료';
-        resultDesc = `이미 목표 평점(${target.toFixed(2)})을 초과 달성했습니다! 남은 ${rem}학점을 수료만 해도 목표를 이룰 수 있습니다.`;
+        resultBadge = Tx.gpaSimDoneBadge || '🎉 목표 달성 완료';
+        resultDesc = Tx.gpaSimDoneDesc ? Tx.gpaSimDoneDesc(target.toFixed(2)) : `축하합니다! 이미 목표 평점(${target.toFixed(2)})을 달성했습니다.`;
       } else if (neededGpa <= 4.50) {
         resultClass = 'is-possible';
-        resultBadge = `✨ 잔여 평균 ${neededGpa.toFixed(2)} 필요`;
-        resultDesc = `남은 ${rem}학점 동안 평균 ${neededGpa.toFixed(2)} 이상을 취득하면 졸업 평점 ${target.toFixed(2)}에 도달합니다!`;
+        resultBadge = `✨ ${neededGpa.toFixed(2)}`;
+        resultDesc = Tx.gpaSimNeedDesc ? Tx.gpaSimNeedDesc(rem, neededGpa.toFixed(2), target.toFixed(2)) : `남은 ${rem}학점 동안 평균 ${neededGpa.toFixed(2)} 이상을 취득하면 졸업 평점 ${target.toFixed(2)}에 도달합니다!`;
       } else {
         resultClass = 'is-impossible';
-        resultBadge = '⚠️ 달성 난도 높음';
-        resultDesc = `남은 학점을 모두 A+(4.5) 받아도 최대 ${maxPossible.toFixed(2)}까지 가능합니다. 목표 평점을 조정해보세요.`;
+        resultBadge = Tx.gpaSimHardBadge || '⚠️ 달성 난도 높음';
+        resultDesc = Tx.gpaSimHardDesc ? Tx.gpaSimHardDesc(maxPossible.toFixed(2)) : `남은 학점을 모두 A+(4.5) 받아도 최대 ${maxPossible.toFixed(2)}까지 가능합니다. 목표 평점을 조정해보세요.`;
       }
 
       return h('section', { class: `plan-box gpa-sim-box ${resultClass}` },
         h('div', { class: 'gpa-sim-head' },
           h('div', { class: 'gpa-sim-title-wrap' },
-            h('h3', null, '🎯 목표 졸업 평점 역산기'),
-            h('span', { class: 'gpa-sim-subtitle' }, `현재 누적: ${curGpa.toFixed(2)} (${curCredits}학점 성적 산출 기준)`)
+            h('h3', null, Tx.gpaSimTitle || '🎯 목표 졸업 평점 역산기'),
+            h('span', { class: 'gpa-sim-subtitle' }, Tx.gpaSimCurGpa ? Tx.gpaSimCurGpa(curGpa.toFixed(2), curCredits) : `현재 누적: ${curGpa.toFixed(2)} (${curCredits}학점 성적 산출 기준)`)
           ),
           h('span', { class: `gpa-sim-badge ${resultClass}` }, resultBadge)
         ),
         h('div', { class: 'gpa-sim-controls' },
           h('label', { class: 'gpa-sim-field' },
-            h('span', null, '목표 평점'),
+            h('span', null, Tx.gpaSimTarget || '목표 평점'),
             h('input', {
               type: 'number',
               step: '0.05',
@@ -539,7 +540,7 @@
             })
           ),
           h('label', { class: 'gpa-sim-field' },
-            h('span', null, '남은 학점'),
+            h('span', null, Tx.gpaSimRem || '남은 학점'),
             h('input', {
               type: 'number',
               step: '1',
@@ -558,21 +559,120 @@
       );
     }
 
+    function renderGpaTrendChart(terms) {
+      if (!terms || terms.length < 2) return null;
+      const data = terms.map((g) => {
+        const gpaObj = P.gpa(g.items);
+        return {
+          term: g.term,
+          name: termName(g.term),
+          shortName: String(g.term || '').replace(/^[0-9]{2}([0-9]{2})[_-]?([12SWsw])$/, '$1-$2'),
+          credits: g.credits,
+          gpa: gpaObj ? gpaObj.gpa : null
+        };
+      }).filter((d) => d.gpa !== null);
+
+      if (data.length < 2) return null;
+
+      const Tx = T();
+      const peak = data.reduce((max, d) => (d.gpa > max.gpa ? d : max), data[0]);
+      const last = data[data.length - 1];
+      const prev = data[data.length - 2];
+      const delta = last.gpa - prev.gpa;
+
+      const w = 520;
+      const h_svg = 155;
+      const padL = 40;
+      const padR = 40;
+      const padT = 30;
+      const padB = 30;
+      const chartW = w - padL - padR;
+      const chartH = h_svg - padT - padB;
+
+      const getX = (i) => padL + (i * chartW) / (data.length - 1);
+      const getY = (val) => padT + chartH - (val / 4.5) * chartH;
+
+      const points = data.map((d, i) => [getX(i), getY(d.gpa)]);
+      const lineD = points.map((p, i) => `${i === 0 ? 'M' : 'L'} ${p[0].toFixed(1)} ${p[1].toFixed(1)}`).join(' ');
+      const areaD = `${lineD} L ${points[points.length - 1][0].toFixed(1)} ${(padT + chartH).toFixed(1)} L ${points[0][0].toFixed(1)} ${(padT + chartH).toFixed(1)} Z`;
+
+      const guideLevels = [4.5, 4.0, 3.0, 2.0];
+      const guidesSvg = guideLevels.map((lvl) => {
+        const y = getY(lvl);
+        return `<line x1="${padL - 10}" y1="${y}" x2="${w - padR + 10}" y2="${y}" stroke="var(--border-soft)" stroke-dasharray="3,3" stroke-width="1"/>` +
+               `<text x="${padL - 14}" y="${y + 3}" font-size="9" text-anchor="end" fill="var(--faint)">${lvl.toFixed(1)}</text>`;
+      }).join('');
+
+      const barsSvg = data.map((d, i) => {
+        const x = getX(i) - 12;
+        const barH = Math.min(chartH * 0.7, (d.credits / 24) * (chartH * 0.7));
+        const y = padT + chartH - barH;
+        return `<rect x="${x}" y="${y}" width="24" height="${barH}" rx="4" fill="color-mix(in srgb, var(--accent) 10%, transparent)"/>` +
+               `<text x="${x + 12}" y="${y - 4}" font-size="9" text-anchor="middle" fill="var(--faint)">${d.credits}학점</text>`;
+      }).join('');
+
+      const nodesSvg = data.map((d, i) => {
+        const p = points[i];
+        const isPeak = d === peak;
+        return `<g class="gpa-node">` +
+               `<circle cx="${p[0]}" cy="${p[1]}" r="${isPeak ? 5.5 : 4.5}" fill="var(--surface)" stroke="${isPeak ? '#f59e0b' : 'var(--accent)'}" stroke-width="${isPeak ? 3 : 2.5}"/>` +
+               `<text x="${p[0]}" y="${p[1] - 8}" font-size="11" font-weight="800" text-anchor="middle" fill="${isPeak ? '#f59e0b' : 'var(--text)'}">${d.gpa.toFixed(2)}</text>` +
+               `<text x="${p[0]}" y="${padT + chartH + 18}" font-size="10.5" font-weight="600" text-anchor="middle" fill="var(--text-sub)">${d.shortName || d.name}</text>` +
+               `</g>`;
+      }).join('');
+
+      const svgContent = `
+        <svg viewBox="0 0 ${w} ${h_svg}" class="gpa-trend-svg" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="gpaAreaGrad" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="var(--accent)" stop-opacity="0.25"/>
+              <stop offset="100%" stop-color="var(--accent)" stop-opacity="0.0"/>
+            </linearGradient>
+          </defs>
+          ${guidesSvg}
+          ${barsSvg}
+          <path d="${areaD}" fill="url(#gpaAreaGrad)"/>
+          <path d="${lineD}" fill="none" stroke="var(--accent)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+          ${nodesSvg}
+        </svg>
+      `;
+
+      const card = h('section', { class: 'plan-box gpa-trend-box' },
+        h('div', { class: 'gt-head' },
+          h('div', { class: 'gt-title-wrap' },
+            h('h3', null, Tx.gpaTrendTitle || '📈 학기별 평점 및 학점 추이'),
+            h('span', { class: 'gt-subtitle' }, `최근 학기: ${last.name} (${last.gpa.toFixed(2)})`)
+          ),
+          h('div', { class: 'gt-badges' },
+            h('span', { class: 'gt-peak-badge' }, `🏆 ${Tx.gpaPeak || '최고'}: ${peak.shortName || peak.name} ${peak.gpa.toFixed(2)}`),
+            h('span', { class: `gt-delta-badge ${delta >= 0 ? 'is-up' : 'is-down'}` },
+              delta > 0 ? `▲ +${delta.toFixed(2)} ${Tx.gpaDeltaUp || '상승'}` : delta < 0 ? `▼ ${delta.toFixed(2)} ${Tx.gpaDeltaDown || '하락'}` : '= 유지'
+            )
+          )
+        ),
+        h('div', { class: 'gt-chart-wrap', innerHTML: svgContent })
+      );
+
+      return card;
+    }
+
     function renderHistory() {
       const Tx = T();
       const box = $('#history-view');
+      const terms = P.byTerm(st.history);
       // 빈 칸(null)은 빼고 넣는다: replaceChildren 은 null 을 'null' 글자로 그려 버림
       box.replaceChildren(...[
         h('div', { class: 'plan-head' }, h('h2', null, Tx.histTitle), h('p', { class: 'help' }, Tx.histHelp)),
         ...renderSummary(),
         renderGpaSimulator(),
+        renderGpaTrendChart(terms),
         renderReq(),
         h('section', { class: 'plan-box add-box' },
           h('div', { class: 'add-head' }, h('h3', null, Tx.histAddTitle),
             h('button', { type: 'button', class: 'btn small', onclick: fromTimetable }, Tx.histFromTt)),
           ...renderAdd()),
         renderPaste(),
-        renderTerms()].filter(Boolean));
+        renderTerms(terms)].filter(Boolean));
     }
 
     // ---------- 수강신청 추천 ----------
@@ -677,30 +777,50 @@
         h('button', { type: 'button', class: 'btn primary plan-run', onclick: runSoon, disabled: st.busy ? true : null }, st.busy ? Tx.altComputing : Tx.planRun));
     }
 
-    // 고른 분반을 요일×시간 격자로 (월~금, 수업이 있는 시간대만)
+    // 고른 분반을 요일×시간 격자로 (월~금, 공강 표시 및 이러닝 칩 포함)
     function miniGrid(picks) {
       const timed = picks.filter((p) => p.section.t.length);
-      if (!timed.length) return null;
+      const elearns = picks.filter((p) => !p.section.t.length || p.section.mode === 'elearn');
+      if (!timed.length && !elearns.length) return null;
       const toMin = (x) => { const [a, b] = x.split(':').map(Number); return a * 60 + b; };
       let lo = 24 * 60;
       let hi = 0;
       for (const p of timed) for (const [, a, b] of p.section.t) { lo = Math.min(lo, toMin(a)); hi = Math.max(hi, toMin(b)); }
-      lo = Math.floor(lo / 60) * 60;
-      hi = Math.ceil(hi / 60) * 60;
+      if (lo >= hi) { lo = 9 * 60; hi = 18 * 60; }
+      else {
+        lo = Math.floor(lo / 60) * 60;
+        hi = Math.ceil(hi / 60) * 60;
+      }
       const days = [...new Set([...DAYS, ...timed.flatMap((p) => p.section.t.map((x) => x[0]))])].sort((a, b) => (a || 7) - (b || 7));
-      const span = hi - lo;
+      const span = hi - lo || 1;
       const hours = [];
       for (let m = lo; m < hi; m += 60) hours.push(m / 60);
-      return h('div', { class: 'mini-tt', style: `--cols:${days.length};--rows:${hours.length}` },
+
+      const gridEl = h('div', { class: 'mini-tt', style: `--cols:${days.length};--rows:${hours.length}` },
         h('div', { class: 'mini-head' }, h('span'), days.map((d) => h('span', null, deps.dayName(d)))),
         h('div', { class: 'mini-body' },
           h('div', { class: 'mini-hours' }, hours.map((x) => h('span', null, String(x)))),
-          days.map((d) => h('div', { class: 'mini-col' },
-            timed.flatMap((p) => p.section.t.filter((x) => x[0] === d).map(([, a, b]) => h('div', {
-              class: 'mini-class' + (p.section.mode === 'live' ? ' live' : ''),
-              style: `top:${((toMin(a) - lo) / span) * 100}%;height:${((toMin(b) - toMin(a)) / span) * 100}%;--c:${deps.classColor(p.group.name)}`,
-              title: `${p.group.name} ${a}–${b}${p.section.prof ? ` (${p.section.prof} 교수)` : ''}`
-            }, h('b', null, p.group.name), p.section.prof ? h('span', { class: 'mini-prof', style: 'font-size:10px;display:block;opacity:.85;font-weight:600;' }, p.section.prof) : null, h('small', null, `${a}–${b}`))))))));
+          days.map((d) => {
+            const dayClasses = timed.flatMap((p) => p.section.t.filter((x) => x[0] === d).map(([, a, b]) => ({ p, a, b })));
+            return h('div', { class: 'mini-col' + (!dayClasses.length ? ' is-free-col' : '') },
+              !dayClasses.length ? h('span', { class: 'mini-free-label' }, '공강') : null,
+              dayClasses.map(({ p, a, b }) => h('div', {
+                class: 'mini-class' + (p.section.mode === 'live' ? ' live' : ''),
+                style: `top:${((toMin(a) - lo) / span) * 100}%;height:${((toMin(b) - toMin(a)) / span) * 100}%;--c:${deps.classColor(p.group.name)}`,
+                title: `${p.group.name} ${a}–${b}${p.section.prof ? ` (${p.section.prof} 교수)` : ''}`
+              }, h('b', null, p.group.name), p.section.prof ? h('span', { class: 'mini-prof', style: 'font-size:10px;display:block;opacity:.85;font-weight:600;' }, p.section.prof) : null, h('small', null, `${a}–${b}`))));
+          })));
+
+      const elearnChips = elearns.length ? h('div', { class: 'mini-elearn-wrap' },
+        h('span', { class: 'mini-el-label' }, '💻 시간표 외 이러닝:'),
+        h('div', { class: 'mini-el-chips' }, elearns.map((p) =>
+          h('span', { class: 'mini-el-chip', style: `--c:${deps.classColor(p.group.name)}` },
+            `📖 ${p.group.name}`, p.section.prof ? ` (${p.section.prof})` : ''
+          )
+        ))
+      ) : null;
+
+      return h('div', { class: 'mini-grid-container' }, gridEl, elearnChips);
     }
 
     function renderResult() {

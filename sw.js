@@ -1,10 +1,10 @@
 // 공지 줍줍 서비스 워커: 한 번 열어 본 화면은 오프라인에서도 열리고, 새 데이터는 네트워크가 되면 받아 온다.
 // - 화면 파일(html·css·js·아이콘): 네트워크 먼저(새 버전이 바로 보임), 안 되면 저장된 것
 // - 공지 데이터(version·notices·calendar·overrides 의 json): 항상 네트워크 먼저, 안 되면 저장된 것
-const CACHE = 'gongji-v28';
+const CACHE = 'gongji-v34';
 const CORE = ['./', 'index.html', 'css/style.css', 'css/enhanced.css', 'manifest.webmanifest', 'icons/icon-192.png',
   'js/benefit.js', 'js/sync.js', 'js/logic.js', 'js/overrides.js', 'js/extras.js', 'js/summary.js', 'js/personal.js', 'js/eligibility.js', 'js/ask.js', 'js/cal.js',
-  'js/i18n.js', 'js/i18n2.js', 'js/i18n3.js', 'js/i18n4.js', 'js/i18n5.js', 'js/theme.js', 'js/plan.js', 'js/planui.js', 'js/track.js', 'js/palette.js', 'js/ttimage.js', 'js/ttics.js', 'js/app.js', 'js/enhanced.js', 'icons/mark.svg',
+  'js/i18n.js', 'js/i18n2.js', 'js/i18n3.js', 'js/i18n4.js', 'js/i18n5.js', 'js/theme.js', 'js/plan.js', 'js/planui.js', 'js/track.js', 'js/palette.js', 'js/ttimage.js', 'js/ttics.js', 'js/noticeimage.js', 'js/app.js', 'js/enhanced.js', 'icons/mark.svg',
   'data/notices.js', 'data/glossary.js', 'data/calendar.js', 'data/config.js', 'data/courses.js', 'data/timetable.js', 'data/gradreq.js', 'js/curriculum.js'];
 const DATA_JSON = /\/data\/(version|notices|calendar|glossary|overrides)\.json$|\/data\/gongji\.ics$/;
 

@@ -386,15 +386,19 @@
   }
 
   /* ═══════════════════════════════════════════════════════
-     8. 주간 마감 타임라인 위젯
-        오늘 화면에 이번 주 7일을 세로 슬롯으로 보여줌
+     8. 주간 마감 타임라인 위젯 (모던 카드 덱 리디자인)
+        모바일 & 데스크톱 모두 시원한 가로 스크롤 카드 덱
      ═══════════════════════════════════════════════════════ */
   function renderWeekTimeline() {
     const notices = window.GONGJI_DATA && window.GONGJI_DATA.notices;
     if (!notices || !notices.length) return;
     if ($('.week-timeline-sec')) return;
 
-    const DAYS = ['일', '월', '화', '수', '목', '금', '토'];
+    const lang = document.documentElement.lang || localStorage.getItem('gongji:lang') || 'ko';
+    const I = window.GongjiI18n;
+    const T = (I && I.T && I.T[lang]) || {};
+    const DOW_NAMES = (I && I.WEEKDAYS && I.WEEKDAYS[lang]) || ['일', '월', '화', '수', '목', '금', '토'];
+
     const today = new Date();
     today.setHours(0, 0, 0, 0);
 
@@ -428,43 +432,133 @@
     const timeline = document.createElement('div');
     timeline.className = 'week-timeline';
 
-    days.forEach((day, di) => {
-      const col = document.createElement('div');
-      col.className = 'wt-col' + (day.getTime() === today.getTime() ? ' is-today' : '');
+    const CAT_COLORS = {
+      '장학': 'var(--badge-money, #f59e0b)',
+      '학사': 'var(--accent, #10b981)',
+      '취업': 'var(--badge-exp, #3b82f6)',
+      '행사': '#8b5cf6',
+      '기타': 'var(--badge-info, #64748b)'
+    };
 
-      const dow = document.createElement('div');
-      dow.className = 'wt-dow';
-      dow.textContent = DAYS[day.getDay()];
-      col.append(dow);
+    let todayColEl = null;
+
+    days.forEach((day) => {
+      const isToday = day.getTime() === today.getTime();
+      const col = document.createElement('div');
+      col.className = 'wt-col' + (isToday ? ' is-today' : '');
+      if (isToday) todayColEl = col;
 
       const dayStr = day.toISOString().slice(0, 10);
       const items = withDeadline.filter(n => n.deadline && n.deadline.startsWith(dayStr));
+      const mm = String(day.getMonth() + 1);
+      const dd = String(day.getDate());
+      const dateText = `${mm}.${dd}`;
 
-      items.slice(0, 3).forEach(n => {
-        const item = document.createElement('button');
-        item.type = 'button';
-        item.className = 'wt-item';
+      // 요일 컬럼 상단 헤더
+      const colHead = document.createElement('div');
+      colHead.className = 'wt-col-head';
 
-        const dl = new Date(n.deadline);
-        const hoursLeft = (dl - Date.now()) / 3600_000;
-        if (hoursLeft < 24) item.classList.add('is-urgent');
-        if (saved.includes(n.id)) item.classList.add('is-saved');
+      const headLeft = document.createElement('div');
+      headLeft.className = 'wt-head-left';
 
-        item.textContent = n.title;
-        item.title = n.title;
-        item.addEventListener('click', () => {
-          location.hash = '#/n/' + encodeURIComponent(n.id);
-        });
-        col.append(item);
-      });
+      const dowEl = document.createElement('span');
+      dowEl.className = 'wt-dow';
+      dowEl.textContent = DOW_NAMES[day.getDay()];
 
-      if (items.length > 3) {
-        const more = document.createElement('p');
-        more.style.cssText = 'font-size:11px;color:var(--faint);margin:2px 0 0;text-align:center;';
-        more.textContent = `+${items.length - 3}`;
-        col.append(more);
+      const dateEl = document.createElement('span');
+      dateEl.className = 'wt-date';
+      dateEl.textContent = dateText;
+
+      headLeft.append(dowEl, dateEl);
+
+      const headRight = document.createElement('div');
+      headRight.className = 'wt-head-right';
+
+      if (isToday) {
+        const todayBadge = document.createElement('span');
+        todayBadge.className = 'wt-today-pill';
+        todayBadge.textContent = T.timelineTodayBadge || '오늘';
+        headRight.append(todayBadge);
       }
 
+      if (items.length > 0) {
+        const cntBadge = document.createElement('span');
+        cntBadge.className = 'wt-cnt-badge';
+        cntBadge.textContent = T.unitCount ? `${items.length}${T.unitCount}` : `${items.length}`;
+        headRight.append(cntBadge);
+      }
+
+      colHead.append(headLeft, headRight);
+      col.append(colHead);
+
+      // 공지 리스트
+      const colBody = document.createElement('div');
+      colBody.className = 'wt-col-body';
+
+      if (items.length === 0) {
+        const empty = document.createElement('div');
+        empty.className = 'wt-col-empty';
+        empty.innerHTML = `<span class="wt-empty-icon">☕</span><span>${T.timelineNoDeadlines || '마감 없음'}</span>`;
+        colBody.append(empty);
+      } else {
+        items.slice(0, 5).forEach(n => {
+          const item = document.createElement('button');
+          item.type = 'button';
+          item.className = 'wt-item';
+
+          const dl = new Date(n.deadline);
+          const hoursLeft = (dl - Date.now()) / 3600_000;
+          if (hoursLeft < 24) item.classList.add('is-urgent');
+          if (saved.includes(n.id)) item.classList.add('is-saved');
+
+          // 카테고리 액센트 바 색상
+          const cat = n.category || '기타';
+          const catColor = CAT_COLORS[cat] || CAT_COLORS['기타'];
+          item.style.setProperty('--wt-cat-color', catColor);
+
+          // 상단 메타 바 (카테고리 칩 + D-Day)
+          const metaRow = document.createElement('div');
+          metaRow.className = 'wt-item-meta';
+
+          const catTag = document.createElement('span');
+          catTag.className = 'wt-item-cat';
+          catTag.textContent = cat;
+
+          const ddayTag = document.createElement('span');
+          ddayTag.className = 'wt-item-dday';
+          const daysLeft = Math.ceil(hoursLeft / 24);
+          if (hoursLeft <= 24) {
+            ddayTag.textContent = T.dueToday || '오늘 마감';
+            ddayTag.classList.add('urgent');
+          } else {
+            ddayTag.textContent = `D-${daysLeft}`;
+          }
+
+          metaRow.append(catTag, ddayTag);
+
+          // 공지 제목 (언어별 번역 지원)
+          const titleEl = document.createElement('div');
+          titleEl.className = 'wt-item-title';
+          const title = (lang !== 'ko' && n.titleTr && n.titleTr[lang]) || n.title;
+          titleEl.textContent = title;
+          item.title = title;
+
+          item.append(metaRow, titleEl);
+          item.addEventListener('click', () => {
+            location.hash = '#/n/' + encodeURIComponent(n.id);
+          });
+          colBody.append(item);
+        });
+
+        if (items.length > 5) {
+          const more = document.createElement('p');
+          more.className = 'wt-more-hint';
+          more.textContent = `+${items.length - 5}`;
+          colBody.append(more);
+        }
+      }
+
+      col.append(colBody);
       timeline.append(col);
     });
 
@@ -473,21 +567,178 @@
     sec.className = 'home-card week-timeline-sec';
     sec.style.marginTop = '0';
 
+    const headWrap = document.createElement('div');
+    headWrap.className = 'wt-sec-head';
+
+    const titleWrap = document.createElement('div');
+    titleWrap.className = 'wt-sec-title-wrap';
+
     const h3 = document.createElement('h3');
-    h3.style.cssText = 'font-size:15px;font-weight:800;margin-bottom:12px;letter-spacing:-0.02em;display:flex;align-items:center;gap:8px;';
-    h3.textContent = '이번 주 마감 타임라인';
+    h3.className = 'wt-sec-title';
+    h3.innerHTML = `📅 <span>${T.timelineTitle || '이번 주 마감 타임라인'}</span>`;
 
     const count = document.createElement('span');
-    count.style.cssText = 'font-size:13px;color:var(--accent-strong);font-variant-numeric:tabular-nums;';
-    count.textContent = `${withDeadline.length}건`;
+    count.className = 'wt-sec-count';
+    count.textContent = T.unitCount ? `${withDeadline.length}${T.unitCount}` : `${withDeadline.length}`;
     h3.append(count);
 
+    const sub = document.createElement('p');
+    sub.className = 'wt-sec-sub';
+    sub.textContent = T.timelineSub || '다가오는 일주일간의 주요 마감 일정입니다.';
+
+    titleWrap.append(h3, sub);
+
+    const scrollHint = document.createElement('span');
+    scrollHint.className = 'wt-scroll-hint';
+    scrollHint.textContent = '← 스크롤하여 요일별 확인 →';
+
+    headWrap.append(titleWrap, scrollHint);
+
     enableDragScroll(timeline);
-    sec.append(h3, timeline);
+    sec.append(headWrap, timeline);
 
     const homeWrap = $('.home-wrap, #home-body');
     if (homeWrap) {
       homeWrap.prepend(sec);
+    }
+
+    // 오늘 요일 컬럼으로 부드러운 스크롤 포커스
+    if (todayColEl) {
+      setTimeout(() => {
+        try {
+          const offset = todayColEl.offsetLeft - 16;
+          timeline.scrollTo({ left: Math.max(0, offset), behavior: 'smooth' });
+        } catch (_) {}
+      }, 150);
+    }
+  }
+
+  /* ═══════════════════════════════════════════════════════
+     8-1. 주요 학사일정 D-Day 로드맵 위젯
+          오늘 이후 다가오는 핵심 학사일정 타임트랙 카드
+     ═══════════════════════════════════════════════════════ */
+  function renderAcademicDdayWidget() {
+    const cal = window.GONGJI_CALENDAR;
+    if (!cal || !cal.items || !cal.items.length) return;
+    if ($('.acad-roadmap-sec')) return;
+
+    const lang = document.documentElement.lang || localStorage.getItem('gongji:lang') || 'ko';
+    const I = window.GongjiI18n;
+    const T = (I && I.T && I.T[lang]) || {};
+    const DOW_NAMES = (I && I.WEEKDAYS && I.WEEKDAYS[lang]) || ['일', '월', '화', '수', '목', '금', '토'];
+
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    const upcoming = cal.items.filter(item => {
+      if (!item.end && !item.start) return false;
+      const endD = new Date(item.end || item.start);
+      endD.setHours(23, 59, 59, 999);
+      return endD >= today;
+    }).slice(0, 4);
+
+    if (!upcoming.length) return;
+
+    const sec = document.createElement('div');
+    sec.className = 'home-card acad-roadmap-sec';
+
+    const head = document.createElement('div');
+    head.className = 'ar-head';
+
+    const titleWrap = document.createElement('div');
+    titleWrap.className = 'ar-title-wrap';
+
+    const h3 = document.createElement('h3');
+    h3.className = 'ar-title';
+    h3.innerHTML = `🎓 <span>${T.acadRoadmapTitle || '주요 학사일정 로드맵'}</span>`;
+
+    const sub = document.createElement('p');
+    sub.className = 'ar-sub';
+    sub.textContent = T.acadRoadmapSub || '건국대학교 GLOCAL캠퍼스 주요 학사일정입니다.';
+
+    titleWrap.append(h3, sub);
+
+    const viewAllBtn = document.createElement('button');
+    viewAllBtn.type = 'button';
+    viewAllBtn.className = 'ar-view-all';
+    viewAllBtn.textContent = T.acadViewAll || '전체 달력 보기 ↗';
+    viewAllBtn.onclick = () => {
+      location.hash = '#/calendar';
+      if (typeof setTab === 'function') setTab('calendar', true);
+    };
+
+    head.append(titleWrap, viewAllBtn);
+
+    const list = document.createElement('div');
+    list.className = 'ar-list';
+
+    upcoming.forEach(item => {
+      const row = document.createElement('div');
+      row.className = 'ar-item';
+
+      const startD = new Date(item.start);
+      startD.setHours(0, 0, 0, 0);
+      const endD = new Date(item.end || item.start);
+      endD.setHours(23, 59, 59, 999);
+
+      const daysUntilStart = Math.ceil((startD - today) / 86400000);
+      const isOngoing = today >= startD && today <= endD;
+
+      // 아이콘 결정
+      const rawTitle = (item.title && (item.title.ko || item.title)) || '';
+      let icon = '🏛️';
+      if (/시험|기말|중간/.test(rawTitle)) icon = '📝';
+      else if (/방학|계절/.test(rawTitle)) icon = '❄️';
+      else if (/성적|정정|열람/.test(rawTitle)) icon = '📊';
+      else if (/수업|개강|종강/.test(rawTitle)) icon = '📚';
+      else if (/등록|휴학|복학/.test(rawTitle)) icon = '💳';
+
+      const iconEl = document.createElement('span');
+      iconEl.className = 'ar-icon';
+      iconEl.textContent = icon;
+
+      const infoWrap = document.createElement('div');
+      infoWrap.className = 'ar-info';
+
+      const titleEl = document.createElement('div');
+      titleEl.className = 'ar-item-title';
+      const displayTitle = (item.title && typeof item.title === 'object' && (item.title[lang] || item.title.ko)) || rawTitle;
+      titleEl.textContent = displayTitle;
+
+      const dateEl = document.createElement('div');
+      dateEl.className = 'ar-item-period';
+      const fmtDate = (d) => {
+        const mm = d.getMonth() + 1;
+        const dd = d.getDate();
+        const dow = DOW_NAMES[d.getDay()];
+        return `${mm}.${dd}(${dow})`;
+      };
+      dateEl.textContent = item.start === item.end ? fmtDate(startD) : `${fmtDate(startD)} ~ ${fmtDate(endD)}`;
+
+      infoWrap.append(titleEl, dateEl);
+
+      const ddayBadge = document.createElement('span');
+      ddayBadge.className = 'ar-dday' + (isOngoing ? ' is-ongoing' : daysUntilStart <= 7 ? ' is-urgent' : '');
+      if (isOngoing) {
+        ddayBadge.textContent = T.bfOngoing || '진행 중';
+      } else if (daysUntilStart === 0) {
+        ddayBadge.textContent = T.dueToday || '오늘 시작';
+      } else {
+        ddayBadge.textContent = `D-${daysUntilStart}`;
+      }
+
+      row.append(iconEl, infoWrap, ddayBadge);
+      list.append(row);
+    });
+
+    sec.append(head, list);
+
+    const weekSec = $('.week-timeline-sec');
+    if (weekSec && weekSec.nextSibling) {
+      weekSec.parentNode.insertBefore(sec, weekSec.nextSibling);
+    } else {
+      const homeWrap = $('.home-wrap, #home-body');
+      if (homeWrap) homeWrap.append(sec);
     }
   }
 
@@ -586,76 +837,147 @@
   }
 
   /* ═══════════════════════════════════════════════════════
-     13. 오늘 화면 "오늘 할 일" 체크리스트 간단 위젯
-         오늘 마감 중 아직 지원 안 한 것을 체크리스트로 표시
+     13. 오늘 화면 "오늘 마감 투두 체크리스트" 위젯 (Today's Checklist)
+         오늘 마감 중 미완료 공지를 투두 형태로 제공 + 원클릭 지원완료 & 상세 열기
      ═══════════════════════════════════════════════════════ */
   function renderTodayChecklist() {
     const notices = window.GONGJI_DATA && window.GONGJI_DATA.notices;
     if (!notices || !notices.length) return;
-    if ($('.today-checklist-sec')) return;
 
-    const todayStr = new Date().toISOString().slice(0, 10);
-    const applied = (() => {
-      try { return JSON.parse(localStorage.getItem('gongji:applied') || '[]'); } catch { return []; }
-    })();
+    // 기존 요소가 있으면 내용만 갱신하거나 재작성
+    const existing = $('.today-checklist-sec');
+    if (existing) existing.remove();
+
+    const app = window.GongjiApp;
+    const isApplied = (id) => {
+      if (app && typeof app.isApplied === 'function') return app.isApplied(id);
+      try {
+        const arr = JSON.parse(localStorage.getItem('gongji:applied') || '[]');
+        return arr.includes(id);
+      } catch { return false; }
+    };
+
+    const now = new Date();
+    const todayStr = new Intl.DateTimeFormat('en-CA').format(now); // 'YYYY-MM-DD'
+    const lang = (app && app.getState && app.getState().lang) || document.documentElement.lang || 'ko';
 
     const todayDue = notices.filter(n => {
       if (!n.deadline) return false;
-      return n.deadline.startsWith(todayStr) && !applied.includes(n.id);
-    }).slice(0, 5);
+      return n.deadline.startsWith(todayStr);
+    });
 
     if (!todayDue.length) return;
+
+    const unapplied = todayDue.filter(n => !isApplied(n.id));
 
     const sec = document.createElement('div');
     sec.className = 'home-card today-checklist-sec';
 
+    const getI18nText = () => {
+      const pendingCount = unapplied.length;
+      if (lang === 'en') {
+        return {
+          title: `Due today — ${pendingCount} pending`,
+          doneTitle: '🎉 All notices due today are completed!',
+          timeLabel: (tm) => tm ? `by ${tm}` : 'Today'
+        };
+      } else if (lang === 'zh') {
+        return {
+          title: `今日截止 — 还有 ${pendingCount} 项待申请`,
+          doneTitle: '🎉 今日截止的所有公告均已完成！',
+          timeLabel: (tm) => tm ? `${tm} 截止` : '今日截止'
+        };
+      } else if (lang === 'ja') {
+        return {
+          title: `今日締切 — 未応募 ${pendingCount}件`,
+          doneTitle: '🎉 今日の締切のお知らせはすべて完了しました！',
+          timeLabel: (tm) => tm ? `${tm}まで` : '今日締切'
+        };
+      }
+      return {
+        title: `오늘 마감 — 아직 지원 안 한 ${pendingCount}건`,
+        doneTitle: '🎉 오늘 마감 공지를 모두 지원·확인했습니다!',
+        timeLabel: (tm) => tm ? `${tm} 마감` : '오늘 마감'
+      };
+    };
+
+    const i18n = getI18nText();
+
+    const headDiv = document.createElement('div');
+    headDiv.className = 'tc-head';
+
     const h3 = document.createElement('h3');
-    h3.style.cssText = 'font-size:15px;font-weight:800;margin-bottom:10px;letter-spacing:-0.02em;';
-    h3.textContent = `오늘 마감 — 아직 지원 안 한 ${todayDue.length}건`;
-    h3.style.color = 'var(--danger)';
-    sec.append(h3);
+    h3.className = 'tc-title';
+    h3.textContent = unapplied.length > 0 ? i18n.title : i18n.doneTitle;
+    if (unapplied.length === 0) h3.classList.add('tc-all-done');
+    headDiv.append(h3);
+    sec.append(headDiv);
 
-    const ul = document.createElement('ul');
-    ul.style.cssText = 'list-style:none;margin:0;padding:0;display:grid;gap:6px;';
+    if (unapplied.length === 0) {
+      const doneCard = document.createElement('div');
+      doneCard.className = 'tc-done-box';
+      doneCard.innerHTML = `<span class="tc-done-icon">👏</span><span class="tc-done-msg">${lang === 'en' ? 'Great job! You have checked all deadlines today.' : '오늘 마감인 모든 장학금 및 프로그램을 확인했습니다.'}</span>`;
+      sec.append(doneCard);
+    } else {
+      const ul = document.createElement('ul');
+      ul.className = 'tc-list';
 
-    todayDue.forEach(n => {
-      const li = document.createElement('li');
-      li.style.cssText = 'display:flex;align-items:center;gap:10px;padding:6px 0;border-bottom:1px solid var(--border);';
+      todayDue.slice(0, 5).forEach(n => {
+        const appliedNow = isApplied(n.id);
+        const li = document.createElement('li');
+        li.className = 'tc-item' + (appliedNow ? ' is-done' : '');
 
-      const cb = document.createElement('input');
-      cb.type = 'checkbox';
-      cb.style.cssText = 'flex:none;width:18px;height:18px;accent-color:var(--accent);cursor:pointer;';
-      cb.setAttribute('aria-label', `${n.title} 지원 완료 표시`);
+        const cb = document.createElement('input');
+        cb.type = 'checkbox';
+        cb.className = 'tc-cb';
+        cb.checked = appliedNow;
+        cb.id = `tdc-${n.id}`;
+        cb.setAttribute('aria-label', `${n.title} 지원 완료 토글`);
 
-      const label = document.createElement('label');
-      label.style.cssText = 'flex:1;font-size:14px;font-weight:600;cursor:pointer;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;';
-      label.textContent = n.title;
-
-      // 체크하면 applied에 추가 + 흐리게
-      cb.addEventListener('change', () => {
-        if (cb.checked) {
-          li.style.opacity = '0.45';
-          label.style.textDecoration = 'line-through';
-          // localStorage applied 갱신 (앱의 state와 별개이지만 UX용)
-          try {
-            const arr = JSON.parse(localStorage.getItem('gongji:applied') || '[]');
-            if (!arr.includes(n.id)) {
-              arr.push(n.id);
-              localStorage.setItem('gongji:applied', JSON.stringify(arr));
-            }
-          } catch {}
+        // 마감 시간 추출 (예: '2026-11-24T18:00' -> '18:00')
+        let timeStr = '';
+        if (n.deadline && n.deadline.includes('T')) {
+          timeStr = n.deadline.split('T')[1].slice(0, 5);
         }
+
+        const titleBtn = document.createElement('button');
+        titleBtn.type = 'button';
+        titleBtn.className = 'tc-title-btn';
+        titleBtn.textContent = n.title;
+        titleBtn.title = '공지 상세 보기';
+        titleBtn.onclick = () => {
+          if (app && typeof app.openDetail === 'function') {
+            app.openDetail(n.id);
+          }
+        };
+
+        const metaSpan = document.createElement('span');
+        metaSpan.className = 'tc-time';
+        metaSpan.textContent = i18n.timeLabel(timeStr);
+
+        cb.addEventListener('change', () => {
+          if (app && typeof app.toggleApplied === 'function') {
+            app.toggleApplied(n.id);
+          } else {
+            try {
+              const arr = JSON.parse(localStorage.getItem('gongji:applied') || '[]');
+              const idx = arr.indexOf(n.id);
+              if (cb.checked && idx < 0) arr.push(n.id);
+              else if (!cb.checked && idx >= 0) arr.splice(idx, 1);
+              localStorage.setItem('gongji:applied', JSON.stringify(arr));
+            } catch {}
+          }
+          // 리렌더링
+          renderTodayChecklist();
+        });
+
+        li.append(cb, titleBtn, metaSpan);
+        ul.append(li);
       });
 
-      label.htmlFor = `tdc-${n.id}`;
-      cb.id = `tdc-${n.id}`;
-      li.append(cb, label);
-      ul.append(li);
-    });
+      sec.append(ul);
+    }
 
-    sec.append(ul);
-
-    // home-wrap 상단에 삽입
     const homeWrap = $('#home-body, .home-wrap');
     if (homeWrap) homeWrap.prepend(sec);
   }
@@ -711,6 +1033,7 @@
       // DOM이 완성된 뒤 약간의 delay로 주입
       setTimeout(() => {
         try { renderWeekTimeline(); } catch (e) { console.warn('[enhanced] week timeline:', e); }
+        try { renderAcademicDdayWidget(); } catch (e) { console.warn('[enhanced] acad roadmap:', e); }
         try { renderTodayChecklist(); } catch (e) { console.warn('[enhanced] today checklist:', e); }
         try { startSmartCountdown(); } catch (e) {}
       }, 200);

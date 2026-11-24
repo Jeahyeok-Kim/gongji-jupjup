@@ -168,6 +168,7 @@
         <p id="count" aria-live="polite"></p>
         <div class="list-tools">
           <button type="button" class="link-btn" id="reset-filters" hidden data-i18n="resetFilters"></button>
+          <button type="button" class="link-btn btn-mark-all-read" id="mark-all-read" data-i18n="markAllRead" title="모든 공지를 읽음 상태로 처리"></button>
           <label class="toggle">
             <input type="checkbox" id="saved-only">
             <span id="saved-only-label"></span>
@@ -223,9 +224,9 @@
             <select id="tt-selector" class="tt-selector" aria-label="시간표 선택"></select>
           </div>
           <div class="tt-mgr-actions">
-            <button type="button" class="btn small tt-btn-action" id="tt-new-btn" title="새 시간표 만들기">+ 새 시간표</button>
-            <button type="button" class="btn small tt-btn-action" id="tt-dup-btn" title="현재 시간표 복제">복제</button>
-            <button type="button" class="btn small tt-btn-action" id="tt-manage-btn" title="시간표 이름 변경/삭제">관리</button>
+            <button type="button" class="btn small tt-btn-action" id="tt-new-btn" title="새 시간표 만들기" data-i18n="ttNew">+ 새 시간표</button>
+            <button type="button" class="btn small tt-btn-action" id="tt-dup-btn" title="현재 시간표 복제" data-i18n="ttDup">복제</button>
+            <button type="button" class="btn small tt-btn-action" id="tt-manage-btn" title="시간표 이름 변경/삭제" data-i18n="ttManage">관리</button>
           </div>
         </div>
         <!-- 실시간 학점 및 등교 통계 바 -->
@@ -239,7 +240,7 @@
           <button type="button" class="btn" id="example-tt" data-i18n="exampleTimetable"></button>
           <button type="button" class="btn" id="clear-tt" data-i18n="clearTimetable"></button>
           <button type="button" class="btn" id="tt-image" data-i18n="ttImage"></button>
-          <button type="button" class="btn" id="tt-ics" title="구글·애플·갤럭시 캘린더에 시간표 등록">📅 캘린더 등록</button>
+          <button type="button" class="btn" id="tt-ics" title="구글·애플·갤럭시 캘린더에 시간표 등록" data-i18n="ttIcs">📅 캘린더 등록</button>
         </div>
         <label class="toggle">
           <input type="checkbox" class="hide-control">
@@ -492,6 +493,7 @@
   <script src="js/palette.js"></script>
   <script src="js/ttimage.js"></script>
   <script src="js/ttics.js"></script>
+  <script src="js/noticeimage.js"></script>
   <script src="js/theme.js"></script>
   <script src="js/app.js"></script>
   <script src="js/enhanced.js"></script>
