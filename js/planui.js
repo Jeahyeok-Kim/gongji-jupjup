@@ -52,14 +52,25 @@
     };
     const slotText = (slots) => slots.map(([d, a, b]) => `${deps.dayName(d)} ${a}–${b}`).join(', ');
 
-    // 학기 선택지: 지금부터 6년 전까지 (최근 학기가 위)
+    // 학기 선택지: 다가올 계절/차기 학기부터 6년 전까지 (최근 학기가 위)
     function termOptions() {
       const cur = P.currentTerm(deps.now);
       const out = [];
-      for (let y = cur.year; y >= cur.year - 6; y--) {
+      // 2학기일 때는 다가올 겨울학기(W) 및 차년도 1학기까지, 1학기일 때는 여름학기(S) 및 2학기까지 미리 선택 가능
+      let maxYear = cur.year;
+      let maxTerm = cur.term;
+      if (cur.term === '2') {
+        maxYear = cur.year + 1;
+        maxTerm = '1';
+      } else {
+        maxTerm = '2';
+      }
+      const maxTermKey = P.termKey(`${maxYear}-${maxTerm}`);
+
+      for (let y = maxYear; y >= cur.year - 6; y--) {
         for (const t of ['W', '2', 'S', '1']) {
           const key = `${y}-${t}`;
-          if (P.termKey(key) > P.termKey(`${cur.year}-${cur.term}`)) continue;
+          if (P.termKey(key) > maxTermKey) continue;
           out.push(key);
         }
       }
@@ -95,6 +106,75 @@
         extra || null);
     }
 
+    function renderDetailedBreakdown(tot, req) {
+      if (!req || (!req.major && !req.general)) return null;
+
+      const majorReqDone = (st.history || []).filter((x) => x.kind === '전필').reduce((s, x) => s + (Number(x.credit) || 0), 0);
+      const majorElectDone = (st.history || []).filter((x) => x.kind === '전선').reduce((s, x) => s + (Number(x.credit) || 0), 0);
+      const reqMajorReq = req.majorReq || 0;
+
+      const items = [
+        {
+          label: '전공필수',
+          done: majorReqDone,
+          need: reqMajorReq,
+          tag: majorReqDone >= reqMajorReq ? '완료 ✓' : `${reqMajorReq - majorReqDone}학점 부족`,
+          ok: majorReqDone >= reqMajorReq
+        },
+        {
+          label: '전공선택',
+          done: majorElectDone,
+          need: req.major ? Math.max(0, req.major - reqMajorReq) : null,
+          tag: '전공선택',
+          ok: req.major ? majorElectDone >= Math.max(0, req.major - reqMajorReq) : true
+        },
+        {
+          label: '기초교양',
+          done: tot.gen['기초'] || 0,
+          need: req.gen ? req.gen['기초'] : 14,
+          tag: (tot.gen['기초'] || 0) >= (req.gen ? req.gen['기초'] : 14) ? '완료 ✓' : `${(req.gen ? req.gen['기초'] : 14) - (tot.gen['기초'] || 0)}학점 부족`,
+          ok: (tot.gen['기초'] || 0) >= (req.gen ? req.gen['기초'] : 14)
+        },
+        {
+          label: '심화교양',
+          done: tot.gen['심화'] || 0,
+          need: req.gen ? req.gen['심화'] : 8,
+          tag: (tot.gen['심화'] || 0) >= (req.gen ? req.gen['심화'] : 8) ? '완료 ✓' : `${(req.gen ? req.gen['심화'] : 8) - (tot.gen['심화'] || 0)}학점 부족`,
+          ok: (tot.gen['심화'] || 0) >= (req.gen ? req.gen['심화'] : 8)
+        },
+        {
+          label: 'KU소양',
+          done: tot.gen['소양'] || 0,
+          need: req.gen ? req.gen['소양'] : 9,
+          tag: (tot.gen['소양'] || 0) >= (req.gen ? req.gen['소양'] : 9) ? '완료 ✓' : `${(req.gen ? req.gen['소양'] : 9) - (tot.gen['소양'] || 0)}학점 부족`,
+          ok: (tot.gen['소양'] || 0) >= (req.gen ? req.gen['소양'] : 9)
+        }
+      ];
+
+      return h('div', { class: 'grad-breakdown-card' },
+        h('div', { class: 'gbc-head' },
+          h('h4', null, '📊 영역별 세부 졸업요건 이수율'),
+          h('span', { class: 'gbc-sub' }, '전필·교양 필수 영역별 충족 여부')
+        ),
+        h('div', { class: 'gbc-grid' }, items.map((it) => {
+          const pct = it.need ? Math.min(100, Math.round((it.done / it.need) * 100)) : 100;
+          return h('div', { class: `gbc-item ${it.ok ? 'is-fulfilled' : 'is-pending'}` },
+            h('div', { class: 'gbc-item-top' },
+              h('span', { class: 'gbc-item-label' }, it.label),
+              h('span', { class: `gbc-item-badge ${it.ok ? 'ok' : 'warn'}` }, it.tag)
+            ),
+            h('div', { class: 'gbc-bar' },
+              h('div', { class: 'gbc-bar-fill', style: `width:${pct}%;` })
+            ),
+            h('div', { class: 'gbc-item-nums' },
+              h('strong', null, `${it.done}학점`),
+              it.need ? h('span', null, ` / ${it.need}학점`) : null
+            )
+          );
+        }))
+      );
+    }
+
     function renderSummary() {
       const Tx = T();
       const req = requirement();
@@ -112,7 +192,7 @@
         meter(Tx.areaMajor, tot.major, req.major),
         meter(Tx.areaGeneral, tot.general, req.general,
           req.gen ? h('p', { class: 'meter-sub' }, ['기초', '심화', '소양'].map((g) => `${Tx.genLabel[g]} ${tot.gen[g]}/${req.gen[g]}`).join(' · ')) : null));
-      return [head, meters, renderRoadmap(left), renderRequired()];
+      return [head, meters, renderDetailedBreakdown(tot, req), renderRoadmap(left), renderRequired()];
     }
 
     // 원형 진행 표시 (SVG). 처음 그릴 때 0 에서 값까지 차오른다
@@ -391,6 +471,93 @@
           } }, '×')))))));
     }
 
+    function renderGpaSimulator() {
+      const gpaData = P.gpa(st.history);
+      if (!gpaData || !gpaData.credits) return null;
+
+      const curGpa = gpaData.gpa;
+      const curCredits = gpaData.credits;
+      const req = requirement();
+      const defaultRemCredits = Math.max(18, (req.total || 132) - totalsNow().total);
+
+      if (!st.gpaSim) {
+        st.gpaSim = {
+          targetGpa: store.get('sim_target_gpa', 4.0),
+          remCredits: store.get('sim_rem_credits', defaultRemCredits)
+        };
+      }
+
+      const target = Number(st.gpaSim.targetGpa) || 4.0;
+      const rem = Math.max(1, Number(st.gpaSim.remCredits) || 18);
+
+      const curSum = curCredits * curGpa;
+      const targetSum = (curCredits + rem) * target;
+      const neededSum = targetSum - curSum;
+      const neededGpa = neededSum / rem;
+      const maxPossible = Math.min(4.5, (curSum + rem * 4.5) / (curCredits + rem));
+
+      let resultBadge = '';
+      let resultClass = '';
+      let resultDesc = '';
+
+      if (neededGpa <= 0) {
+        resultClass = 'is-achieved';
+        resultBadge = '🎉 목표 달성 완료';
+        resultDesc = `이미 목표 평점(${target.toFixed(2)})을 초과 달성했습니다! 남은 ${rem}학점을 수료만 해도 목표를 이룰 수 있습니다.`;
+      } else if (neededGpa <= 4.50) {
+        resultClass = 'is-possible';
+        resultBadge = `✨ 잔여 평균 ${neededGpa.toFixed(2)} 필요`;
+        resultDesc = `남은 ${rem}학점 동안 평균 ${neededGpa.toFixed(2)} 이상을 취득하면 졸업 평점 ${target.toFixed(2)}에 도달합니다!`;
+      } else {
+        resultClass = 'is-impossible';
+        resultBadge = '⚠️ 달성 난도 높음';
+        resultDesc = `남은 학점을 모두 A+(4.5) 받아도 최대 ${maxPossible.toFixed(2)}까지 가능합니다. 목표 평점을 조정해보세요.`;
+      }
+
+      return h('section', { class: `plan-box gpa-sim-box ${resultClass}` },
+        h('div', { class: 'gpa-sim-head' },
+          h('div', { class: 'gpa-sim-title-wrap' },
+            h('h3', null, '🎯 목표 졸업 평점 역산기'),
+            h('span', { class: 'gpa-sim-subtitle' }, `현재 누적: ${curGpa.toFixed(2)} (${curCredits}학점 성적 산출 기준)`)
+          ),
+          h('span', { class: `gpa-sim-badge ${resultClass}` }, resultBadge)
+        ),
+        h('div', { class: 'gpa-sim-controls' },
+          h('label', { class: 'gpa-sim-field' },
+            h('span', null, '목표 평점'),
+            h('input', {
+              type: 'number',
+              step: '0.05',
+              min: '1.5',
+              max: '4.5',
+              value: target.toFixed(2),
+              onchange: (e) => {
+                st.gpaSim.targetGpa = parseFloat(e.target.value) || 4.0;
+                store.set('sim_target_gpa', st.gpaSim.targetGpa);
+                render();
+              }
+            })
+          ),
+          h('label', { class: 'gpa-sim-field' },
+            h('span', null, '남은 학점'),
+            h('input', {
+              type: 'number',
+              step: '1',
+              min: '1',
+              max: '140',
+              value: String(rem),
+              onchange: (e) => {
+                st.gpaSim.remCredits = parseInt(e.target.value, 10) || 18;
+                store.set('sim_rem_credits', st.gpaSim.remCredits);
+                render();
+              }
+            })
+          )
+        ),
+        h('p', { class: 'gpa-sim-desc' }, resultDesc)
+      );
+    }
+
     function renderHistory() {
       const Tx = T();
       const box = $('#history-view');
@@ -398,6 +565,7 @@
       box.replaceChildren(...[
         h('div', { class: 'plan-head' }, h('h2', null, Tx.histTitle), h('p', { class: 'help' }, Tx.histHelp)),
         ...renderSummary(),
+        renderGpaSimulator(),
         renderReq(),
         h('section', { class: 'plan-box add-box' },
           h('div', { class: 'add-head' }, h('h3', null, Tx.histAddTitle),

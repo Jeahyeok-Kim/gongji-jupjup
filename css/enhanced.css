@@ -1399,3 +1399,748 @@ span.board::-webkit-scrollbar,
   background: rgba(239, 68, 68, 0.12);
   color: #ef4444;
 }
+
+/* ==========================================================================
+   47. 시간표 수업 충돌 및 대체 분반 (Timetable Clash & Alt Section Swap)
+   ========================================================================== */
+.tt-class.has-clash {
+  border: 2px dashed #ef4444 !important;
+  box-shadow: 0 0 0 2px rgba(239, 68, 68, 0.25) !important;
+  animation: clash-pulse 2s infinite ease-in-out;
+}
+
+@keyframes clash-pulse {
+  0%, 100% { border-color: #ef4444; }
+  50% { border-color: #f97316; }
+}
+
+.tt-clash-badge {
+  display: inline-block;
+  font-size: 10px;
+  font-weight: 700;
+  padding: 1px 5px;
+  background: #ef4444;
+  color: #ffffff;
+  border-radius: 4px;
+  margin-bottom: 2px;
+  line-height: 1.3;
+}
+
+.clash-warn-badge {
+  background: #fee2e2 !important;
+  color: #b91c1c !important;
+  font-weight: 700 !important;
+  animation: badge-blink 1.8s infinite ease-in-out;
+}
+
+[data-theme="dark"] .clash-warn-badge {
+  background: rgba(239, 68, 68, 0.2) !important;
+  color: #fca5a5 !important;
+}
+
+@keyframes badge-blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.7; }
+}
+
+.class-alt-sec {
+  margin: 12px 0 6px;
+  padding: 12px;
+  background: color-mix(in srgb, var(--accent) 4%, var(--surface-2, rgba(255, 255, 255, 0.04)));
+  border: 1px solid color-mix(in srgb, var(--accent) 20%, transparent);
+  border-radius: 10px;
+}
+
+.alt-sec-head {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  margin-bottom: 8px;
+}
+
+.alt-sec-title {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--accent);
+}
+
+.alt-sec-sub {
+  font-size: 11px;
+  color: var(--muted, #6b7280);
+}
+
+.alt-sec-list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.alt-sec-chip {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 7px 10px;
+  border-radius: 8px;
+  background: var(--surface, #ffffff);
+  border: 1px solid var(--border, #e5e7eb);
+  cursor: pointer;
+  text-align: left;
+  transition: all 0.15s ease;
+}
+
+[data-theme="dark"] .alt-sec-chip {
+  background: var(--surface-1, #1e252b);
+  border-color: var(--border, #2e3842);
+}
+
+.alt-sec-chip:hover {
+  border-color: var(--accent);
+  transform: translateY(-1px);
+}
+
+.alt-sec-chip.is-clean {
+  border-left: 3px solid #10b981;
+}
+
+.alt-sec-chip.is-clashing {
+  border-left: 3px solid #f59e0b;
+  opacity: 0.85;
+}
+
+.asc-badge {
+  font-size: 10.5px;
+  font-weight: 700;
+  padding: 2px 6px;
+  border-radius: 4px;
+  white-space: nowrap;
+}
+
+.alt-sec-chip.is-clean .asc-badge {
+  background: #ecfdf5;
+  color: #059669;
+}
+
+[data-theme="dark"] .alt-sec-chip.is-clean .asc-badge {
+  background: rgba(16, 185, 129, 0.2);
+  color: #34d399;
+}
+
+.alt-sec-chip.is-clashing .asc-badge {
+  background: #fffbeb;
+  color: #d97706;
+}
+
+[data-theme="dark"] .alt-sec-chip.is-clashing .asc-badge {
+  background: rgba(245, 158, 11, 0.2);
+  color: #fbbf24;
+}
+
+.asc-text {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text, #1f2937);
+  flex: 1;
+}
+
+[data-theme="dark"] .asc-text {
+  color: var(--text, #e5e7eb);
+}
+
+/* ==========================================================================
+   48. 목표 평점 역산기 & GPA 시뮬레이터 (Target GPA Simulator)
+   ========================================================================== */
+.gpa-sim-box {
+  margin-top: 14px;
+  padding: 14px 16px;
+  border-radius: 12px;
+  background: var(--surface, #ffffff);
+  border: 1px solid var(--border, #e5e7eb);
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+[data-theme="dark"] .gpa-sim-box {
+  background: var(--surface-1, #182026);
+  border-color: var(--border, #2a343e);
+}
+
+.gpa-sim-box.is-possible {
+  border-color: color-mix(in srgb, var(--accent, #008a4b) 40%, transparent);
+  background: color-mix(in srgb, var(--accent, #008a4b) 3%, var(--surface));
+}
+
+.gpa-sim-box.is-achieved {
+  border-color: rgba(59, 130, 246, 0.4);
+  background: color-mix(in srgb, #3b82f6 3%, var(--surface));
+}
+
+.gpa-sim-box.is-impossible {
+  border-color: rgba(245, 158, 11, 0.4);
+  background: color-mix(in srgb, #f59e0b 3%, var(--surface));
+}
+
+.gpa-sim-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.gpa-sim-title-wrap h3 {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--text, #111827);
+}
+
+[data-theme="dark"] .gpa-sim-title-wrap h3 {
+  color: var(--text, #f3f4f6);
+}
+
+.gpa-sim-subtitle {
+  font-size: 11.5px;
+  color: var(--muted, #6b7280);
+}
+
+.gpa-sim-badge {
+  font-size: 11.5px;
+  font-weight: 700;
+  padding: 3px 8px;
+  border-radius: 6px;
+}
+
+.gpa-sim-badge.is-possible {
+  background: #ecfdf5;
+  color: #059669;
+}
+
+[data-theme="dark"] .gpa-sim-badge.is-possible {
+  background: rgba(5, 150, 105, 0.2);
+  color: #34d399;
+}
+
+.gpa-sim-badge.is-achieved {
+  background: #eff6ff;
+  color: #2563eb;
+}
+
+[data-theme="dark"] .gpa-sim-badge.is-achieved {
+  background: rgba(37, 99, 235, 0.2);
+  color: #60a5fa;
+}
+
+.gpa-sim-badge.is-impossible {
+  background: #fffbeb;
+  color: #d97706;
+}
+
+[data-theme="dark"] .gpa-sim-badge.is-impossible {
+  background: rgba(217, 119, 6, 0.2);
+  color: #fbbf24;
+}
+
+.gpa-sim-controls {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 10px;
+}
+
+.gpa-sim-field {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-size: 11.5px;
+  font-weight: 600;
+  color: var(--muted, #6b7280);
+}
+
+.gpa-sim-field input {
+  padding: 8px 10px;
+  font-size: 13.5px;
+  font-weight: 700;
+  color: var(--text, #111827);
+  background: var(--surface-1, #f9fafb);
+  border: 1px solid var(--border, #d1d5db);
+  border-radius: 8px;
+  outline: none;
+  transition: all 0.15s ease;
+}
+
+[data-theme="dark"] .gpa-sim-field input {
+  background: var(--surface-2, #20272e);
+  border-color: var(--border, #333f4c);
+  color: var(--text, #f3f4f6);
+}
+
+.gpa-sim-field input:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--accent) 20%, transparent);
+}
+
+.gpa-sim-desc {
+  margin: 0;
+  font-size: 12px;
+  line-height: 1.5;
+  color: var(--text, #374151);
+}
+
+[data-theme="dark"] .gpa-sim-desc {
+  color: var(--text, #d1d5db);
+}
+
+/* ==========================================================================
+   49. 공지 개인 메모 및 키워드 매칭 UI (Notice Memo & Keyword Tags)
+   ========================================================================== */
+.notice-memo-sec {
+  background: color-mix(in srgb, var(--accent) 3%, var(--surface-1, rgba(255, 255, 255, 0.03)));
+  border: 1px solid color-mix(in srgb, var(--accent) 15%, transparent);
+  border-radius: 10px;
+  padding: 12px 14px;
+  margin-top: 12px;
+}
+
+.memo-sec-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 6px;
+}
+
+.memo-sec-head h3 {
+  margin: 0;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--text, #111827);
+}
+
+[data-theme="dark"] .memo-sec-head h3 {
+  color: var(--text, #f3f4f6);
+}
+
+.memo-sec-hint {
+  font-size: 11px;
+  color: var(--muted, #9ca3af);
+}
+
+.notice-memo-input {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 8px 10px;
+  font-size: 12.5px;
+  font-family: inherit;
+  color: var(--text, #111827);
+  background: var(--surface, #ffffff);
+  border: 1px solid var(--border, #d1d5db);
+  border-radius: 8px;
+  resize: vertical;
+  outline: none;
+  transition: all 0.15s ease;
+}
+
+[data-theme="dark"] .notice-memo-input {
+  background: var(--surface-2, #1f272e);
+  border-color: var(--border, #313c47);
+  color: var(--text, #f3f4f6);
+}
+
+.notice-memo-input:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 20%, transparent);
+}
+
+.memo-badge {
+  font-size: 10.5px;
+  font-weight: 700;
+  padding: 2px 6px;
+  background: #fef3c7;
+  color: #b45309;
+  border-radius: 4px;
+}
+
+[data-theme="dark"] .memo-badge {
+  background: rgba(245, 158, 11, 0.2);
+  color: #fcd34d;
+}
+
+.card-memo-preview {
+  margin: 4px 0 6px;
+  padding: 5px 9px;
+  font-size: 11.5px;
+  font-weight: 600;
+  background: color-mix(in srgb, #f59e0b 8%, var(--surface-1, rgba(255, 255, 255, 0.04)));
+  border-left: 3px solid #f59e0b;
+  border-radius: 0 6px 6px 0;
+  color: var(--text, #374151);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  cursor: pointer;
+}
+
+[data-theme="dark"] .card-memo-preview {
+  color: var(--text, #e5e7eb);
+}
+
+.kw-match-badge {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--accent);
+  background: color-mix(in srgb, var(--accent) 10%, transparent);
+  padding: 1px 6px;
+  border-radius: 4px;
+  margin-right: 2px;
+}
+
+/* ==========================================================================
+   50. 공지 표 보기(Table View) 네이티브 고도화
+   ========================================================================== */
+.ntable-wrap {
+  overflow-x: auto !important;
+  -webkit-overflow-scrolling: touch;
+  border: 1px solid var(--border-soft, rgba(255, 255, 255, 0.08)) !important;
+  border-radius: 12px !important;
+  background: var(--surface, #ffffff) !important;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  margin-bottom: 16px;
+}
+
+[data-theme="dark"] .ntable-wrap {
+  background: var(--surface-1, #182026) !important;
+  border-color: var(--border, #26313c) !important;
+}
+
+.ntable {
+  min-width: 640px;
+  width: 100%;
+  border-collapse: collapse;
+}
+
+@media (max-width: 640px) {
+  .ntable {
+    min-width: 560px;
+  }
+  .ntable .th-benefit, .ntable .td-benefit {
+    display: table-cell !important;
+    width: 130px;
+    font-size: 11.5px;
+  }
+  .ntable .th-board, .ntable .td-board {
+    display: table-cell !important;
+    width: 90px;
+    font-size: 11.5px;
+  }
+  .ntable .th-who, .ntable .td-who,
+  .ntable .th-date, .ntable .td-date {
+    display: table-cell !important;
+    font-size: 11px;
+  }
+}
+
+.ntable th {
+  background: color-mix(in srgb, var(--surface-2, #f3f4f6) 80%, transparent) !important;
+  padding: 10px 12px !important;
+  font-size: 12px !important;
+  font-weight: 700 !important;
+  color: var(--muted, #6b7280) !important;
+  border-bottom: 1px solid var(--border, #e5e7eb) !important;
+  white-space: nowrap;
+}
+
+[data-theme="dark"] .ntable th {
+  background: #20272e !important;
+  border-color: #2e3943 !important;
+  color: #9ca3af !important;
+}
+
+.ntable td {
+  padding: 11px 12px !important;
+  border-bottom: 1px solid var(--border-soft, rgba(0, 0, 0, 0.05)) !important;
+  vertical-align: middle !important;
+  font-size: 13px !important;
+}
+
+[data-theme="dark"] .ntable td {
+  border-color: rgba(255, 255, 255, 0.04) !important;
+}
+
+.ntable tbody tr:hover td {
+  background: color-mix(in srgb, var(--accent, #008a4b) 4%, transparent) !important;
+}
+
+.group-table {
+  margin-bottom: 20px;
+}
+.group-table .group-title {
+  margin-bottom: 8px;
+}
+
+/* ==========================================================================
+   51. 홈 대시보드 다음 수업 라이브 브리핑 배너 (Next Class Live Banner)
+   ========================================================================== */
+.tc-live-banner {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 11px 14px;
+  border-radius: 12px;
+  margin: 6px 0 12px;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.tc-live-banner.is-ongoing {
+  background: color-mix(in srgb, #ef4444 8%, var(--surface-1, #ffffff));
+  border: 1px solid color-mix(in srgb, #ef4444 30%, transparent);
+}
+
+.tc-live-banner.is-upcoming {
+  background: color-mix(in srgb, var(--accent, #008a4b) 8%, var(--surface-1, #ffffff));
+  border: 1px solid color-mix(in srgb, var(--accent, #008a4b) 28%, transparent);
+}
+
+[data-theme="dark"] .tc-live-banner.is-ongoing {
+  background: rgba(239, 68, 68, 0.12);
+  border-color: rgba(239, 68, 68, 0.25);
+}
+
+[data-theme="dark"] .tc-live-banner.is-upcoming {
+  background: rgba(0, 138, 75, 0.12);
+  border-color: rgba(0, 138, 75, 0.25);
+}
+
+.tcl-pulse-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.tcl-pulse-dot.red {
+  background: #ef4444;
+  box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7);
+  animation: pulse-red 1.8s infinite;
+}
+
+.tcl-pulse-dot.green {
+  background: #10b981;
+  box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7);
+  animation: pulse-green 1.8s infinite;
+}
+
+@keyframes pulse-red {
+  0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7); }
+  70% { transform: scale(1); box-shadow: 0 0 0 6px rgba(239, 68, 68, 0); }
+  100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); }
+}
+
+@keyframes pulse-green {
+  0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7); }
+  70% { transform: scale(1); box-shadow: 0 0 0 6px rgba(16, 185, 129, 0); }
+  100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
+}
+
+.tcl-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.tcl-title {
+  font-size: 13.5px;
+  font-weight: 700;
+  color: var(--text, #111827);
+}
+
+[data-theme="dark"] .tcl-title {
+  color: var(--text, #f3f4f6);
+}
+
+.tc-live-banner.is-ongoing .tcl-title {
+  color: #dc2626;
+}
+
+[data-theme="dark"] .tc-live-banner.is-ongoing .tcl-title {
+  color: #f87171;
+}
+
+.tc-live-banner.is-upcoming .tcl-title {
+  color: var(--accent, #008a4b);
+}
+
+[data-theme="dark"] .tc-live-banner.is-upcoming .tcl-title {
+  color: #34d399;
+}
+
+.tcl-sub {
+  font-size: 12px;
+  color: var(--muted, #4b5563);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+[data-theme="dark"] .tcl-sub {
+  color: var(--muted, #9ca3af);
+}
+
+/* ==========================================================================
+   52. 세부 졸업요건 이수율 대시보드 (Graduation Detailed Breakdown Card)
+   ========================================================================== */
+.grad-breakdown-card {
+  margin: 14px 0;
+  padding: 14px 16px;
+  background: var(--surface, #ffffff);
+  border: 1px solid var(--border-soft, rgba(0, 0, 0, 0.08));
+  border-radius: 12px;
+}
+
+[data-theme="dark"] .grad-breakdown-card {
+  background: var(--surface-1, #182026);
+  border-color: var(--border, #2a343e);
+}
+
+.gbc-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 12px;
+}
+
+.gbc-head h4 {
+  margin: 0;
+  font-size: 13.5px;
+  font-weight: 700;
+  color: var(--text, #111827);
+}
+
+[data-theme="dark"] .gbc-head h4 {
+  color: var(--text, #f3f4f6);
+}
+
+.gbc-sub {
+  font-size: 11.5px;
+  color: var(--muted, #6b7280);
+}
+
+.gbc-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 10px;
+}
+
+.gbc-item {
+  padding: 10px 12px;
+  border-radius: 10px;
+  background: var(--surface-1, #f9fafb);
+  border: 1px solid var(--border, #e5e7eb);
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+[data-theme="dark"] .gbc-item {
+  background: var(--surface-2, #1f272e);
+  border-color: var(--border, #2e3943);
+}
+
+.gbc-item-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 4px;
+}
+
+.gbc-item-label {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--text, #374151);
+}
+
+[data-theme="dark"] .gbc-item-label {
+  color: var(--text, #e5e7eb);
+}
+
+.gbc-item-badge {
+  font-size: 10px;
+  font-weight: 700;
+  padding: 2px 5px;
+  border-radius: 4px;
+}
+
+.gbc-item-badge.ok {
+  background: #ecfdf5;
+  color: #059669;
+}
+
+[data-theme="dark"] .gbc-item-badge.ok {
+  background: rgba(16, 185, 129, 0.2);
+  color: #34d399;
+}
+
+.gbc-item-badge.warn {
+  background: #fffbeb;
+  color: #d97706;
+}
+
+[data-theme="dark"] .gbc-item-badge.warn {
+  background: rgba(245, 158, 11, 0.2);
+  color: #fbbf24;
+}
+
+.gbc-bar {
+  width: 100%;
+  height: 6px;
+  background: var(--border, #e5e7eb);
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+[data-theme="dark"] .gbc-bar {
+  background: #2b3641;
+}
+
+.gbc-bar-fill {
+  height: 100%;
+  background: var(--accent, #008a4b);
+  border-radius: 3px;
+  transition: width 0.4s ease;
+}
+
+.gbc-item.is-pending .gbc-bar-fill {
+  background: #f59e0b;
+}
+
+.gbc-item.is-fulfilled .gbc-bar-fill {
+  background: #10b981;
+}
+
+.gbc-item-nums {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  font-size: 11.5px;
+}
+
+.gbc-item-nums strong {
+  font-size: 12.5px;
+  color: var(--text, #111827);
+}
+
+[data-theme="dark"] .gbc-item-nums strong {
+  color: var(--text, #f3f4f6);
+}
+
+.gbc-item-nums span {
+  color: var(--muted, #6b7280);
+}
+
+.btn-tts-speak {
+  transition: all 0.15s ease;
+}
+.btn-tts-speak:active {
+  transform: scale(0.96);
+}
