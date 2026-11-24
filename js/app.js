@@ -58,10 +58,11 @@
   }
 
   const EXAMPLE_TIMETABLE = [
-    { day: 1, start: '13:30', end: '15:00', names: { ko: '이산수학', en: 'Discrete Math', zh: '离散数学', ja: '離散数学' } },
-    { day: 3, start: '13:00', end: '14:30', names: { ko: '컴퓨터공학개론', en: 'Intro to Computer Eng.', zh: '计算机工程概论', ja: 'コンピュータ工学概論' } },
-    { day: 4, start: '16:30', end: '18:00', names: { ko: '자료구조', en: 'Data Structures', zh: '数据结构', ja: 'データ構造' } },
-    { day: 5, start: '10:30', end: '12:00', names: { ko: '대학영어', en: 'College English', zh: '大学英语', ja: '大学英語' } }
+    { day: 1, start: '13:30', end: '15:00', prof: '김건국', room: '공학관 301', names: { ko: '이산수학', en: 'Discrete Math', zh: '离散数学', ja: '離散数学' } },
+    { day: 3, start: '13:00', end: '14:30', prof: '박인공', room: '창의예술관 204', names: { ko: '컴퓨터공학개론', en: 'Intro to Computer Eng.', zh: '计算机工程概论', ja: 'コンピュータ工学概論' } },
+    { day: 4, start: '16:30', end: '18:00', prof: '이소프트', room: '자연과학관 105', names: { ko: '자료구조', en: 'Data Structures', zh: '数据结构', ja: 'データ構造' } },
+    { day: 5, start: '10:30', end: '12:00', prof: 'Smith', room: '국제교육관 402', names: { ko: '대학영어', en: 'College English', zh: '大学英语', ja: '大学英語' } },
+    { elearn: true, prof: '최글로벌', names: { ko: '인공지능과미래사회', en: 'AI & Future Society', zh: '人工智能与未来社会', ja: 'AIと未来社会' } }
   ];
 
   // 내 정보(지원 자격 확인용): 과정·학년·학적·유학생·학과. 학년(또는 대학원)을 고르면 켜진다
@@ -73,6 +74,35 @@
     out.set = level === 'grad' || grade !== null;
     return out;
   }
+
+  function initTimetables() {
+    let saved = store.get('timetables', null);
+    const legacy = (store.get('timetable', []) || []).filter(L.isValidClass);
+    if (!Array.isArray(saved) || saved.length === 0) {
+      saved = [{
+        id: 'default',
+        name: '기본 시간표',
+        classes: legacy,
+        createdAt: Date.now()
+      }];
+      store.set('timetables', saved);
+    } else {
+      saved = saved.map((t, idx) => ({
+        id: t.id || ('tt_' + idx),
+        name: t.name || ('시간표 ' + (idx + 1)),
+        classes: Array.isArray(t.classes) ? t.classes.filter(L.isValidClass) : [],
+        createdAt: t.createdAt || Date.now()
+      }));
+    }
+    let activeId = store.get('activeTimetableId', '');
+    if (!activeId || !saved.some((t) => t.id === activeId)) {
+      activeId = saved[0].id;
+      store.set('activeTimetableId', activeId);
+    }
+    const active = saved.find((t) => t.id === activeId) || saved[0];
+    return { list: saved, activeId, activeClasses: active.classes };
+  }
+  const ttInit = initTimetables();
 
   const state = {
     lang: initialLang(),
@@ -86,7 +116,11 @@
     group: '',
     sub: '',
     grouped: store.get('grouped', false),
-    timetable: (store.get('timetable', []) || []).filter(L.isValidClass),
+    timetables: ttInit.list,
+    activeTimetableId: ttInit.activeId,
+    timetable: ttInit.activeClasses,
+    customFilterPresets: store.get('customFilterPresets', []),
+    activePresetId: '',
     hideConflicts: store.get('hideConflicts', false),
     dept: store.get('dept', ''),                       // 내 학과 (요람의 학과 이름)
     currTab: store.get('currTab', ''),                 // '1'~'4' 학년, '0' 학년 무관, 'gen' 교양
@@ -483,7 +517,7 @@
         mine.any ? h('span', { class: 'mine-badge', title: mine.keywords.join(', ') }, t().mineBadge) : null,
         n.aiPending ? h('span', { class: 'pending-badge', title: t().aiPendingNote }, t().aiPendingBadge) : null,
         ...L.classifyBenefit(n).subs.slice(0, 2).map((sb) => subTag(n, sb)),
-        h('span', { class: 'board' }, `${catLabel(n.category)} · ${boardsOf(n)}`),
+        h('span', { class: 'card-board' }, `${catLabel(n.category)} · ${boardsOf(n)}`),
         starButton(n)),
       h('h3', { class: 'card-title' },
         h('button', { type: 'button', class: 'card-link', 'aria-haspopup': 'dialog', onclick: () => openDetail(n.id) }, hl(titleOf(n)))),
@@ -680,7 +714,196 @@
     applyStaticText();
     renderList();
   }
+
+  const BUILTIN_FILTER_PRESETS = [
+    {
+      id: 'fp_all',
+      name: '전체 공지',
+      icon: '🏛️',
+      apply: () => {
+        resetFilters();
+      }
+    },
+    {
+      id: 'fp_scholarship',
+      name: '장학금 마감순',
+      icon: '💰',
+      apply: () => {
+        state.category = '장학';
+        state.group = '';
+        state.sub = '';
+        state.status = 'open';
+        state.sort = 'deadline';
+        state.savedOnly = false;
+        state.mineOnly = false;
+        state.due = '';
+        if ($('#sort')) $('#sort').value = 'deadline';
+        if ($('#status')) $('#status').value = 'open';
+      }
+    },
+    {
+      id: 'fp_soon',
+      name: '3일 내 마감',
+      icon: '⚡',
+      apply: () => {
+        state.due = 'soon';
+        state.status = 'open';
+        state.sort = 'deadline';
+        if ($('#sort')) $('#sort').value = 'deadline';
+        if ($('#status')) $('#status').value = 'open';
+      }
+    },
+    {
+      id: 'fp_mine',
+      name: '내 맞춤 공지',
+      icon: '🎯',
+      apply: () => {
+        state.mineOnly = true;
+        state.status = 'open';
+        if ($('#mine-only')) $('#mine-only').checked = true;
+        if ($('#status')) $('#status').value = 'open';
+      }
+    },
+    {
+      id: 'fp_noclash',
+      name: '공강 시간대 공지',
+      icon: '🗓️',
+      apply: () => {
+        state.hideConflicts = true;
+        store.set('hideConflicts', true);
+        const chk = $('#hide-conflicts');
+        if (chk) chk.checked = true;
+      }
+    }
+  ];
+
+  function renderFilterPresets() {
+    const el = $('#filter-presets');
+    if (!el) return;
+    const customList = store.get('customFilterPresets', []) || [];
+
+    const chips = [];
+    chips.push(h('span', { class: 'fp-label' }, '⚡ 빠른 필터'));
+
+    BUILTIN_FILTER_PRESETS.forEach((p) => {
+      const isActive = state.activePresetId === p.id;
+      chips.push(
+        h('button', {
+          type: 'button',
+          class: `fp-chip ${isActive ? 'is-active' : ''}`,
+          onclick: () => {
+            state.activePresetId = p.id;
+            p.apply();
+            renderList();
+            renderFilterPresets();
+            toast(`'${p.name}' 필터가 적용되었습니다.`);
+          }
+        }, `${p.icon} ${p.name}`)
+      );
+    });
+
+    customList.forEach((cp) => {
+      const isActive = state.activePresetId === cp.id;
+      chips.push(
+        h('div', { class: `fp-chip custom-fp ${isActive ? 'is-active' : ''}` },
+          h('button', {
+            type: 'button',
+            class: 'fp-chip-btn',
+            onclick: () => {
+              state.activePresetId = cp.id;
+              applyFilterState(cp.filter);
+              renderList();
+              renderFilterPresets();
+              toast(`'${cp.name}' 필터가 적용되었습니다.`);
+            }
+          }, `🏷️ ${cp.name}`),
+          h('button', {
+            type: 'button',
+            class: 'fp-chip-del',
+            title: '필터 삭제',
+            'aria-label': `${cp.name} 필터 삭제`,
+            onclick: (e) => {
+              e.stopPropagation();
+              deleteCustomFilterPreset(cp.id);
+            }
+          }, '×')
+        )
+      );
+    });
+
+    chips.push(
+      h('button', {
+        type: 'button',
+        class: 'fp-save-btn',
+        title: '현재 설정된 검색·필터 조건을 프리셋으로 저장',
+        onclick: saveCurrentAsFilterPreset
+      }, '+ 현재 조건 저장')
+    );
+
+    fill(el, ...chips);
+  }
+
+  function applyFilterState(f) {
+    if (!f) return;
+    if (f.board !== undefined) { state.board = f.board; if ($('#board')) $('#board').value = f.board; }
+    if (f.category !== undefined) state.category = f.category;
+    if (f.status !== undefined) { state.status = f.status; if ($('#status')) $('#status').value = f.status; }
+    if (f.sort !== undefined) { state.sort = f.sort; if ($('#sort')) $('#sort').value = f.sort; }
+    if (f.savedOnly !== undefined) state.savedOnly = !!f.savedOnly;
+    if (f.mineOnly !== undefined) {
+      state.mineOnly = !!f.mineOnly;
+      if ($('#mine-only')) $('#mine-only').checked = state.mineOnly;
+    }
+    if (f.unreadOnly !== undefined) state.unreadOnly = !!f.unreadOnly;
+    if (f.hideConflicts !== undefined) {
+      state.hideConflicts = !!f.hideConflicts;
+      store.set('hideConflicts', state.hideConflicts);
+      const chk = $('#hide-conflicts');
+      if (chk) chk.checked = state.hideConflicts;
+    }
+    if (f.query !== undefined) {
+      state.query = f.query;
+      if ($('#q')) $('#q').value = f.query;
+    }
+  }
+
+  function saveCurrentAsFilterPreset() {
+    const customList = store.get('customFilterPresets', []) || [];
+    const name = (prompt('현재 필터 조건의 이름을 입력하세요:', '내 필터 ' + (customList.length + 1)) || '').trim();
+    if (!name) return;
+    const newPreset = {
+      id: 'custom_fp_' + Date.now().toString(36),
+      name,
+      filter: {
+        board: state.board,
+        category: state.category,
+        status: state.status,
+        sort: state.sort,
+        savedOnly: state.savedOnly,
+        mineOnly: state.mineOnly,
+        unreadOnly: state.unreadOnly,
+        hideConflicts: state.hideConflicts,
+        query: state.query
+      }
+    };
+    customList.push(newPreset);
+    store.set('customFilterPresets', customList);
+    state.activePresetId = newPreset.id;
+    renderFilterPresets();
+    toast(`'${name}' 필터 프리셋이 저장되었습니다.`);
+  }
+
+  function deleteCustomFilterPreset(id) {
+    let customList = store.get('customFilterPresets', []) || [];
+    customList = customList.filter((p) => p.id !== id);
+    store.set('customFilterPresets', customList);
+    if (state.activePresetId === id) state.activePresetId = '';
+    renderFilterPresets();
+    toast('필터 프리셋이 삭제되었습니다.');
+  }
+
   function renderListTools() {
+    renderFilterPresets();
     const mineWrap = $('#mine-only-wrap');
     if (mineWrap) { mineWrap.hidden = !hasMine() && !state.mineOnly; $('#mine-only').checked = state.mineOnly; }
     const fitWrap = $('#fit-only-wrap');
@@ -806,7 +1029,7 @@
 
     parts.push(h('div', { class: 'card-top' },
       ...L.classifyBenefit(n).subs.map((sb) => subTag(n, sb)),
-      h('span', { class: 'board' }, `${catLabel(n.category)} · ${boardsOf(n)}`),
+      h('span', { class: 'card-board' }, `${catLabel(n.category)} · ${boardsOf(n)}`),
       ddayBadge(n)));
     parts.push(h('h2', { id: 'detail-title' }, titleOf(n)));
     if (n.overrides || n.pinned || X.isNew(n, since) || isApplied(n.id) || mineOf(n).any) {
@@ -856,14 +1079,19 @@
         n.hours ? fact(T.hours, T.hoursValue(n.hours)) : null));
     }
 
-    // 자주 쓰는 동작(지원 완료·캘린더·공유)은 핵심 정보 바로 아래에
+    // 자주 쓰는 동작(지원 완료·캘린더·공유·요약 복사)은 핵심 정보 바로 아래에
     parts.push(h('div', { class: 'd-actions' },
       h('button', {
         type: 'button', class: 'btn small' + (isApplied(n.id) ? ' is-on' : ''), 'aria-pressed': String(isApplied(n.id)),
         title: isApplied(n.id) ? T.appliedUnmark : T.appliedMark, 'aria-label': isApplied(n.id) ? T.appliedUnmark : T.appliedMark,
         onclick: () => toggleApplied(n.id)
       }, isApplied(n.id) ? '✓ ' + T.appliedBadge : T.appliedMark),
+      n.deadline ? h('a', {
+        href: gcalUrl(n), target: '_blank', rel: 'noopener noreferrer',
+        class: 'btn small btn-gcal', title: '구글 캘린더에 마감 일정 등록'
+      }, '📅 구글 캘린더') : null,
       h('button', { type: 'button', class: 'btn small', onclick: () => exportCalendar([n], 'gongji-' + n.id) }, T.addToCalendar),
+      h('button', { type: 'button', class: 'btn small btn-copy-card', onclick: () => copyNoticeCard(n), title: '카톡·에타 공유용 요약 복사' }, '📋 요약 복사'),
       h('button', { type: 'button', class: 'btn small', onclick: () => shareNotice(n) }, navigator.share ? T.share : T.copyLink)));
     if (K) parts.push(trackBox(n));
 
@@ -999,6 +1227,7 @@
       if (title) { title.tabIndex = -1; title.focus({ preventScroll: true }); }
       try { history.replaceState(null, '', '#/n/' + encodeURIComponent(id)); } catch (e) { /* 주소 바꾸기 실패는 무시 */ }
     }
+    dlg.dataset.noticeId = id; // enhanced.js 스크롤 복원 연동
     body.scrollTop = keepScroll ? top : 0;
     markRead(id);
   }
@@ -1063,6 +1292,57 @@
   function noticeUrl(id) {
     return location.href.split('#')[0].split('?')[0] + '#/n/' + encodeURIComponent(id);
   }
+
+  function gcalUrl(n) {
+    if (!n.deadline) return '';
+    const d = L.parseLocal(n.deadline);
+    if (!d || isNaN(d.getTime())) return '';
+    const pad = (v) => String(v).padStart(2, '0');
+    const startStr = `${d.getFullYear()}${pad(d.getMonth() + 1)}${pad(d.getDate())}T${pad(d.getHours())}${pad(d.getMinutes())}00`;
+    const endD = new Date(d.getTime() + 60 * 60 * 1000);
+    const endStr = `${endD.getFullYear()}${pad(endD.getMonth() + 1)}${pad(endD.getDate())}T${pad(endD.getHours())}${pad(endD.getMinutes())}00`;
+    const title = `[마감] ${titleOf(n)}`;
+    const sm = S.pick(n, state.lang);
+    const details = [
+      sm.text ? `요약: ${sm.text}` : '',
+      n.benefit ? `혜택: ${tr(n.benefit.text)}` : '',
+      n.eligibility ? `대상: ${tr(n.eligibility)}` : '',
+      `원문: ${noticeUrl(n.id)}`
+    ].filter(Boolean).join('\n');
+
+    return `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(title)}&dates=${startStr}/${endStr}&details=${encodeURIComponent(details)}`;
+  }
+
+  function copyNoticeCard(n) {
+    const T = t();
+    const sm = S.pick(n, state.lang);
+    const left = L.daysLeft(n.deadline, now);
+    const dday = left === 0 ? '오늘 마감' : left !== null && left > 0 ? `D-${left}` : '';
+    const dlStr = n.deadline ? `${I.formatDateTime(L.parseLocal(n.deadline), state.lang)}${dday ? ` (${dday})` : ''}` : '';
+    const benStr = n.benefit ? tr(n.benefit.text) : '';
+    const eligStr = n.eligibility ? tr(n.eligibility) : '';
+    const url = noticeUrl(n.id);
+
+    const text = [
+      `📌 [건국대 GLOCAL] ${titleOf(n)}`,
+      dlStr ? `⏰ 마감: ${dlStr}` : '',
+      benStr ? `💰 혜택: ${benStr}` : '',
+      eligStr ? `🎯 대상: ${eligStr}` : '',
+      sm.text ? `📝 요약: ${sm.text}` : '',
+      url ? `🔗 공지: ${url}` : ''
+    ].filter(Boolean).join('\n');
+
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(text).then(() => {
+        toast('공지 핵심 요약을 복사했어요! (카톡·에타 공유용)');
+      }).catch(() => {
+        window.prompt('공지 요약 복사', text);
+      });
+    } else {
+      window.prompt('공지 요약 복사', text);
+    }
+  }
+
   async function shareNotice(n) {
     const url = noticeUrl(n.id);
     try {
@@ -1084,8 +1364,197 @@
   const fromMinutes = (m) => `${pad2(Math.floor(m / 60))}:${pad2(m % 60)}`;
   const DAY_ORDER = [1, 2, 3, 4, 5, 6, 0];          // 월요일부터
 
+  function calcTotalCredits(classes) {
+    if (!classes || !classes.length) return 0;
+    const seen = new Set();
+    let total = 0;
+    for (const c of classes) {
+      const k = (c.name || '').trim().toLowerCase();
+      if (!k || seen.has(k)) continue;
+      seen.add(k);
+      const cr = Number(c.credit || c.credits || 3);
+      total += isNaN(cr) ? 3 : cr;
+    }
+    return total;
+  }
+
   function saveTimetable() {
+    const cur = state.timetables.find((t) => t.id === state.activeTimetableId);
+    if (cur) {
+      cur.classes = state.timetable;
+      cur.updatedAt = Date.now();
+    }
+    store.set('timetables', state.timetables);
     store.set('timetable', state.timetable);
+    renderTimetableSelector();
+    renderTimetableStats();
+  }
+
+  function switchTimetable(id) {
+    const target = state.timetables.find((t) => t.id === id);
+    if (!target) return;
+    state.activeTimetableId = id;
+    store.set('activeTimetableId', id);
+    state.timetable = (target.classes || []).filter(L.isValidClass);
+    store.set('timetable', state.timetable);
+    timetableChanged();
+    renderTimetable();
+    toast(`'${target.name}' 시간표로 전환되었습니다.`);
+  }
+
+  function addTimetable(name, classes) {
+    const newName = (name || prompt('새 시간표 이름을 입력해주세요:', `시간표 ${state.timetables.length + 1}`) || '').trim();
+    if (!newName) return;
+    const newId = 'tt_' + Date.now().toString(36) + '_' + Math.random().toString(36).slice(2, 6);
+    const newEntry = {
+      id: newId,
+      name: newName,
+      classes: Array.isArray(classes) ? classes.filter(L.isValidClass) : [],
+      createdAt: Date.now()
+    };
+    state.timetables.push(newEntry);
+    state.activeTimetableId = newId;
+    state.timetable = newEntry.classes;
+    saveTimetable();
+    timetableChanged();
+    renderTimetable();
+    toast(`새 시간표 '${newName}'이(가) 생성되었습니다.`);
+  }
+
+  function duplicateTimetable() {
+    const cur = state.timetables.find((t) => t.id === state.activeTimetableId);
+    const baseName = cur ? cur.name : '시간표';
+    const newName = (prompt('복제할 시간표 이름을 입력해주세요:', `${baseName} (사본)`) || '').trim();
+    if (!newName) return;
+    const newId = 'tt_' + Date.now().toString(36) + '_' + Math.random().toString(36).slice(2, 6);
+    const clonedClasses = JSON.parse(JSON.stringify(state.timetable)).map((c) => ({
+      ...c,
+      id: 'cls_' + Date.now().toString(36) + '_' + Math.random().toString(36).slice(2, 6)
+    }));
+    const newEntry = {
+      id: newId,
+      name: newName,
+      classes: clonedClasses,
+      createdAt: Date.now()
+    };
+    state.timetables.push(newEntry);
+    state.activeTimetableId = newId;
+    state.timetable = newEntry.classes;
+    saveTimetable();
+    timetableChanged();
+    renderTimetable();
+    toast(`'${newName}'으로 복제되었습니다.`);
+  }
+
+  function manageTimetable() {
+    const cur = state.timetables.find((t) => t.id === state.activeTimetableId);
+    if (!cur) return;
+    const isOnly = state.timetables.length <= 1;
+    const choice = confirm(`[시간표 관리: ${cur.name}]\n\n• 확인(OK): 이름 변경\n• 취소(Cancel): ${isOnly ? '닫기' : '이 시간표 삭제'}`);
+    if (choice) {
+      const newName = (prompt('새 이름을 입력해주세요:', cur.name) || '').trim();
+      if (newName && newName !== cur.name) {
+        cur.name = newName;
+        saveTimetable();
+        toast(`시간표 이름이 '${newName}'(으)로 변경되었습니다.`);
+      }
+    } else if (!isOnly) {
+      const delConfirm = confirm(`정말 '${cur.name}' 시간표를 삭제하시겠습니까?\n이 작업은 취소할 수 없습니다.`);
+      if (delConfirm) {
+        const delName = cur.name;
+        state.timetables = state.timetables.filter((t) => t.id !== cur.id);
+        state.activeTimetableId = state.timetables[0].id;
+        state.timetable = state.timetables[0].classes;
+        saveTimetable();
+        timetableChanged();
+        renderTimetable();
+        toast(`'${delName}' 시간표가 삭제되었습니다.`);
+      }
+    }
+  }
+
+  function renderTimetableSelector() {
+    const sel = $('#tt-selector');
+    if (!sel) return;
+    sel.innerHTML = '';
+    state.timetables.forEach((t) => {
+      const opt = document.createElement('option');
+      opt.value = t.id;
+      const credits = calcTotalCredits(t.classes);
+      const cnt = t.classes ? t.classes.length : 0;
+      opt.textContent = `${t.name} (${cnt}과목 · ${credits}학점)`;
+      if (t.id === state.activeTimetableId) opt.selected = true;
+      sel.appendChild(opt);
+    });
+  }
+
+  function renderTimetableStats() {
+    const bar = $('#tt-stats-bar');
+    if (!bar) return;
+    const tt = state.timetable || [];
+    const timed = tt.filter((c) => !c.elearn && c.start && c.end && Number.isInteger(c.day));
+    const elearn = tt.filter((c) => c.elearn || c.m === 'elearn' || !c.start);
+    const credits = calcTotalCredits(tt);
+
+    const activeDays = new Set(timed.map((c) => c.day));
+    const weekdays = [1, 2, 3, 4, 5];
+    const freeWeekdays = weekdays.filter((d) => !activeDays.has(d));
+    const dayNames = { 1: '월', 2: '화', 3: '수', 4: '목', 5: '금' };
+    let freeBadge = '';
+    if (activeDays.size === 0) {
+      freeBadge = '대면 수업 없음';
+    } else if (freeWeekdays.length === 0) {
+      freeBadge = '주 5일 올출';
+    } else {
+      freeBadge = freeWeekdays.map((d) => dayNames[d]).join('·') + '공강';
+    }
+
+    let lunchOk = true;
+    if (activeDays.size > 0) {
+      for (const d of activeDays) {
+        const dayClasses = timed.filter((c) => c.day === d);
+        let hasFree45 = false;
+        let freeSlots = 0;
+        for (let m = 690; m < 810; m += 15) {
+          const busy = dayClasses.some((c) => {
+            const cs = L.toMinutes(c.start);
+            const ce = L.toMinutes(c.end);
+            return m >= cs && m < ce;
+          });
+          if (!busy) freeSlots += 15;
+          else freeSlots = 0;
+          if (freeSlots >= 45) { hasFree45 = true; break; }
+        }
+        if (!hasFree45) { lunchOk = false; break; }
+      }
+    }
+
+    fill(bar,
+      h('div', { class: 'tt-stat-item' },
+        h('span', { class: 'tt-stat-lbl' }, '신청 학점'),
+        h('strong', { class: 'tt-stat-val' }, `${credits}학점`)
+      ),
+      h('div', { class: 'tt-stat-item' },
+        h('span', { class: 'tt-stat-lbl' }, '수업 구성'),
+        h('span', { class: 'tt-stat-detail' },
+          `총 ${tt.length}개 `,
+          elearn.length > 0 ? h('span', { class: 'tt-stat-sub' }, `(대면 ${timed.length}, 이러닝 ${elearn.length})`) : ''
+        )
+      ),
+      h('div', { class: 'tt-stat-item' },
+        h('span', { class: 'tt-stat-lbl' }, '등교 일정'),
+        h('span', { class: 'tt-stat-badges' },
+          h('span', { class: 'tt-stat-badge day-badge' }, activeDays.size ? `주 ${activeDays.size}일 등교` : '비등교'),
+          h('span', { class: `tt-stat-badge ${freeWeekdays.length ? 'free-badge' : 'full-badge'}` }, freeBadge)
+        )
+      ),
+      activeDays.size > 0 ? h('div', { class: 'tt-stat-item' },
+        h('span', { class: 'tt-stat-lbl' }, '점심시간'),
+        h('span', { class: `tt-stat-badge ${lunchOk ? 'lunch-ok' : 'lunch-warn'}` },
+          lunchOk ? '점심 여유 🍱' : '점심 부족 ⚠️'
+        )
+      ) : ''
+    );
   }
 
   // 과목명이 같으면 같은 색 (요일이 달라도 한눈에 같은 과목으로 보이게)
@@ -1145,17 +1614,22 @@
   }
 
   function renderTimetable() {
+    renderTimetableSelector();
+    renderTimetableStats();
     renderCalendar();
     const badge = $('#badge-timetable');
     badge.hidden = state.timetable.length === 0;
     badge.textContent = String(state.timetable.length);
 
     const tt = state.timetable;
+    const timed = tt.filter((c) => !c.elearn && c.start && c.end && Number.isInteger(c.day));
+    const elearn = tt.filter((c) => c.elearn || c.m === 'elearn' || !c.start);
+
     // 월~금은 항상, 토·일은 수업이 있을 때만 칸을 만든다
-    const days = DAY_ORDER.filter((d) => (d >= 1 && d <= 5) || tt.some((c) => c.day === d));
+    const days = DAY_ORDER.filter((d) => (d >= 1 && d <= 5) || timed.some((c) => c.day === d));
     let from = TT_DEFAULT.from;
     let to = TT_DEFAULT.to;
-    for (const c of tt) {
+    for (const c of timed) {
       from = Math.min(from, Math.floor(L.toMinutes(c.start) / 60));
       to = Math.max(to, Math.ceil(L.toMinutes(c.end) / 60));
     }
@@ -1169,16 +1643,21 @@
     const hours = h('div', { class: 'tt-hours', 'aria-hidden': 'true' },
       ...Array.from({ length: to - from }, (_, i) => h('span', null, String(from + i))));
     const cols = days.map((d) => {
-      const blocks = tt.filter((c) => c.day === d).map((c) => {
+      const blocks = timed.filter((c) => c.day === d).map((c) => {
         const s = L.toMinutes(c.start);
         const e = L.toMinutes(c.end);
         const name = c.name || t().classFallback;
+        const prof = c.prof || c.p || '';
+        const profText = prof ? (prof.endsWith('교수') ? prof : `${prof} 교수`) : '';
         return h('button', {
           type: 'button', class: 'tt-class',
           style: `top:${pct(s)};height:${pct(e - s + base)};--c:${classColor(c.name)}`,
-          'aria-label': `${dayName(d)} ${c.start}~${c.end} ${name}`,
+          'aria-label': `${dayName(d)} ${c.start}~${c.end} ${name}${profText ? ` (${profText})` : ''}`,
           onclick: (ev) => { ev.stopPropagation(); openClassDialog({ cls: c }); }
-        }, h('span', { class: 'tt-name' }, name), h('span', { class: 'tt-time' }, `${c.start}~\u200b${c.end}`),
+        },
+          h('span', { class: 'tt-name' }, name),
+          profText ? h('span', { class: 'tt-prof' }, profText) : null,
+          h('span', { class: 'tt-time' }, `${c.start}~\u200b${c.end}`),
           c.room ? h('span', { class: 'tt-room' }, c.room) : null);
       });
       const nowLine = d === today && nowMin >= base && nowMin <= base + span
@@ -1198,6 +1677,78 @@
     box.style.setProperty('--cols', String(days.length));
     box.style.setProperty('--rows', String(to - from));
     fill(box, head, body);
+
+    renderElearnSection(elearn);
+  }
+
+  function renderElearnSection(elearn) {
+    const sec = $('#tt-elearn-sec');
+    if (!sec) return;
+    if (!elearn.length) {
+      fill(sec, h('div', { class: 'tt-elearn-empty-bar' },
+        h('span', { class: 'tt-elearn-empty-txt' }, '시간이 정해지지 않은 온라인·이러닝 수업이 있나요?'),
+        h('button', {
+          type: 'button',
+          class: 'btn-add-elearn',
+          onclick: () => openClassDialog({ elearn: true })
+        }, '+ 이러닝 추가')
+      ));
+      return;
+    }
+
+    const heading = h('div', { class: 'tt-elearn-head' },
+      h('h3', { class: 'tt-elearn-title' },
+        '이러닝 · 시간 미지정 과목',
+        h('span', { class: 'tt-elearn-count' }, `${elearn.length}`)
+      ),
+      h('button', {
+        type: 'button',
+        class: 'btn-add-elearn-icon',
+        title: '이러닝 과목 추가',
+        onclick: () => openClassDialog({ elearn: true })
+      }, '+ 추가')
+    );
+
+    const items = elearn.map((c) => {
+      const color = classColor(c.name);
+      return h('div', {
+        class: 'tt-elearn-card',
+        style: `--c:${color}`,
+        tabindex: 0,
+        role: 'button',
+        'aria-label': `${c.name} 이러닝 수업 수정`,
+        onclick: () => openClassDialog({ cls: c }),
+        onkeydown: (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); openClassDialog({ cls: c }); } }
+      },
+        h('div', { class: 'tt-elearn-color-bar' }),
+        h('div', { class: 'tt-elearn-info' },
+          h('div', { class: 'tt-elearn-name-row' },
+            h('strong', { class: 'tt-elearn-name' }, c.name || t().classFallback),
+            (c.prof || c.p) ? h('span', { class: 'tt-elearn-prof' }, `${c.prof || c.p} 교수`) : null,
+            h('span', { class: 'tt-elearn-badge' }, '이러닝')
+          ),
+          c.room && c.room !== '이러닝'
+            ? h('span', { class: 'tt-elearn-room' }, c.room)
+            : h('span', { class: 'tt-elearn-sub' }, '원격 · 정해진 수업 시간 없음')
+        ),
+        h('button', {
+          type: 'button',
+          class: 'tt-elearn-del',
+          title: `${c.name} 삭제`,
+          'aria-label': `${c.name} 삭제`,
+          onclick: (e) => {
+            e.stopPropagation();
+            const before = state.timetable;
+            state.timetable = before.filter((x) => x.id !== c.id);
+            saveTimetable();
+            timetableChanged();
+          }
+        }, '×')
+      );
+    });
+
+    const grid = h('div', { class: 'tt-elearn-grid' }, ...items);
+    fill(sec, heading, grid);
   }
 
   // 학사일정 (data/calendar.js, 크롬 확장으로 받은 학교 연간주요일정): 진행 중이거나 60일 안에 시작하는 것
@@ -1231,7 +1782,35 @@
   }
 
   // 수업 넣기·고치기 창
-  const classEdit = { id: null, days: new Set(), extra: [], rooms: {} };   // rooms: 강의 시간표에서 고른 수업의 '요일|시작' → 강의실
+  const classEdit = { id: null, days: new Set(), extra: [], rooms: {}, isElearn: false, prof: '' };   // rooms: 강의 시간표에서 고른 수업의 '요일|시작' → 강의실
+
+  function updateClassModeUI(isElearn) {
+    classEdit.isElearn = !!isElearn;
+    const btnReg = $('#btn-mode-regular');
+    const btnEl = $('#btn-mode-elearn');
+    if (btnReg) {
+      btnReg.classList.toggle('is-active', !isElearn);
+      btnReg.setAttribute('aria-checked', String(!isElearn));
+    }
+    if (btnEl) {
+      btnEl.classList.toggle('is-active', isElearn);
+      btnEl.setAttribute('aria-checked', String(isElearn));
+    }
+    const note = $('#class-elearn-note');
+    if (note) note.hidden = !isElearn;
+
+    const dayField = $('#class-dialog .day-field');
+    const timeFields = Array.from(document.querySelectorAll('#class-dialog .time-field'));
+    const durations = $('#class-dialog .durations');
+    const btnMore = $('#class-more');
+
+    if (dayField) dayField.hidden = isElearn;
+    timeFields.forEach((tf) => { tf.hidden = isElearn; });
+    if (durations) durations.hidden = isElearn;
+    if (btnMore) btnMore.hidden = isElearn;
+
+    showClassError('');
+  }
 
   function fillTimeSelects() {
     const hoursOpts = () => Array.from({ length: TT_HOURS.last - TT_HOURS.first + 1 },
@@ -1292,6 +1871,43 @@
   const normName = (x) => String(x).replace(/\s+/g, '').toLowerCase();
   const toMin = (hm) => L.toMinutes(hm);
 
+  function getCourseList() {
+    if (courseList && courseList.length > 500) return courseList;
+    const CU = window.GongjiCurriculum;
+    const CO = window.GONGJI_COURSES;
+    const list = [];
+    const seen = new Set();
+    const add = (name, kind, credit, dept) => {
+      const n = normName(name);
+      if (!n || seen.has(n)) return;
+      seen.add(n);
+      list.push({ name, kind: kind || '', credit: credit || 3, dept: dept || '' });
+    };
+
+    // 1. 내 학과 요람 과목 우선
+    if (CU && state.dept) {
+      for (const c of CU.suggestions(state.dept, CO) || []) add(c.name, c.kind, c.credit, state.dept);
+    }
+    // 2. 전체 단과대학/학과의 요람 과목 (컴퓨터공학과 등 모든 학과)
+    if (CO && Array.isArray(CO.colleges)) {
+      for (const col of CO.colleges) {
+        for (const d of col.depts || []) {
+          for (const item of d.courses || []) {
+            add(item[2], item[1], item[3], d.name);
+          }
+        }
+      }
+    }
+    // 3. 교양 과목
+    if (CO && Array.isArray(CO.general)) {
+      for (const item of CO.general) {
+        add(item[2], item[0], item[3], '교양');
+      }
+    }
+    courseList = list;
+    return courseList;
+  }
+
   // 같은 시작·끝 시간인 요일끼리 묶는다: [{days:[1,4], start:'10:00', end:'11:30'}...]
   function groupSlots(slots) {
     const groups = [];
@@ -1306,26 +1922,35 @@
   function lectureHits(q) {
     const T = window.GONGJI_TIMETABLE;
     if (!q || !T || !Array.isArray(T.courses)) return [];
-    const hits = T.courses.filter((c) => normName(c.n).includes(q));
+    const hits = T.courses.filter((c) => normName(c.n).includes(q) || (c.p && normName(c.p).includes(q)));
     const mine = (c) => (state.dept && c.d && (c.d.includes(state.dept) || state.dept.includes(c.d)) ? 0 : 1);
-    hits.sort((a, b) => (normName(a.n).startsWith(q) ? 0 : 1) - (normName(b.n).startsWith(q) ? 0 : 1) || mine(a) - mine(b) || a.n.localeCompare(b.n) || a.s.localeCompare(b.s));
-    return hits.slice(0, 6).map((c) => ({
-      name: c.n, slots: c.t,
-      // 이러닝처럼 정해진 시간이 없는 수업은 시간 대신 방식을 보여 준다 (격자에는 넣을 칸이 없음)
-      label: [c.s ? `${c.s}분반` : '', c.t.length ? slotText(c.t) : (t().planModeElearn || ''), c.m === 'live' ? t().planModeLive : '', c.d, c.k].filter(Boolean).join(' · ')
+    hits.sort((a, b) => {
+      const aN = normName(a.n).startsWith(q) ? 0 : 1;
+      const bN = normName(b.n).startsWith(q) ? 0 : 1;
+      const aP = a.p && normName(a.p).startsWith(q) ? 0 : 1;
+      const bP = b.p && normName(b.p).startsWith(q) ? 0 : 1;
+      return (aN - bN) || (aP - bP) || (mine(a) - mine(b)) || a.n.localeCompare(b.n) || a.s.localeCompare(b.s);
+    });
+    return hits.slice(0, 8).map((c) => ({
+      name: c.n, slots: c.t, prof: c.p || '',
+      // 교수명, 분반, 시간, 수업방식 순으로 상세 표시
+      label: [c.p ? `${c.p} 교수` : '', c.s ? `${c.s}분반` : '', c.t.length ? slotText(c.t) : (t().planModeElearn || ''), c.m === 'live' ? t().planModeLive : '', c.d, c.k].filter(Boolean).join(' · ')
     }));
   }
 
   function pickLecture(item) {
     const groups = groupSlots(item.slots);
-    const first = groups[0];
+    const first = groups[0] || { days: [], start: '09:00', end: '10:30' };
     classEdit.days = new Set(first.days);
     setTime('start', toMin(first.start));
     setTime('end', toMin(first.end));
+    classEdit.prof = item.prof || item.p || '';
+    const profInput = $('#class-prof');
+    if (profInput) profInput.value = classEdit.prof;
     // 나머지 시간(요일마다 시간이 다른 경우)은 저장할 때 함께 넣는다.
     classEdit.extra = groups.slice(1).flatMap((g) => g.days.map((d) => ({ day: d, start: g.start, end: g.end })));
     classEdit.rooms = {};
-    for (const [d, a, , room] of item.slots) if (room) classEdit.rooms[`${d}|${a}`] = room;
+    for (const [d, a, , room] of item.slots || []) if (room) classEdit.rooms[`${d}|${a}`] = room;
     renderDayPicks();
     renderDurations();
     showClassError('');
@@ -1346,8 +1971,9 @@
     const q = normName(input.value.trim());
     const lectures = lectureHits(q);
     const taken = new Set(lectures.map((x) => normName(x.name)));
+    const allCourses = getCourseList();
     const plain = q
-      ? [...courseList.filter((c) => normName(c.name).startsWith(q)), ...courseList.filter((c) => !normName(c.name).startsWith(q) && normName(c.name).includes(q))]
+      ? [...allCourses.filter((c) => normName(c.name).startsWith(q)), ...allCourses.filter((c) => !normName(c.name).startsWith(q) && normName(c.name).includes(q))]
           .filter((c) => !taken.has(normName(c.name)) && c.name !== input.value.trim())
       : [];
     const shown = [...lectures, ...plain.slice(0, Math.max(0, 8 - lectures.length))];
@@ -1356,10 +1982,18 @@
         input.value = c.name;
         classEdit.extra = [];
         classEdit.rooms = {};
+        classEdit.prof = c.prof || c.p || '';
+        const profInput = $('#class-prof');
+        if (profInput) profInput.value = classEdit.prof;
         renderExtraNote();
-        if (c.slots && c.slots.length) pickLecture(c);
+        if (c.slots && c.slots.length) {
+          updateClassModeUI(false);
+          pickLecture(c);
+        } else {
+          updateClassModeUI(true);
+        }
         hideSuggest(); input.focus();
-      } }, h('span', {}, c.name), h('small', {}, c.label || '')))));
+      } }, h('span', {}, c.name), h('small', {}, c.label || [c.prof ? `${c.prof} 교수` : '', c.dept, c.kind, c.credit ? `${c.credit}학점` : ''].filter(Boolean).join(' · '))))));
     box.hidden = shown.length === 0;
     input.setAttribute('aria-expanded', String(shown.length > 0));
   }
@@ -1381,17 +2015,100 @@
     return [...set].sort((a, b) => (names(a).some((x) => head.includes(x)) ? 0 : 1) - (names(b).some((x) => head.includes(x)) ? 0 : 1)).slice(0, 10);
   }
 
-  function openClassDialog({ cls = null, day = 1, start = 9 * 60, name = '' } = {}) {
+  function updateQuickSlotSuggest(day, startMinutes) {
+    const box = $('#class-quick-suggest');
+    const chipsBox = $('#cqs-chips');
+    if (!box || !chipsBox) return;
+
+    if (classEdit.id || classEdit.isElearn || !window.GONGJI_TIMETABLE || !Array.isArray(window.GONGJI_TIMETABLE.courses)) {
+      box.hidden = true;
+      return;
+    }
+
+    const tt = window.GONGJI_TIMETABLE.courses;
+    const startWindowMin = startMinutes - 30;
+    const endWindowMin = startMinutes + 120;
+    const matching = [];
+    const userDept = (state.profile && state.profile.dept) || state.dept || '';
+
+    for (const c of tt) {
+      if (!c.t || !c.t.length) continue;
+      const hitSlot = c.t.find(([d, s, e]) => {
+        if (d !== day) return false;
+        const sm = toMin(s);
+        const em = toMin(e);
+        return (sm >= startWindowMin && sm <= endWindowMin) || (sm <= startMinutes && em > startMinutes);
+      });
+      if (hitSlot) {
+        const isDept = userDept && c.d && (c.d.includes(userDept) || userDept.includes(c.d));
+        let score = 0;
+        if (isDept) score += 50;
+        if (c.k === '전필') score += 40;
+        else if (c.k === '전선') score += 30;
+        else if (c.k === '기초') score += 20;
+        else if (c.k === '심화' || c.k === '소양') score += 15;
+        matching.push({ c, slot: hitSlot, isDept, score });
+      }
+    }
+
+    matching.sort((a, b) => b.score - a.score || a.c.n.localeCompare(b.c.n, 'ko'));
+
+    const seen = new Set();
+    const top = [];
+    for (const m of matching) {
+      const k = normName(m.c.n);
+      if (seen.has(k)) continue;
+      seen.add(k);
+      top.push(m);
+      if (top.length >= 5) break;
+    }
+
+    if (!top.length) {
+      box.hidden = true;
+      return;
+    }
+
+    box.hidden = false;
+    chipsBox.replaceChildren(...top.map(({ c, slot }) => {
+      const meta = [c.k, c.c ? `${c.c}학점` : '', c.p ? `${c.p} 교수` : ''].filter(Boolean).join(' · ');
+      return h('button', {
+        type: 'button',
+        class: 'cqs-chip' + (c.k === '전필' ? ' is-major-req' : ''),
+        title: `${c.n} (${c.d || ''} · ${meta})`,
+        onclick: () => {
+          $('#class-name').value = c.n;
+          classEdit.extra = [];
+          classEdit.rooms = {};
+          classEdit.prof = c.p || '';
+          const profInput = $('#class-prof');
+          if (profInput) profInput.value = classEdit.prof;
+          renderExtraNote();
+          pickLecture({ name: c.n, p: c.p, prof: c.p, slots: c.t });
+          box.hidden = true;
+        }
+      },
+        h('span', { class: 'cqs-name' }, c.n),
+        h('span', { class: 'cqs-meta' }, meta)
+      );
+    }));
+  }
+
+  function openClassDialog({ cls = null, day = 1, start = 9 * 60, name = '', elearn = false } = {}) {
     classEdit.id = cls ? cls.id : null;
-    classEdit.days = new Set([cls ? cls.day : day]);
+    const isElearn = cls ? Boolean(cls.elearn || cls.m === 'elearn' || !cls.start) : Boolean(elearn);
+    classEdit.isElearn = isElearn;
+    classEdit.days = new Set(isElearn ? [] : [cls ? cls.day : day]);
     classEdit.extra = [];
     classEdit.rooms = {};
+    classEdit.prof = cls ? (cls.prof || cls.p || '') : '';
+    const profInput = $('#class-prof');
+    if (profInput) profInput.value = classEdit.prof;
     renderExtraNote();
     $('#class-dialog-title').textContent = cls ? t().editClass : t().addClass;
     $('#class-name').value = cls ? cls.name || '' : name;
-    const s = cls ? L.toMinutes(cls.start) : start;
+    const s = cls && cls.start ? L.toMinutes(cls.start) : start;
     setTime('start', s);
-    setTime('end', cls ? L.toMinutes(cls.end) : s + 90);
+    setTime('end', cls && cls.end ? L.toMinutes(cls.end) : s + 90);
     $('#class-delete').hidden = !cls;
     $('#class-delete').setAttribute('aria-label', cls ? t().removeClass(cls) : '');
     // 같은 이름의 칸이 여러 개면(월·목 수업 등) 삭제가 모두 지운다는 것을 버튼에 적어 둔다
@@ -1400,6 +2117,8 @@
     $('#class-dialog').classList.toggle('editing', !!cls);
     renderDayPicks();
     renderDurations();
+    updateClassModeUI(isElearn);
+    updateQuickSlotSuggest(cls ? cls.day : day, s);
     showClassError('');
     hideSuggest();
     $('#class-dialog').showModal();
@@ -1409,33 +2128,57 @@
 
   const classKey = (c) => String((c && c.name) || '').trim().toLowerCase();
   function saveClass(more = false) {
+    const name = $('#class-name').value.trim();
+    if (!name) return showClassError('수업 이름을 적어 주세요.');
+    const prof = ($('#class-prof')?.value || classEdit.prof || '').trim();
+
+    if (classEdit.isElearn) {
+      let others = state.timetable.filter((c) => c.id !== classEdit.id);
+      const orig = classEdit.id ? state.timetable.find((c) => c.id === classEdit.id) : null;
+      if (orig && classKey(orig) && name !== orig.name) {
+        others = others.map((c) => (classKey(c) === classKey(orig) ? Object.assign({}, c, { name, prof: prof || c.prof }) : c));
+      }
+      const item = {
+        id: classEdit.id || 'c' + Date.now().toString(36) + Math.random().toString(36).slice(2, 5),
+        name,
+        prof,
+        elearn: true,
+        m: 'elearn',
+        room: '이러닝'
+      };
+      state.timetable = others.concat([item]);
+      saveTimetable();
+      $('#class-dialog').close();
+      timetableChanged();
+      return;
+    }
+
     const s = getTime('start');
     const e = getTime('end');
     if (e <= s) return showClassError(t().timeError);
     if (!classEdit.days.size) return showClassError(t().pickDay);
-    const name = $('#class-name').value.trim();
     const orig = classEdit.id ? state.timetable.find((c) => c.id === classEdit.id) : null;
     let others = state.timetable.filter((c) => c.id !== classEdit.id);
     // 수업 이름을 고치면 같은 수업의 다른 요일 칸도 같은 이름으로 바꾼다 (월·목 수업이 둘로 갈라지지 않게)
     if (orig && classKey(orig) && name && name !== orig.name) {
-      others = others.map((c) => (classKey(c) === classKey(orig) ? Object.assign({}, c, { name }) : c));
+      others = others.map((c) => (classKey(c) === classKey(orig) ? Object.assign({}, c, { name, prof: prof || c.prof }) : c));
     }
-    const withRoom = (c, room) => (room ? Object.assign(c, { room }) : c);
+    const withDetails = (c, room) => Object.assign(c, room ? { room } : {}, prof ? { prof } : {});
     for (const d of classEdit.days) {
-      const hit = others.find((c) => c.day === d && L.overlaps(s, e, L.toMinutes(c.start), L.toMinutes(c.end)));
+      const hit = others.find((c) => c.day === d && !c.elearn && c.start && L.overlaps(s, e, L.toMinutes(c.start), L.toMinutes(c.end)));
       if (hit) return showClassError(t().overlapError(dayName(d), hit));
     }
-    const made = [...classEdit.days].map((d, i) => withRoom({
+    const made = [...classEdit.days].map((d, i) => withDetails({
       id: classEdit.id || 'c' + Date.now().toString(36) + i + Math.random().toString(36).slice(2, 5),
       day: d, start: fromMinutes(s), end: fromMinutes(e), name
     }, orig ? orig.room : classEdit.rooms[`${d}|${fromMinutes(s)}`])).filter(L.isValidClass);
     // 강의 시간표에서 고른 수업의 다른 요일·시간
-    const extras = classEdit.id ? [] : classEdit.extra.map((x, i) => withRoom({
+    const extras = classEdit.id ? [] : classEdit.extra.map((x, i) => withDetails({
       id: 'c' + Date.now().toString(36) + 'x' + i + Math.random().toString(36).slice(2, 5),
       day: x.day, start: x.start, end: x.end, name
     }, classEdit.rooms[`${x.day}|${x.start}`])).filter(L.isValidClass);
     for (const x of extras) {
-      const hit = others.concat(made).find((c) => c.day === x.day && L.overlaps(toMin(x.start), toMin(x.end), toMin(c.start), toMin(c.end)));
+      const hit = others.concat(made).find((c) => c.day === x.day && !c.elearn && c.start && L.overlaps(toMin(x.start), toMin(x.end), toMin(c.start), toMin(c.end)));
       if (hit) return showClassError(t().overlapError(dayName(x.day), hit));
     }
     state.timetable = others.concat(made, extras);
@@ -1558,7 +2301,7 @@
     const dow = now.getDay();
     const cur = now.getHours() * 60 + now.getMinutes();
     const byStart = (a, b) => toMin(a.start) - toMin(b.start);
-    const today = tt.filter((c) => c.day === dow).sort(byStart);
+    const today = tt.filter((c) => c.day === dow && !c.elearn && c.start).sort(byStart);
     const rows = [];
     let nextMarked = false;
     today.forEach((c, i) => {
@@ -1569,9 +2312,11 @@
       }
       const st = cur >= e ? 'done' : cur >= s ? 'now' : (!nextMarked ? 'next' : '');
       if (st === 'next' || st === 'now') nextMarked = true;
+      const prof = c.prof || c.p || '';
+      const meta = [prof ? `${prof} 교수` : '', c.room].filter(Boolean).join(' · ');
       rows.push(h('li', { class: 'home-row tc-row' + (st ? ' ' + st : '') },
         h('span', { class: 'tc-time' }, `${c.start}–${c.end}`),
-        h('span', { class: 'tc-name' }, c.name || T.classFallback, c.room ? h('small', null, c.room) : null),
+        h('span', { class: 'tc-name' }, c.name || T.classFallback, meta ? h('small', null, meta) : null),
         st === 'now' ? h('span', { class: 'tc-badge now' }, T.classNow) : st === 'next' ? h('span', { class: 'tc-badge' }, T.classNext) : null));
     });
     // 오늘 남은 수업이 없으면 다음 수업이 언제인지 알려 준다
@@ -1579,14 +2324,27 @@
     if (!today.some((c) => toMin(c.end) > cur)) {
       for (let i = 1; i <= 7 && !foot; i++) {
         const d = (dow + i) % 7;
-        const first = tt.filter((c) => c.day === d).sort(byStart)[0];
+        const first = tt.filter((c) => c.day === d && !c.elearn && c.start).sort(byStart)[0];
         if (first) foot = T.nextClass(dayName(d), first.start, first.name || T.classFallback);
       }
     }
+    const elearn = tt.filter((c) => c.elearn || c.m === 'elearn' || !c.start);
+    let elearnNote = null;
+    if (elearn.length) {
+      elearnNote = h('div', { class: 'tc-elearn-bar' },
+        h('span', { class: 'tc-elearn-label' }, `💻 온라인·이러닝 과목 (${elearn.length})`),
+        h('ul', { class: 'tc-elearn-list' }, elearn.map((ec) => {
+          const ep = ec.prof || ec.p || '';
+          return h('li', null, `${ec.name}${ep ? ` (${ep} 교수)` : ''}`);
+        }))
+      );
+    }
+
     return h('section', { class: 'home-card today-classes' },
       h('h3', null, T.todayClasses, today.length ? h('span', { class: 'group-count' }, ` ${today.length}`) : null),
       today.length ? h('ul', { class: 'home-list' }, rows) : h('p', { class: 'fine' }, T.todayNoClass),
       foot ? h('p', { class: 'fine' }, foot) : null,
+      elearnNote,
       h('button', { type: 'button', class: 'link-btn', onclick: () => { location.hash = '#/timetable'; setTab('timetable', true); } }, T.seeTimetable));
   }
 
@@ -1763,6 +2521,61 @@
           h('span', { class: 'bf-sub' }, x.sub))))));
   }
 
+  // 가로 스크롤 영역 마우스 드래그 & 휠 스크롤 지원 (티켓·타임라인 등)
+  function enableDragScroll(el) {
+    if (!el) return;
+    let isDown = false;
+    let startX = 0;
+    let scrollStart = 0;
+    let hasMoved = false;
+
+    const onMove = (e) => {
+      if (!isDown) return;
+      const dx = e.clientX - startX;
+      if (!hasMoved && Math.abs(dx) > 4) {
+        hasMoved = true;
+        el.classList.add('is-dragging');
+      }
+      if (hasMoved) {
+        el.scrollLeft = scrollStart - dx;
+      }
+    };
+
+    const onUp = () => {
+      if (!isDown) return;
+      isDown = false;
+      window.removeEventListener('pointermove', onMove);
+      window.removeEventListener('pointerup', onUp);
+      window.removeEventListener('pointercancel', onUp);
+      el.classList.remove('is-dragging');
+      if (hasMoved) {
+        const preventClick = (ev) => {
+          ev.stopPropagation();
+          ev.preventDefault();
+        };
+        el.addEventListener('click', preventClick, { capture: true, once: true });
+        setTimeout(() => el.removeEventListener('click', preventClick, { capture: true }), 120);
+      }
+    };
+
+    el.addEventListener('pointerdown', (e) => {
+      if (e.pointerType !== 'mouse' || e.button !== 0) return;
+      isDown = true;
+      hasMoved = false;
+      startX = e.clientX;
+      scrollStart = el.scrollLeft;
+      window.addEventListener('pointermove', onMove);
+      window.addEventListener('pointerup', onUp);
+      window.addEventListener('pointercancel', onUp);
+    });
+
+    el.addEventListener('wheel', (e) => {
+      if (el.scrollWidth <= el.clientWidth || Math.abs(e.deltaY) <= Math.abs(e.deltaX)) return;
+      el.scrollLeft += e.deltaY;
+      e.preventDefault();
+    }, { passive: false });
+  }
+
   // 마감 티켓: 가까운 마감을 '오려 낸 표'처럼 옆으로 넘겨 본다 (줍줍 = 주워 담는 표). 저장한 공지는 초록 띠
   function ticketStrip() {
     const T = t();
@@ -1786,6 +2599,7 @@
           h('span', { class: 'tk-title' }, titleOf(n)),
           sub ? subTag(n, sub) : null));
     }));
+    enableDragScroll(rail);
     const scroll = (dir) => rail.scrollBy({ left: dir * Math.max(280, rail.clientWidth * 0.8), behavior: reduceMotion() ? 'auto' : 'smooth' });
     return h('section', { class: 'sec sec-tickets' },
       h('header', { class: 'sec-head' },
@@ -2002,7 +2816,7 @@
   // ---------- 첫 방문 안내 ----------
   function loadExampleTimetable() {
     state.timetable = EXAMPLE_TIMETABLE.map((c, i) => ({
-      id: 'ex' + i, day: c.day, start: c.start, end: c.end, name: c.names[state.lang] || c.names.ko
+      id: 'ex' + i, day: c.day, start: c.start, end: c.end, prof: c.prof || '', room: c.room || '', elearn: c.elearn || false, name: c.names[state.lang] || c.names.ko
     }));
     saveTimetable();
     timetableChanged();
@@ -2112,6 +2926,8 @@
     if (tab === 'budget' && !state.budgetResult) runBudget();
     // 링크 클릭과 주소 바뀜(hashchange)이 같은 화면으로 두 번 부르므로, 화면이 실제로 바뀔 때만 위치를 옮긴다
     if (scrollTop && prev !== tab) scrollToTab(tab, true);
+    // enhanced.js 연동: 탭 전환 이벤트 발행 (위젯 재주입·collapse 해제 등)
+    if (prev !== tab) document.body.dispatchEvent(new CustomEvent('gongji:tabchange', { detail: { tab, prev } }));
   }
 
   // PC(왼쪽 내비게이션)와 휴대폰(아래 탭) 모두 화면을 통째로 바꾼다. 처음 여는 화면은 맨 위, 다시 온 화면은 보던 곳
@@ -2791,6 +3607,14 @@
 
     fillTimeSelects();
     $('#add-class-btn').addEventListener('click', () => openClassDialog());
+    $('#btn-mode-regular')?.addEventListener('click', () => {
+      if (!classEdit.days.size) classEdit.days = new Set([1]);
+      updateClassModeUI(false);
+      renderDayPicks();
+    });
+    $('#btn-mode-elearn')?.addEventListener('click', () => {
+      updateClassModeUI(true);
+    });
     $('#class-form').addEventListener('submit', (e) => { e.preventDefault(); saveClass(); });
     $('#class-more').addEventListener('click', () => saveClass(true));
     $('#class-name').addEventListener('input', () => { classEdit.extra = []; classEdit.rooms = {}; renderExtraNote(); showSuggest(); });
@@ -2825,6 +3649,11 @@
     for (const id of ['#end-h', '#end-m']) {
       $(id).addEventListener('change', () => { renderDurations(); showClassError(''); });
     }
+    $('#tt-selector')?.addEventListener('change', (e) => switchTimetable(e.target.value));
+    $('#tt-new-btn')?.addEventListener('click', () => addTimetable());
+    $('#tt-dup-btn')?.addEventListener('click', () => duplicateTimetable());
+    $('#tt-manage-btn')?.addEventListener('click', () => manageTimetable());
+
     $('#example-tt').addEventListener('click', loadExampleTimetable);
     $('#clear-tt').addEventListener('click', () => {
       const before = state.timetable;

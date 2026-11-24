@@ -47,9 +47,11 @@ def parse_slots(text: str) -> list[list]:
     return out
 
 
-def class_mode(text: str, slots: list[list]) -> str:
+def class_mode(text: str, slots: list[list], row_mode: str = '') -> str:
     """수업 방식: '' 강의실 · 'live' 실시간 온라인 · 'elearn' 시간이 정해지지 않은 수업"""
-    if not slots:
+    if row_mode == 'elearn' or not slots or not text:
+        return 'elearn'
+    if re.search(r'(이러닝|원격|cyber|사이버|e-learning)', text, re.I):
         return 'elearn'
     rooms = [s[3] for s in slots if s[3]]
     if rooms and all(ONLINE.search(r) for r in rooms):
@@ -94,7 +96,8 @@ def build(terms: list[dict], term_code: str | None = None) -> dict:
         name = (r.get('n') or '').strip()
         text = (r.get('t') or '').strip()
         slots = parse_slots(text)
-        if not name or (text and not slots):
+        is_elearn_text = bool(re.search(r'(이러닝|원격|cyber|사이버|e-learning)', text, re.I))
+        if not name or (text and not slots and not is_elearn_text):
             skipped += 1        # 시간 글자가 있는데 읽지 못함
             continue
         key = (r.get('h'), r.get('s'), name, json.dumps(slots, ensure_ascii=False))
@@ -102,10 +105,13 @@ def build(terms: list[dict], term_code: str | None = None) -> dict:
             continue
         seen.add(key)
         # 짧은 키: n 과목명, h 학수번호, s 분반, d 개설학과, k 이수구분, y 개설학년(9 = 전 학년), c 학점,
-        #          t 시간 [요일(0=일), 시작, 끝, 강의실], m 수업 방식('live' 실시간 온라인 · 'elearn' 시간 없음)
+        #          t 시간 [요일(0=일), 시작, 끝, 강의실], m 수업 방식('live' 실시간 온라인 · 'elearn' 시간 없음), p 교수명
         c = {'n': name, 'h': r.get('h') or '', 's': r.get('s') or '', 'd': r.get('d') or '', 'k': r.get('k') or '',
              'y': r.get('y') or '', 'c': r.get('c') or 0, 't': slots}
-        mode = class_mode(text, slots)
+        prof = (r.get('p') or r.get('prof') or '').strip()
+        if prof:
+            c['p'] = prof
+        mode = class_mode(text, slots, r.get('m') or '')
         if mode:
             c['m'] = mode
             modes[mode] += 1

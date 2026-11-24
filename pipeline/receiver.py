@@ -429,6 +429,17 @@ class Handler(BaseHTTPRequestHandler):
         self.received.append(rec)
         del self.received[:-20]
         note(self.root, f'[{rec["at"]}] 받음: {kind} {n}건 → collected/{path.name}')
+        if kind == 'lectures':
+            try:
+                import build_timetable
+                build_timetable.main([str(path)])
+                site_tt = self.root / '_site' / 'data' / 'timetable.js'
+                if site_tt.parent.exists():
+                    import shutil
+                    shutil.copy2(self.root / 'data' / 'timetable.js', site_tt)
+                note(self.root, '  강의 시간표(data/timetable.js)를 즉시 빌드했습니다.')
+            except Exception as e:
+                note(self.root, f'  강의 시간표 자동 빌드 실패: {e}')
         if self.runner:
             self.runner.request()
         self._json(200, {'ok': True, 'saved': path.name, 'count': n, 'queued': bool(self.runner and self.runner.enabled)})

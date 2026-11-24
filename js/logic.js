@@ -65,14 +65,18 @@
     return parseLocal(dateStr).getDay();
   }
 
-  // 시간표 한 줄이 올바른가? (요일 0~6, 시작이 끝보다 빠름)
+  // 시간표 한 줄이 올바른가? (요일 0~6, 시작이 끝보다 빠름, 또는 이러닝/시간 미지정 수업)
   function isValidClass(c) {
-    return c && Number.isInteger(c.day) && c.day >= 0 && c.day <= 6 &&
+    if (!c) return false;
+    if (c.elearn || c.m === 'elearn' || (c.name && !c.start && !c.end && (c.day === undefined || c.day === null || c.day === -1))) {
+      return Boolean(c.name && String(c.name).trim());
+    }
+    return Number.isInteger(c.day) && c.day >= 0 && c.day <= 6 &&
       /^\d{2}:\d{2}$/.test(c.start || '') && /^\d{2}:\d{2}$/.test(c.end || '') &&
       toMinutes(c.start) < toMinutes(c.end);
   }
 
-  // 공지의 행사 일시와 내 수업이 겹치는 목록
+  // 공지의 행사 일시와 내 수업이 겹치는 목록 (이러닝 등 시간 없는 수업은 겹치지 않음)
   function findConflicts(notice, timetable) {
     const out = [];
     for (const ev of notice.events || []) {
@@ -80,7 +84,7 @@
       const s = toMinutes(ev.start);
       const e = toMinutes(ev.end);
       for (const c of timetable || []) {
-        if (!isValidClass(c)) continue;
+        if (!isValidClass(c) || c.elearn || c.m === 'elearn' || !c.start) continue;
         if (c.day === day && overlaps(s, e, toMinutes(c.start), toMinutes(c.end))) {
           out.push({ event: ev, cls: c });
         }

@@ -32,7 +32,9 @@
 
   function draw(classes, opt) {
     const o = opt || {};
-    const list = (classes || []).filter((c) => c && c.start && c.end);
+    const all = classes || [];
+    const list = all.filter((c) => c && !c.elearn && c.start && c.end && Number.isInteger(c.day));
+    const elearnList = all.filter((c) => c && (c.elearn || c.m === 'elearn' || !c.start));
     const weekend = list.some((c) => c.day === 6 || c.day === 0);
     const days = weekend ? [1, 2, 3, 4, 5, 6, 0] : [1, 2, 3, 4, 5];
     let lo = 9 * 60;
@@ -50,7 +52,8 @@
     const colHead = 64;
     const hourH = Math.max(70, Math.min(96, 860 / rows));
     const timeW = 56;
-    const foot = o.note ? 120 : 84;
+    const elearnH = elearnList.length ? (64 + Math.ceil(elearnList.length / 2) * 40) : 0;
+    const foot = (o.note ? 90 : 60) + (elearnH ? elearnH + 20 : 0);
     const H = head + colHead + rows * hourH + foot + pad;
     const dpr = 2;
     const cv = document.createElement('canvas');
@@ -122,22 +125,60 @@
       rrect(ctx, x, y, 6, h, 3);
       ctx.fill();
       ctx.fillStyle = '#1c2420';
-      ctx.font = `700 21px ${FONT}`;
+      ctx.font = `700 20px ${FONT}`;
       const lines = wrap(ctx, c.name, w - 24, h > 110 ? 3 : 2);
-      lines.forEach((ln, k) => ctx.fillText(ln, x + 14, y + 30 + k * 26));
-      ctx.font = `500 16px ${FONT}`;
+      lines.forEach((ln, k) => ctx.fillText(ln, x + 14, y + 28 + k * 25));
+      ctx.font = `500 15px ${FONT}`;
       ctx.fillStyle = '#3f4b44';
-      const ty = y + 30 + lines.length * 26;
+      const ty = y + 28 + lines.length * 25;
       if (ty + 4 < y + h) ctx.fillText(`${c.start}–${c.end}`, x + 14, ty);
-      if (c.room && ty + 26 < y + h) ctx.fillText(wrap(ctx, c.room, w - 24, 1)[0] || '', x + 14, ty + 22);
+      const prof = c.prof || c.p || '';
+      const subInfo = [prof ? `${prof} 교수` : '', c.room].filter(Boolean).join(' · ');
+      if (subInfo && ty + 22 < y + h) ctx.fillText(wrap(ctx, subInfo, w - 24, 1)[0] || '', x + 14, ty + 20);
     }
-    // 아래: 메모와 이름표
-    const by = gy + gh;
+    // 아래: 이러닝 & 메모 & 이름표
+    let curY = gy + gh + 20;
+    if (elearnList.length) {
+      ctx.fillStyle = C.card;
+      rrect(ctx, gx, curY, gw, elearnH, 20);
+      ctx.fill();
+      ctx.strokeStyle = C.line;
+      ctx.lineWidth = 1;
+      ctx.stroke();
+
+      ctx.fillStyle = C.accent;
+      ctx.font = `700 19px ${FONT}`;
+      ctx.fillText(`💻 이러닝 · 온라인 강좌 (${elearnList.length})`, gx + 24, curY + 34);
+
+      const itemW = (gw - 48) / 2;
+      elearnList.forEach((ec, idx) => {
+        const col = idx % 2;
+        const row = Math.floor(idx / 2);
+        const ix = gx + 24 + col * itemW;
+        const iy = curY + 66 + row * 38;
+        const pStr = ec.prof || ec.p ? ` (${ec.prof || ec.p} 교수)` : '';
+        ctx.fillStyle = C.text;
+        ctx.font = `600 17px ${FONT}`;
+        ctx.fillText(wrap(ctx, `• ${ec.name}${pStr}`, itemW - 16, 1)[0] || '', ix, iy);
+      });
+      curY += elearnH + 20;
+    }
+
     if (o.note) {
       ctx.fillStyle = C.muted;
       ctx.font = `500 22px ${FONT}`;
-      ctx.fillText(wrap(ctx, o.note, gw, 1)[0] || '', pad, by + 52);
+      ctx.fillText(wrap(ctx, o.note, gw, 1)[0] || '', pad, curY + 28);
     }
+    ctx.font = `800 26px ${FONT}`;
+    ctx.textAlign = 'right';
+    ctx.fillStyle = C.text;
+    const brandY = H - pad + 8;
+    ctx.fillText('공지 ', W - pad - ctx.measureText('줍줍').width, brandY);
+    ctx.fillStyle = C.accent;
+    ctx.fillText('줍줍', W - pad, brandY);
+    ctx.textAlign = 'left';
+    return cv;
+  }
     ctx.font = `800 26px ${FONT}`;
     ctx.textAlign = 'right';
     ctx.fillStyle = C.text;

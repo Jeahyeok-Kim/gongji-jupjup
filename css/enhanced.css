@@ -1,0 +1,1401 @@
+/* ============================================================
+   공지 줍줍 — 고도화 패치 (enhanced.css)
+   기존 style.css 를 덮어씌워 개선합니다.
+   참고: 토스 · 네이버 · Linear · Apple HIG · 삼성 One UI
+   모바일(~899px) · 태블릿(900~1239px) · PC(1240px+) 동시 고려
+   ============================================================ */
+
+/* ---- 1. 토큰 추가·보완 ---- */
+:root {
+  /* 애니메이션 커브 보완 */
+  --ease-bounce: cubic-bezier(.34, 1.56, .64, 1);
+
+  /* 엘리베이션: 카드 hover 시 쓸 미묘한 그림자 */
+  --elev-card-hover: 0 2px 10px rgba(17, 24, 32, .07), 0 1px 2px rgba(17, 24, 32, .04);
+
+  /* 스크롤바 색 */
+  --scrollbar-thumb: #c8ced4;
+  --scrollbar-track: transparent;
+
+  /* 마감 티켓 강조 그라데이션 (좌 꼭지만, 흰면과 조화) */
+  --ticket-stub-ok: color-mix(in srgb, var(--accent) 7%, var(--surface));
+  --ticket-stub-hot: color-mix(in srgb, var(--danger) 9%, var(--surface));
+}
+:root[data-theme="dark"] {
+  --elev-card-hover: 0 2px 12px rgba(0, 0, 0, .22), 0 0 0 1px rgba(255,255,255,.04);
+  --scrollbar-thumb: #3a4048;
+
+  /* 다크모드 마스트헤드: 완전 검정이 아닌 짙은 초록 계열 유지 */
+  --mast: #0b2318;
+  --mast-ink: #f0faf4;
+  --mast-sub: rgba(220, 250, 235, .62);
+}
+
+/* ---- 2. 전역 스크롤바 (Chrome·Edge; FF는 scrollbar-color 로) ---- */
+::-webkit-scrollbar { width: 7px; height: 7px; }
+::-webkit-scrollbar-track { background: var(--scrollbar-track); }
+::-webkit-scrollbar-thumb { background: var(--scrollbar-thumb); border-radius: 4px; }
+::-webkit-scrollbar-thumb:hover { background: var(--border-strong); }
+
+/* ---- 마감 티켓: 드래그 스크롤 및 불필요한 스크롤바 제거 (토스/애플 카드 캐러셀 스타일) ---- */
+.tickets {
+  cursor: grab;
+  user-select: none;
+  -webkit-user-select: none;
+  scrollbar-width: none !important;
+  -ms-overflow-style: none !important;
+  touch-action: pan-y pinch-zoom;
+}
+
+.tickets::-webkit-scrollbar {
+  display: none !important;
+}
+
+.tickets.is-dragging {
+  cursor: grabbing !important;
+  scroll-snap-type: none !important;
+}
+
+.tickets.is-dragging .ticket {
+  pointer-events: none !important;
+  cursor: grabbing !important;
+}
+
+.ticket {
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+/* ---- 3. 카드 hover 영역 — overflow clip 으로 튀어나옴 방지 ---- */
+/* 기존: .card::before 로 inset 0 -12px 하는데 .cards overflow 없어 삐져나옴 */
+.cards {
+  overflow: clip; /* contains 없이 정확히 clip */
+  contain: paint;
+}
+/* hover 배경 반경을 카드 안쪽으로 맞춤 */
+.card::before {
+  inset: 2px -16px !important;
+  border-radius: 10px !important;
+}
+/* 모바일: 카드 블록 레이아웃에서 overflow 조정 */
+@media (max-width: 899px) {
+  .card::before { inset: 2px -12px !important; }
+}
+
+/* ---- 4. 포커스 링 세밀화 ---- */
+/* 버튼·칩: 채도 높은 ring */
+:is(.btn, .chip, .tabbar a, .icon-btn, .rail-btn, .pal-item, .ss-list button, .ticket):focus-visible {
+  outline: 2.5px solid var(--accent);
+  outline-offset: 2px;
+  box-shadow: none;
+}
+/* 텍스트 입력: glow 방식 (토스·애플 인풋 스타일) */
+:is(input[type="search"], input[type="text"], input[type="number"], input[type="time"], textarea):focus-visible {
+  outline: none;
+  border-color: var(--accent) !important;
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 18%, transparent) !important;
+}
+select:focus-visible {
+  outline: none;
+  border-color: var(--accent) !important;
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 18%, transparent) !important;
+}
+
+/* ---- 5. 공지 카드 — summary hover expand (PC에서만) ---- */
+@media (hover: hover) and (pointer: fine) {
+  .card:hover .card-summary {
+    -webkit-line-clamp: 4;
+    transition: none; /* line-clamp는 transition 미지원, 즉시 반영 */
+  }
+}
+
+/* ---- 6. 공지 카드 — 읽은 카드 대비 개선 ---- */
+/* 기존 opacity 차이만 있던 걸 왼쪽 선으로 "읽음" 명시 */
+.card.is-read::after {
+  display: none; /* 별도 선 없이 타이틀 색으로만 구분 (현행 유지) */
+}
+/* 저장된 공지: 왼쪽 금선 더 굵게 (기존 3px → 4px, 모바일에서도 보이게) */
+.card.is-pinned { box-shadow: inset 4px 0 0 var(--gold) !important; }
+/* 시간 충돌: 왼쪽 주황선 더 명확히 */
+.card.has-conflict { box-shadow: inset 4px 0 0 #d47b20 !important; }
+
+/* ---- 7. 빈 상태(empty state) 개선 ---- */
+.empty {
+  padding: 56px 20px !important;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+}
+.empty::before {
+  content: "";
+  display: block;
+  width: 48px;
+  height: 48px;
+  background: var(--fill);
+  border-radius: 50%;
+  /* 돋보기 아이콘 (검색 없을 때 범용) */
+  -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='1.6' stroke-linecap='round'%3E%3Ccircle cx='11' cy='11' r='7'/%3E%3Cpath d='m20 20-3.5-3.5'/%3E%3C/svg%3E") center / 24px no-repeat;
+  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='1.6' stroke-linecap='round'%3E%3Ccircle cx='11' cy='11' r='7'/%3E%3Cpath d='m20 20-3.5-3.5'/%3E%3C/svg%3E") center / 24px no-repeat;
+  opacity: 0.45;
+}
+/* 그룹 보기의 빈 그룹은 최소 패딩만 */
+.group > .empty { padding: 24px 20px !important; }
+
+/* ---- 8. 마감 티켓 — 호버 엘리베이션 개선 ---- */
+@media (prefers-reduced-motion: no-preference) {
+  .ticket {
+    transition: transform .22s var(--ease-spring), border-color .15s, box-shadow .2s !important;
+  }
+  .ticket:hover {
+    transform: translateY(-4px) !important;
+    box-shadow: var(--elev-card-hover) !important;
+    border-color: var(--border-strong) !important;
+  }
+}
+
+/* ---- 9. 마감 티켓 — stub(D-day 꼭지) 디자인 개선 ---- */
+.tk-stub {
+  background: var(--ticket-stub-ok) !important;
+}
+.ticket.is-hot .tk-stub {
+  background: var(--ticket-stub-hot) !important;
+}
+/* 오늘 마감 live 카운트다운 — 더 눈에 띄게 */
+.tk-time.is-live {
+  font-size: 11.5px;
+  font-weight: 800;
+  letter-spacing: -0.01em;
+  color: var(--danger) !important;
+  animation: live-pulse 2s ease-in-out infinite;
+}
+@media (prefers-reduced-motion: reduce) {
+  .tk-time.is-live { animation: none; }
+}
+@keyframes live-pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: .6; }
+}
+
+/* ---- 10. 지원 보드 (칸반) — 카드 hover 개선 ---- */
+@media (prefers-reduced-motion: no-preference) {
+  .bcard {
+    transition: transform .18s var(--ease-spring), border-color .15s, box-shadow .18s !important;
+  }
+  .bcard:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--elev-card-hover) !important;
+  }
+}
+
+/* ---- 11. 다크모드 마스트헤드 검색창 개선 ---- */
+:root[data-theme="dark"] .masthead .ask-form input {
+  background-color: #1a2820 !important;  /* 초록 살짝 섞인 어두운 배경 */
+  color: var(--mast-ink) !important;
+  box-shadow: 0 8px 28px rgba(0, 0, 0, .4) !important;
+}
+:root[data-theme="dark"] .masthead .ask-form input::placeholder {
+  color: rgba(180, 220, 200, .5) !important;
+}
+
+/* ---- 12. 오늘 화면 — 마스트헤드 모바일 collapse ---- */
+/* 스크롤 시 JS에서 .is-collapsed 를 붙이면 검색창만 sticky */
+.masthead { transition: padding .3s var(--ease-out); }
+.masthead.is-collapsed {
+  padding-bottom: 20px !important;
+}
+.masthead.is-collapsed .hero,
+.masthead.is-collapsed .home-toggle {
+  display: none;
+}
+.masthead.is-collapsed .ask {
+  margin-top: 0 !important;
+}
+/* 모바일에서만 collapse 적용 */
+@media (min-width: 900px) {
+  .masthead.is-collapsed {
+    padding-bottom: 32px !important;
+  }
+  .masthead.is-collapsed .hero { display: block; } /* PC는 항상 헤로 보임 */
+}
+
+/* ---- 13. 위쪽 topbar — 모바일에서 blur 재질 개선 ---- */
+/* 기존에도 blur 있으나 색상 단계 미세조정 */
+@media (max-width: 899px) {
+  .topbar {
+    --material: color-mix(in srgb, var(--surface) 88%, transparent);
+  }
+}
+
+/* ---- 14. 알림 센터 — 개별 알림 아이템 hover ---- */
+.alert-item {
+  transition: background-color .15s, transform .15s var(--ease-spring) !important;
+}
+@media (prefers-reduced-motion: no-preference) {
+  .alert-item:hover {
+    transform: translateX(2px);
+  }
+}
+/* 읽지 않은 알림 왼쪽 선 개선 */
+.alert-item.is-new {
+  box-shadow: inset 3px 0 0 var(--accent) !important;
+}
+.alert-item.due.is-new {
+  box-shadow: inset 3px 0 0 var(--danger) !important;
+}
+
+/* ---- 15. 필터 칩 — 활성 칩에 × 버튼 (JS 로 추가될 요소 미리 정의) ---- */
+.chip-clear {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 18px;
+  margin-left: 2px;
+  margin-right: -4px;
+  border-radius: 50%;
+  border: 0;
+  background: rgba(255,255,255,.18);
+  color: inherit;
+  font-size: 13px;
+  line-height: 1;
+  cursor: pointer;
+  flex: none;
+  opacity: .75;
+  transition: opacity .15s, background .15s;
+}
+.chip-clear:hover { opacity: 1; background: rgba(255,255,255,.32); }
+.chip[aria-pressed="true"] .chip-clear { display: inline-flex; }
+.chip:not([aria-pressed="true"]) .chip-clear { display: none; }
+
+/* ---- 16. 토스트 — 모바일 하단 safe area 보정 개선 ---- */
+/* 기존 코드에 있으나, is-visible 클래스 활용 개선 */
+.toast {
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity .22s var(--ease-out), translate .22s var(--ease-spring) !important;
+  translate: -50% 10px !important;
+}
+.toast:not([hidden]) {
+  pointer-events: auto;
+  opacity: 1 !important;
+  translate: -50% 0 !important;
+  animation: none !important; /* 기존 toast-in 대체 */
+}
+
+/* ---- 17. 단락 행동 유도(CTA) 버튼 — primary 버튼 미세조정 ---- */
+/* 살짝 올라가며 눌리는 느낌 강화 */
+@media (prefers-reduced-motion: no-preference) {
+  .btn.primary:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px color-mix(in srgb, var(--accent) 30%, transparent);
+  }
+  .btn.primary:active { transform: translateY(0) scale(.98); box-shadow: none; }
+}
+:root[data-theme="dark"] .btn.primary:hover {
+  box-shadow: 0 4px 12px color-mix(in srgb, var(--accent) 25%, transparent);
+}
+
+/* ---- 18. 공지 카드 목록 행 — 카드 사이 구분선 개선 ---- */
+/* 기존 border-bottom 보다 왼쪽 여백도 맞춰 가늘게 처리 */
+.card {
+  border-bottom: 1px solid color-mix(in srgb, var(--border) 70%, transparent) !important;
+}
+.card:last-child { border-bottom: 0 !important; }
+
+/* ---- 19. 오늘 브리핑 패널 — 숫자 카운트업 애니메이션 보완 ---- */
+/* JS에서 data-from / data-to 붙이면 @keyframes count-up 으로 처리 */
+@property --num {
+  syntax: "<integer>";
+  inherits: false;
+  initial-value: 0;
+}
+/* 현재 브라우저 지원 범위 제한으로 JS 카운트업 유지, CSS는 보조 */
+
+/* ---- 20. 반응형 보완: 태블릿(900~1240px) ---- */
+@media (min-width: 900px) and (max-width: 1239px) {
+  /* 브리핑 숫자 크기 소폭 축소 */
+  .bf-big { font-size: 28px !important; }
+  /* 티켓 고정 너비 소폭 축소 */
+  .ticket { flex-basis: 280px !important; }
+  /* 마스트헤드 헤더 크기 조정 */
+  .masthead h2 { font-size: clamp(26px, 2.8vw, 38px) !important; }
+}
+
+/* ---- 21. 접근성 — 고대비 모드(forced-colors) 보조 ---- */
+@media (forced-colors: active) {
+  .ticket, .bcard, .home-pill { border: 1px solid ButtonText; }
+  .btn.primary { forced-color-adjust: none; }
+}
+
+/* ---- 22. 스크롤 위치 복원 — 상세 대화상자 body 스크롤 ---- */
+/* dialog body 스크롤바 개선 */
+.dialog-body {
+  scrollbar-width: thin;
+  scrollbar-color: var(--scrollbar-thumb) transparent;
+}
+.dialog-body::-webkit-scrollbar { width: 5px; }
+.dialog-body::-webkit-scrollbar-thumb { background: var(--scrollbar-thumb); border-radius: 3px; }
+
+/* ---- 23. 공지 필터 chip 행 — 모바일 edge-fade 개선 ---- */
+/* 기존 mask-image 개선: 왼쪽/오른쪽 각각 더 부드럽게 */
+@media (max-width: 899px) {
+  .chips.can-right:not(.can-left) {
+    -webkit-mask-image: linear-gradient(90deg, #000 calc(100% - 40px), transparent) !important;
+    mask-image: linear-gradient(90deg, #000 calc(100% - 40px), transparent) !important;
+  }
+  .chips.can-left:not(.can-right) {
+    -webkit-mask-image: linear-gradient(90deg, transparent, #000 40px) !important;
+    mask-image: linear-gradient(90deg, transparent, #000 40px) !important;
+  }
+  .chips.can-left.can-right {
+    -webkit-mask-image: linear-gradient(90deg, transparent, #000 40px, #000 calc(100% - 40px), transparent) !important;
+    mask-image: linear-gradient(90deg, transparent, #000 40px, #000 calc(100% - 40px), transparent) !important;
+  }
+}
+
+/* ---- 24. PC 사이드 패널 — 공지 상세 개선 ---- */
+@media (min-width: 900px) {
+  #detail .dialog-body {
+    scrollbar-width: thin;
+    scrollbar-color: var(--scrollbar-thumb) transparent;
+  }
+  /* PC 상세 패널 나타날 때 약간의 blur 효과 */
+  #detail::backdrop {
+    backdrop-filter: blur(2px) !important;
+    -webkit-backdrop-filter: blur(2px) !important;
+  }
+}
+
+/* ---- 25. 단축키 힌트 — 상세 패널 footer ---- */
+/* JS에서 .kbd-hint 엘리먼트를 주입할 위치 */
+.kbd-hint {
+  font-size: 12px;
+  color: var(--faint);
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+}
+.kbd-hint kbd {
+  display: inline-grid;
+  place-items: center;
+  padding: 1px 6px;
+  border-radius: 5px;
+  border: 1px solid var(--border-strong);
+  border-bottom-width: 2px;
+  background: var(--surface-2);
+  font: 600 11px/1.5 ui-monospace, SFMono-Regular, Menlo, monospace;
+  color: var(--muted);
+}
+/* 모바일에서는 단축키 힌트 숨김 */
+@media (max-width: 899px) {
+  .kbd-hint { display: none; }
+}
+
+/* ---- 26. 검색창 — 검색어 있을 때 clear 버튼 개선 ---- */
+input[type="search"]::-webkit-search-cancel-button {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: var(--fill-hover);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%238b95a1' stroke-width='2.5' stroke-linecap='round'%3E%3Cpath d='M18 6 6 18M6 6l12 12'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: 11px;
+  cursor: pointer;
+  opacity: 1;
+  transition: background-color .15s;
+}
+input[type="search"]::-webkit-search-cancel-button:hover {
+  background-color: var(--fill-hover);
+}
+
+/* ---- 27. 오늘 화면 — setup-strip 개선 ---- */
+/* 모바일에서 2열 버튼이 너무 작은 문제 보완 */
+@media (max-width: 599px) {
+  .ss-list {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  }
+  .ss-list button {
+    min-height: 56px !important;
+    font-size: 12.5px !important;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+  }
+  .setup-check {
+    margin-left: auto;
+    margin-top: 2px;
+  }
+}
+
+/* ---- 28. 완료 체크 애니메이션 (★ 저장 등) ---- */
+@keyframes check-pop {
+  0% { transform: scale(0.6); opacity: 0; }
+  60% { transform: scale(1.2); }
+  100% { transform: scale(1); opacity: 1; }
+}
+.setup-check.just-done {
+  animation: check-pop .38s var(--ease-bounce) both;
+}
+
+/* ---- 29. 혜택 금액 미니 막대 차트 (JS에서 주입될 구조) ---- */
+.benefit-chart {
+  display: grid;
+  gap: 8px;
+  margin-top: 4px;
+}
+.benefit-row {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: center;
+  gap: 8px 12px;
+}
+.benefit-row-name {
+  font-size: 13.5px;
+  font-weight: 600;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: var(--text);
+}
+.benefit-row-amount {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--accent-strong);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+  grid-column: 2;
+  grid-row: 1;
+}
+.benefit-bar-wrap {
+  grid-column: 1 / -1;
+  height: 5px;
+  background: var(--fill);
+  border-radius: 3px;
+  overflow: hidden;
+}
+.benefit-bar-fill {
+  height: 100%;
+  border-radius: 3px;
+  background: var(--accent);
+  transform-origin: left;
+}
+@media (prefers-reduced-motion: no-preference) {
+  .benefit-bar-fill {
+    animation: grow .7s var(--ease-out) both;
+    animation-delay: calc(var(--i, 0) * 80ms);
+  }
+}
+
+/* ---- 30. 주간 마감 타임라인 (신규 기능용 구조) ---- */
+.week-timeline {
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  gap: 4px;
+  margin-top: 8px;
+}
+.wt-col {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-height: 80px;
+}
+.wt-dow {
+  font-size: 11.5px;
+  font-weight: 700;
+  color: var(--faint);
+  text-align: center;
+  padding-bottom: 4px;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 2px;
+}
+.wt-col.is-today .wt-dow {
+  color: var(--accent-strong);
+  border-bottom-color: var(--accent);
+}
+.wt-item {
+  padding: 4px 6px;
+  border-radius: 6px;
+  background: var(--fill);
+  font-size: 11.5px;
+  font-weight: 600;
+  line-height: 1.35;
+  color: var(--text);
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  cursor: pointer;
+  transition: background-color .15s;
+}
+.wt-item:hover { background: var(--fill-hover); }
+.wt-item.is-urgent {
+  background: color-mix(in srgb, var(--danger) 10%, var(--surface));
+  color: var(--danger);
+}
+.wt-item.is-saved {
+  background: color-mix(in srgb, var(--accent) 10%, var(--surface));
+  color: var(--accent-strong);
+}
+@media (max-width: 899px) {
+  .week-timeline { gap: 2px; }
+  .wt-item { font-size: 10.5px; padding: 3px 4px; }
+}
+
+/* ---- 31. 오늘 화면 — 수업 타임라인 "지금" 표시 개선 ---- */
+.tc-row.now .tc-time {
+  color: var(--danger) !important;
+  font-weight: 700;
+}
+.tc-row.now .tc-name {
+  color: var(--text);
+}
+
+/* ---- 32. 지원 보드 — 단계 색상 더 명확히 ---- */
+.bcol-head {
+  /* 기존 inset 2px shadow로 색 → 더 얇고 명확한 bottom border */
+  box-shadow: none !important;
+  border-bottom: 2.5px solid var(--stage-c) !important;
+  margin-bottom: 2px !important;
+}
+
+/* ---- 33. 상세 대화상자 — 사실 표(facts) 반응형 개선 ---- */
+@media (min-width: 480px) {
+  .facts {
+    grid-template-columns: 100px minmax(0, 1fr) !important;
+  }
+  .facts dd { margin-bottom: 0 !important; }
+}
+
+/* ---- 34. 이수 내역 — 진행 막대 미세 개선 ---- */
+.meter-bar {
+  height: 5px !important; /* 4px → 5px 약간 더 두껍게 */
+  border-radius: 3px !important;
+}
+.meter-bar i {
+  transition: width .6s var(--ease-out) !important;
+}
+
+/* ---- 35. 접근성 개선 — skip link (screen reader) ---- */
+/* JS에서 주입. 평소엔 화면 밖, 포커스 시 나타남 */
+.skip-link {
+  position: fixed;
+  top: 8px;
+  left: 8px;
+  z-index: 999;
+  padding: 8px 16px;
+  border-radius: 8px;
+  background: var(--accent);
+  color: var(--on-accent);
+  font-weight: 700;
+  font-size: 14px;
+  text-decoration: none;
+  transform: translateY(-80px);
+  transition: transform .18s;
+}
+.skip-link:focus {
+  transform: translateY(0);
+}
+
+/* ---- 36. 이러닝 · 시간 미지정 과목 지원 및 수업 모달 고도화 ---- */
+
+/* 수업 방식 세그먼트 컨트롤 (토스 / 애플 HIG 스타일) */
+.class-mode-row {
+  display: flex;
+  background: var(--surface-variant, rgba(125, 125, 125, 0.1));
+  padding: 3px;
+  border-radius: 10px;
+  gap: 3px;
+  margin-top: 6px;
+  margin-bottom: 8px;
+}
+
+.btn-mode {
+  flex: 1;
+  padding: 7px 12px;
+  font-size: 13px;
+  font-weight: 600;
+  text-align: center;
+  border: none;
+  border-radius: 7px;
+  background: transparent;
+  color: var(--text-sub, #8e9a90);
+  cursor: pointer;
+  transition: all .15s ease;
+  font-family: inherit;
+}
+
+.btn-mode:hover {
+  color: var(--text);
+}
+
+.btn-mode.is-active {
+  background: var(--surface, #ffffff);
+  color: var(--accent-strong, #137746);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12);
+  font-weight: 700;
+}
+
+/* 이러닝 안내 콜아웃 */
+.class-elearn-note {
+  background: color-mix(in srgb, var(--accent) 8%, var(--surface));
+  border: 1px solid color-mix(in srgb, var(--accent) 22%, transparent);
+  border-radius: 10px;
+  padding: 10px 14px;
+  margin-top: 4px;
+  margin-bottom: 8px;
+}
+
+.class-elearn-note .elearn-desc {
+  margin: 0;
+  font-size: 12.5px;
+  line-height: 1.5;
+  color: var(--text-sub, #7a877c);
+}
+
+.class-elearn-note strong {
+  color: var(--accent-strong, #137746);
+}
+
+/* 시간표 뷰 — 이러닝 과목 전용 섹션 */
+.tt-elearn-sec {
+  margin-top: 14px;
+  margin-bottom: 10px;
+}
+
+/* 빈 상태: 가볍고 은은한 추가 유도 바 */
+.tt-elearn-empty-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 9px 14px;
+  background: var(--surface);
+  border: 1px dashed var(--border);
+  border-radius: 10px;
+  font-size: 12.5px;
+  color: var(--faint);
+  transition: border-color .15s;
+}
+
+.tt-elearn-empty-bar:hover {
+  border-color: var(--accent);
+}
+
+.btn-add-elearn {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--accent-strong);
+  background: transparent;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 4px 10px;
+  cursor: pointer;
+  transition: all .15s;
+}
+
+.btn-add-elearn:hover {
+  background: color-mix(in srgb, var(--accent) 10%, transparent);
+  border-color: var(--accent);
+}
+
+/* 등록된 이러닝 수업 목록 */
+.tt-elearn-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 8px;
+  padding: 0 2px;
+}
+
+.tt-elearn-title {
+  font-size: 13.5px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  color: var(--text);
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.tt-elearn-count {
+  font-size: 11px;
+  font-weight: 700;
+  padding: 1px 7px;
+  border-radius: 10px;
+  background: var(--fill, rgba(125, 125, 125, 0.12));
+  color: var(--accent-strong);
+}
+
+.btn-add-elearn-icon {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--accent-strong);
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 3px 6px;
+  border-radius: 4px;
+  transition: background-color .15s;
+}
+
+.btn-add-elearn-icon:hover {
+  background: color-mix(in srgb, var(--accent) 10%, transparent);
+}
+
+.tt-elearn-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 8px;
+}
+
+.tt-elearn-card {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  padding: 9px 12px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  cursor: pointer;
+  outline: none;
+  transition: transform .15s var(--ease-out, ease), border-color .15s, box-shadow .15s;
+}
+
+.tt-elearn-card:hover,
+.tt-elearn-card:focus-visible {
+  transform: translateY(-1px);
+  border-color: var(--accent, #137746);
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.08);
+}
+
+.tt-elearn-color-bar {
+  width: 3.5px;
+  height: 26px;
+  border-radius: 2px;
+  background-color: var(--c, var(--accent));
+  flex-shrink: 0;
+}
+
+.tt-elearn-info {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.tt-elearn-name-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.tt-elearn-name {
+  font-size: 13px;
+  font-weight: 700;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: var(--text);
+  letter-spacing: -0.01em;
+}
+
+.tt-elearn-badge {
+  font-size: 10px;
+  font-weight: 700;
+  padding: 1px 5px;
+  border-radius: 4px;
+  background: color-mix(in srgb, var(--accent) 12%, transparent);
+  color: var(--accent-strong);
+  flex-shrink: 0;
+  letter-spacing: -0.02em;
+}
+
+.tt-elearn-sub {
+  font-size: 11px;
+  color: var(--faint);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.tt-elearn-room {
+  font-size: 11px;
+  color: var(--text-sub);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.tt-elearn-del {
+  width: 22px;
+  height: 22px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  background: transparent;
+  color: var(--faint);
+  font-size: 15px;
+  border-radius: 4px;
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: all .15s;
+  padding: 0;
+  line-height: 1;
+}
+
+.tt-elearn-del:hover {
+  background: color-mix(in srgb, var(--danger) 15%, transparent);
+  color: var(--danger);
+}
+
+/* ---- 37. 카드 내 게시판 태그와 칸반 보드 클래스명(.board) 충돌 방지 (스크롤바 제거) ---- */
+span.board,
+.card-top .board,
+.card-board {
+  display: inline-block !important;
+  grid-template-columns: none !important;
+  gap: 0 !important;
+  overflow: visible !important;
+  overflow-x: visible !important;
+  padding-bottom: 0 !important;
+  width: auto !important;
+  scrollbar-width: none !important;
+}
+
+span.board::-webkit-scrollbar,
+.card-top .board::-webkit-scrollbar,
+.card-board::-webkit-scrollbar {
+  display: none !important;
+}
+
+/* ---- 38. 시간표 교수명 표시 ---- */
+.tt-prof {
+  display: block;
+  font-size: 11px;
+  font-weight: 600;
+  color: #2c3830 !important;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin-top: 1px;
+  line-height: 1.25;
+  letter-spacing: -0.01em;
+}
+
+.tt-elearn-prof {
+  display: inline-block;
+  font-size: 11.5px;
+  color: var(--muted);
+  font-weight: 600;
+  margin: 0 4px;
+}
+
+.class-prof-field input {
+  font-size: 14px;
+}
+
+/* ---- 39. 수강신청 4대 추천 대안 탭 반응형 그리드 ---- */
+.alt-tabs {
+  display: grid !important;
+  grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+  gap: 10px !important;
+}
+
+.alt-tab {
+  padding: 12px 14px !important;
+  transition: all .18s var(--ease-spring) !important;
+}
+
+.alt-tab[aria-selected="true"] {
+  border-color: var(--accent) !important;
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--accent) 30%, transparent), 0 2px 8px rgba(0, 0, 0, .06) !important;
+  background: color-mix(in srgb, var(--accent) 4%, var(--surface)) !important;
+}
+
+.alt-tab[aria-selected="true"] .alt-name {
+  color: var(--accent) !important;
+}
+
+@media (max-width: 900px) {
+  .alt-tabs {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    gap: 8px !important;
+  }
+}
+
+/* ---- 40. 시간표 빈 슬롯 클릭 시 퀵 개설 과목 추천 ---- */
+.class-quick-suggest {
+  margin: -2px 0 6px;
+  padding: 10px 12px;
+  background: color-mix(in srgb, var(--accent) 7%, var(--surface));
+  border: 1px solid color-mix(in srgb, var(--accent) 22%, transparent);
+  border-radius: 12px;
+}
+
+.cqs-label {
+  display: block;
+  font-size: 11.5px;
+  font-weight: 700;
+  color: var(--accent);
+  margin-bottom: 7px;
+  letter-spacing: -0.01em;
+}
+
+.cqs-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.cqs-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 10px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--surface);
+  color: var(--text);
+  font: inherit;
+  font-size: 12.5px;
+  cursor: pointer;
+  transition: all .15s var(--ease-spring);
+  text-align: left;
+}
+
+.cqs-chip:hover {
+  border-color: var(--accent);
+  background: color-mix(in srgb, var(--accent) 10%, var(--surface));
+  transform: translateY(-1px);
+}
+
+.cqs-chip .cqs-name {
+  font-weight: 700;
+}
+
+.cqs-chip .cqs-meta {
+  font-size: 11px;
+  color: var(--muted);
+}
+
+.cqs-chip.is-major-req {
+  border-color: color-mix(in srgb, var(--accent) 40%, var(--border));
+  background: color-mix(in srgb, var(--accent) 5%, var(--surface));
+}
+
+.cqs-chip.is-major-req .cqs-name {
+  color: var(--accent);
+}
+
+/* ---- 41. 공지 상세 캘린더 & 요약 복사 버튼 ---- */
+.btn-gcal {
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+.btn-copy-card {
+  font-weight: 600;
+}
+
+/* ---- 42. 홈 오늘 수업 카드 이러닝 과목 바 ---- */
+.tc-elearn-bar {
+  margin: 10px 0 6px;
+  padding: 10px 12px;
+  background: color-mix(in srgb, var(--accent) 5%, var(--surface-2));
+  border: 1px dashed color-mix(in srgb, var(--accent) 25%, transparent);
+  border-radius: 10px;
+}
+.tc-elearn-label {
+  display: block;
+  font-size: 11.5px;
+  font-weight: 700;
+  color: var(--accent);
+  margin-bottom: 5px;
+}
+.tc-elearn-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+.tc-elearn-list li {
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--text);
+}
+
+
+
+
+
+/* ==========================================================================
+   43. 다중 시간표 관리 바 (Multi-Timetable Toolbar)
+   ========================================================================== */
+.tt-mgr-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 8px 12px;
+  padding: 10px 14px;
+  background: var(--surface-2, rgba(255, 255, 255, 0.04));
+  border: 1px solid var(--border-soft, rgba(255, 255, 255, 0.08));
+  border-radius: 12px;
+  margin-bottom: 10px;
+}
+
+.tt-select-wrap {
+  flex: 1 1 200px;
+  min-width: 180px;
+}
+
+.tt-selector {
+  width: 100%;
+  padding: 8px 12px;
+  font-size: 13.5px;
+  font-weight: 600;
+  color: var(--text, #111827);
+  background: var(--surface, #ffffff);
+  border: 1px solid var(--border, #d1d5db);
+  border-radius: 8px;
+  outline: none;
+  cursor: pointer;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+[data-theme="dark"] .tt-selector {
+  background: var(--surface-1, #1e252b);
+  border-color: var(--border, #2e3842);
+  color: var(--text, #f3f4f6);
+}
+
+.tt-selector:focus {
+  border-color: var(--accent, #008a4b);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent, #008a4b) 20%, transparent);
+}
+
+.tt-mgr-actions {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-shrink: 0;
+}
+
+.tt-btn-action {
+  font-size: 12px !important;
+  font-weight: 600 !important;
+  padding: 6px 10px !important;
+  border-radius: 6px !important;
+  background: var(--surface, #ffffff);
+  border: 1px solid var(--border, #d1d5db);
+  color: var(--text, #374151);
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+[data-theme="dark"] .tt-btn-action {
+  background: var(--surface-2, #262f38);
+  border-color: var(--border, #3a4754);
+  color: var(--text, #e5e7eb);
+}
+
+.tt-btn-action:hover {
+  background: color-mix(in srgb, var(--accent, #008a4b) 8%, var(--surface));
+  border-color: var(--accent, #008a4b);
+  color: var(--accent, #008a4b);
+}
+
+/* ==========================================================================
+   44. 실시간 학점 및 등교 통계 바 (Timetable Stats Strip)
+   ========================================================================== */
+.tt-stats-bar {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px 16px;
+  padding: 10px 14px;
+  background: color-mix(in srgb, var(--accent, #008a4b) 4%, var(--surface-1, #1a2027));
+  border: 1px solid color-mix(in srgb, var(--accent, #008a4b) 18%, transparent);
+  border-radius: 10px;
+  margin-bottom: 12px;
+}
+
+.tt-stat-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12.5px;
+}
+
+.tt-stat-lbl {
+  color: var(--muted, #6b7280);
+  font-weight: 500;
+  font-size: 11.5px;
+}
+
+.tt-stat-val {
+  color: var(--accent, #008a4b);
+  font-weight: 700;
+  font-size: 13.5px;
+}
+
+.tt-stat-detail {
+  font-weight: 600;
+  color: var(--text, #111827);
+}
+
+[data-theme="dark"] .tt-stat-detail {
+  color: var(--text, #f3f4f6);
+}
+
+.tt-stat-sub {
+  font-size: 11.5px;
+  color: var(--muted, #9ca3af);
+  font-weight: normal;
+}
+
+.tt-stat-badges {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.tt-stat-badge {
+  display: inline-block;
+  padding: 2px 7px;
+  font-size: 11px;
+  font-weight: 600;
+  border-radius: 4px;
+  line-height: 1.4;
+}
+
+.tt-stat-badge.day-badge {
+  background: color-mix(in srgb, var(--accent, #008a4b) 12%, transparent);
+  color: var(--accent, #008a4b);
+}
+
+.tt-stat-badge.free-badge {
+  background: #ecfdf5;
+  color: #059669;
+}
+
+[data-theme="dark"] .tt-stat-badge.free-badge {
+  background: rgba(5, 150, 105, 0.18);
+  color: #34d399;
+}
+
+.tt-stat-badge.full-badge {
+  background: #f3f4f6;
+  color: #6b7280;
+}
+
+[data-theme="dark"] .tt-stat-badge.full-badge {
+  background: rgba(255, 255, 255, 0.08);
+  color: #9ca3af;
+}
+
+.tt-stat-badge.lunch-ok {
+  background: #f0fdf4;
+  color: #16a34a;
+}
+
+[data-theme="dark"] .tt-stat-badge.lunch-ok {
+  background: rgba(22, 163, 74, 0.15);
+  color: #4ade80;
+}
+
+.tt-stat-badge.lunch-warn {
+  background: #fffbeb;
+  color: #d97706;
+}
+
+[data-theme="dark"] .tt-stat-badge.lunch-warn {
+  background: rgba(217, 119, 6, 0.15);
+  color: #fbbf24;
+}
+
+/* ==========================================================================
+   45. 공지 빠른 필터 프리셋 바 (Notice Filter Presets Bar)
+   ========================================================================== */
+.filter-presets {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 0;
+  margin-bottom: 8px;
+  overflow-x: auto;
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+}
+
+.filter-presets::-webkit-scrollbar {
+  display: none;
+}
+
+.fp-label {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--muted, #6b7280);
+  white-space: nowrap;
+  padding-right: 4px;
+}
+
+.fp-chip {
+  display: inline-flex;
+  align-items: center;
+  font-size: 12px;
+  font-weight: 600;
+  padding: 5px 11px;
+  border-radius: 9999px;
+  background: var(--surface-1, #f3f4f6);
+  border: 1px solid var(--border, #e5e7eb);
+  color: var(--text, #374151);
+  white-space: nowrap;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+[data-theme="dark"] .fp-chip {
+  background: var(--surface-2, #20272e);
+  border-color: var(--border, #2d3844);
+  color: var(--text, #d1d5db);
+}
+
+.fp-chip:hover {
+  border-color: var(--accent, #008a4b);
+  color: var(--accent, #008a4b);
+}
+
+.fp-chip.is-active {
+  background: color-mix(in srgb, var(--accent, #008a4b) 12%, transparent);
+  border-color: var(--accent, #008a4b);
+  color: var(--accent, #008a4b);
+  font-weight: 700;
+}
+
+.fp-chip.custom-fp {
+  padding: 0 4px 0 10px;
+  gap: 2px;
+}
+
+.fp-chip-btn {
+  background: none;
+  border: none;
+  padding: 5px 0;
+  font-size: 12px;
+  font-weight: 600;
+  color: inherit;
+  cursor: pointer;
+}
+
+.fp-chip-del {
+  background: none;
+  border: none;
+  color: var(--muted, #9ca3af);
+  font-size: 15px;
+  line-height: 1;
+  padding: 2px 4px;
+  margin-left: 2px;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: all 0.12s ease;
+}
+
+.fp-chip-del:hover {
+  color: #ef4444;
+  background: rgba(239, 68, 68, 0.12);
+}
+
+.fp-save-btn {
+  font-size: 11.5px;
+  font-weight: 600;
+  padding: 5px 10px;
+  border-radius: 9999px;
+  background: transparent;
+  border: 1px dashed var(--border, #d1d5db);
+  color: var(--muted, #6b7280);
+  white-space: nowrap;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.fp-save-btn:hover {
+  border-color: var(--accent, #008a4b);
+  color: var(--accent, #008a4b);
+  border-style: solid;
+}
+
+/* ==========================================================================
+   46. 성적표 붙여넣기 미리보기 개별 제외 (Paste Preview Item & Delete)
+   ========================================================================== */
+.paste-item {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  padding: 8px 12px !important;
+  background: var(--surface-1, rgba(255, 255, 255, 0.04));
+  border: 1px solid var(--border-soft, rgba(255, 255, 255, 0.08));
+  border-radius: 8px;
+  margin-bottom: 6px;
+}
+
+.paste-item-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.paste-item-info .pl-name {
+  font-size: 13.5px;
+  font-weight: 600;
+  color: var(--text, #111827);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+[data-theme="dark"] .paste-item-info .pl-name {
+  color: var(--text, #f3f4f6);
+}
+
+.paste-item-info .pl-meta {
+  font-size: 11.5px;
+  color: var(--muted, #6b7280);
+}
+
+.pl-del-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  border: none;
+  background: transparent;
+  color: var(--muted, #9ca3af);
+  font-size: 17px;
+  line-height: 1;
+  cursor: pointer;
+  flex-shrink: 0;
+  margin-left: 8px;
+  transition: all 0.15s ease;
+}
+
+.pl-del-btn:hover {
+  background: rgba(239, 68, 68, 0.12);
+  color: #ef4444;
+}

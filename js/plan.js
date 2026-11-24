@@ -210,7 +210,7 @@
 
   const GRADE_TOKEN = /^(A\+|A0|A-|A|B\+|B0|B-|B|C\+|C0|C-|C|D\+|D0|D-|D|P|S|PASS|F|NP|U|FA|W)$/i;
   function parseTerm(line) {
-    const m = /(20\d{2})\s*(?:년도?|학년도)?\s*[-./]?\s*(1|2|여름|하계|겨울|동계)\s*(?:학기)?/.exec(line);
+    const m = /(20\d{2})\s*(?:년도?|학년도)?\s*[-./\s]?\s*(1|2|여름|하계|겨울|동계)\s*(?:학기)?/.exec(line);
     if (!m) return '';
     const t = { 1: '1', 2: '2', 여름: 'S', 하계: 'S', 겨울: 'W', 동계: 'W' }[m[2]];
     return `${m[1]}-${t}`;
@@ -335,16 +335,21 @@
       }
       const sig = `${c.s}|${JSON.stringify(c.t || [])}`;
       if (g.sections.some((s) => s.sig === sig)) continue;
-      g.sections.push({ s: c.s || '', t: c.t || [], mode: modeOf(c), sig });
+      g.sections.push({ s: c.s || '', t: c.t || [], mode: modeOf(c), prof: c.p || c.prof || '', sig });
     }
     for (const g of map.values()) g.sections.sort((a, b) => a.s.localeCompare(b.s));
     return [...map.values()];
   }
 
   const deptMatch = (a, b) => {
-    const x = String(a || '').trim();
-    const y = String(b || '').trim();
-    return !!x && !!y && (x === y || x.includes(y) || y.includes(x));
+    const x = String(a || '').trim().replace(/\s+/g, '').toLowerCase();
+    const y = String(b || '').trim().replace(/\s+/g, '').toLowerCase();
+    if (!x || !y) return false;
+    if (x === y || x.includes(y) || y.includes(x)) return true;
+    const clean = (s) => s.replace(/(학부|전공|학과|공학과|트랙)$/, '');
+    const cx = clean(x);
+    const cy = clean(y);
+    return cx.length >= 2 && cy.length >= 2 && (cx.includes(cy) || cy.includes(cx));
   };
 
   // 이번 학기 목표 학점을 남은 전공·교양 학점 비율대로 나눈다 (예: 전공 57 · 교양 28 남음, 18학점 → 전공 12 · 교양 6)
@@ -361,13 +366,73 @@
     return { major, general, free: rest };
   }
 
+  // ---------- 시간표 품질 평가 (Schedule Quality Fitness) ----------
+  // 공강일 수, 우주공강 방지, 점심시간 확보, 하루 1과목 낭비 등교 방지 등을 점수화
+  function scheduleQuality(slots, theme) {
+    if (!slots || !slots.length) return 60;
+    const byDay = {};
+    for (const [d, a, b] of slots) {
+      if (!byDay[d]) byDay[d] = [];
+      byDay[d].push([toMin(a), toMin(b)]);
+    }
+    let score = 100;
+    const weekdays = [1, 2, 3, 4, 5];
+    const daysAttending = weekdays.filter((d) => byDay[d] && byDay[d].length > 0);
+    const freeDaysCount = 5 - daysAttending.length;
+
+    // 1. 공강일 보너스
+    if (freeDaysCount === 1) score += (theme === 'freeDay' ? 50 : 30);
+    else if (freeDaysCount === 2) score += (theme === 'freeDay' ? 100 : 70);
+    else if (freeDaysCount >= 3) score += (theme === 'freeDay' ? 140 : 100);
+
+    // 금공강 / 월공강 특화 보너스
+    if (!byDay[5] || byDay[5].length === 0) score += (theme === 'freeDay' ? 35 : 20);
+    if (!byDay[1] || byDay[1].length === 0) score += (theme === 'freeDay' ? 25 : 15);
+
+    for (const d of daysAttending) {
+      const times = byDay[d].sort((x, y) => x[0] - y[0]);
+
+      // 하루 1과목만 듣기 위한 단과목 등교 페널티 (이동 시간 대비 비효율)
+      if (times.length === 1 && (times[0][1] - times[0][0]) <= 90) {
+        score -= 20;
+      }
+
+      // 우주공강(2.5시간 이상 틈) 페널티 및 적정 이동시간 보너스
+      let hasLunch = false;
+      for (let i = 0; i < times.length - 1; i++) {
+        const gap = times[i + 1][0] - times[i][1];
+        if (gap > 150) {
+          score -= Math.min(50, 20 + Math.round((gap - 150) / 3)); // 우주공강 감점
+        } else if (gap >= 20 && gap <= 80) {
+          score += 8; // 편안한 쉬는시간
+        }
+        // 점심시간(11:30~13:30 사이) 40분 이상 공강 확보
+        if (times[i][1] <= 12 * 60 + 20 && times[i + 1][0] >= 12 * 60 + 40 && gap >= 40) {
+          hasLunch = true;
+        }
+      }
+
+      // 오후 늦게 시작하거나 12시 전에 끝나는 날은 자연스럽게 식사 가능
+      if (times[times.length - 1][1] <= 12 * 60 || times[0][0] >= 13 * 60) {
+        hasLunch = true;
+      }
+      if (hasLunch) score += 12;
+      else if (times.length >= 2) score -= 15; // 밥 못 먹는 연강
+
+      // 과도한 하루 연강(5시간 초과) 피로도 페널티
+      const dailyTotal = times.reduce((s, t) => s + (t[1] - t[0]), 0);
+      if (dailyTotal > 300) score -= 25;
+
+      // 테마: 늦게 시작(lateStart)
+      if (theme === 'lateStart') {
+        if (times[0][0] < 10 * 60 + 30) score -= 40; // 1교시 회피
+        else score += 25;
+      }
+    }
+    return score;
+  }
+
   // ---------- 추천 ----------
-  // opts: {
-  //   groups: groupOffered() 결과, taken: Set(학수번호·정규화한 과목명), left: remaining() 결과,
-  //   target: 목표 학점, grades: [1..4] 또는 null(전체), dept: 내 학과, deptCourses: Set(내 학과 요람 과목 이름, 정규화),
-  //   myGrade: 다음 학기에 다닐 학년, include: { major, general, elearn, live }, avoidDays: [요일], busy: [[요일, 시작, 끝]],
-  //   locked: [{ key, s }] 꼭 넣을 과목(분반), excluded: [key] 뺄 과목, maxNodes
-  // }
   function candidates(opts) {
     const o = opts || {};
     const inc = { major: true, general: true, elearn: true, live: true, ...(o.include || {}) };
@@ -376,42 +441,74 @@
     const lockedKeys = new Set((o.locked || []).map((x) => x.key));
     const grades = Array.isArray(o.grades) && o.grades.length ? new Set(o.grades.map(Number)) : null;
     const avoid = new Set(o.avoidDays || []);
-    const minStart = Number(o.minStart) || 0;            // 이 시각(분) 전에 시작하는 분반은 빼기 (늦게 시작하는 조합)
+    const minStart = Number(o.minStart) || 0;
     const deptCourses = o.deptCourses || new Set();
     const left = o.left || {};
+    const reqLeftNames = new Set((o.requiredCourses || []).map(normName));
     const out = [];
     const stats = { taken: 0, grade: 0, time: 0, area: 0 };
+    const needFree = (left.free && left.free > 0) || (left.total !== null && left.total > ((left.major || 0) + (left.general || 0)));
+
     for (const g of o.groups || []) {
       if (excluded.has(g.key) || g.credit <= 0) continue;
-      if ((g.code && taken.has(g.code)) || taken.has(normName(g.name))) { stats.taken += 1; continue; }
+      const nm = normName(g.name);
+      if ((g.code && taken.has(g.code)) || taken.has(nm)) { stats.taken += 1; continue; }
       const isLocked = lockedKeys.has(g.key);
+      const isReqLeft = (g.kind === '전필' || reqLeftNames.has(nm)) && (deptMatch(g.dept, o.dept) || deptCourses.has(nm));
       let ar = g.area;
-      if (ar === 'major' && !(deptMatch(g.dept, o.dept) || deptCourses.has(normName(g.name)))) {
-        if (!isLocked) { stats.area += 1; continue; }
+
+      if (ar === 'major' && !(deptMatch(g.dept, o.dept) || deptCourses.has(nm))) {
+        ar = 'free'; // 타 학과 전공은 일반선택 영역으로 전환
       }
-      if (ar === 'free') { if (!isLocked) { stats.area += 1; continue; } }
-      if (!isLocked && ((ar === 'major' && !inc.major) || (ar === 'general' && !inc.general))) { stats.area += 1; continue; }
-      if (!isLocked && grades && g.grade && !grades.has(g.grade)) { stats.grade += 1; continue; }
-      // 고정한 과목은 사용자가 고른 것이라 요일·방식 조건을 따지지 않는다
-      const sections = isLocked ? g.sections : g.sections.filter((s) => (s.mode !== 'elearn' || inc.elearn) && (s.mode !== 'live' || inc.live)
-        && !s.t.some(([d, a]) => avoid.has(d) || (minStart && toMin(a) < minStart)) && !overlaps(s.t, o.busy || []));
+
+      if (!isLocked) {
+        if (ar === 'major' && !inc.major) { stats.area += 1; continue; }
+        if (ar === 'general' && !inc.general) { stats.area += 1; continue; }
+        if (ar === 'free' && (!needFree && !isLocked && !inc.general)) { stats.area += 1; continue; }
+        if (grades && g.grade && !grades.has(g.grade)) { stats.grade += 1; continue; }
+      }
+
+      const sections = isLocked ? g.sections : g.sections.filter((s) => {
+        if (s.mode === 'elearn' && !inc.elearn) return false;
+        if (s.mode === 'live' && !inc.live) return false;
+        if (s.t && s.t.length) {
+          if (s.t.some(([d, a]) => avoid.has(d) || (minStart && toMin(a) < minStart))) return false;
+          if (overlaps(s.t, o.busy || [])) return false;
+        }
+        return true;
+      });
+
       if (!sections.length) { stats.time += 1; continue; }
-      // 점수: 남은 학점이 있는 영역 > 학년이 맞는 과목 > 그 밖
-      let score;
-      if (ar === 'major') score = left.major === 0 ? 15 : g.kind === '전필' ? 100 : 70;
-      else if (ar === 'general') {
-        score = left.general === 0 ? 10 : 55;
-        if (left.gen && g.gen && left.gen[g.gen] > 0) score += 15;
-      } else score = 5;
-      if (o.myGrade && g.grade) {
-        if (g.grade === o.myGrade) score += 12;
-        else if (g.grade < o.myGrade) score += g.kind === '전필' ? 18 : -4;
-        else score -= 12;
+
+      // 스마트 점수 체계: 미이수 전필 > 부족 영역 교양 > 전공선택 > 일반선택
+      let score = 50;
+      if (isReqLeft) {
+        score = 160; // 미이수 전공필수 최우선
+      } else if (ar === 'major') {
+        score = (left.major === 0) ? 35 : (g.kind === '전필' ? 120 : 90);
+      } else if (ar === 'general') {
+        score = (left.general === 0) ? 25 : 70;
+        if (left.gen && g.gen) {
+          if (left.gen[g.gen] > 0) score += 30; // 부족한 세부 교양 영역
+          else score -= 15; // 이미 채운 세부 영역
+        }
+      } else {
+        score = needFree ? 50 : 20;
       }
-      if (deptCourses.has(normName(g.name))) score += 5;
-      if (ar === 'major' && deptMatch(g.dept, o.dept)) score += 8;      // 같은 과목이면 내 학과가 연 분반을 먼저
-      out.push({ g, sections, score, area: ar });
+
+      if (o.myGrade && g.grade) {
+        if (g.grade === o.myGrade) score += 15;
+        else if (g.grade < o.myGrade) score += (isReqLeft ? 20 : 5);
+        else score -= 10;
+      }
+
+      if (deptCourses.has(nm)) score += 10;
+      if (ar === 'major' && deptMatch(g.dept, o.dept)) score += 10;
+      if (o.theme === 'smartMix' && sections.some((s) => s.mode === 'elearn')) score += 30;
+
+      out.push({ g, sections, score, area: ar, isReqLeft });
     }
+
     out.sort((a, b) => b.score - a.score || b.g.credit - a.g.credit || a.g.name.localeCompare(b.g.name));
     return { list: out, stats };
   }
@@ -421,11 +518,14 @@
     const target = num(o.target, 1, 30) || 18;
     const left = o.left || {};
     const { list: all, stats } = candidates(o);
-    // 꼭 넣을 과목부터
+
+    // 1단계: 꼭 넣을 고정 과목 및 미이수 전공필수 우선 슬롯 확보
     const fixed = [];
     let fixedSlots = [...(o.busy || [])].map((x) => x.slice(0, 3));
     let fixedCredits = 0;
     const lockedMap = new Map((o.locked || []).map((x) => [x.key, x.s]));
+
+    // 고정 과목
     for (const c of all) {
       if (!lockedMap.has(c.g.key)) continue;
       const want = lockedMap.get(c.g.key);
@@ -436,37 +536,55 @@
       fixedCredits += c.g.credit;
     }
     const fixedNames = new Set(fixed.map((x) => normName(x.c.g.name)));
-    // 탐색할 후보: 영역마다 점수 높은 순으로 따로 뽑는다 (전공 과목이 많아도 교양 후보가 밀려나지 않게)
-    const per = num(o.limit, 4, 60) || 22;
+
+    // 2단계: 탐색할 자유 후보군
+    const per = num(o.limit, 6, 60) || 28;
     const free = all.filter((c) => !lockedMap.has(c.g.key) && !fixedNames.has(normName(c.g.name)));
-    const pool = ['major', 'general', 'free'].flatMap((a) => free.filter((c) => c.area === a).slice(0, a === 'free' ? 4 : per))
-      .sort((a, b) => b.score - a.score || b.g.credit - a.g.credit);
+    const pool = ['major', 'general', 'free'].flatMap((a) => free.filter((c) => c.area === a).slice(0, a === 'free' ? 6 : per))
+      .sort((a, b) => (b.score / b.g.credit) - (a.score / a.g.credit) || b.score - a.score);
     const n = pool.length;
-    const maxNodes = o.maxNodes || 60000;
+    const maxNodes = o.maxNodes || 50000;
     let nodes = 0;
-    let best = { val: -1, credits: -1, chosen: [] };
+
+    let best = { val: -1, quality: -1, credits: -1, chosen: [] };
     const cap = target - fixedCredits;
     const areaUsed = { major: 0, general: 0, free: 0 };
     const quota = o.quota || split(left, target);
     for (const f of fixed) areaUsed[f.c.area] += f.c.g.credit;
+
     const chosen = [];
     const names = new Set(fixedNames);
-    // 이번 학기 영역별 몫(quota)을 넘으면 점수를 낮춘다: 전공만 잔뜩, 교양만 잔뜩 고르지 않게
+
     const valueOf = (c) => {
       const cap2 = c.area === 'major' ? quota.major : c.area === 'general' ? quota.general : 0;
       const over = areaUsed[c.area] >= cap2;
-      return (over ? Math.min(c.score, 12) : c.score) * c.g.credit;
+      return (over ? Math.min(c.score, 18) : c.score) * c.g.credit;
     };
+
+    function evaluateCombo(items, currentCredits, currentSlots) {
+      const courseVal = items.reduce((sum, item) => sum + valueOf(item.c), 0);
+      const quality = scheduleQuality(currentSlots, o.theme);
+      // 목표 학점을 맞추는 것이 1순위, 그 다음 과목 가치와 시간표 품질
+      const creditScore = currentCredits === cap ? 200 : currentCredits > (cap - 2) ? 100 : 0;
+      return (courseVal * 0.7) + (quality * 0.8) + creditScore;
+    }
+
     function dfs(i, credits, slots, val) {
       nodes += 1;
-      if (val > best.val || (val === best.val && credits > best.credits)) best = { val, credits, chosen: chosen.slice() };
+      if (credits <= cap) {
+        const quality = scheduleQuality(slots, o.theme);
+        const comboScore = evaluateCombo(chosen, credits, slots);
+        if (comboScore > best.val || (comboScore === best.val && credits > best.credits)) {
+          best = { val: comboScore, quality, credits, chosen: chosen.slice() };
+        }
+      }
       if (i >= n || nodes > maxNodes || credits >= cap) return;
-      if (val + (cap - credits) * pool[i].score <= best.val) return;   // 남은 칸을 지금 점수로 다 채워도 못 이기면 그만
+
       const c = pool[i];
       const nm = normName(c.g.name);
       if (credits + c.g.credit <= cap && !names.has(nm)) {
-        // 같은 과목의 분반: 시간이 다른 분반을 최대 3개까지 시도 (같은 시간 분반은 한 번만)
         const tried = new Set();
+        // 분반 선택 시 시간대가 다른 상위 3개 분반 시도
         for (const sec of c.sections) {
           const sig = JSON.stringify(sec.t.map((x) => x.slice(0, 3)));
           if (tried.has(sig) || tried.size >= 3 || overlaps(sec.t, slots)) continue;
@@ -483,19 +601,23 @@
       }
       dfs(i + 1, credits, slots, val);
     }
+
     if (cap > 0) dfs(0, 0, fixedSlots, 0);
+
     const picks = [...fixed.map((x) => ({ ...x, locked: true })), ...best.chosen.map((x) => ({ ...x, locked: false }))];
-    // 다른 분반: 다른 고른 과목·바쁜 시간과 안 겹치는 분반
     const result = picks.map((p, idx) => {
       const others = picks.filter((_, j) => j !== idx).flatMap((q) => q.sec.t).concat((o.busy || []).map((x) => x.slice(0, 3)));
       const alts = p.c.sections.filter((s) => s !== p.sec && !overlaps(s.t, others));
       return { key: p.c.g.key, group: p.c.g, section: p.sec, area: p.c.area, score: p.c.score, locked: p.locked, alts };
     });
+
     const credits = result.reduce((s, r) => s + r.group.credit, 0);
     const byArea = { major: 0, general: 0, free: 0 };
     for (const r of result) byArea[r.area] += r.group.credit;
     result.sort((a, b) => (a.area === b.area ? 0 : a.area === 'major' ? -1 : b.area === 'major' ? 1 : 0) || b.score - a.score);
-    return { picks: result, credits, byArea, target, quota, value: best.val, short: Math.max(0, target - credits), considered: all.length, stats, nodes };
+
+    const finalQuality = scheduleQuality(result.flatMap((r) => r.section.t), o.theme);
+    return { picks: result, credits, byArea, target, quota, value: best.val, quality: finalQuality, short: Math.max(0, target - credits), considered: all.length, stats, nodes };
   }
 
   // 결과에서 수업이 있는 요일 (월=1 … 일=0) 과 가장 이른 시작 시각
@@ -507,29 +629,50 @@
     return all.length ? Math.min(...all) : null;
   }
 
-  // 추천 3안: 균형 · 공강 최대(평일을 비워 보며 쉬는 날이 가장 많은 조합) · 늦게 시작(첫 수업 10:30 이후)
-  // 목표 학점에서 2학점 넘게 모자라면 그 안은 쓰지 않는다.
+  // ---------- 추천 4대 테마 ----------
+  // 1. balanced: 황금 밸런스형 (전필 우선 + 점심시간 확보 + 요일별 고른 분산)
+  // 2. freeDay: 공강 극대화형 (금공강/월공강 우선, 주 3~4일 등교 시간표)
+  // 3. lateStart: 오후 집중형 (오전 10:30 이전 1교시 배제)
+  // 4. smartMix: 이러닝+대면 꿀조합 (원격 과목 활용으로 등교 부담 최소화)
   function alternatives(opts) {
-    const o = { ...(opts || {}), maxNodes: (opts && opts.maxNodes) || 25000 };
-    const base = recommend(o);
+    const o = { ...(opts || {}), maxNodes: (opts && opts.maxNodes) || 30000 };
+    const base = recommend({ ...o, theme: 'balanced' });
     const enough = (r) => r.credits >= Math.min(base.credits, base.target - 2);
-    const out = [{ key: 'balanced', result: base, days: daysUsed(base), start: earliest(base) }];
+    const out = [{ key: 'balanced', title: '황금 밸런스', result: base, days: daysUsed(base), start: earliest(base), quality: base.quality }];
+
     const avoid0 = o.avoidDays || [];
     const weekdays = [1, 2, 3, 4, 5].filter((d) => !avoid0.includes(d));
     const freeOf = (r) => weekdays.filter((d) => !daysUsed(r).includes(d)).length;
-    let best = { r: base, free: freeOf(base) };
-    const tryDays = (days) => {
-      const r = recommend({ ...o, avoidDays: avoid0.concat(days) });
+
+    // 2. 공강 극대화
+    let bestFree = { r: base, free: freeOf(base) };
+    const tryFreeDays = (days) => {
+      const r = recommend({ ...o, theme: 'freeDay', avoidDays: avoid0.concat(days) });
       if (!enough(r)) return;
       const f = freeOf(r);
-      if (f > best.free || (f === best.free && r.credits > best.r.credits)) best = { r, free: f };
+      if (f > bestFree.free || (f === bestFree.free && r.credits > bestFree.r.credits)) bestFree = { r, free: f };
     };
-    for (const d of weekdays) tryDays([d]);
-    const first = weekdays.filter((d) => !daysUsed(best.r).includes(d));
-    for (const a of first) for (const b of weekdays) if (b !== a && !first.includes(b)) tryDays([...first, b].filter((x, i, arr) => arr.indexOf(x) === i));
-    out.push({ key: 'freeDay', result: best.r, days: daysUsed(best.r), free: weekdays.filter((d) => !daysUsed(best.r).includes(d)), start: earliest(best.r) });
-    const late = recommend({ ...o, minStart: 10 * 60 + 30 });
-    out.push({ key: 'lateStart', result: late, days: daysUsed(late), start: earliest(late), ok: enough(late) });
+    for (const d of [5, 1, 4, 2, 3]) tryFreeDays([d]); // 금공강, 월공강 우선 시도
+    out.push({
+      key: 'freeDay', title: '공강 극대화', result: bestFree.r,
+      days: daysUsed(bestFree.r), free: weekdays.filter((d) => !daysUsed(bestFree.r).includes(d)),
+      start: earliest(bestFree.r), quality: bestFree.r.quality
+    });
+
+    // 3. 늦게 시작 (오전 10:30 이후)
+    const late = recommend({ ...o, theme: 'lateStart', minStart: 10 * 60 + 30 });
+    out.push({
+      key: 'lateStart', title: '오후 집중', result: late,
+      days: daysUsed(late), start: earliest(late), quality: late.quality, ok: enough(late)
+    });
+
+    // 4. 이러닝 꿀조합 (원격 수업 적극 포함)
+    const smart = recommend({ ...o, theme: 'smartMix', include: { ...(o.include || {}), elearn: true } });
+    out.push({
+      key: 'smartMix', title: '이러닝 꿀조합', result: smart,
+      days: daysUsed(smart), start: earliest(smart), quality: smart.quality
+    });
+
     return out;
   }
 
@@ -554,10 +697,19 @@
     return out;
   }
 
-  // 결과의 시간을 내 시간표 수업 형식으로: [{ name, day, start, end, room }]
+  // 결과의 시간을 내 시간표 수업 형식으로: [{ name, prof, day, start, end, room }] (이러닝은 elearn: true)
   function toClasses(picks) {
     const out = [];
-    for (const p of picks || []) for (const [day, start, end, room] of p.section.t) out.push({ name: p.group.name, day, start, end, room: room || '' });
+    for (const p of picks || []) {
+      const prof = p.section.prof || p.group.prof || '';
+      if (!p.section.t || !p.section.t.length) {
+        out.push({ name: p.group.name, prof, elearn: true, m: 'elearn', room: '이러닝' });
+      } else {
+        for (const [day, start, end, room] of p.section.t) {
+          out.push({ name: p.group.name, prof, day, start, end, room: room || '' });
+        }
+      }
+    }
     return out;
   }
 

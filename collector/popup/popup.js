@@ -249,7 +249,11 @@ async function renderLectures() {
   const all = await chrome.storage.local.get(null);
   const terms = Object.entries(all).filter(([k]) => k.startsWith('lec:')).map(([, v]) => v);
   $('lecSummary').textContent = terms.length
-    ? terms.map((t) => `${t.year}년 ${t.term === 'B01011' ? '1학기' : t.term === 'B01012' ? '2학기' : t.term} · ${t.rows.length}개 과목 (${fmtTime(t.collectedAt)})`).join('\n')
+    ? terms.map((t) => {
+        const profCount = (t.rows || []).filter((r) => r.p).length;
+        const profText = profCount ? ` (교수명 ${profCount}개)` : '';
+        return `${t.year}년 ${t.term === 'B01011' ? '1학기' : t.term === 'B01012' ? '2학기' : t.term} · ${t.rows.length}개 과목${profText} (${fmtTime(t.collectedAt)})`;
+      }).join('\n')
     : '아직 받은 강의 시간표가 없습니다.';
   const st = all['kis:status'];
   const box = $('lecStatus');
@@ -329,13 +333,29 @@ async function init() {
 
   await initReference(tab, currentHost);      // 학교 기본 정보 (reference-popup.js)
 
-  if (currentHost === 'kis.kku.ac.kr') {
-    $('kis').hidden = false;
-    $('semBox').open = true;
-    $('lecFetch').addEventListener('click', async () => {
-      try { await chrome.tabs.sendMessage(tab.id, { type: 'kisFetch' }); } catch { $('lecStatus').textContent = '이 탭을 새로고침(F5)한 뒤 다시 눌러 주세요.'; }
-    });
-  }
+  if (currentHost === 'kis.kku.ac.kr') $('semBox').open = true;
+  $('lecFetch')?.addEventListener('click', async () => {
+    if (currentHost === 'kis.kku.ac.kr' && tab?.id) {
+      try {
+        await chrome.tabs.sendMessage(tab.id, { type: 'kisFetch' });
+        $('lecStatus').textContent = '강의 목록을 요청했습니다. 잠시만 기다려 주세요…';
+      } catch {
+        $('lecStatus').textContent = 'KIS 탭을 새로고침(F5)한 뒤 다시 눌러 주세요.';
+      }
+    } else {
+      const tabs = await chrome.tabs.query({ url: '*://kis.kku.ac.kr/*' });
+      if (tabs.length && tabs[0].id) {
+        try {
+          await chrome.tabs.sendMessage(tabs[0].id, { type: 'kisFetch' });
+          $('lecStatus').textContent = '열려 있는 KIS 탭에서 강의 목록을 요청했습니다…';
+        } catch {
+          $('lecStatus').textContent = '열려 있는 KIS 탭을 새로고침(F5)한 뒤 다시 시도해 주세요.';
+        }
+      } else {
+        $('lecStatus').textContent = 'KIS(학사정보시스템) 탭을 열고 로그인한 뒤 눌러 주세요.';
+      }
+    }
+  });
   if (currentHost === 'rule.konkuk.ac.kr') $('semBox').open = true;
 
   if (boards.length) {

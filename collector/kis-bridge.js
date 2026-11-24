@@ -1,19 +1,33 @@
 // 공지 줍줍 수집기 - 학사정보시스템 강의 목록 저장·자동 받기 (확장 안에서 실행)
 // - kis-hook.js 가 보낸 강의 목록에서 필요한 칸만 골라 chrome.storage.local 에 저장합니다. 저장되면 서비스 워커가 내 컴퓨터로 전달합니다.
 // - KIS에 로그인한 상태로 이 사이트를 열면 오늘 아직 안 받았을 때 자동으로 한 번 받습니다 (끄려면 팝업의 자동 수집).
-// - 교수 이름·수강 인원은 저장하지 않고, 내 이름·학번도 읽지 않습니다.
+// - 담당 교수명·과목명·요일시간·강의실을 수집하며, 개인 식별자(학생 본인 이름·학번)는 읽지 않습니다.
 (() => {
   const AUTO_MS = (globalThis.KKU_AUTO_HOURS ?? 12) * 3600000;
-  const slim = (r) => ({
-    n: String(r.CORS_NM ?? '').trim(),            // 과목명
-    t: String(r.LT_DAY_TIME ?? '').trim(),        // 강의시간(강의실) 예: 월0900-1030(인문사회관 101), 목1330-1500(...)
-    d: String(r.OPEN_SUST_NM ?? '').trim(),       // 개설 학과
-    k: String(r.POBT_DIV_NM ?? '').trim(),        // 이수구분 (전선·전필·교양 등)
-    y: String(r.OPEN_SHYR ?? '').trim(),          // 개설 학년
-    c: Number(r.PNT) || 0,                        // 학점
-    h: String(r.HAKSU_ID ?? '').trim(),           // 학수번호
-    s: String(r.CLSS_NO ?? '').trim()             // 분반
-  });
+  const slim = (r) => {
+    const t = String(r.LT_DAY_TIME ?? '').trim();
+    // 이러닝 / 원격 수업 여부 판별 (강의시간이 없거나 방식·비고에 원격/이러닝 표기)
+    const method = String(r.LT_MTHD_NM ?? r.LSSN_FORM_NM ?? r.CLS_MTHD ?? r.CYBER_DIV_NM ?? r.CYBER_AT ?? r.LSSN_MTHD_NM ?? r.RMK ?? '').trim();
+    const isElearn = !t || /이러닝|원격|온라인|cyber|사이버|e-learning/i.test(method) || /이러닝|원격|사이버/i.test(t);
+    const prof = String(
+      r.PROF_NM ?? r.LCTR_PROF_NM ?? r.RESP_PROF_NM ?? r.EMP_NM ?? r.STAFF_NM ??
+      r.CHRG_PROF_NM ?? r.PROF_KRN_NM ?? r.PROF ?? r.TEACHER_NM ?? ''
+    ).trim();
+    const item = {
+      n: String(r.CORS_NM ?? '').trim(),            // 과목명
+      t: t,                                         // 강의시간(강의실) 예: 월0900-1030(인문사회관 101), 목1330-1500(...)
+      d: String(r.OPEN_SUST_NM ?? '').trim(),       // 개설 학과
+      k: String(r.POBT_DIV_NM ?? '').trim(),        // 이수구분 (전선·전필·교양 등)
+      y: String(r.OPEN_SHYR ?? '').trim(),          // 개설 학년
+      c: Number(r.PNT) || 0,                        // 학점
+      h: String(r.HAKSU_ID ?? '').trim(),           // 학수번호
+      s: String(r.CLSS_NO ?? '').trim()             // 분반
+    };
+    if (prof) item.p = prof;                       // 담당 교수명
+    if (isElearn && !t) item.m = 'elearn';
+    else if (method && /실시간\s*온라인/i.test(method)) item.m = 'live';
+    return item;
+  };
 
   const setStatus = (patch) => chrome.storage.local.set({ 'kis:status': { ...patch, at: Date.now() } });
 

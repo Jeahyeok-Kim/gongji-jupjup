@@ -16,12 +16,14 @@
     let catalog = null;
     const cat = () => (catalog = catalog || P.buildCatalog(TT, root.GONGJI_COURSES));
 
+    const curTermKey = `${P.currentTerm(deps.now).year}-${P.currentTerm(deps.now).term}`;
     const st = {
       sub: ['week', 'history', 'plan'].includes(store.get('ttSub', 'week')) ? store.get('ttSub', 'week') : 'week',
       history: P.cleanHistory(store.get('history', [])),
       req: store.get('gradReq', null) || {},
       prefs: Object.assign({ target: null, grades: [], include: { major: true, general: true, elearn: true, live: true }, avoid: [], takenNow: true, semesters: null, locked: [], excluded: [] },
         store.get('planPrefs', null) || {}),
+      lastTerm: store.get('histLastTerm', curTermKey),
       paste: null,
       result: null
     };
@@ -211,14 +213,62 @@
       const Tx = T();
       const terms = termOptions();
       const cur = P.currentTerm(deps.now);
+      const defaultTerm = `${cur.year}-${cur.term}`;
+      const curTermVal = (st.lastTerm !== undefined && st.lastTerm !== null) ? st.lastTerm : defaultTerm;
+
+      // 전체 카탈로그(시간표 + 학사요람 전 학과 + 전체 교양) 목록
+      const allCatalog = Array.from(cat().byName.values());
+      const allCourseNames = [];
+      const seen = new Set();
+      const addCourse = (name) => {
+        const s = String(name || '').trim();
+        if (!s || seen.has(s)) return;
+        seen.add(s);
+        allCourseNames.push(s);
+      };
+
+      // 1. 내 학과 요람 과목 우선
+      const C = root.GongjiCurriculum;
+      if (C) {
+        for (const s of C.suggestions(dept(), root.GONGJI_COURSES)) addCourse(s.name);
+      }
+      // 2. 이번 학기 개설 과목
+      for (const g of groups) addCourse(g.name);
+      // 3. 전체 요람 과목 (타과 전공, 교양 등 전체)
+      for (const c of allCatalog) addCourse(c.name);
+
+      const names = h('datalist', { id: 'hist-names' });
+      // 초기 전체 과목 datalist 등록
+      names.replaceChildren(...allCourseNames.map((n) => h('option', { value: n })));
+
+      function updateSuggestions(query) {
+        const q = P.normName(query || '');
+        if (!q) {
+          names.replaceChildren(...allCourseNames.slice(0, 500).map((n) => h('option', { value: n })));
+          return;
+        }
+        const prefix = [];
+        const contains = [];
+        for (const item of allCatalog) {
+          const norm = P.normName(item.name);
+          if (norm.startsWith(q)) prefix.push(item.name);
+          else if (norm.includes(q)) contains.push(item.name);
+        }
+        const matched = [...new Set([...prefix, ...contains])].slice(0, 150);
+        names.replaceChildren(...matched.map((n) => h('option', { value: n })));
+      }
+
       const form = h('form', { class: 'hist-form', onsubmit: (e) => {
         e.preventDefault();
         const f = e.currentTarget;
         const name = f.elements.name.value.trim();
         const credit = Number(f.elements.credit.value);
         if (!name || !(credit > 0)) { toast(Tx.histBadInput); return; }
+        const termVal = f.elements.term.value;
+        st.lastTerm = termVal;
+        store.set('histLastTerm', termVal);
         const hit = cat().byName.get(P.normName(name));
-        const n = addItems([{ name, credit, kind: f.elements.kind.value, term: f.elements.term.value, code: hit ? hit.code : '', grade: f.elements.grade.value }]);
+        const n = addItems([{ name, credit, kind: f.elements.kind.value, term: termVal, code: hit ? hit.code : '', grade: f.elements.grade.value }]);
         if (!n) { toast(Tx.histDup); return; }
         f.elements.name.value = '';
         render();
@@ -227,31 +277,34 @@
         h('label', { class: 'wide' }, h('span', null, Tx.histName),
           h('input', { type: 'text', name: 'name', id: 'hist-name', list: 'hist-names', autocomplete: 'off', maxlength: '60', required: true,
             oninput: (e) => {
-              const hit = cat().byName.get(P.normName(e.target.value));
+              const val = e.target.value;
+              updateSuggestions(val);
+              const hit = cat().byName.get(P.normName(val));
               if (!hit) return;
               const f = e.target.form;
-              if (hit.credit) f.elements.credit.value = String(hit.credit);
+              if (hit.credit && f.elements.credit) f.elements.credit.value = String(hit.credit);
               const k = P.cleanKind(hit.kind);
-              if (KINDS.includes(k)) f.elements.kind.value = k;
-            } })),
+              if (KINDS.includes(k) && f.elements.kind) f.elements.kind.value = k;
+            },
+            onfocus: (e) => updateSuggestions(e.target.value) })),
         h('label', null, h('span', null, Tx.histKind),
           h('select', { name: 'kind' }, KINDS.map((k) => h('option', { value: k }, kindLabel(k))))),
         h('label', null, h('span', null, Tx.histCredit),
           h('input', { type: 'number', name: 'credit', min: '0.5', max: '9', step: '0.5', value: '3', inputmode: 'decimal', required: true })),
         h('label', null, h('span', null, Tx.histTerm),
-          h('select', { name: 'term' }, h('option', { value: '' }, Tx.histTermNone),
-            terms.map((x) => h('option', { value: x, selected: x === `${cur.year}-${cur.term}` ? true : null }, termName(x))))),
+          h('select', {
+            name: 'term',
+            onchange: (e) => {
+              st.lastTerm = e.target.value;
+              store.set('histLastTerm', st.lastTerm);
+            }
+          },
+            h('option', { value: '', selected: curTermVal === '' ? true : null }, Tx.histTermNone),
+            terms.map((x) => h('option', { value: x, selected: x === curTermVal ? true : null }, termName(x))))),
         h('label', null, h('span', null, Tx.histGrade),
           h('select', { name: 'grade' }, h('option', { value: '' }, Tx.gradeNone), P.GRADES.map((g) => h('option', { value: g }, g)))),
         h('button', { type: 'submit', class: 'btn primary' }, Tx.histAdd));
-      const names = h('datalist', { id: 'hist-names' }, cat().names.slice(0, 0));
-      // 자동완성 후보: 내 학과 요람 과목 + 교양 + 개설 과목 (많으면 느려서 앞 600개)
-      const opts = [];
-      const seen = new Set();
-      const C = root.GongjiCurriculum;
-      if (C) for (const s of C.suggestions(dept(), root.GONGJI_COURSES)) { if (!seen.has(s.name)) { seen.add(s.name); opts.push(s.name); } }
-      for (const g of groups) if (!seen.has(g.name)) { seen.add(g.name); opts.push(g.name); }
-      names.replaceChildren(...opts.slice(0, 600).map((n) => h('option', { value: n })));
+
       return [form, names];
     }
 
@@ -285,8 +338,23 @@
         const r = st.paste;
         box.append(h('p', { class: 'fine' }, Tx.histPastePreview(r.items.length, r.failed, r.skipped)));
         if (r.items.length) {
-          box.append(h('ul', { class: 'paste-list' }, r.items.map((x) => h('li', null,
-            h('span', { class: 'pl-name' }, x.name), h('span', { class: 'pl-meta' }, [kindLabel(x.kind), `${x.credit}`, termName(x.term)].filter(Boolean).join(' · '))))));
+          box.append(h('ul', { class: 'paste-list' }, r.items.map((x, idx) => h('li', { class: 'paste-item' },
+            h('div', { class: 'paste-item-info' },
+              h('span', { class: 'pl-name' }, x.name),
+              h('span', { class: 'pl-meta' }, [kindLabel(x.kind), x.credit ? `${x.credit}학점` : '', termName(x.term), x.grade].filter(Boolean).join(' · '))
+            ),
+            h('button', {
+              type: 'button',
+              class: 'pl-del-btn',
+              title: '이 과목 제외',
+              'aria-label': `${x.name} 제외`,
+              onclick: () => {
+                r.items.splice(idx, 1);
+                render();
+                const d = document.querySelector('.paste-box'); if (d) d.open = true;
+              }
+            }, '×')
+          ))));
           box.append(h('div', { class: 'row' },
             h('button', { type: 'button', class: 'btn small primary', onclick: () => {
               const n = addItems(r.items);
@@ -463,8 +531,8 @@
             timed.flatMap((p) => p.section.t.filter((x) => x[0] === d).map(([, a, b]) => h('div', {
               class: 'mini-class' + (p.section.mode === 'live' ? ' live' : ''),
               style: `top:${((toMin(a) - lo) / span) * 100}%;height:${((toMin(b) - toMin(a)) / span) * 100}%;--c:${deps.classColor(p.group.name)}`,
-              title: `${p.group.name} ${a}–${b}`
-            }, h('b', null, p.group.name), h('small', null, `${a}–${b}`))))))));
+              title: `${p.group.name} ${a}–${b}${p.section.prof ? ` (${p.section.prof} 교수)` : ''}`
+            }, h('b', null, p.group.name), p.section.prof ? h('span', { class: 'mini-prof', style: 'font-size:10px;display:block;opacity:.85;font-weight:600;' }, p.section.prof) : null, h('small', null, `${a}–${b}`))))))));
     }
 
     function renderResult() {
@@ -490,13 +558,14 @@
             h('p', { class: 'pr-name' }, g.name, isLocked ? h('span', { class: 'pr-lock' }, Tx.planLocked) : null),
             h('p', { class: 'pr-meta' }, [kindLabel(g.kind), `${g.credit}${Tx.creditUnit}`, Tx.planGradeN(g.grade), g.area === 'major' ? g.dept : ''].filter(Boolean).join(' · ')),
             h('p', { class: 'pr-when' },
+              sec.prof ? h('span', { class: 'pr-prof', style: 'font-weight:600;margin-right:6px;color:var(--text);' }, `${sec.prof} 교수`) : null,
               h('span', { class: 'pr-sec' }, Tx.planSection(sec.s)), ' ', when,
               sec.mode === 'live' ? h('span', { class: 'pr-mode' }, Tx.planModeLive) : null,
               room && sec.mode === '' ? h('span', { class: 'pr-room' }, room) : null)),
           h('div', { class: 'pr-actions' },
             x.alts.length ? h('select', { 'aria-label': Tx.planAlts(x.alts.length), onchange: (e) => { if (e.target.value) setLocked(x.key, e.target.value); } },
               h('option', { value: '' }, Tx.planAlts(x.alts.length)),
-              x.alts.map((s) => h('option', { value: s.s }, `${Tx.planSection(s.s)} · ${s.mode === 'elearn' ? Tx.planModeElearn : slotText(s.t)}`))) : null,
+              x.alts.map((s) => h('option', { value: s.s }, `${Tx.planSection(s.s)}${s.prof ? ` (${s.prof})` : ''} · ${s.mode === 'elearn' ? Tx.planModeElearn : slotText(s.t)}`))) : null,
             h('button', { type: 'button', class: 'btn small', 'aria-pressed': String(isLocked), onclick: () => setLocked(x.key, isLocked ? null : sec.s) }, isLocked ? Tx.planUnlock : Tx.planLock),
             h('button', { type: 'button', class: 'btn small', onclick: () => {
               st.prefs.excluded = [...new Set(p.excluded.concat(x.key))];
@@ -507,12 +576,20 @@
       const altTabs = st.alts ? h('div', { class: 'alt-tabs', role: 'tablist', 'aria-label': Tx.altTitle }, st.alts.map((a) => {
         const r2 = a.result;
         const wk = a.days.filter((d) => d >= 1 && d <= 5).length;
-        const sub = a.key === 'freeDay' ? (a.free && a.free.length ? Tx.altFree(a.free.map((d) => deps.dayName(d)).join('·')) : Tx.altNoFree)
-          : a.key === 'lateStart' ? (a.ok === false ? Tx.altShort : a.start !== null ? Tx.altStart(`${String(Math.floor(a.start / 60)).padStart(2, '0')}:${String(a.start % 60).padStart(2, '0')}`) : Tx.planModeElearn)
-            : Tx.altBalanced;
+        const elearnCount = r2.picks.filter((x) => !x.section.t.length || x.section.m === 'elearn').length;
+        let sub = Tx.altBalanced;
+        if (a.key === 'freeDay') {
+          sub = (a.free && a.free.length) ? Tx.altFree(a.free.map((d) => deps.dayName(d)).join('·')) : Tx.altNoFree;
+        } else if (a.key === 'lateStart') {
+          sub = (a.ok === false) ? Tx.altShort : (a.start !== null ? Tx.altStart(`${String(Math.floor(a.start / 60)).padStart(2, '0')}:${String(a.start % 60).padStart(2, '0')}`) : Tx.planModeElearn);
+        } else if (a.key === 'smartMix') {
+          sub = elearnCount ? `이러닝 ${elearnCount}과목` : Tx.altBalanced;
+        } else if (a.key === 'balanced') {
+          sub = (a.quality && a.quality.lunchBreak) ? '점심시간 확보' : Tx.altBalanced;
+        }
         return h('button', { type: 'button', role: 'tab', class: 'alt-tab', 'aria-selected': String(a.key === st.altKey),
           onclick: () => { st.altKey = a.key; st.result = a.result; renderPlan(); } },
-          h('span', { class: 'alt-name' }, Tx['alt_' + a.key]),
+          h('span', { class: 'alt-name' }, Tx['alt_' + a.key] || a.title || a.key),
           h('strong', null, `${r2.credits}${Tx.creditUnit}`, h('small', null, ` · ${Tx.altDays(wk)}`)),
           h('span', { class: 'alt-sub' }, sub));
       })) : null;

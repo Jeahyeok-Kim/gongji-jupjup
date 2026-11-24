@@ -44,6 +44,16 @@ class BuildTest(unittest.TestCase):
         self.assertEqual((by['현장실습']['m'], by['현장실습']['t']), ('elearn', []))
         self.assertEqual(by['데이터베이스']['m'], 'live')
 
+    def test_build_preserves_professor_name(self):
+        rows = [
+            {'n': '인공지능', 't': '월1000-1130(공학관 101)', 'd': '컴퓨터공학과', 'k': '전선', 'c': 3, 'h': 'AI01', 's': '01', 'p': '홍길동'},
+            {'n': '머신러닝', 't': '', 'm': 'elearn', 'c': 3, 'h': 'ML01', 's': '01', 'prof': '이순신'},
+        ]
+        r = bt.build([{'year': '2026', 'term': 'B01012', 'collectedAt': 1, 'rows': rows}])
+        by = {c['n']: c for c in r['courses']}
+        self.assertEqual(by['인공지능']['p'], '홍길동')
+        self.assertEqual(by['머신러닝']['p'], '이순신')
+
     def test_class_mode_mixed_rooms_is_classroom(self):
         slots = bt.parse_slots('월1000-1130(실시간온라인), 수1000-1130(공학관 1)')
         self.assertEqual(bt.class_mode('x', slots), '', '한 번이라도 강의실에 가면 강의실 수업')
