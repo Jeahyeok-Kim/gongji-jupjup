@@ -48,24 +48,136 @@
     return out;
   }
 
-  // 과목명 자동완성 후보: 내 학과 과목을 먼저, 그다음 교양. 같은 이름은 한 번만.
-  // 각 항목: { name, label }  (label 은 "전선 · 2-1 · 3학점" 같은 보조 설명)
-  function suggestions(deptName, data) {
-    const seen = new Set();
-    const out = [];
-    const add = (name, label) => { if (name && !seen.has(name)) { seen.add(name); out.push({ name, label }); } };
-    const d = findDept(deptName, data);
-    if (d) for (const [term, kind, name, credit] of d.courses) add(name, [kind, term, credit ? `${credit}학점` : ''].filter(Boolean).join(' · '));
-    for (const [kind, area, name, credit] of dataOf(data).general) add(name, [`${kind}교양`.replace('소양교양', 'KU소양'), area, credit ? `${credit}학점` : ''].filter(Boolean).join(' · '));
-    // 학과를 고르지 않았거나 다른 학과 과목(복수전공 등)을 넣을 때를 위해 나머지 학과 과목도 뒤에 붙인다.
-    for (const c of dataOf(data).colleges || []) {
-      for (const od of c.depts) {
-        if (d && od.name === d.name) continue;
-        for (const [term, kind, name, credit] of od.courses) add(name, [od.name, kind, term, credit ? `${credit}학점` : ''].filter(Boolean).join(' · '));
+  const CHOSUNG = ['ㄱ','ㄲ','ㄴ','ㄷ','ㄸ','ㄹ','ㅁ','ㅂ','ㅃ','ㅅ','ㅆ','ㅇ','ㅈ','ㅉ','ㅊ','ㅋ','ㅌ','ㅍ','ㅎ'];
+  const JUNGSUNG = ['ㅏ','ㅐ','ㅑ','ㅒ','ㅓ','ㅔ','ㅕ','ㅖ','ㅗ','ㅘ','ㅙ','ㅚ','ㅛ','ㅜ','ㅝ','ㅞ','ㅟ','ㅠ','ㅡ','ㅢ','ㅣ'];
+  const JONGSUNG = ['', 'ㄱ','ㄲ','ㄳ','ㄴ','ㄵ','ㄶ','ㄷ','ㄹ','ㄺ','ㄻ','ㄼ','ㄽ','ㄾ','ㄿ','ㅀ','ㅁ','ㅂ','ㅄ','ㅅ','ㅆ','ㅇ','ㅈ','ㅊ','ㅋ','ㅌ','ㅍ','ㅎ'];
+
+  function decomposeHangul(str) {
+    if (!str) return '';
+    let out = '';
+    for (let i = 0; i < str.length; i++) {
+      const code = str.charCodeAt(i);
+      if (code >= 0xAC00 && code <= 0xD7A3) {
+        const s = code - 0xAC00;
+        const cho = Math.floor(s / 588);
+        const jung = Math.floor((s % 588) / 28);
+        const jong = s % 28;
+        out += CHOSUNG[cho] + JUNGSUNG[jung] + (jong > 0 ? JONGSUNG[jong] : '');
+      } else {
+        out += str[i];
       }
     }
     return out;
   }
 
-  return { colleges, findDept, gradeOf, byGrade, general, suggestions };
+  function getChosung(str) {
+    if (!str) return '';
+    let out = '';
+    for (let i = 0; i < str.length; i++) {
+      const code = str.charCodeAt(i);
+      if (code >= 0xAC00 && code <= 0xD7A3) {
+        out += CHOSUNG[Math.floor((code - 0xAC00) / 588)];
+      } else {
+        out += str[i];
+      }
+    }
+    return out;
+  }
+
+  // 한글 퍼지 및 오타 허용 매칭 (예: '컴퓨테' 입력 시 '컴퓨터구조' 매칭, 'ㅋㅍㅌ' 입력 시 '컴퓨터' 매칭)
+  function matchCourseName(query, target) {
+    if (!query || !target) return 0;
+    const qNorm = String(query).replace(/\s+/g, '').toLowerCase();
+    const tNorm = String(target).replace(/\s+/g, '').toLowerCase();
+    if (!qNorm || !tNorm) return 0;
+
+    // 1. 정확한 시작 (가장 높은 점수)
+    if (tNorm.startsWith(qNorm)) return 100;
+    // 2. 정확한 포함
+    if (tNorm.includes(qNorm)) return 80;
+
+    // 3. 자모 분해 매칭
+    const qDec = decomposeHangul(qNorm);
+    const tDec = decomposeHangul(tNorm);
+    if (tDec.startsWith(qDec)) return 90;
+    if (tDec.includes(qDec)) return 70;
+
+    // 4. 초성 매칭 (예: ㅋㅍㅌ구조 -> 컴퓨터구조)
+    const tCho = getChosung(tNorm);
+    if (tCho.startsWith(qNorm) || tCho.includes(qNorm)) return 65;
+
+    // 5. 오타 허용 (1글자 오타 또는 접두사 일치)
+    if (qNorm.length >= 2) {
+      const qPrefix = qNorm.slice(0, Math.max(2, qNorm.length - 1));
+      if (tNorm.startsWith(qPrefix)) return 60;
+      if (tNorm.includes(qPrefix)) return 45;
+
+      // 자모 레벨에서 공통 접두사가 3자 이상인 경우 (예: 컴퓨테 vs 컴퓨터)
+      if (qDec.length >= 3) {
+        let common = 0;
+        for (let i = 0; i < Math.min(qDec.length, tDec.length); i++) {
+          if (tDec[i] === qDec[i]) common++;
+          else break;
+        }
+        if (common >= qDec.length - 1 && common >= 3) {
+          return 55;
+        }
+      }
+    }
+
+    return 0;
+  }
+
+  // 과목명 자동완성 후보: 내 학과 과목을 먼저, 그다음 교양. 같은 이름은 한 번만.
+  // 각 항목: { name, label }  (label 은 "전선 · 2-1 · 3학점" 같은 보조 설명)
+  function suggestions(deptName, data) {
+    const seen = new Set();
+    const out = [];
+    const profDict = (typeof window !== 'undefined' && window.GONGJI_PROFESSORS) || null;
+    const tt = (typeof window !== 'undefined' && window.GONGJI_TIMETABLE && window.GONGJI_TIMETABLE.courses) || null;
+
+    const findProf = (name) => {
+      if (profDict) {
+        if (profDict[`${name}:01`]) return profDict[`${name}:01`];
+        for (const [k, p] of Object.entries(profDict)) {
+          if (k.startsWith(`${name}:`) && p) return p;
+        }
+      }
+      if (tt) {
+        const hit = tt.find((c) => c.n === name && c.p);
+        if (hit && hit.p) return hit.p;
+      }
+      return '';
+    };
+
+    const add = (name, parts) => {
+      if (!name || seen.has(name)) return;
+      seen.add(name);
+      const prof = findProf(name);
+      const meta = [...parts, prof ? `${prof} 교수` : ''].filter(Boolean).join(' · ');
+      out.push({ name, label: meta, prof });
+    };
+
+    const d = findDept(deptName, data);
+    if (d) {
+      for (const [term, kind, name, credit] of d.courses) {
+        add(name, [kind, term, credit ? `${credit}학점` : '']);
+      }
+    }
+    for (const [kind, area, name, credit] of dataOf(data).general) {
+      add(name, [`${kind}교양`.replace('소양교양', 'KU소양'), area, credit ? `${credit}학점` : '']);
+    }
+    // 학과를 고르지 않았거나 다른 학과 과목(복수전공 등)을 넣을 때를 위해 나머지 학과 과목도 뒤에 붙인다.
+    for (const c of dataOf(data).colleges || []) {
+      for (const od of c.depts) {
+        if (d && od.name === d.name) continue;
+        for (const [term, kind, name, credit] of od.courses) {
+          add(name, [od.name, kind, term, credit ? `${credit}학점` : '']);
+        }
+      }
+    }
+    return out;
+  }
+
+  return { colleges, findDept, gradeOf, byGrade, general, suggestions, decomposeHangul, getChosung, matchCourseName };
 }));

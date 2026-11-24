@@ -58,11 +58,11 @@
   }
 
   const EXAMPLE_TIMETABLE = [
-    { day: 1, start: '13:30', end: '15:00', prof: '김건국', room: '공학관 301', names: { ko: '이산수학', en: 'Discrete Math', zh: '离散数学', ja: '離散数学' } },
-    { day: 3, start: '13:00', end: '14:30', prof: '박인공', room: '창의예술관 204', names: { ko: '컴퓨터공학개론', en: 'Intro to Computer Eng.', zh: '计算机工程概论', ja: 'コンピュータ工学概論' } },
-    { day: 4, start: '16:30', end: '18:00', prof: '이소프트', room: '자연과학관 105', names: { ko: '자료구조', en: 'Data Structures', zh: '数据结构', ja: 'データ構造' } },
+    { day: 1, start: '13:30', end: '15:00', prof: '선우하식', room: '자연과학관 516', names: { ko: '이산수학', en: 'Discrete Math', zh: '离散数学', ja: '離散数学' } },
+    { day: 3, start: '13:00', end: '14:30', prof: '이철원', room: '국제교육관 302-2', names: { ko: '컴퓨터공학개론', en: 'Intro to Computer Eng.', zh: '计算机工程概论', ja: 'コンピュータ工学概論' } },
+    { day: 4, start: '16:30', end: '18:00', prof: '김창호', room: '자연과학관 206', names: { ko: '자료구조', en: 'Data Structures', zh: '数据结构', ja: 'データ構造' } },
     { day: 5, start: '10:30', end: '12:00', prof: 'Smith', room: '국제교육관 402', names: { ko: '대학영어', en: 'College English', zh: '大学英语', ja: '大学英語' } },
-    { elearn: true, prof: '최글로벌', names: { ko: '인공지능과미래사회', en: 'AI & Future Society', zh: '人工智能与未来社会', ja: 'AIと未来社会' } }
+    { elearn: true, prof: '이철원', names: { ko: '인공지능과미래사회', en: 'AI & Future Society', zh: '人工智能与未来社会', ja: 'AIと未来社会' } }
   ];
 
   // 내 정보(지원 자격 확인용): 과정·학년·학적·유학생·학과. 학년(또는 대학원)을 고르면 켜진다
@@ -636,7 +636,7 @@
       ondragend: (ev) => { ev.currentTarget.classList.remove('is-drag'); document.body.classList.remove('is-dragging'); }
     },
     h('div', { class: 'bcard-top' }, ddayBadge(n), sub ? subTag(n, sub) : null,
-      e && e.result ? h('span', { class: 'bres ' + e.result }, T.result[e.result]) : null),
+      e && e.result ? h('span', { class: 'bres ' + resultTypeClass(e.result) }, (T.result && T.result[e.result]) || e.result) : null),
     h('button', { type: 'button', class: 'bcard-title', 'aria-haspopup': 'dialog', onclick: () => openDetail(n.id, false, ids) }, titleOf(n)),
     pg.total ? h('div', { class: 'bcard-prog' },
       h('span', { class: 'bbar', 'aria-hidden': 'true' }, h('i', { style: `width:${(pg.done / pg.total) * 100}%` })),
@@ -657,44 +657,232 @@
     const ids = K.STAGES.flatMap((s2) => cols[s2].map((n) => n.id));
     const sumEl = $('#board-sum');
     if (sumEl) sumEl.textContent = T.boardSummary(sum);
-    if (!ids.length) {
-      box.classList.add('is-empty');
-      fill(box, h('div', { class: 'board-empty' },
-        h('div', { class: 'be-icon-circle' }, '⭐'),
-        h('h3', { class: 'be-title' }, T.boardEmptyTitle),
-        h('p', { class: 'be-desc' }, T.boardEmpty),
-        h('div', { class: 'be-stages' },
-          ...K.STAGES.map((s, idx) => [
-            h('span', { class: `be-stage-pill ${s}` },
-              h('span', { class: `bcol-dot ${s}` }),
-              T.stage[s]
-            ),
-            idx < K.STAGES.length - 1 ? h('span', { class: 'be-stage-arrow', 'aria-hidden': 'true' }, '→') : null
-          ]).flat().filter(Boolean)
-        ),
-        h('div', { class: 'be-actions' },
-          h('button', { type: 'button', class: 'btn primary be-main-btn', onclick: () => goList({ due: 'soon', sort: 'deadline' }) }, T.boardEmptyBtn),
-          h('div', { class: 'be-quick-chips' },
-            h('span', { class: 'be-chip-hint' }, state.lang === 'en' ? 'Quick look:' : state.lang === 'zh' ? '快速查看:' : state.lang === 'ja' ? 'クイック表示:' : '추천 바로보기:'),
-            h('button', { type: 'button', class: 'chip be-chip', onclick: () => goList({ category: '장학', sort: 'deadline' }) }, '💰 장학'),
-            h('button', { type: 'button', class: 'chip be-chip', onclick: () => goList({ query: '다드림', sort: 'deadline' }) }, '⭐ 다드림'),
-            h('button', { type: 'button', class: 'chip be-chip', onclick: () => goList({ category: '취업', sort: 'deadline' }) }, '💼 취업')
+
+    const hasCards = ids.length > 0;
+    const guideEl = $('#board-pipeline-guide');
+    if (guideEl) {
+      if (!hasCards) {
+        guideEl.hidden = false;
+        fill(guideEl,
+          h('div', { class: 'bpg-left' },
+            h('span', { class: 'bpg-tag' }, '💡 PIPELINE'),
+            h('div', { class: 'bpg-steps' },
+              h('span', { class: 'bpg-step interest' }, h('span', { class: 'bcol-dot interest' }), T.stage.interest || '관심'),
+              h('span', { class: 'bpg-arrow', 'aria-hidden': 'true' }, '→'),
+              h('span', { class: 'bpg-step prep' }, h('span', { class: 'bcol-dot prep' }), T.stage.prep || '준비 중'),
+              h('span', { class: 'bpg-arrow', 'aria-hidden': 'true' }, '→'),
+              h('span', { class: 'bpg-step done' }, h('span', { class: 'bcol-dot done' }), T.stage.done || '지원 완료'),
+              h('span', { class: 'bpg-arrow', 'aria-hidden': 'true' }, '→'),
+              h('span', { class: 'bpg-step result' }, h('span', { class: 'bcol-dot result' }), T.stage.result || '결과')
+            )
+          ),
+          h('div', { class: 'bpg-chips' },
+            h('span', { class: 'bpg-chip-label' }, state.lang === 'en' ? 'Explore:' : '추천 바로담기:'),
+            h('button', { type: 'button', class: 'chip small bpg-chip', onclick: () => goList({ due: 'soon', sort: 'deadline' }) }, '🔥 마감 임박'),
+            h('button', { type: 'button', class: 'chip small bpg-chip', onclick: () => goList({ category: '장학', sort: 'deadline' }) }, '💰 장학금'),
+            h('button', { type: 'button', class: 'chip small bpg-chip', onclick: () => goList({ category: '공모전', sort: 'deadline' }) }, '🏆 공모전')
           )
-        )
-      ));
-      return;
+        );
+      } else {
+        guideEl.hidden = true;
+        guideEl.replaceChildren();
+      }
     }
+
     box.classList.remove('is-empty');
-    fill(box, ...K.STAGES.map((stage) => h('section', {
-      class: 'bcol', 'data-stage': stage, 'aria-label': T.stage[stage],
-      ondragover: (ev) => { ev.preventDefault(); ev.dataTransfer.dropEffect = 'move'; ev.currentTarget.classList.add('is-over'); },
-      ondragleave: (ev) => { if (!ev.currentTarget.contains(ev.relatedTarget)) ev.currentTarget.classList.remove('is-over'); },
-      ondrop: (ev) => { ev.preventDefault(); ev.currentTarget.classList.remove('is-over'); const id = ev.dataTransfer.getData('text/plain'); if (id) moveStage(id, stage); }
-    },
-    h('header', { class: 'bcol-head' },
-      h('span', { class: 'bcol-dot ' + stage, 'aria-hidden': 'true' }), h('h3', null, T.stage[stage]), h('span', { class: 'bcol-count' }, String(cols[stage].length))),
-    cols[stage].length ? h('ul', { class: 'bcards' }, cols[stage].map((n) => boardCard(n, stage, ids)))
-      : h('p', { class: 'bcol-empty' }, T.stageEmpty[stage]))));
+    fill(box, ...K.STAGES.map((stage) => {
+      const stageCards = cols[stage];
+      let bodyContent;
+      if (stageCards.length) {
+        bodyContent = h('ul', { class: 'bcards' }, stageCards.map((n) => boardCard(n, stage, ids)));
+      } else if (!hasCards && stage === 'interest') {
+        bodyContent = h('div', { class: 'bcol-guide-card' },
+          h('div', { class: 'bgc-icon' }, '⭐'),
+          h('strong', { class: 'bgc-title' }, T.boardEmptyTitle || '관심 공지를 담아보세요'),
+          h('p', { class: 'bgc-desc' }, T.boardEmpty || '공지에서 ★를 누르면 이 칸에 들어와요.'),
+          h('button', { type: 'button', class: 'btn primary small bgc-btn', onclick: () => goList({ due: 'soon', sort: 'deadline' }) }, T.boardEmptyBtn || '마감 가까운 공지 보기')
+        );
+      } else {
+        bodyContent = h('p', { class: 'bcol-empty' }, T.stageEmpty[stage]);
+      }
+
+      return h('section', {
+        class: 'bcol', 'data-stage': stage, 'aria-label': T.stage[stage],
+        ondragover: (ev) => { ev.preventDefault(); ev.dataTransfer.dropEffect = 'move'; ev.currentTarget.classList.add('is-over'); },
+        ondragleave: (ev) => { if (!ev.currentTarget.contains(ev.relatedTarget)) ev.currentTarget.classList.remove('is-over'); },
+        ondrop: (ev) => { ev.preventDefault(); ev.currentTarget.classList.remove('is-over'); const id = ev.dataTransfer.getData('text/plain'); if (id) moveStage(id, stage); }
+      },
+      h('header', { class: 'bcol-head' },
+        h('span', { class: 'bcol-dot ' + stage, 'aria-hidden': 'true' }),
+        h('h3', null, T.stage[stage]),
+        h('span', { class: 'bcol-count' }, String(stageCards.length))
+      ),
+      bodyContent);
+    }));
+  }
+
+  function resultTypeClass(res) {
+    if (!res) return '';
+    const r = String(res).toLowerCase();
+    if (/대상|최우수|우수|장려|입선|입상|수상|상금|award/.test(r)) return 'is-award';
+    if (/합격|선정|수료|이수|완료|pass|select/.test(r)) return 'is-pass';
+    if (/서류|본선|면접|milestone/.test(r)) return 'is-milestone';
+    if (/대기|예비|wait/.test(r)) return 'is-wait';
+    if (/불합격|미선정|미이수|탈락|fail/.test(r)) return 'is-fail';
+    return 'is-custom';
+  }
+
+  function resultCategoryPresets(n) {
+    const benefitInfo = L && L.classifyBenefit ? L.classifyBenefit(n) : { subs: [] };
+    const primarySub = (benefitInfo.subs && benefitInfo.subs[0]) || '';
+    const title = String((n && n.title) || '').toLowerCase();
+    const isContest = primarySub === 'contest' || primarySub === 'prize' || /공모전|대회|경진대회|해커톤|시상|콘테스트|공모|미디어아트|창작|영상제/.test(title);
+    const isScholarship = primarySub === 'scholarship' || primarySub === 'support' || /장학|장학생|지원사업|지원금|수혜/.test(title);
+    const isEdu = primarySub === 'edu' || primarySub === 'activity' || primarySub === 'event' || /교육|특강|워크숍|아카데미|이수|수료|봉사|캠프|세미나|포럼/.test(title);
+    const isCareer = primarySub === 'career' || primarySub === 'jobinfo' || /인턴|채용|서포터즈|기자단|홍보대사|크루|동아리|모집/.test(title);
+
+    if (isContest) {
+      return {
+        theme: 'contest',
+        hint: '🏆 공모전·대회 맞춤 결과',
+        presets: [
+          { text: '대상', badge: '🏆 대상', type: 'award' },
+          { text: '최우수상', badge: '🥇 최우수상', type: 'award' },
+          { text: '우수상', badge: '🥈 우수상', type: 'award' },
+          { text: '장려상', badge: '🥉 장려상', type: 'award' },
+          { text: '입선', badge: '🎖️ 입선', type: 'award' },
+          { text: '수상(입상)', badge: '🏅 수상', type: 'award' },
+          { text: '본선 진출', badge: '🎯 본선진출', type: 'milestone' },
+          { text: '미선정/탈락', badge: '❌ 미선정', type: 'fail' }
+        ]
+      };
+    }
+    if (isScholarship) {
+      return {
+        theme: 'scholarship',
+        hint: '💰 장학금·지원금 맞춤 결과',
+        presets: [
+          { text: '선정 (수혜)', badge: '🎉 선정', type: 'pass' },
+          { text: '추가 합격', badge: '✨ 추가합격', type: 'pass' },
+          { text: '심사 대기', badge: '⏳ 심사대기', type: 'wait' },
+          { text: '미선정/탈락', badge: '❌ 미선정', type: 'fail' }
+        ]
+      };
+    }
+    if (isEdu) {
+      return {
+        theme: 'edu',
+        hint: '📜 교육·활동 맞춤 결과',
+        presets: [
+          { text: '이수/수료', badge: '📜 수료', type: 'pass' },
+          { text: '참가 완료', badge: '✨ 참가완료', type: 'pass' },
+          { text: '우수 수료', badge: '🏆 우수수료', type: 'award' },
+          { text: '미이수', badge: '❌ 미이수', type: 'fail' }
+        ]
+      };
+    }
+    if (isCareer) {
+      return {
+        theme: 'career',
+        hint: '💼 채용·대외활동 맞춤 결과',
+        presets: [
+          { text: '최종 합격', badge: '🎉 최종합격', type: 'pass' },
+          { text: '서류 합격', badge: '📄 서류합격', type: 'milestone' },
+          { text: '면접 대기', badge: '💬 면접대기', type: 'milestone' },
+          { text: '예비 번호', badge: '⏳ 예비', type: 'wait' },
+          { text: '불합격', badge: '❌ 불합격', type: 'fail' }
+        ]
+      };
+    }
+    return {
+      theme: 'general',
+      hint: '🎯 지원 결과 선택',
+      presets: [
+        { text: '합격', badge: '🎉 합격', type: 'pass' },
+        { text: '수상', badge: '🏆 수상', type: 'award' },
+        { text: '선정', badge: '🌟 선정', type: 'pass' },
+        { text: '수료', badge: '📜 수료', type: 'pass' },
+        { text: '불합격', badge: '❌ 불합격', type: 'fail' }
+      ]
+    };
+  }
+
+  function renderResultSection(n, e, checks) {
+    const curResult = (e && e.result) || '';
+    const cat = resultCategoryPresets(n);
+    const activeClass = resultTypeClass(curResult);
+
+    const setResult = (val) => {
+      const trimmed = (val || '').trim();
+      setTrack(K.update(state.track, n.id, { result: trimmed }), n.id);
+      if (trimmed) toast(`결과가 [${trimmed}](으)로 저장되었습니다.`);
+      else toast('결과가 초기화되었습니다.');
+    };
+
+    return h('div', { class: 'result-tracker-wrap' },
+      h('div', { class: 'result-head-row' },
+        h('span', { class: 'result-guide-label' }, cat.hint),
+        curResult ? h('div', { class: 'result-active-pill ' + activeClass },
+          h('strong', null, curResult),
+          h('button', {
+            type: 'button',
+            class: 'result-clear-btn',
+            title: '결과 초기화',
+            'aria-label': '결과 초기화',
+            onclick: () => setResult('')
+          }, '✕')
+        ) : h('span', { class: 'fine' }, '결과를 선택하거나 직접 입력하세요')
+      ),
+      h('div', { class: 'result-presets-grid', role: 'group', 'aria-label': '추천 결과 목록' },
+        cat.presets.map((p) => {
+          const isSelected = curResult === p.badge || curResult === p.text;
+          return h('button', {
+            type: 'button',
+            class: 'result-preset-chip ' + (isSelected ? `is-active is-${p.type}` : ''),
+            'aria-pressed': String(isSelected),
+            onclick: () => setResult(isSelected ? '' : p.badge)
+          }, p.badge);
+        })
+      ),
+      h('form', {
+        class: 'result-custom-row',
+        onsubmit: (ev) => {
+          ev.preventDefault();
+          const inp = ev.currentTarget.elements.customResult;
+          setResult(inp ? inp.value : '');
+        }
+      },
+        h('input', {
+          name: 'customResult',
+          type: 'text',
+          class: 'result-custom-input',
+          maxlength: '40',
+          value: curResult,
+          placeholder: '직접 결과 입력 (예: 대상, 상금 300만원, 우수상, 예비 2번...)',
+          'aria-label': '직접 결과 입력'
+        }),
+        h('button', { type: 'submit', class: 'btn small primary result-custom-submit' }, '저장')
+      ),
+      h('textarea', {
+        class: 'memo result-memo',
+        rows: '2',
+        maxlength: '500',
+        placeholder: '결과 상세 메모 (예: 상금 수령 계좌 제출 완료, 면접 피드백, 소감 등)',
+        'aria-label': '결과 상세 메모',
+        oninput: (ev) => {
+          const v = ev.target.value;
+          clearTimeout(memoTimer);
+          memoTimer = setTimeout(() => setTrack(K.update(state.track, n.id, { memo: v }), n.id, true), 350);
+        }
+      }, (e && e.memo) || ''),
+      checks && checks.length ? h('details', { class: 'result-prev-checks' },
+        h('summary', null, `이전 준비물 체크리스트 (${checks.filter((c) => c.d).length}/${checks.length} 완료)`),
+        h('ul', { class: 'checks' }, checks.map((c, i) => h('li', { class: c.d ? 'is-done' : '' },
+          h('label', null,
+            h('input', { type: 'checkbox', checked: c.d ? true : null, onchange: () => setTrack(K.toggleCheck(state.track, n.id, i), n.id) }),
+            h('span', null, c.t)),
+          h('button', { type: 'button', class: 'icon-x', 'aria-label': `${c.t} ${t().histRemove}`, onclick: () => setTrack(K.removeCheck(state.track, n.id, i), n.id) }, '×'))))) : null
+    );
   }
 
   // 공지 상세의 '지원 준비': 단계 · 준비물 체크리스트 · 메모
@@ -709,30 +897,29 @@
       h('div', { class: 'stage-seg', role: 'group', 'aria-label': T.boardTitle },
         K.STAGES.map((s2) => h('button', { type: 'button', 'aria-pressed': String(stage === s2), onclick: () => moveStage(n.id, s2) },
           h('span', { class: 'bcol-dot ' + s2, 'aria-hidden': 'true' }), T.stage[s2]))),
-      stage === 'result' ? h('div', { class: 'result-seg', role: 'group' },
-        ['pass', 'fail'].map((r) => h('button', { type: 'button', class: 'chip small', 'aria-pressed': String(!!e && e.result === r),
-          onclick: () => setTrack(K.update(state.track, n.id, { result: e && e.result === r ? '' : r }), n.id) }, T.result[r]))) : null,
-      checks.length ? h('ul', { class: 'checks' }, checks.map((c, i) => h('li', { class: c.d ? 'is-done' : '' },
-        h('label', null,
-          h('input', { type: 'checkbox', checked: c.d ? true : null, onchange: () => setTrack(K.toggleCheck(state.track, n.id, i), n.id) }),
-          h('span', null, c.t)),
-        h('button', { type: 'button', class: 'icon-x', 'aria-label': `${c.t} ${T.histRemove}`, onclick: () => setTrack(K.removeCheck(state.track, n.id, i), n.id) }, '×')))) : null,
-      h('form', { class: 'check-add', onsubmit: (ev) => {
-        ev.preventDefault();
-        const input = ev.currentTarget.elements.c;
-        const v = input ? input.value : '';
-        if (v && v.trim()) {
-          setTrack(K.addCheck(state.track, n.id, v.trim()), n.id);
-          input.value = '';
-        }
-      } },
-        h('input', { name: 'c', type: 'text', maxlength: '40', placeholder: T.checkPh, 'aria-label': T.checkPh }),
-        h('button', { type: 'submit', class: 'btn small' }, T.checkAdd)),
-      h('div', { class: 'check-sugg' }, (T.checkSuggest || K.SUGGEST).filter((x) => !checks.some((c) => c.t === x)).slice(0, 6)
-        .map((x) => h('button', { type: 'button', class: 'chip small', onclick: () => setTrack(K.addCheck(state.track, n.id, x), n.id) }, '+ ' + x))),
-      h('textarea', { class: 'memo', rows: '2', maxlength: '500', placeholder: T.memoPh, 'aria-label': T.memoPh,
-        oninput: (ev) => { const v = ev.target.value; clearTimeout(memoTimer); memoTimer = setTimeout(() => setTrack(K.update(state.track, n.id, { memo: v }), n.id, true), 350); } },
-      (e && e.memo) || ''));
+      stage === 'result' ? renderResultSection(n, e, checks) : [
+        checks.length ? h('ul', { class: 'checks' }, checks.map((c, i) => h('li', { class: c.d ? 'is-done' : '' },
+          h('label', null,
+            h('input', { type: 'checkbox', checked: c.d ? true : null, onchange: () => setTrack(K.toggleCheck(state.track, n.id, i), n.id) }),
+            h('span', null, c.t)),
+          h('button', { type: 'button', class: 'icon-x', 'aria-label': `${c.t} ${T.histRemove}`, onclick: () => setTrack(K.removeCheck(state.track, n.id, i), n.id) }, '×')))) : null,
+        h('form', { class: 'check-add', onsubmit: (ev) => {
+          ev.preventDefault();
+          const input = ev.currentTarget.elements.c;
+          const v = input ? input.value : '';
+          if (v && v.trim()) {
+            setTrack(K.addCheck(state.track, n.id, v.trim()), n.id);
+            input.value = '';
+          }
+        } },
+          h('input', { name: 'c', type: 'text', maxlength: '40', placeholder: T.checkPh, 'aria-label': T.checkPh }),
+          h('button', { type: 'submit', class: 'btn small' }, T.checkAdd)),
+        h('div', { class: 'check-sugg' }, (T.checkSuggest || K.SUGGEST).filter((x) => !checks.some((c) => c.t === x)).slice(0, 6)
+          .map((x) => h('button', { type: 'button', class: 'chip small', onclick: () => setTrack(K.addCheck(state.track, n.id, x), n.id) }, '+ ' + x))),
+        h('textarea', { class: 'memo', rows: '2', maxlength: '500', placeholder: T.memoPh, 'aria-label': T.memoPh,
+          oninput: (ev) => { const v = ev.target.value; clearTimeout(memoTimer); memoTimer = setTimeout(() => setTrack(K.update(state.track, n.id, { memo: v }), n.id, true), 350); } },
+        (e && e.memo) || '')
+      ]);
   }
 
   // ---------- 공지 보기 바꾸기: 목록 · 표 · 시간 맞춤 추천 ----------
@@ -1269,8 +1456,8 @@
         class: 'btn small btn-card-img',
         title: T.cardNewsTitle || '카드뉴스 저장 및 공유',
         onclick: () => {
-          if (root.GongjiNoticeImage) {
-            root.GongjiNoticeImage.openNoticeCardModal(n, {
+          if (window.GongjiNoticeImage) {
+            window.GongjiNoticeImage.openNoticeCardModal(n, {
               lang: state.lang,
               now,
               titleOf,
@@ -1426,8 +1613,8 @@
         class: 'btn btn-card-img',
         title: T.cardNewsTitle || '카드뉴스 저장',
         onclick: () => {
-          if (root.GongjiNoticeImage) {
-            root.GongjiNoticeImage.openNoticeCardModal(n, {
+          if (window.GongjiNoticeImage) {
+            window.GongjiNoticeImage.openNoticeCardModal(n, {
               lang: state.lang,
               now,
               titleOf,
@@ -1506,6 +1693,8 @@
     clearTimeout(toast.timer);
     toast.timer = setTimeout(() => { el.hidden = true; }, action ? 6000 : 3500);
   }
+  window.toast = toast;
+  window.showToast = toast;
   function download(filename, text, type) {
     const url = URL.createObjectURL(new Blob([text], { type }));
     const a = h('a', { href: url, download: filename });
@@ -2165,11 +2354,18 @@
         type: 'button', class: 'chip small', 'aria-pressed': String(x.key === state.currTab),
         onclick: () => { state.currTab = x.key; store.set('currTab', x.key); renderCurriculum(); }
       }, x.label, h('span', { class: 'chip-count' }, ` ${x.n}`)))));
-      const chip = (c) => h('button', {
-        type: 'button', class: 'course-chip' + (c.kind === '전필' ? ' req' : ''),
-        title: [c.kind, c.term, c.credit ? T.creditN(c.credit) : ''].filter(Boolean).join(' · '),
-        onclick: () => openClassDialog({ name: c.name })
-      }, c.name, c.kind === '전필' ? h('span', { class: 'req-mark' }, T.reqMark) : null);
+      const chip = (c) => {
+        const prof = findProfForCourse(c.name);
+        return h('button', {
+          type: 'button', class: 'course-chip' + (c.kind === '전필' ? ' req' : '') + (prof ? ' has-prof' : ''),
+          title: [c.kind, c.term, c.credit ? T.creditN(c.credit) : '', prof ? `${prof} 교수` : ''].filter(Boolean).join(' · '),
+          onclick: () => openClassDialog({ name: c.name })
+        },
+          c.name,
+          c.kind === '전필' ? h('span', { class: 'req-mark' }, T.reqMark) : null,
+          prof ? h('span', { class: 'chip-prof', style: 'margin-left: 5px; font-size: 11px; opacity: 0.85; font-weight: 600;' }, `[${prof}]`) : null
+        );
+      };
       if (state.currTab === 'gen') {
         parts.push(CU.general().map((grp) => h('div', { class: 'curr-group' },
           h('h4', null, `${grp.kind === '소양' ? 'KU소양' : grp.kind + '교양'} · ${grp.area}`),
@@ -2514,7 +2710,25 @@
     }));
   }
 
+  function checkTransferredCourseWarning(courseName) {
+    const warnEl = $('#class-transferred-warn');
+    if (!warnEl) return false;
+    const n = (courseName || '').replace(/\s+/g, '').toLowerCase();
+    if (!n) { warnEl.hidden = true; return false; }
+    const trList = store.get('transferredCourses', []) || [];
+    const hit = trList.find((x) => x && x.name && x.name.replace(/\s+/g, '').toLowerCase() === n);
+    if (hit) {
+      warnEl.hidden = false;
+      warnEl.innerHTML = `🚫 <strong>전적대 전공 인정 교과목</strong> (${hit.name} · ${hit.credit || 3}학점 ${hit.kind === '전필' ? '전공필수' : '전공선택'})<br>건국대학교 학사 규정상 전적대에서 이미 인정받은 과목은 <strong>재수강(중복 수강신청)할 수 없습니다.</strong>`;
+      return true;
+    } else {
+      warnEl.hidden = true;
+      return false;
+    }
+  }
+
   function pickLecture(item) {
+    if (item && item.name) checkTransferredCourseWarning(item.name);
     const groups = groupSlots(item.slots);
     const first = groups[0] || { days: [], start: '09:00', end: '10:30' };
     classEdit.days = new Set(first.days);
@@ -2556,6 +2770,7 @@
     box.replaceChildren(...shown.map((c) => h('li', { role: 'option' },
       h('button', { type: 'button', onpointerdown: (e) => e.preventDefault(), onclick: () => {
         input.value = c.name;
+        checkTransferredCourseWarning(c.name);
         classEdit.extra = [];
         classEdit.rooms = {};
         classEdit.prof = c.prof || c.p || '';
@@ -2653,6 +2868,7 @@
         title: `${c.n} (${c.d || ''} · ${meta})`,
         onclick: () => {
           $('#class-name').value = c.n;
+          checkTransferredCourseWarning(c.n);
           classEdit.extra = [];
           classEdit.rooms = {};
           classEdit.prof = c.p || '';
@@ -2669,20 +2885,46 @@
     }));
   }
 
-  // 과목명으로 크롬 확장이 수집한 KIS 강의 시간표(GONGJI_TIMETABLE) 및 예시 시간표에서 담당 교수 자동 조회
-  function findProfForCourse(courseName) {
+  // 과목명으로 크롬 확장이 수집한 KIS 강의 시간표(GONGJI_TIMETABLE) 및 검증된 건국대 글로컬 교수진 매핑에서 담당 교수 자동 조회
+  function findProfForCourse(courseName, section) {
     if (!courseName) return '';
     const norm = normName(courseName);
+
+    // 1) 현재 시간표(state.classes)에 이미 등록된 동일 과목의 교수명이 있으면 최우선 계승
+    if (Array.isArray(state.classes)) {
+      const existing = state.classes.find((c) => c && normName(c.name) === norm && (c.prof || c.p));
+      if (existing) return (existing.prof || existing.p || '').trim();
+    }
+
+    // 2) KIS 수집 강의 시간표(window.GONGJI_TIMETABLE: 1,532 강좌) 조회
     const T = window.GONGJI_TIMETABLE;
     if (T && Array.isArray(T.courses)) {
-      // 1) 정확히 과목명이 일치하는 강의
-      const exact = T.courses.find((c) => normName(c.n) === norm && (c.p || c.prof));
+      const userDept = (state.profile && state.profile.dept) || state.dept || '';
+      // 학과 일치 + 과목명 일치 우선
+      if (userDept) {
+        const deptExact = T.courses.find((c) => normName(c.n) === norm && (c.p || c.prof) && c.d && (c.d.includes(userDept) || userDept.includes(c.d)) && (!section || c.s === section));
+        if (deptExact) return (deptExact.p || deptExact.prof || '').trim();
+      }
+      // 정확히 과목명이 일치하는 강의
+      const exact = T.courses.find((c) => normName(c.n) === norm && (c.p || c.prof) && (!section || c.s === section));
       if (exact) return (exact.p || exact.prof || '').trim();
-      // 2) 과목명을 포함하거나 시작하는 강의
+      // 과목명을 포함하는 강의
       const partial = T.courses.find((c) => (normName(c.n).startsWith(norm) || norm.startsWith(normName(c.n))) && (c.p || c.prof));
       if (partial) return (partial.p || partial.prof || '').trim();
     }
-    // 예시 시간표 및 기본 대표 매핑
+
+    // 3) KIS 공식 교수진 매핑 데이터베이스 (window.GONGJI_PROFESSORS: 2,800 강좌)
+    const P_DICT = window.GONGJI_PROFESSORS;
+    if (P_DICT && typeof P_DICT === 'object') {
+      if (section && P_DICT[`${courseName}:${section}`]) return P_DICT[`${courseName}:${section}`];
+      if (P_DICT[`${courseName}:01`]) return P_DICT[`${courseName}:01`];
+      for (const [k, p] of Object.entries(P_DICT)) {
+        const [cName] = k.split(':');
+        if (normName(cName) === norm && p) return p;
+      }
+    }
+
+    // 4) 예시 시간표 조회
     const exHit = EXAMPLE_TIMETABLE.find((c) => {
       const ko = c.names && c.names.ko ? normName(c.names.ko) : '';
       const en = c.names && c.names.en ? normName(c.names.en) : '';
@@ -2690,21 +2932,6 @@
     });
     if (exHit && exHit.prof) return exHit.prof.trim();
 
-    // 건국대 글로컬 주요 과목 기본 매핑 백업 (수집 전이라도 즉시 자동 채움 지원)
-    const KNOWN_PROFS = {
-      '컴퓨터공학개론': '박인공',
-      '컴퓨터네트워크': '김네트',
-      '소프트웨어공학': '이소프트',
-      '자료구조': '최알고',
-      '이산수학': '김건국',
-      '인공지능과미래사회': '최글로벌',
-      '지식발견머신러닝': '정머신',
-      '대학영어': 'Smith',
-      '토익1': 'Johnson'
-    };
-    for (const [k, p] of Object.entries(KNOWN_PROFS)) {
-      if (norm.includes(normName(k)) || normName(k).includes(norm)) return p;
-    }
     return '';
   }
 
@@ -2717,7 +2944,27 @@
     classEdit.rooms = {};
     classEdit.prof = cls ? (cls.prof || cls.p || '') : '';
     const targetName = cls ? (cls.name || '') : name;
-    // 유저 요청 반영: 교수명이 비어있는 경우, 과목명으로 크롬 확장 KIS DB에서 담당 교수 자동 조회 및 채우기
+
+    // 과목명으로 시간표(GONGJI_TIMETABLE)에서 개설 정보 조회 (강의실, 요일, 시간, 교수 자동 반영)
+    if (!cls && targetName && window.GONGJI_TIMETABLE && Array.isArray(window.GONGJI_TIMETABLE.courses)) {
+      const userDept = (state.profile && state.profile.dept) || state.dept || '';
+      const hits = window.GONGJI_TIMETABLE.courses.filter((c) => normName(c.n) === normName(targetName));
+      const hit = hits.find((c) => userDept && c.d && (c.d.includes(userDept) || userDept.includes(c.d))) || hits[0];
+      if (hit) {
+        if (!classEdit.prof && (hit.p || hit.prof)) classEdit.prof = hit.p || hit.prof;
+        if (hit.t && hit.t.length) {
+          const groups = groupSlots(hit.t);
+          const first = groups[0];
+          if (first) {
+            classEdit.days = new Set(first.days);
+            start = toMin(first.start);
+            classEdit.extra = groups.slice(1).flatMap((g) => g.days.map((d) => ({ day: d, start: g.start, end: g.end })));
+          }
+        }
+      }
+    }
+
+    // 교수명이 비어있는 경우, 과목명으로 KIS 공식 DB에서 담당 교수 자동 조회 및 채우기
     if (!classEdit.prof && targetName) {
       const autoProf = findProfForCourse(targetName);
       if (autoProf) {
@@ -2729,6 +2976,7 @@
     renderExtraNote();
     $('#class-dialog-title').textContent = cls ? t().editClass : t().addClass;
     $('#class-name').value = cls ? cls.name || '' : name;
+    checkTransferredCourseWarning($('#class-name').value);
     const s = cls && cls.start ? L.toMinutes(cls.start) : start;
     setTime('start', s);
     setTime('end', cls && cls.end ? L.toMinutes(cls.end) : s + 90);
@@ -2754,6 +3002,12 @@
   function saveClass(more = false) {
     const name = $('#class-name').value.trim();
     if (!name) return showClassError('수업 이름을 적어 주세요.');
+    const isTr = checkTransferredCourseWarning(name);
+    if (isTr) {
+      if (!confirm(`[${name}] 과목은 전적대에서 전공으로 인정받은 과목입니다.\n건국대학교 학사 규정상 전적대 인정과목은 재수강(중복 수강신청)할 수 없습니다.\n\n그래도 시간표에 추가하시겠습니까?`)) {
+        return;
+      }
+    }
     const prof = ($('#class-prof')?.value || classEdit.prof || '').trim();
 
     if (classEdit.isElearn) {
@@ -3016,11 +3270,19 @@
       );
     }
 
+    const restingCard = h('div', { class: 'tc-resting-card' },
+      h('span', { class: 'tc-resting-icon' }, '☕'),
+      h('div', { class: 'tc-resting-info' },
+        h('strong', { class: 'tc-resting-title' }, T.todayNoClass || '오늘은 오프라인 수업이 없는 날이에요'),
+        h('p', { class: 'tc-resting-sub' }, foot || '과제나 관심 공지를 정리하기 좋은 여유로운 날이에요.')
+      )
+    );
+
     return h('section', { class: 'home-card today-classes' },
       h('h3', null, T.todayClasses, today.length ? h('span', { class: 'group-count' }, ` ${today.length}`) : null),
       liveBanner,
-      today.length ? h('ul', { class: 'home-list' }, rows) : h('p', { class: 'fine' }, T.todayNoClass),
-      foot ? h('p', { class: 'fine' }, foot) : null,
+      today.length ? h('ul', { class: 'home-list' }, rows) : restingCard,
+      (today.length && foot) ? h('p', { class: 'fine' }, foot) : null,
       elearnNote,
       h('button', { type: 'button', class: 'link-btn', onclick: () => { location.hash = '#/timetable'; setTab('timetable', true); } }, T.seeTimetable));
   }
@@ -3552,8 +3814,19 @@
     const T = t();
     const cols = K.columns(DATA.notices, { track: state.track, saved: state.saved, applied: state.applied }, now);
     const sum = K.summary(cols, now);
-    if (!(sum.interest + sum.prep + sum.done + sum.result)) return null;
     const go = () => { location.hash = '#/track'; setTab('track', true); };
+    if (!(sum.interest + sum.prep + sum.done + sum.result)) {
+      return sec('sec-board is-empty-mini', T.boardTitle, null, { label: '보드 열기 ↗', run: go },
+        h('div', { class: 'bm-empty-card', onclick: () => goList({ due: 'soon', sort: 'deadline' }) },
+          h('span', { class: 'bm-empty-icon' }, '⭐'),
+          h('div', { class: 'bm-empty-text' },
+            h('strong', null, '챙길 공지를 보관해보세요'),
+            h('p', null, '공지에서 ★를 누르면 관심 칸에 모이고 마감을 놓치지 않아요.')
+          ),
+          h('span', { class: 'bm-empty-badge' }, '공지 둘러보기 →')
+        )
+      );
+    }
     return sec('sec-board', T.boardTitle, null, { label: T.homeMore, run: go },
       h('ol', { class: 'pipe' }, K.STAGES.map((st) => h('li', { class: 'pipe-' + st },
         h('button', { type: 'button', onclick: go }, h('strong', { 'data-count': String(cols[st].length) }, String(cols[st].length)), h('span', null, T.stage[st]))))),
@@ -3592,10 +3865,38 @@
       s.fresh.length ? sec('', T.homeNew, s.fresh.length, { label: T.homeMore, run: () => goList({ due: 'new', sort: 'latest' }) }, rows(s.fresh, 4)) : null,
       rec.chosen.length ? sec('', T.homePicks, null, { label: T.homeMore, run: () => { location.hash = '#/budget'; setTab('budget', true); } },
         h('ul', { class: 'home-list' }, rec.chosen.slice(0, 4).map((it) => homeRow(it.notice, recIds)))) : null,
-      calItems.length ? sec('', T.calendarTitle, null, null, h('ul', { class: 'home-list' }, calItems.map((x) => h('li', { class: 'home-row' },
+      calItems.length ? sec('', T.calendarTitle, null, {
+        label: T.homeMore || '전체 보기',
+        run: () => {
+          if (typeof window.openAcademicCalendarModal === 'function') {
+            window.openAcademicCalendarModal();
+          } else {
+            location.hash = '#/calendar';
+          }
+        }
+      }, h('ul', { class: 'home-list' }, calItems.map((x) => h('li', { class: 'home-row' },
         h('span', { class: 'cal-what' }, tr(x.title)),
         h('span', { class: 'home-meta cal-when' }, x.start === x.end ? fmt(x.start) : `${fmt(x.start)} ~ ${fmt(x.end)}`))))) : null
     ].filter(Boolean);
+
+    // PC에서 카드 높이 차이로 인한 거대한 빈 공간(Dead Space)을 없애고
+    // 모바일처럼 카드가 상하로 매끄럽게 연결(Masonry Flow)되도록 좌우 2개 컬럼으로 균형 분할
+    let listContainer = null;
+    if (lists.length === 1) {
+      listContainer = h('div', { class: 'home-lists is-single' }, lists[0]);
+    } else if (lists.length > 1) {
+      const col1 = [];
+      const col2 = [];
+      lists.forEach((item, idx) => {
+        item.style.setProperty('--card-idx', String(idx));
+        if (idx % 2 === 0) col1.push(item);
+        else col2.push(item);
+      });
+      listContainer = h('div', { class: 'home-lists' },
+        h('div', { class: 'home-list-col' }, col1),
+        h('div', { class: 'home-list-col' }, col2)
+      );
+    }
 
     const parts = [
       briefingRow(s),
@@ -3604,7 +3905,7 @@
         h('div', { class: 'home-col' }, classes, week),
         h('div', { class: 'home-col' }, grad, boardMini())),
       ticketStrip(),
-      lists.length ? h('div', { class: 'home-lists' }, lists) : null,
+      listContainer,
       calCard()
     ].filter(Boolean);
     const cc = parts.find((x) => x.classList && x.classList.contains('cal-card'));
@@ -4677,6 +4978,7 @@
       renderExtraNote();
       showSuggest();
       const val = $('#class-name').value.trim();
+      checkTransferredCourseWarning(val);
       const profInput = $('#class-prof');
       if (val && profInput && !profInput.value.trim()) {
         const auto = findProfForCourse(val);

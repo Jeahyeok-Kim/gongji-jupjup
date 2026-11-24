@@ -473,10 +473,9 @@
     const viewAllBtn = document.createElement('button');
     viewAllBtn.type = 'button';
     viewAllBtn.className = 'ar-view-all';
-    viewAllBtn.textContent = T.acadViewAll || '전체 달력 보기 ↗';
+    viewAllBtn.textContent = T.acadViewAll || '연간 일정 전체보기 ↗';
     viewAllBtn.onclick = () => {
-      location.hash = '#/calendar';
-      if (typeof setTab === 'function') setTab('calendar', true);
+      openAcademicCalendarModal();
     };
 
     head.append(titleWrap, viewAllBtn);
@@ -552,6 +551,286 @@
       const homeWrap = $('.home-wrap, #home-body');
       if (homeWrap) homeWrap.append(sec);
     }
+  }
+
+  /* ═══════════════════════════════════════════════════════
+     8-2. 연간 주요 학사일정 전체보기 모달
+     ═══════════════════════════════════════════════════════ */
+  function openAcademicCalendarModal() {
+    const cal = window.GONGJI_CALENDAR;
+    if (!cal || !cal.items || !cal.items.length) {
+      alert('등록된 학사일정 정보가 없습니다.');
+      return;
+    }
+
+    let dialog = document.getElementById('acad-full-modal');
+    if (!dialog) {
+      dialog = document.createElement('dialog');
+      dialog.id = 'acad-full-modal';
+      dialog.className = 'acad-full-dialog';
+      dialog.setAttribute('closedby', 'any');
+      document.body.appendChild(dialog);
+    }
+
+    const lang = document.documentElement.lang || localStorage.getItem('gongji:lang') || 'ko';
+    const I = window.GongjiI18n;
+    const T = (I && I.T && I.T[lang]) || {};
+    const DOW_NAMES = (I && I.WEEKDAYS && I.WEEKDAYS[lang]) || ['일', '월', '화', '수', '목', '금', '토'];
+
+    let activeFilter = 'all'; // 'all', 'upcoming', 'ongoing', 'past'
+    let searchQuery = '';
+
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    const pad = (v) => String(v).padStart(2, '0');
+    const fmtFullDate = (d) => {
+      const yyyy = d.getFullYear();
+      const mm = pad(d.getMonth() + 1);
+      const dd = pad(d.getDate());
+      const dow = DOW_NAMES[d.getDay()];
+      return `${yyyy}.${mm}.${dd}(${dow})`;
+    };
+
+    function renderModalContent() {
+      dialog.innerHTML = '';
+
+      const wrap = document.createElement('div');
+      wrap.className = 'afm-wrap';
+
+      // 1. 헤더
+      const header = document.createElement('div');
+      header.className = 'afm-header';
+
+      const titleBox = document.createElement('div');
+      titleBox.className = 'afm-title-box';
+      const h2 = document.createElement('h2');
+      h2.className = 'afm-title';
+      h2.textContent = T.acadModalTitle || '🎓 건국대학교 연간 학사일정';
+      const p = document.createElement('p');
+      p.className = 'afm-sub';
+      p.textContent = (T.acadModalSub || '학교 연간주요일정 전체 목록') + ` (총 ${cal.items.length}개 일정)`;
+      titleBox.append(h2, p);
+
+      const closeBtn = document.createElement('button');
+      closeBtn.type = 'button';
+      closeBtn.className = 'afm-close-btn';
+      closeBtn.setAttribute('aria-label', '닫기');
+      closeBtn.innerHTML = '✕';
+      closeBtn.onclick = () => dialog.close();
+
+      header.append(titleBox, closeBtn);
+
+      // 2. 검색창 & 필터 바
+      const controlBar = document.createElement('div');
+      controlBar.className = 'afm-controls';
+
+      const searchInput = document.createElement('input');
+      searchInput.type = 'search';
+      searchInput.className = 'afm-search-input';
+      searchInput.placeholder = T.acadModalSearchPh || '학사일정 검색 (예: 수강신청, 시험, 방학...)';
+      searchInput.value = searchQuery;
+      searchInput.oninput = (e) => {
+        searchQuery = e.target.value.trim().toLowerCase();
+        updateList();
+      };
+
+      const filterBar = document.createElement('div');
+      filterBar.className = 'afm-filters';
+
+      const filters = [
+        { id: 'all', label: T.acadFilterAll || '전체' },
+        { id: 'upcoming', label: T.acadFilterUpcoming || '다가오는 일정' },
+        { id: 'ongoing', label: T.acadFilterOngoing || '진행 중' },
+        { id: 'past', label: T.acadFilterPast || '종료된 일정' }
+      ];
+
+      filters.forEach(f => {
+        const chip = document.createElement('button');
+        chip.type = 'button';
+        chip.className = 'afm-filter-chip' + (activeFilter === f.id ? ' is-active' : '');
+        chip.textContent = f.label;
+        chip.onclick = () => {
+          activeFilter = f.id;
+          updateList();
+        };
+        filterBar.appendChild(chip);
+      });
+
+      controlBar.append(searchInput, filterBar);
+
+      // 3. 리스트 영역
+      const listContainer = document.createElement('div');
+      listContainer.className = 'afm-list';
+
+      function updateList() {
+        listContainer.innerHTML = '';
+
+        filterBar.querySelectorAll('.afm-filter-chip').forEach((c, idx) => {
+          c.classList.toggle('is-active', filters[idx].id === activeFilter);
+        });
+
+        const filtered = cal.items.filter(item => {
+          const rawTitle = (item.title && (item.title[lang] || item.title.ko || item.title)) || '';
+          if (searchQuery && !rawTitle.toLowerCase().includes(searchQuery)) return false;
+
+          const startD = new Date(item.start);
+          startD.setHours(0, 0, 0, 0);
+          const endD = new Date(item.end || item.start);
+          endD.setHours(23, 59, 59, 999);
+
+          const isOngoing = today >= startD && today <= endD;
+          const isPast = today > endD;
+          const isUpcoming = today < startD;
+
+          if (activeFilter === 'upcoming') return isUpcoming;
+          if (activeFilter === 'ongoing') return isOngoing;
+          if (activeFilter === 'past') return isPast;
+          return true;
+        });
+
+        if (!filtered.length) {
+          const empty = document.createElement('div');
+          empty.className = 'afm-empty';
+          empty.textContent = '조건에 일치하는 학사일정이 없습니다.';
+          listContainer.appendChild(empty);
+          return;
+        }
+
+        filtered.forEach(item => {
+          const startD = new Date(item.start);
+          startD.setHours(0, 0, 0, 0);
+          const endD = new Date(item.end || item.start);
+          endD.setHours(23, 59, 59, 999);
+
+          const daysUntilStart = Math.ceil((startD - today) / 86400000);
+          const isOngoing = today >= startD && today <= endD;
+          const isPast = today > endD;
+
+          const rawTitle = (item.title && (item.title[lang] || item.title.ko || item.title)) || '';
+          let icon = '🏛️';
+          if (/시험|기말|중간/.test(rawTitle)) icon = '📝';
+          else if (/방학|계절/.test(rawTitle)) icon = '❄️';
+          else if (/성적|정정|열람/.test(rawTitle)) icon = '📊';
+          else if (/수업|개강|종강/.test(rawTitle)) icon = '📚';
+          else if (/등록|휴학|복학|수강신청/.test(rawTitle)) icon = '💳';
+          else if (/실습|현장/.test(rawTitle)) icon = '💼';
+
+          const card = document.createElement('div');
+          card.className = 'afm-item' + (isOngoing ? ' is-ongoing' : isPast ? ' is-past' : '');
+
+          const left = document.createElement('div');
+          left.className = 'afm-item-left';
+
+          const iconEl = document.createElement('span');
+          iconEl.className = 'afm-item-icon';
+          iconEl.textContent = icon;
+
+          const textEl = document.createElement('div');
+          textEl.className = 'afm-item-text';
+
+          const titleEl = document.createElement('strong');
+          titleEl.className = 'afm-item-title';
+          titleEl.textContent = rawTitle;
+
+          const dateEl = document.createElement('span');
+          dateEl.className = 'afm-item-date';
+          dateEl.textContent = item.start === item.end ? fmtFullDate(startD) : `${fmtFullDate(startD)} ~ ${fmtFullDate(endD)}`;
+
+          textEl.append(titleEl, dateEl);
+          left.append(iconEl, textEl);
+
+          const right = document.createElement('div');
+          right.className = 'afm-item-right';
+
+          const badge = document.createElement('span');
+          badge.className = 'afm-dday' + (isOngoing ? ' is-ongoing' : isPast ? ' is-past' : daysUntilStart <= 7 ? ' is-urgent' : '');
+          if (isOngoing) badge.textContent = T.bfOngoing || '진행 중';
+          else if (isPast) badge.textContent = '종료';
+          else if (daysUntilStart === 0) badge.textContent = '오늘 시작';
+          else badge.textContent = `D-${daysUntilStart}`;
+
+          const gcalLink = document.createElement('a');
+          const sClean = item.start.replace(/-/g, '');
+          const eClean = item.end ? item.end.replace(/-/g, '') : sClean;
+          gcalLink.href = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(rawTitle)}&dates=${sClean}/${eClean}&details=${encodeURIComponent('건국대학교 GLOCAL캠퍼스 주요 학사일정')}`;
+          gcalLink.target = '_blank';
+          gcalLink.rel = 'noopener noreferrer';
+          gcalLink.className = 'afm-gcal-btn';
+          gcalLink.title = '구글 캘린더에 추가';
+          gcalLink.innerHTML = '📅';
+
+          right.append(badge, gcalLink);
+          card.append(left, right);
+          listContainer.appendChild(card);
+        });
+      }
+
+      updateList();
+
+      // 4. 푸터
+      const footer = document.createElement('div');
+      footer.className = 'afm-footer';
+
+      const icsBtn = document.createElement('button');
+      icsBtn.type = 'button';
+      icsBtn.className = 'btn small secondary afm-ics-btn';
+      icsBtn.textContent = T.acadExportIcs || '📅 연간 학사일정 (.ics) 다운로드';
+      icsBtn.onclick = () => {
+        exportAcademicIcs(cal.items);
+      };
+
+      const closeFooterBtn = document.createElement('button');
+      closeFooterBtn.type = 'button';
+      closeFooterBtn.className = 'btn small primary';
+      closeFooterBtn.textContent = '닫기';
+      closeFooterBtn.onclick = () => dialog.close();
+
+      footer.append(icsBtn, closeFooterBtn);
+
+      wrap.append(header, controlBar, listContainer, footer);
+      dialog.appendChild(wrap);
+    }
+
+    renderModalContent();
+    dialog.showModal();
+    dialog.onclick = (e) => {
+      if (e.target === dialog) dialog.close();
+    };
+  }
+  window.openAcademicCalendarModal = openAcademicCalendarModal;
+
+  function exportAcademicIcs(items) {
+    if (!items || !items.length) return;
+    const lines = [
+      'BEGIN:VCALENDAR',
+      'VERSION:2.0',
+      'PRODID:-//Gongji Jupjup//KR',
+      'CALSCALE:GREGORIAN',
+      'METHOD:PUBLISH'
+    ];
+    items.forEach((it, idx) => {
+      const s = it.start ? it.start.replace(/-/g, '') : '';
+      const e = it.end ? it.end.replace(/-/g, '') : s;
+      const title = (it.title && (it.title.ko || it.title)) || '학사일정';
+      lines.push(
+        'BEGIN:VEVENT',
+        `UID:acad-${idx}-${s}@gongji-jupjup`,
+        `DTSTART;VALUE=DATE:${s}`,
+        `DTEND;VALUE=DATE:${e}`,
+        `SUMMARY:${title}`,
+        'DESCRIPTION:건국대학교 GLOCAL캠퍼스 주요 학사일정',
+        'END:VEVENT'
+      );
+    });
+    lines.push('END:VCALENDAR');
+    const blob = new Blob([lines.join('\r\n')], { type: 'text/calendar;charset=utf-8' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'konkuk-academic-calendar.ics';
+    a.click();
+    setTimeout(() => URL.revokeObjectURL(url), 1000);
   }
 
   /* ═══════════════════════════════════════════════════════

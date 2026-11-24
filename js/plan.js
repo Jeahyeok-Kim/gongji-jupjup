@@ -63,7 +63,7 @@
   }
 
   // ---------- 이수 내역 ----------
-  const TERM_RE = /^\d{4}-(1|2|S|W)$/;
+  const TERM_RE = /^(\d{4}-(1|2|S|W)|전적대|인정)$/;
   const num = (v, lo, hi) => { const n = Number(v); return Number.isFinite(n) && n >= lo && n <= hi ? n : null; };
 
   function cleanHistory(list) {
@@ -100,9 +100,10 @@
     return t;
   }
 
-  // 학기 순서: '2025-1' < '2025-S' < '2025-2' < '2025-W'
+  // 학기 순서: '2025-1' < '2025-S' < '2025-2' < '2025-W' (전적대 인정은 별도 구분 표기)
   const TERM_ORDER = { 1: 0, S: 1, 2: 2, W: 3 };
   function termKey(term) {
+    if (term === '전적대' || term === '인정') return -1;
     const m = /^(\d{4})-(1|2|S|W)$/.exec(term || '');
     return m ? Number(m[1]) * 10 + TERM_ORDER[m[2]] : 0;
   }
@@ -135,26 +136,52 @@
     const gen = reqData && reqData.general ? { ...reqData.general } : null;
     let base;
     if (mode === 'transfer') {
-      const total = (reqData && reqData.transferTotal) || 66;
-      base = { total, major: row ? Math.min(row[1] + row[2], total) : null, general: row ? 0 : null, majorReq: row ? row[1] : null };
+      const defaultTot = (reqData && reqData.transferTotal) || 66;
+      base = { total: defaultTot, major: row ? Math.min(row[1] + row[2], defaultTot) : 66, general: 0, majorReq: row ? row[1] : null };
+
+      // 편입생 총 이수학점: 기본 66학점이나 다전공(복수전공)·융합전공·부전공 및 초과이수를 고려하여 최대 250학점까지 수동 자유 설정 허용
+      let tot = num(c.total, 30, 250);
+      if (tot === null) tot = defaultTot;
+      base.total = tot;
+
+      // 전공 최소 학점: 0부터 250학점까지 허용
+      let maj = num(c.major, 0, 250);
+      if (maj === null) {
+        maj = base.major !== null ? base.major : defaultTot;
+      }
+      base.major = maj;
+
+      // 자유/다전공 학점: 0부터 250학점까지 허용.
+      // 명시적으로 지정되지 않은 경우에만 잔여(tot - maj)로 산출
+      let genVal = num(c.general, 0, 250);
+      if (genVal === null) {
+        genVal = Math.max(0, tot - maj);
+      }
+      base.general = genVal;
+
+      const edited = {};
+      if (c.total !== undefined && c.total !== null && c.total !== defaultTot) edited.total = true;
+      if (c.major !== undefined && c.major !== null && c.major !== (row ? Math.min(row[1] + row[2], defaultTot) : 66)) edited.major = true;
+      if (c.general !== undefined && c.general !== null) edited.general = true;
+
+      return {
+        mode, dept: found ? found.name : '', found: !!found, edited,
+        total: base.total, major: base.major, general: base.general, majorReq: base.majorReq,
+        gen: null
+      };
     } else {
       base = row ? { total: row[3], major: row[1] + row[2], general: row[0], majorReq: row[1] } : { total: null, major: null, general: null, majorReq: null };
-    }
-    const edited = {};
-    for (const k of ['total', 'major', 'general']) {
-      let v = num(c[k], 0, 300);
-      // 편입생 모드인데 total이 100을 초과하면 (신입생 4년제 총 학점 132 등이 남아있는 경우) 무시하고 편입생 기준 66 적용
-      if (mode === 'transfer' && k === 'total' && v !== null && v > 100) {
-        v = null;
+      const edited = {};
+      for (const k of ['total', 'major', 'general']) {
+        let v = num(c[k], 0, 300);
+        if (v !== null) { base[k] = v; edited[k] = true; }
       }
-      if (v !== null) { base[k] = v; edited[k] = true; }
+      return {
+        mode, dept: found ? found.name : '', found: !!found, edited,
+        total: base.total, major: base.major, general: base.general, majorReq: base.majorReq,
+        gen: gen && !edited.general && base.general === 31 ? gen : null
+      };
     }
-    return {
-      mode, dept: found ? found.name : '', found: !!found, edited,
-      total: base.total, major: base.major, general: base.general, majorReq: base.majorReq,
-      // 교양 세부 기준은 일반 학생이고 교양 기준을 고치지 않았을 때만 (요람 31 = 14 + 8 + 9)
-      gen: mode === 'regular' && gen && !edited.general && base.general === 31 ? gen : null
-    };
   }
 
   function remaining(req, tot) {
@@ -732,14 +759,28 @@
     if (neededGpa <= 0) {
       return { status: 'achieved', neededGpa: 0, maxPossible, maxRounded, target };
     }
-    if (targetRounded <= maxRounded && neededGpa > 4.495) {
-      // 전과목 A+(4.5) 취득 시 소수점 둘째 자리 반올림으로 정확히 목표 달성 가능한 최고 난도 케이스
+    // 소수점 둘째 자리 반올림으로도 목표에 도달할 수 없는 경우 (불가능)
+    if (targetRounded > maxRounded) {
+      return { status: 'impossible', neededGpa, maxPossible, maxRounded, target };
+    }
+    // 전과목 A+(4.5) 만점 취득 시에만 달성 가능한 최고 난도 케이스 (4.495 이상이거나 반올림 한계치에 걸친 경우)
+    if (neededGpa >= 4.495 || targetRounded === maxRounded) {
       return { status: 'all-aplus', neededGpa: 4.5, maxPossible, maxRounded, target };
     }
-    if (neededGpa <= 4.495) {
+    // 4.40 이상 4.495 미만: 거의 전과목 A+ 수준 (한 과목만 감점되어도 미달 위기인 극상 난이도)
+    if (neededGpa >= 4.40) {
+      return { status: 'extreme', neededGpa, maxPossible, maxRounded, target };
+    }
+    // 4.15 이상 4.40 미만: A+ 및 A0 위주의 고득점 필요
+    if (neededGpa >= 4.15) {
+      return { status: 'challenging', neededGpa, maxPossible, maxRounded, target };
+    }
+    // 3.70 이상 4.15 미만: A0 및 B+ 위주의 달성 가능권
+    if (neededGpa >= 3.70) {
       return { status: 'possible', neededGpa, maxPossible, maxRounded, target };
     }
-    return { status: 'impossible', neededGpa, maxPossible, maxRounded, target };
+    // 3.70 미만: 여유 있는 안정권
+    return { status: 'comfortable', neededGpa, maxPossible, maxRounded, target };
   }
 
   // 결과의 시간을 내 시간표 수업 형식으로: [{ name, prof, day, start, end, room }] (이러닝은 elearn: true)

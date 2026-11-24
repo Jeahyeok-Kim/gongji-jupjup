@@ -44,8 +44,11 @@ test('편입생: 잔여 66학점을 기본으로, 전공·교양은 직접 고�
   assert.ok(mine.edited.major && mine.edited.general);
   const bad = P.requirement('컴퓨터공학과', REQ, { mode: 'transfer', major: -3, general: 'x' });
   assert.strictEqual(bad.major, 66, '이상한 값은 무시');
-  const tainted = P.requirement('컴퓨터공학과', REQ, { mode: 'transfer', total: 132 });
-  assert.strictEqual(tainted.total, 66, '신입생 132학점 오염값은 66으로 정정');
+  const multiMajor = P.requirement('컴퓨터공학과', REQ, { mode: 'transfer', total: 132, major: 66, general: 66 });
+  assert.strictEqual(multiMajor.total, 132, '다전공/융합전공 등 편입 후 총 학점 커스텀 입력(132학점) 정상 보존');
+  const customTransfer = P.requirement('컴퓨터공학과', REQ, { mode: 'transfer', total: 150, major: 66, general: 84 });
+  assert.strictEqual(customTransfer.total, 150, '150학점 커스텀 입력 정상 보존');
+  assert.strictEqual(customTransfer.general, 84, '자유·다전공 84학점 정상 보존');
 });
 
 test('편입생 이수 계산: 전공 51 + 자유 15(교양/일선 무관) 케이스', () => {
@@ -72,6 +75,19 @@ test('편입생 이수 계산: 전공 51 + 자유 15(교양/일선 무관) 케�
   assert.strictEqual(left3.major, 0);
   assert.strictEqual(left3.free, 0);
   assert.strictEqual(left3.total, 0);
+});
+
+test('편입생 이수 계산: 전공 6학점 인정 케이스 (유저 피드백: 전공 60 + 자유 6)', () => {
+  // 전적대 전공 6학점 인정 시 -> 건국대에서 전공 60학점(66 - 6) + 자유 6학점 이수
+  const req = P.requirement('컴퓨터공학과', REQ, { mode: 'transfer', total: 66, major: 60, general: 6 });
+  assert.deepStrictEqual([req.total, req.major, req.general], [66, 60, 6]);
+
+  // 학생이 전공 45학점, 교양 3학점 이수한 경우
+  const tot = { total: 48, major: 45, general: 3, free: 0 };
+  const left = P.remaining(req, tot);
+  assert.strictEqual(left.major, 15, '전공 60 - 45 = 15학점 남음');
+  assert.strictEqual(left.free, 3, '자유 학점 6 - 3 = 3학점 남음');
+  assert.strictEqual(left.total, 18, '총 남은 학점 66 - 48 = 18학점 (15 + 3)');
 });
 
 test('이수 내역 정리·합계·남은 학점', () => {
@@ -296,9 +312,25 @@ test('목표 졸업 평점 역산기: 12학점 4.25에서 35학점 남았을 때
   assert.strictEqual(res45.status, 'impossible', '4.45는 전과목 A+ 받아도 초과하므로 목표 조정 필요');
   assert.strictEqual(res45.maxRounded, 4.44);
 
+  // 유저 최신 피드백 케이스 (12학점 4.25 누적, 22학점 남음):
+  // 목표 4.40 -> 평균 4.48 필요 (극상 난이도)
+  const res22_440 = P.simGpa(12, 4.25, 22, 4.40);
+  assert.strictEqual(res22_440.status, 'extreme', '4.48 평균은 단순 달성가능(possible)이 아닌 극상 난이도(extreme)');
+  assert.strictEqual(Number(res22_440.neededGpa.toFixed(2)), 4.48);
+
+  // 목표 4.41 -> 전과목 A+ 필수 (all-aplus)
+  const res22_441 = P.simGpa(12, 4.25, 22, 4.41);
+  assert.strictEqual(res22_441.status, 'all-aplus', '4.41은 전과목 A+ 필수');
+
+  // 목표 4.20 -> 4.17 필요 (고득점 필요 challenging)
+  const res22_420 = P.simGpa(12, 4.25, 22, 4.20);
+  assert.strictEqual(res22_420.status, 'challenging');
+
+  // 목표 3.80 -> 3.55 필요 (안정권 comfortable)
+  const res22_380 = P.simGpa(12, 4.25, 22, 3.80);
+  assert.strictEqual(res22_380.status, 'comfortable');
+
   // 이미 달성한 경우
-  const resDone = P.simGpa(12, 4.25, 35, 3.50);
-  assert.strictEqual(resDone.status, 'possible');
   const resZero = P.simGpa(12, 4.25, 35, 0.50);
   assert.strictEqual(resZero.status, 'achieved');
 });

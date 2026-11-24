@@ -6,7 +6,7 @@
   const DATA = /*JSON-START*/{
  "meta": {
   "source": "pipeline",
-  "generatedAt": "2026-11-24 17:23",
+  "generatedAt": "2026-11-24 23:04",
   "model": "qwen3:8b",
   "note": "AI가 만든 요약·번역입니다. 근거 문장이 원문에 없는 값은 버렸습니다.",
   "keep": {
@@ -17,7 +17,7 @@
   "stats": {
    "collected": 1709,
    "processed": 1080,
-   "fromCache": 1078,
+   "fromCache": 1080,
    "failed": 0,
    "imageOnly": 7,
    "droppedValues": 1654,

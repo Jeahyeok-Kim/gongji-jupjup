@@ -24,8 +24,8 @@
       .slice(0, MAX_CHECKS)
       .map((c) => ({ t: str(c.t.trim(), 40), d: c.d === true }));
     const memo = str(e.memo, 500);
-    const result = e.result === 'pass' || e.result === 'fail' ? e.result : '';
-    if (!stage && !checks.length && !memo) return null;          // 아무것도 없으면 지운다 (관심 단계로 돌아감)
+    const result = typeof e.result === 'string' ? str(e.result.trim(), 40) : '';
+    if (!stage && !checks.length && !memo && !result) return null;          // 아무것도 없으면 지운다 (관심 단계로 돌아감)
     return { stage: stage || 'interest', checks, memo, result: stage === 'result' ? result : '', at: Number(e.at) || 0 };
   }
 

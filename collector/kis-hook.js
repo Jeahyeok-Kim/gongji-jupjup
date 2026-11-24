@@ -13,7 +13,11 @@
            u.includes('CourTimeTableInqPop/find.do') ||
            u.includes('CourTimeTable/find.do') ||
            u.includes('CourAply/find.do') ||
-           (u.includes('find.do') && (u.includes('Cour') || u.includes('Lec')));
+           u.includes('CourSyllabus') ||
+           u.includes('CourLecturePlanInqNewGlocal/find') ||
+           u.includes('CourLecturePlanInqNewGlocal/findSub') ||
+           u.includes('LecPlan') ||
+           (u.includes('find.do') && (u.includes('Cour') || u.includes('Lec') || u.includes('TimeTable') || u.includes('Syllabus') || u.includes('Plan')));
   };
 
   let template = null; // 화면이 마지막으로 보낸 강의 조회 요청 (주소·머리글·본문)
@@ -64,13 +68,37 @@
       throw new Error(parsed.ERRMSGINFO.ERRMSG || '학교 시스템 오류');
     }
 
-    // KIS 강의 목록 키들 (전체 개설 과목 또는 개인 수강신청 목록)
+    // 1) 강의계획서 상세 (기본정보/평가 or 주별 계획)
+    if (parsed.DS_SPRF_SBJT_LIST || parsed.DS_WEEKPLAN) {
+      post({
+        type: 'syllabus',
+        main: parsed.DS_SPRF_SBJT_LIST?.[0] || null,
+        weeks: parsed.DS_WEEKPLAN || null,
+        timeCount: parsed.DS_TIME_COUNT || null
+      });
+      return;
+    }
+
+    // 2) KIS 강의 목록 키들 (전체 개설 과목 또는 개인 수강신청 목록)
     const rows = parsed.DS_LECTUREINFO || parsed.DS_SUGANGINFO || parsed.DS_TIMETABLE || parsed.DS_COUR_APLY || parsed.DS_LIST;
     if (!Array.isArray(rows) || rows.length === 0) return;
 
-    const params = new URLSearchParams(body);
-    const year = params.get('@d1#ltYy') || String(rows[0].LT_YY || rows[0].OPEN_YY || rows[0].YY || '');
-    const term = params.get('@d1#ltShtm') || String(rows[0].LT_SHTM || rows[0].OPEN_SHTM || rows[0].SHTM || '');
+    let year = '';
+    let term = '';
+    try {
+      const params = new URLSearchParams(body);
+      const dm = params.get('dmParam');
+      if (dm) {
+        const parsedDm = typeof dm === 'string' && dm.startsWith('{') ? JSON.parse(dm) : JSON.parse(decodeURIComponent(dm));
+        year = String(parsedDm.ltYy || parsedDm.basiYy || '');
+        term = String(parsedDm.ltShtm || '');
+      } else {
+        year = params.get('@d1#ltYy') || '';
+        term = params.get('@d1#ltShtm') || '';
+      }
+    } catch {}
+    if (!year) year = String(rows[0].LT_YY || rows[0].OPEN_YY || rows[0].YY || '2026');
+    if (!term) term = String(rows[0].LT_SHTM || rows[0].OPEN_SHTM || rows[0].SHTM || 'B01012');
 
     post({
       type: 'lectures',
@@ -81,36 +109,66 @@
     });
   }
 
-  // 화면이 한 번도 조회하지 않았을 때 쓰는 기본 요청 본문 (실제 화면이 보내는 모양을 따름)
+  // eXbuilder6 DataMap 형식으로 전체 과목 요청 (LTPROF 포함)
   function defaultBody(year, term) {
-    const d = new Date();
-    const cur = `${d.getFullYear()}${String(d.getMonth() + 1).padStart(2, '0')}${String(d.getDate()).padStart(2, '0')}`;
     const p = new URLSearchParams();
-    p.set('_AUTH_MENU_KEY', '1130308');
-    p.set('@d1#basiYy', year); p.set('@d1#curDate', cur); p.set('@d1#ltYy', year); p.set('@d1#ltShtm', term);
-    p.set('@d1#sbjtId', ''); p.set('@d1#haksuId', ''); p.set('@d1#campFg', '');
-    p.set('@d#', '@d1#'); p.set('@d1#', 'dmParam'); p.set('@d1#tp', 'dm');
-    return p.toString() + '&';
+    p.set('dmParam', JSON.stringify({
+      basiYy: '',
+      curDate: '',
+      ltYy: year,
+      ltShtm: term,
+      sbjtId: '',
+      haksuId: '',
+      campFg: '1'
+    }));
+    return p.toString();
   }
 
   async function fetchLectures(year, term) {
-    const params = new URLSearchParams(template ? template.body : defaultBody(year, term));
-    params.set('@d1#basiYy', year); params.set('@d1#ltYy', year); params.set('@d1#ltShtm', term);
+    const bodyStr = template ? template.body : defaultBody(year, term);
     const url = template ? new URL(template.url, location.href).href : new URL('/CourLectureAplyInqPop/find.do', location.origin).href;
     const res = await fetch(url, {
       method: 'POST', credentials: 'same-origin',
-      headers: { 'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8', ...(template ? template.headers : {}) },
-      body: params.toString() + '&'
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
+        'X-Requested-With': 'XMLHttpRequest',
+        ...(template ? template.headers : {})
+      },
+      body: bodyStr
     });
     const text = await res.text();
-    deliver(text, params.toString());
+    deliver(text, bodyStr);
     if (!text.includes('"DS_LECTUREINFO"')) throw new Error('강의 목록이 비어 있습니다.');
   }
 
+  async function fetchSyllabus(year, term, sbjtId) {
+    const bodyStr = new URLSearchParams({
+      dmParam: JSON.stringify({ ltYy: year, ltShtm: term, sbjtId: sbjtId, campFg: '1' })
+    }).toString();
+    const [resMain, resSub] = await Promise.all([
+      fetch('/CourLecturePlanInqNewGlocal/find.do', {
+        method: 'POST', credentials: 'same-origin',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8', 'X-Requested-With': 'XMLHttpRequest' },
+        body: bodyStr
+      }).then(r => r.text()).catch(() => null),
+      fetch('/CourLecturePlanInqNewGlocal/findSub.do', {
+        method: 'POST', credentials: 'same-origin',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8', 'X-Requested-With': 'XMLHttpRequest' },
+        body: bodyStr
+      }).then(r => r.text()).catch(() => null)
+    ]);
+    if (resMain) deliver(resMain, bodyStr);
+    if (resSub) deliver(resSub, bodyStr);
+  }
+
   window.addEventListener('message', async (ev) => {
-    if (ev.source !== window || ev.data?.source !== 'kku-collector-cmd' || ev.data.type !== 'fetchLectures') return;
+    if (ev.source !== window || ev.data?.source !== 'kku-collector-cmd') return;
     try {
-      await fetchLectures(String(ev.data.year), String(ev.data.term));
+      if (ev.data.type === 'fetchLectures') {
+        await fetchLectures(String(ev.data.year), String(ev.data.term));
+      } else if (ev.data.type === 'fetchSyllabus') {
+        await fetchSyllabus(String(ev.data.year), String(ev.data.term), String(ev.data.sbjtId));
+      }
     } catch (e) {
       post({ type: 'lecturesError', message: String(e?.message ?? e) });
     }

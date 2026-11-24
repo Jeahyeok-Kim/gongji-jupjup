@@ -36,6 +36,19 @@
   --gold: #e89d00;
   --chip-bg: var(--surface);
 
+  --surface-1: #ffffff;
+  --surface-variant: #f8fafc;
+  --border-soft: rgba(0, 0, 0, 0.08);
+  --text-sub: #4e5968;
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.05);
+  --accent-light: rgba(12, 122, 69, 0.1);
+  --line: #e6e8eb;
+  --w-radius: 18px;
+  --stage-interest: #d97706;
+  --stage-prep: #2563eb;
+  --stage-done: #059669;
+  --stage-result: #7c3aed;
+
   --r-sm: 6px;
   --r: 10px;
   --r-lg: 16px;
@@ -53,16 +66,22 @@
   --bg: #0f1114;
   --surface: #1a1d21;
   --surface-2: #202429;
+  --surface-1: #1a1d21;
+  --surface-variant: #202429;
   --fill: #272b31;
   --fill-hover: #30353c;
   --text: #eceff2;
+  --text-sub: #a7afb9;
   --muted: #a7afb9;
   --faint: #7a838d;
   --border: #2a2f35;
   --border-strong: #3a4048;
+  --border-soft: rgba(255, 255, 255, 0.08);
+  --line: #2a2f35;
   --accent: #36ad6d;
   --accent-strong: #78d4a2;
   --accent-soft: #17301f;
+  --accent-light: rgba(54, 173, 109, 0.15);
   --on-accent: #07140c;
   --inverse: #eceff2;
   --on-inverse: #0f1114;
@@ -74,8 +93,13 @@
   --info-soft: #1b2743;
   --gold: #f2c443;
   --shadow: none;
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.3);
   --shadow-pop: 0 18px 48px rgba(0, 0, 0, .6);
-  color-scheme: dark;
+  --stage-interest: #f59e0b;
+  --stage-prep: #3b82f6;
+  --stage-done: #10b981;
+  --stage-result: #a78bfa;
+  --color-scheme: dark;
 }
 
 /* ============ 2. 바탕 ============ */
@@ -720,7 +744,8 @@ dialog[open]::backdrop { background-color: rgba(10, 14, 20, .5); }
   #timetable-panel > .panel-head, #timetable-panel > .help { grid-column: 1; }
   #timetable-panel > .tt { grid-column: 1; grid-row: 3 / span 5; margin-bottom: 0; }
   #timetable-panel > :is(.calendar, .row, .toggle, .curr) { grid-column: 2; }
-  #timetable-panel > .calendar { grid-row: 1 / span 3; padding: 14px 16px; border-radius: var(--r); background: var(--surface-2); }
+  #timetable-panel > .calendar { grid-row: 1 / span 3; padding: 14px 16px; border-radius: var(--r); background: var(--surface); border: 1px solid var(--border); box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04); }
+  [data-theme="dark"] #timetable-panel > .calendar { background: var(--surface-2); border-color: var(--border); box-shadow: none; }
   #timetable-panel > .row { margin-bottom: 12px; }
   .tt { --hour-h: 56px; }
 }

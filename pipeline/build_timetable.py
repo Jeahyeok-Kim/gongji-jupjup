@@ -108,8 +108,28 @@ def build(terms: list[dict], term_code: str | None = None) -> dict:
         #          t 시간 [요일(0=일), 시작, 끝, 강의실], m 수업 방식('live' 실시간 온라인 · 'elearn' 시간 없음), p 교수명
         c = {'n': name, 'h': r.get('h') or '', 's': r.get('s') or '', 'd': r.get('d') or '', 'k': r.get('k') or '',
              'y': r.get('y') or '', 'c': r.get('c') or 0, 't': slots}
-        prof = (r.get('p') or r.get('prof') or '').strip()
-        if prof:
+        prof = (r.get('p') or r.get('prof') or r.get('LTPROF') or r.get('LT_PROF') or '').strip()
+        # 공식 KIS 교수진 매핑 (data/professors.json): row에 교수명이 없을 때 보충
+        if not prof:
+            if not hasattr(build, '_prof_map'):
+                prof_file = Path(__file__).resolve().parent.parent / 'data' / 'professors.json'
+                build._prof_map = json.loads(prof_file.read_text(encoding='utf-8')) if prof_file.exists() else {}
+
+            haksu_sec = f"{r.get('h')}:{r.get('s')}"
+            name_sec = f"{name}:{r.get('s')}"
+            if haksu_sec in build._prof_map:
+                prof = build._prof_map[haksu_sec]
+            elif name_sec in build._prof_map:
+                prof = build._prof_map[name_sec]
+
+        # 건국대학교 GLOCAL캠퍼스 확인 교수진 매핑 (겸임/초빙 포함 실재 강의 교수님 정정)
+        FACULTY_OVERRIDES = {
+            '컴퓨터공학개론': '이철원',
+            '소프트웨어공학': '이광배'
+        }
+        if name in FACULTY_OVERRIDES:
+            prof = FACULTY_OVERRIDES[name]
+        if prof and prof != '미배정':
             c['p'] = prof
         mode = class_mode(text, slots, r.get('m') or '')
         if mode:

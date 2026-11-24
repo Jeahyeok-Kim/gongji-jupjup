@@ -9,11 +9,20 @@
     // 이러닝 / 원격 수업 여부 판별 (강의시간이 없거나 방식·비고에 원격/이러닝 표기)
     const method = String(r.LT_MTHD_NM ?? r.LSSN_FORM_NM ?? r.CLS_MTHD ?? r.CYBER_DIV_NM ?? r.CYBER_AT ?? r.LSSN_MTHD_NM ?? r.RMK ?? '').trim();
     const isElearn = !t || /이러닝|원격|온라인|cyber|사이버|e-learning/i.test(method) || /이러닝|원격|사이버/i.test(t);
-    // 담당 교수명 다각적 필드 감지 및 불필요한 부가설명 괄호 제거
-    const rawProf = String(
-      r.PROF_NM ?? r.LCTR_PROF_NM ?? r.RESP_PROF_NM ?? r.EMP_NM ?? r.STAFF_NM ??
-      r.CHRG_PROF_NM ?? r.PROF_KRN_NM ?? r.PROF ?? r.TEACHER_NM ?? r.INSTR_NM ?? ''
-    ).trim();
+    // 담당 교수명 다각적 필드 감지 (건국대 KIS 단일/다중 필드 및 다양한 키명 대응: KIS는 LTPROF 사용)
+    let rawProf = '';
+    if (Array.isArray(r.PROF_LIST) && r.PROF_LIST.length > 0) {
+      rawProf = r.PROF_LIST.map((p) => (typeof p === 'object' ? (p.PROF_NM || p.EMP_NM || p.NAME || '') : String(p))).filter(Boolean).join(', ');
+    } else {
+      rawProf = String(
+        r.LTPROF ?? r.LT_PROF ?? r.KOR_NM ?? r.PROF_KOR_NM ??
+        r.PROF_NM ?? r.LCTR_PROF_NM ?? r.RESP_PROF_NM ?? r.EMP_NM ?? r.STAFF_NM ??
+        r.CHRG_PROF_NM ?? r.PROF_KRN_NM ?? r.PROF ?? r.TEACHER_NM ?? r.INSTR_NM ??
+        r.STAFF_KRN_NM ?? r.EMP_KORN_NM ?? r.PROFESSOR ?? r.PROF_NAME ?? r.PROFS_NM ??
+        r.LCTR_EMP_NM ?? r.LCTR_PROFR_NM ?? r.CHRG_EMP_NM ?? r.LECTURER ?? r.INSTRUCTOR ??
+        r.USER_NM ?? r.KORN_NM ?? r.LESSON_PROF ?? r.LSSN_PROF ?? r.LCTR_PROF_KRN_NM ?? ''
+      ).trim();
+    }
     const prof = rawProf.replace(/\(.*?\)/g, '').replace(/\[.*?\]/g, '').trim();
 
     const item = {
@@ -23,9 +32,11 @@
       k: String(r.POBT_DIV_NM ?? r.COMP_DIV_NM ?? '').trim(),       // 이수구분 (전선·전필·교양 등)
       y: String(r.OPEN_SHYR ?? r.SHYR ?? '').trim(),                // 개설 학년
       c: Number(r.PNT ?? r.CDT) || 0,                               // 학점
-      h: String(r.HAKSU_ID ?? r.SBJT_ID ?? '').trim(),              // 학수번호
+      h: String(r.HAKSU_ID ?? '').trim(),                           // 학수번호
       s: String(r.CLSS_NO ?? r.BUNBAN ?? '').trim()                 // 분반
     };
+    if (r.SBJT_ID) item.id = String(r.SBJT_ID).trim();              // 과목번호 (강의계획서 조회 키)
+    if (r.RPST_SPRF_NO) item.sprfNo = String(r.RPST_SPRF_NO).trim(); // 교수 교번
     if (prof) item.p = prof;                       // 담당 교수명 (정제됨)
     if (isElearn && !t) item.m = 'elearn';
     else if (method && /실시간\s*온라인/i.test(method)) item.m = 'live';
@@ -63,10 +74,53 @@
       await setStatus({ state: 'error', message: msg.message });
       return;
     }
+    if (msg.type === 'syllabus') {
+      const main = msg.main;
+      if (!main) return;
+      const yr = main.LT_YY || '2026';
+      const sm = main.LT_SHTM || 'B01012';
+      const sbjt = main.SBJT_ID || '';
+      const key = `syl:${yr}:${sm}:${sbjt}`;
+      const syllabusData = {
+        sbjtId: sbjt,
+        haksuId: main.HAKSU_ID,
+        name: main.CORS_KOR_NM,
+        prof: main.KOR_NM,
+        rank: main.WKGD_NM,
+        tel: main.SPRF_TEL,
+        desc: main.LT_DESC,
+        goal: main.LT_PURP,
+        pre: main.PRE_LT_CTNT,
+        rules: [main.RULE_MANNR, main.RULE_ETC].filter(Boolean).join('\n'),
+        rates: {
+          examMid: main.RATE_B,
+          examFinal: main.RATE_E,
+          attend: main.RATE_JS,
+          task: main.RATE_F,
+          prac: main.RATE_PRAC,
+          discuss: main.RATE_DISCUSS
+        },
+        weeks: (msg.weeks || []).map(w => ({
+          week: w.WEEK_NO,
+          theme: w.THEME,
+          goal: w.LT_PURP,
+          content: w.LT_CTNT,
+          method: w.LT_MTHD,
+          ref: w.PRJT_REF_DATA,
+          prep: w.PREP_GD
+        })),
+        collectedAt: Date.now()
+      };
+      await chrome.storage.local.set({ [key]: syllabusData });
+      await setStatus({ state: 'ok', message: `강의계획서 상세 저장: ${main.CORS_KOR_NM} (${main.KOR_NM} 교수)` });
+      return;
+    }
+
     if (msg.type !== 'lectures' || !Array.isArray(msg.rows)) return;
     clearTimeout(waiting);
     const key = `lec:${msg.year}:${msg.term}`;
     const cleanedRows = msg.rows.map(slim).filter((r) => r.n);
+    const profCount = cleanedRows.filter((r) => r.p).length;
     const saveObj = {
       [key]: { year: msg.year, term: msg.term, count: cleanedRows.length, rows: cleanedRows, collectedAt: Date.now() }
     };
@@ -82,7 +136,7 @@
     }
     await chrome.storage.local.set(saveObj);
     const label = msg.isPersonal ? '내 수강 시간표' : '개설 강의';
-    await setStatus({ state: 'ok', message: `${msg.year}년 ${cleanedRows.length}개 ${label}(담당 교수 포함)을 저장했습니다.` });
+    await setStatus({ state: 'ok', message: `${msg.year}년 ${cleanedRows.length}개 ${label}(담당 교수 ${profCount}명 매칭 완료)을 저장했습니다.` });
   });
 
   chrome.runtime.onMessage.addListener((msg, _s, sendResponse) => {

@@ -432,7 +432,8 @@ class Handler(BaseHTTPRequestHandler):
         if kind == 'lectures':
             try:
                 import build_timetable
-                build_timetable.main([str(path)])
+                out_path = self.root / 'data' / 'timetable.js'
+                build_timetable.main([str(path), '--out', str(out_path)])
                 site_tt = self.root / '_site' / 'data' / 'timetable.js'
                 if site_tt.parent.exists():
                     import shutil

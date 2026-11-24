@@ -52,7 +52,7 @@
       ruleSource: (r) => `${r.law} 제${r.no}조(${r.article})` + (r.checked ? ` · ${r.checked} 확인` : ''),
       ruleLink: '규정정보시스템',
       glossaryTitle: '어려운 용어 풀이',
-      original: '원문 보기', noOriginal: '샘플 공지라 원문 링크가 없습니다.',
+      original: '원문 보기', noOriginal: '원문 링크를 찾을 수 없습니다.',
       aiNote: 'AI가 만든 요약·번역이므로 중요한 내용은 원문을 꼭 확인하세요.',
       imageOnly: '본문 확인 불가 (이미지·첨부)',
       readMedia: '포스터·첨부에서 읽음',
@@ -119,9 +119,9 @@
       tabsLabel: '화면 이동', tabNotices: '공지', tabTimetable: '시간표', tabBudget: '추천', tabSettings: '설정',
       settings: '설정',
       about: '공지 줍줍은 학교 게시판에 흩어진 공지를 모아, 내 시간표와 남는 시간에 맞는 것만 골라 주는 서비스예요. 유학생은 영어·중국어·일본어로 볼 수 있어요.',
-      footer: '공지 줍줍 · 컴퓨터공학개론 기말 프로젝트 · 김재혁',
-      footerNote: '공개 게시글만 다루며 원문 전체를 복사해 보여 주지 않습니다.',
-      dataInfo: (m) => `데이터: ${m.source === 'sample' ? '샘플' : '수집·해독 결과'} · ${m.generatedAt}${m.model ? ' · ' + m.model : ''}`
+      footer: '공지 줍줍 · 건국대학교 GLOCAL캠퍼스 컴퓨터공학개론 기말 프로젝트 · 김재혁',
+      footerNote: '건국대학교 GLOCAL캠퍼스 공식 공지 기반 · 학생 맞춤 학사 지원',
+      dataInfo: (m) => (m.source === 'sample' ? '샘플 데이터 · ' : '최근 데이터 업데이트: ') + m.generatedAt + ' · AI 핵심 요약'
     },
 
     en: {
@@ -165,7 +165,7 @@
       ruleSource: (r) => `${r.law}, Article ${r.no} (${r.article})` + (r.checked ? ` · checked ${r.checked}` : ''),
       ruleLink: 'Rules system',
       glossaryTitle: 'Key terms explained',
-      original: 'View original', noOriginal: 'Sample notice: there is no original link.',
+      original: 'View original', noOriginal: 'Original notice link is not available.',
       aiNote: 'Summaries and translations are made by AI. Always check the original for important details.',
       imageOnly: 'Body unreadable (image/attachment)',
       readMedia: 'Read from poster/attachment',
@@ -232,9 +232,9 @@
       tabsLabel: 'Screens', tabNotices: 'Notices', tabTimetable: 'Timetable', tabBudget: 'Picks', tabSettings: 'Settings',
       settings: 'Settings',
       about: 'Gongji Jupjup gathers notices scattered across school boards and picks the ones that fit your timetable and free time. International students can read them in English, Chinese or Japanese.',
-      footer: 'Gongji Jupjup · Intro to Computer Engineering final project · Kim Jaehyeok',
-      footerNote: 'Only public posts are used, and original posts are not copied in full.',
-      dataInfo: (m) => `Data: ${m.source === 'sample' ? 'sample' : 'collected'} · ${m.generatedAt}${m.model ? ' · ' + m.model : ''}`
+      footer: 'Gongji Jupjup · Konkuk Univ. GLOCAL Dept. of Computer Engineering Final Project · Jaehyeok Kim',
+      footerNote: 'Based on official Konkuk Univ. GLOCAL notices · Smart Academic Support',
+      dataInfo: (m) => (m.source === 'sample' ? 'Sample data · ' : 'Last updated: ') + m.generatedAt + ' · AI Smart Summaries'
     },
 
     zh: {
@@ -278,7 +278,7 @@
       ruleSource: (r) => `${r.law} 第${r.no}条(${r.article})` + (r.checked ? ` · ${r.checked}确认` : ''),
       ruleLink: '规章制度系统',
       glossaryTitle: '术语解释',
-      original: '查看原文', noOriginal: '示例公告,没有原文链接。',
+      original: '查看原文', noOriginal: '无法找到原文链接。',
       aiNote: '摘要和翻译由AI生成,重要内容请务必查看原文。',
       imageOnly: '正文无法读取(图片/附件)',
       readMedia: '从海报/附件读取',
@@ -345,9 +345,9 @@
       tabsLabel: '页面切换', tabNotices: '公告', tabTimetable: '课表', tabBudget: '推荐', tabSettings: '设置',
       settings: '设置',
       about: '公告捡捡收集分散在学校各公告栏的公告,只挑出适合你课表和空闲时间的内容。留学生可以用英语、中文或日语阅读。',
-      footer: '公告捡捡(공지 줍줍) · 计算机工程概论期末项目 · 金在赫',
-      footerNote: '只使用公开的帖子,不完整复制原文。',
-      dataInfo: (m) => `数据:${m.source === 'sample' ? '示例' : '采集结果'} · ${m.generatedAt}${m.model ? ' · ' + m.model : ''}`
+      footer: '公告捡捡(공지 줍줍) · 建国大学GLOCAL校区 计算机工程概论期末项目 · 金在赫',
+      footerNote: '基于建国大学GLOCAL校区官方公告 · 智能学事支持',
+      dataInfo: (m) => (m.source === 'sample' ? '示例数据 · ' : '数据更新: ') + m.generatedAt + ' · AI智能摘要'
     },
 
     ja: {
@@ -391,7 +391,7 @@
       ruleSource: (r) => `${r.law} 第${r.no}条(${r.article})` + (r.checked ? ` · ${r.checked} 確認` : ''),
       ruleLink: '規程情報システム',
       glossaryTitle: '用語の解説',
-      original: '原文を見る', noOriginal: 'サンプルのため原文リンクはありません。',
+      original: '原文を見る', noOriginal: '元のリンクが見つかりません。',
       aiNote: '要約・翻訳はAIが作成したものです。重要な内容は必ず原文を確認してください。',
       imageOnly: '本文を読み取れません(画像・添付)',
       readMedia: 'ポスター・添付から読み取り',
@@ -458,9 +458,9 @@
       tabsLabel: '画面切り替え', tabNotices: 'お知らせ', tabTimetable: '時間割', tabBudget: 'おすすめ', tabSettings: '設定',
       settings: '設定',
       about: 'コンジ・ジュプジュプは学校の掲示板に散らばったお知らせを集め、時間割と空き時間に合うものだけを選ぶサービスです。留学生は英語・中国語・日本語で読めます。',
-      footer: 'コンジ・ジュプジュプ(공지 줍줍) · コンピュータ工学概論 期末プロジェクト · キム・ジェヒョク',
-      footerNote: '公開されている投稿のみを扱い、原文をそのまま全文コピーしません。',
-      dataInfo: (m) => `データ:${m.source === 'sample' ? 'サンプル' : '収集結果'} · ${m.generatedAt}${m.model ? ' · ' + m.model : ''}`
+      footer: 'コンジ・ジュプジュプ(공지 줍줍) · 建国大学GLOCALキャンパス コンピュータ工学概論 期末プロジェクト · キム・ジェヒョク',
+      footerNote: '建国大学GLOCALキャンパス公式お知らせ連携 · スマート学事支援',
+      dataInfo: (m) => (m.source === 'sample' ? 'サンプルデータ · ' : '最終更新: ') + m.generatedAt + ' · AIスマート要約'
     }
   };
 

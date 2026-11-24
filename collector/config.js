@@ -150,7 +150,8 @@ globalThis.kkuLecturesPayload = async () => {
   const all = await chrome.storage.local.get(null);
   const terms = Object.entries(all).filter(([k]) => k.startsWith('lec:')).map(([, v]) => v);
   if (terms.length === 0) return null;
-  return { schema: 1, kind: 'kku-lectures', generator: kkuGenerator(), generatedAt: new Date().toISOString(), terms };
+  const syllabuses = Object.entries(all).filter(([k]) => k.startsWith('syl:')).map(([, v]) => v);
+  return { schema: 1, kind: 'kku-lectures', generator: kkuGenerator(), generatedAt: new Date().toISOString(), terms, syllabuses };
 };
 globalThis.kkuReferencePayload = async () => {
   const { 'ref:kku': kku, 'ref:rule': rule } = await chrome.storage.local.get(['ref:kku', 'ref:rule']);

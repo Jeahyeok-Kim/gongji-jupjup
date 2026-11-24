@@ -34,8 +34,8 @@
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
   <!-- 제목·숫자용 글꼴: 원티드 산스 (기업 브랜드 서체, OFL). 받지 못하면 Pretendard 로 보임 -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/wanteddev/wanted-sans@v1.0.3/packages/wanted-sans/fonts/webfonts/variable/split/WantedSansVariable.min.css">
-  <link rel="stylesheet" href="css/style.css">
-  <link rel="stylesheet" href="css/enhanced.css">
+  <link rel="stylesheet" href="css/style.css?v=67">
+  <link rel="stylesheet" href="css/enhanced.css?v=67">
 </head>
 <body data-tab="notices">
   <header class="topbar">
@@ -202,6 +202,7 @@
         <h2 id="board-title" data-i18n="boardTitle"></h2>
         <p class="view-sub"><span data-i18n="boardHelp"></span> <strong id="board-sum"></strong></p>
       </div>
+      <div class="board-pipeline-guide" id="board-pipeline-guide" hidden></div>
       <div class="board" id="kanban"></div>
     </section>
 
@@ -314,9 +315,18 @@
           <p class="fine" id="install-hint"></p>
         </div>
         <p class="fine setting-row" id="ov-status" hidden></p>
-        <p class="help" data-i18n="about"></p>
-        <p class="fine"><span data-i18n="footerNote"></span> <span class="data-info"></span></p>
-        <p class="fine" data-i18n="footer"></p>
+        <div class="settings-about-card">
+          <div class="settings-about-header">
+            <span class="settings-about-badge">ℹ️ 서비스 소개</span>
+            <span class="settings-about-ver">공지 줍줍 v66</span>
+          </div>
+          <p class="help settings-about-desc" data-i18n="about"></p>
+          <div class="settings-about-meta">
+            <p class="fine"><span data-i18n="footerNote"></span></p>
+            <p class="fine"><span class="data-info"></span></p>
+            <p class="fine settings-credit" data-i18n="footer"></p>
+          </div>
+        </div>
       </section>
 
       <!-- 나에게 맞게: 화면 모드·글자 크기·관심·알림·구글 캘린더 (PC: 항상 보임 / 휴대폰: '설정' 탭) -->
@@ -385,13 +395,14 @@
       </label>
       <label class="wide class-prof-field">
         <span>담당 교수 (선택)</span>
-        <input type="text" name="prof" id="class-prof" maxlength="30" autocomplete="off" placeholder="예: 홍길동 교수">
+        <input type="text" name="prof" id="class-prof" maxlength="30" autocomplete="off" placeholder="예: 이철원 교수">
       </label>
       <div class="wide class-quick-suggest" id="class-quick-suggest" hidden>
         <span class="cqs-label">⚡ 이 시간대 추천 개설 과목</span>
         <div class="cqs-chips" id="cqs-chips"></div>
       </div>
       <ul class="wide course-suggest" id="course-suggest" role="listbox" hidden></ul>
+      <div class="wide warn-note class-transferred-warn" id="class-transferred-warn" hidden></div>
       <p class="wide fine class-extra" id="class-extra" hidden></p>
       <div class="wide class-alt-sec" id="class-alt-sec" hidden></div>
       <div class="wide class-mode-row" role="radiogroup" aria-label="수업 방식">
@@ -459,8 +470,14 @@
   </button>
 
   <footer class="footer">
-    <p data-i18n="footer"></p>
-    <p class="fine"><span data-i18n="footerNote"></span> <span class="data-info"></span></p>
+    <div class="footer-inner">
+      <p class="footer-title" data-i18n="footer"></p>
+      <p class="fine footer-meta">
+        <span class="footer-source" data-i18n="footerNote"></span>
+        <span class="footer-dot">·</span>
+        <span class="data-info"></span>
+      </p>
+    </div>
   </footer>
 
   <!-- 순서 중요: 데이터 → 로직 → 문구 → 화면 -->
@@ -470,6 +487,7 @@
   <script src="data/config.js" onerror="this.remove()"></script>
   <script src="data/courses.js" onerror="this.remove()"></script>
   <script src="data/timetable.js" onerror="this.remove()"></script>
+  <script src="data/professors.js" onerror="this.remove()"></script>
   <script src="data/gradreq.js" onerror="this.remove()"></script>
   <script src="js/benefit.js"></script>
   <script src="js/sync.js"></script>
@@ -481,21 +499,21 @@
   <script src="js/eligibility.js"></script>
   <script src="js/ask.js"></script>
   <script src="js/cal.js"></script>
-  <script src="js/i18n.js"></script>
+  <script src="js/i18n.js?v=67"></script>
   <script src="js/i18n2.js"></script>
   <script src="js/i18n3.js"></script>
   <script src="js/i18n4.js"></script>
-  <script src="js/i18n5.js"></script>
+  <script src="js/i18n5.js?v=67"></script>
   <script src="js/curriculum.js"></script>
-  <script src="js/plan.js"></script>
-  <script src="js/planui.js"></script>
-  <script src="js/track.js"></script>
+  <script src="js/plan.js?v=67"></script>
+  <script src="js/planui.js?v=67"></script>
+  <script src="js/track.js?v=67"></script>
   <script src="js/palette.js"></script>
   <script src="js/ttimage.js"></script>
   <script src="js/ttics.js"></script>
-  <script src="js/noticeimage.js"></script>
+  <script src="js/noticeimage.js?v=67"></script>
   <script src="js/theme.js"></script>
-  <script src="js/app.js"></script>
-  <script src="js/enhanced.js"></script>
+  <script src="js/app.js?v=67"></script>
+  <script src="js/enhanced.js?v=67"></script>
 </body>
 </html>

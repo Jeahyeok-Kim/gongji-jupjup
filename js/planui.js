@@ -21,6 +21,7 @@
       sub: ['week', 'history', 'plan'].includes(store.get('ttSub', 'week')) ? store.get('ttSub', 'week') : 'week',
       history: P.cleanHistory(store.get('history', [])),
       req: store.get('gradReq', null) || {},
+      transferred: (store.get('transferredCourses', []) || []).filter((x) => x && x.name),
       prefs: Object.assign({ target: null, grades: [], include: { major: true, general: true, elearn: true, live: true }, avoid: [], takenNow: true, semesters: null, locked: [], excluded: [] },
         store.get('planPrefs', null) || {}),
       lastTerm: store.get('histLastTerm', curTermKey),
@@ -30,6 +31,7 @@
     const save = () => {
       store.set('history', st.history);
       store.set('gradReq', st.req);
+      store.set('transferredCourses', st.transferred);
       store.set('planPrefs', st.prefs);
       if (deps.onChange) deps.onChange();
     };
@@ -114,29 +116,40 @@
       const reqMajorReq = req.majorReq || 0;
 
       if (req.mode === 'transfer') {
-        const freeReq = Math.max(0, (req.total || 66) - (req.major || 0));
+        const trMajorCredits = (st.transferred || []).reduce((s, x) => s + (Number(x.credit) || 0), 0);
+        const trMajorReqDone = (st.transferred || []).filter((x) => x.kind === '전필').reduce((s, x) => s + (Number(x.credit) || 0), 0);
+        const effectiveMajorReqDone = majorReqDone + trMajorReqDone;
+
+        const targetFree = (req.general !== null && req.general !== undefined) ? req.general : Math.max(0, (req.total || 66) - (req.major || 0));
         const freeDone = Math.max(0, tot.total - Math.min(tot.major, req.major || 0));
         const items = [
           {
             label: reqMajorReq > 0 ? '전공필수' : '전공필수 (학과)',
-            done: majorReqDone,
+            done: effectiveMajorReqDone,
             need: reqMajorReq || null,
-            tag: reqMajorReq > 0 ? (majorReqDone >= reqMajorReq ? '완료 ✓' : `${reqMajorReq - majorReqDone}학점 부족`) : '의무 없음',
-            ok: reqMajorReq > 0 ? majorReqDone >= reqMajorReq : true
+            tag: reqMajorReq > 0 ? (effectiveMajorReqDone >= reqMajorReq ? (trMajorReqDone > 0 ? '완료 ✓ (전적대 인정)' : '완료 ✓') : `${reqMajorReq - effectiveMajorReqDone}학점 부족`) : '의무 없음',
+            ok: reqMajorReq > 0 ? effectiveMajorReqDone >= reqMajorReq : true
           },
           {
-            label: `전공 이수 (${req.major || 0}학점)`,
+            label: '전적대 전공 인정 (최대 15학점)',
+            done: trMajorCredits,
+            need: 15,
+            tag: trMajorCredits >= 15 ? '15학점 인정 완료 ✓ (재수강 불가)' : trMajorCredits > 0 ? `${trMajorCredits}학점 인정 (재수강 불가 🚫)` : '인정 과목 미등록',
+            ok: trMajorCredits > 0
+          },
+          {
+            label: `건국대 전공 이수 (${req.major || 0}학점)`,
             done: tot.major,
             need: req.major,
             tag: (tot.major >= (req.major || 0)) ? '완료 ✓' : `${(req.major || 0) - tot.major}학점 부족`,
             ok: tot.major >= (req.major || 0)
           },
           {
-            label: freeReq > 0 ? `자유 이수 (${freeReq}학점)` : '자유 이수',
+            label: targetFree > 0 ? `건국대 자유·다전공 이수 (${targetFree}학점)` : '자유·다전공 이수',
             done: freeDone,
-            need: freeReq > 0 ? freeReq : null,
-            tag: freeReq === 0 ? '자유 불필요 (전공 100%)' : (freeDone >= freeReq ? '완료 ✓' : `${freeReq - freeDone}학점 부족`),
-            ok: freeReq === 0 || freeDone >= freeReq
+            need: targetFree > 0 ? targetFree : null,
+            tag: targetFree === 0 ? '자유 불필요 (전공 100%)' : (freeDone >= targetFree ? '완료 ✓' : `${targetFree - freeDone}학점 부족`),
+            ok: targetFree === 0 || freeDone >= targetFree
           },
           {
             label: `편입 총 이수 (${req.total || 66}학점)`,
@@ -158,7 +171,7 @@
         return h('div', { class: 'grad-breakdown-card is-transfer-mode' },
           h('div', { class: 'gbc-head' },
             h('h4', null, '📊 영역별 세부 졸업요건 이수율'),
-            h('span', { class: 'gbc-sub' }, '편입생: 기초·심화·KU소양 필수 면제 · 전공 및 자유 학점 충족 여부')
+            h('span', { class: 'gbc-sub' }, '편입생: 기초·심화·KU소양 필수 면제 · 주전공 및 다전공·자유 학점 충족 여부')
           ),
           h('div', { class: 'gbc-grid' }, items.map((it) => {
             const pct = it.need ? Math.min(100, Math.round((it.done / it.need) * 100)) : 100;
@@ -291,18 +304,24 @@
       return wrap;
     }
 
-    // 남은 전공필수: 요람의 내 학과 전공필수 중 이수 내역에 없는 과목. 이번 학기에 열렸으면 눌러서 추천에 고정
+    // 남은 전공필수: 요람의 내 학과 전공필수 중 이수 내역 및 전적대 인정에 없는 과목. 이번 학기에 열렸으면 눌러서 추천에 고정
     function renderRequired() {
       const Tx = T();
       const C = root.GongjiCurriculum;
       const d = C && C.findDept ? C.findDept(dept(), root.GONGJI_COURSES) : null;
       if (!d) return null;
-      const left = P.requiredLeft(d.courses, st.history);
+      const allDone = (st.history || []).concat(st.transferred || []);
+      const left = P.requiredLeft(d.courses, allDone);
       const offered = (name) => groups.find((g) => P.normName(g.name) === P.normName(name) && P.deptMatch(g.dept, dept()))
         || groups.find((g) => P.normName(g.name) === P.normName(name));
+
+      const trReqDone = (st.transferred || []).filter((tr) => d.courses.some(([, , name, kind]) => kind === '전필' && P.normName(name) === P.normName(tr.name)));
+
       return h('section', { class: 'req-left' },
-        h('div', { class: 'road-head' }, h('h3', null, Tx.reqLeftTitle, left.length ? h('span', { class: 'group-count' }, ` ${left.length}`) : null),
-          h('p', { class: 'fine' }, left.length ? Tx.reqLeftHelp : Tx.reqLeftNone)),
+        h('div', { class: 'road-head' },
+          h('h3', null, Tx.reqLeftTitle, left.length ? h('span', { class: 'group-count' }, ` ${left.length}`) : null),
+          h('p', { class: 'fine' }, left.length ? Tx.reqLeftHelp : Tx.reqLeftNone),
+          trReqDone.length ? h('div', { class: 'tr-req-done-pill' }, `🎓 전적대 전필 인정 완료: ${trReqDone.map((x) => x.name).join(', ')} (재수강 불가)`) : null),
         left.length ? h('ul', { class: 'req-chips' }, left.map((x) => {
           const g = offered(x.name);
           return h('li', null, h('button', {
@@ -336,26 +355,42 @@
     function renderReq() {
       const Tx = T();
       const req = requirement();
-      const num = (key, label, value, onCustom) => h('label', { class: 'req-field' },
+      const num = (id, key, label, value, onLiveInput, onCommit) => h('label', { class: 'req-field' },
         h('span', null, label),
         h('input', {
-          type: 'number', min: '0', max: '300', step: '1', inputmode: 'numeric', value: value === null || value === undefined ? '' : String(value),
+          id: id || null,
+          type: 'number', min: '0', max: '300', step: '1', inputmode: 'numeric',
+          value: value === null || value === undefined ? '' : String(value),
+          oninput: (e) => {
+            const raw = e.target.value.trim();
+            const v = raw === '' ? null : Number(raw);
+            if (onLiveInput) onLiveInput(v, e);
+          },
           onchange: (e) => {
             const raw = e.target.value.trim();
             const v = raw === '' ? null : Number(raw);
-            if (onCustom) {
-              onCustom(v);
+            if (onCommit) {
+              onCommit(v, e);
             } else {
               if (v === null) delete st.req[key]; else st.req[key] = v;
+              save(); render();
             }
-            save(); render();
           }
         }));
+
       const setMode = (mode) => {
         const curDept = st.req.dept;
         st.req = { dept: curDept, mode };
         if (mode === 'transfer') {
           st.req.total = 66;
+          const trCredits = (st.transferred || []).reduce((s, x) => s + (Number(x.credit) || 0), 0);
+          if (trCredits > 0) {
+            st.req.major = Math.max(0, 66 - trCredits);
+            st.req.general = Math.min(66, trCredits);
+          } else {
+            st.req.major = 66;
+            st.req.general = 0;
+          }
         }
         save(); render();
       };
@@ -368,48 +403,158 @@
         save(); render();
       };
 
-      const transferPresets = req.mode === 'transfer' ? h('div', { class: 'req-presets-bar' },
-        h('button', {
-          type: 'button',
-          class: 'req-preset-chip' + (req.major === 51 && req.general === 15 ? ' is-active' : ''),
-          onclick: () => applyPreset(66, 51, 15)
-        }, Tx.reqPreset51 || '⚡ 전공 51 + 자유 15 (전적대 전공 15학점 인정 시)'),
-        h('button', {
-          type: 'button',
-          class: 'req-preset-chip' + (req.major === 66 && (req.general === 0 || !req.general) ? ' is-active' : ''),
-          onclick: () => applyPreset(66, 66, 0)
-        }, Tx.reqPreset66 || '⚡ 전공 66 (비동일계 전공 전체 이수)')
+      const transferPresets = req.mode === 'transfer' ? h('div', { class: 'req-presets-wrapper' },
+        h('div', { class: 'req-preset-group' },
+          h('span', { class: 'req-preset-group-title' }, '📌 단일전공 기준 (기본 66학점)'),
+          h('div', { class: 'req-presets-bar' },
+            h('button', {
+              type: 'button',
+              class: 'req-preset-chip' + (req.total === 66 && req.major === 66 && (req.general === 0 || !req.general) ? ' is-active' : ''),
+              onclick: () => applyPreset(66, 66, 0)
+            }, Tx.reqPreset66 || '⚡ 0학점 인정 (비동일계: 전공 66)'),
+            h('button', {
+              type: 'button',
+              class: 'req-preset-chip' + (req.total === 66 && req.major === 60 && req.general === 6 ? ' is-active' : ''),
+              onclick: () => applyPreset(66, 60, 6)
+            }, Tx.reqPreset60 || '⚡ 6학점 인정 (전공 60 + 자유 6)'),
+            h('button', {
+              type: 'button',
+              class: 'req-preset-chip' + (req.total === 66 && req.major === 57 && req.general === 9 ? ' is-active' : ''),
+              onclick: () => applyPreset(66, 57, 9)
+            }, Tx.reqPreset57 || '⚡ 9학점 인정 (전공 57 + 자유 9)'),
+            h('button', {
+              type: 'button',
+              class: 'req-preset-chip' + (req.total === 66 && req.major === 51 && req.general === 15 ? ' is-active' : ''),
+              onclick: () => applyPreset(66, 51, 15)
+            }, Tx.reqPreset51 || '⚡ 15학점 인정 (동일계 최대: 전공 51 + 자유 15)')
+          )
+        ),
+        h('div', { class: 'req-preset-group' },
+          h('span', { class: 'req-preset-group-title' }, '🎓 다전공(복수전공)·융합전공·부전공 기준 (확장 학점)'),
+          h('div', { class: 'req-presets-bar' },
+            h('button', {
+              type: 'button',
+              class: 'req-preset-chip' + (req.total === 87 && req.major === 51 && req.general === 36 ? ' is-active' : ''),
+              onclick: () => applyPreset(87, 51, 36)
+            }, '🎓 다전공(복수전공) 기준 (총 87: 주전공 51 + 제2전공 36)'),
+            h('button', {
+              type: 'button',
+              class: 'req-preset-chip' + (req.total === 75 && req.major === 51 && req.general === 24 ? ' is-active' : ''),
+              onclick: () => applyPreset(75, 51, 24)
+            }, '🧬 융합·연계전공 기준 (총 75: 주전공 51 + 융합전공 24)'),
+            h('button', {
+              type: 'button',
+              class: 'req-preset-chip' + (req.total === 72 && req.major === 51 && req.general === 21 ? ' is-active' : ''),
+              onclick: () => applyPreset(72, 51, 21)
+            }, '📘 부전공 기준 (총 72: 주전공 51 + 부전공 21)')
+          )
+        )
       ) : null;
 
+      const updateBalanceIndicator = () => {
+        const barEl = $('#req-balance-indicator');
+        if (!barEl) return;
+        const totEl = $('#req-input-total');
+        const majEl = $('#req-input-major');
+        const genEl = $('#req-input-general');
+        const curTot = totEl ? (Number(totEl.value) || 0) : (req.total || 66);
+        const curMaj = majEl ? (Number(majEl.value) || 0) : (req.major || 0);
+        const curGen = genEl ? (Number(genEl.value) || 0) : (req.general || 0);
+        const sum = curMaj + curGen;
+        const diff = curTot - sum;
+        barEl.className = 'req-balance-status ' + (diff === 0 ? 'is-balanced' : diff > 0 ? 'is-under' : 'is-over');
+        if (diff === 0) {
+          barEl.innerHTML = `<span class="rbs-icon">✓</span><span class="rbs-text">학점 배분 일치: 전공(${curMaj}) + 자유·다전공(${curGen}) = 총 ${curTot}학점</span>`;
+        } else if (diff > 0) {
+          barEl.innerHTML = `<span class="rbs-icon">💡</span><span class="rbs-text">전공(${curMaj}) + 자유·다전공(${curGen}) = ${sum}학점 · 총 목표(${curTot}학점) 대비 ${diff}학점 여유</span>`;
+        } else {
+          barEl.innerHTML = `<span class="rbs-icon">⚠️</span><span class="rbs-text">전공(${curMaj}) + 자유·다전공(${curGen}) = ${sum}학점 · 총 목표(${curTot}학점)보다 ${-diff}학점 초과</span>`;
+        }
+      };
+
       const reqInputs = req.mode === 'transfer' ? [
-        num('total', Tx.reqTotalTransfer || '편입 후 이수할 학점', req.total, (v) => {
-          if (v === null) delete st.req.total;
-          else {
-            st.req.total = v;
-            if (st.req.major) st.req.general = Math.max(0, v - st.req.major);
+        num('req-input-total', 'total', Tx.reqTotalTransfer || '편입 후 이수할 학점', req.total,
+          (v) => {
+            st.req.total = v === null ? 66 : v;
+            save();
+            updateBalanceIndicator();
+          },
+          (v) => {
+            st.req.total = v === null ? 66 : v;
+            save(); render();
           }
-        }),
-        num('major', Tx.reqMajorTransfer || '전공 최소 학점', req.major, (v) => {
-          if (v === null) delete st.req.major;
-          else {
+        ),
+        num('req-input-major', 'major', Tx.reqMajorTransfer || '전공 최소 학점', req.major,
+          (v) => {
+            st.req.major = v === null ? 0 : v;
+            save();
+            updateBalanceIndicator();
+          },
+          (v) => {
             st.req.major = v;
-            const curTot = st.req.total || req.total || 66;
-            st.req.general = Math.max(0, curTot - v);
+            save(); render();
           }
-        }),
-        num('general', Tx.reqGeneralTransfer || '자유 학점 (교양/일선)', req.general !== null && req.general !== undefined ? req.general : Math.max(0, (req.total || 66) - (req.major || 0)), (v) => {
-          if (v === null) delete st.req.general;
-          else {
+        ),
+        num('req-input-general', 'general', Tx.reqGeneralTransfer || '자유·다전공 학점 (교양/일선/제2전공)', req.general,
+          (v) => {
+            st.req.general = v === null ? 0 : v;
+            save();
+            updateBalanceIndicator();
+          },
+          (v) => {
             st.req.general = v;
-            const curTot = st.req.total || req.total || 66;
-            st.req.major = Math.max(0, curTot - v);
+            save(); render();
           }
-        })
+        )
       ] : [
-        num('total', Tx.reqTotal, req.total),
-        num('major', Tx.reqMajor, req.major),
-        num('general', Tx.reqGeneral, req.general)
+        num('req-input-total', 'total', Tx.reqTotal, req.total),
+        num('req-input-major', 'major', Tx.reqMajor, req.major),
+        num('req-input-general', 'general', Tx.reqGeneral, req.general)
       ];
+
+      let balanceBar = null;
+      if (req.mode === 'transfer') {
+        const curMaj = st.req.major !== undefined && st.req.major !== null ? st.req.major : (req.major || 0);
+        const curGen = st.req.general !== undefined && st.req.general !== null ? st.req.general : (req.general || 0);
+        const curTot = (st.req.total !== undefined && st.req.total !== null ? st.req.total : (req.total || 66)) || 66;
+        const sum = curMaj + curGen;
+        const diff = curTot - sum;
+
+        if (diff === 0) {
+          balanceBar = h('div', { id: 'req-balance-indicator', class: 'req-balance-status is-balanced' },
+            h('span', { class: 'rbs-icon' }, '✓'),
+            h('span', { class: 'rbs-text' }, `학점 배분 일치: 전공(${curMaj}) + 자유·다전공(${curGen}) = 총 ${curTot}학점`)
+          );
+        } else if (diff > 0) {
+          balanceBar = h('div', { id: 'req-balance-indicator', class: 'req-balance-status is-under' },
+            h('span', { class: 'rbs-icon' }, '💡'),
+            h('span', { class: 'rbs-text' }, `전공(${curMaj}) + 자유·다전공(${curGen}) = ${sum}학점 · 총 목표(${curTot}학점) 대비 ${diff}학점 여유`),
+            h('button', {
+              type: 'button',
+              class: 'rbs-action-btn',
+              onclick: () => {
+                st.req.general = curGen + diff;
+                save(); render();
+                toast(`잔여 ${diff}학점을 자유·다전공 학점에 배분했습니다. (총 ${curTot}학점)`);
+              }
+            }, `⚖️ 잔여 ${diff}학점을 자유·다전공에 자동 배분`)
+          );
+        } else {
+          balanceBar = h('div', { id: 'req-balance-indicator', class: 'req-balance-status is-over' },
+            h('span', { class: 'rbs-icon' }, '⚠️'),
+            h('span', { class: 'rbs-text' }, `전공(${curMaj}) + 자유·다전공(${curGen}) = ${sum}학점 · 총 목표(${curTot}학점)보다 ${-diff}학점 초과`),
+            h('button', {
+              type: 'button',
+              class: 'rbs-action-btn',
+              onclick: () => {
+                st.req.total = sum;
+                save(); render();
+                toast(`편입 후 총 이수학점을 ${sum}학점으로 맞췄습니다.`);
+              }
+            }, `🎯 총 이수학점을 ${sum}학점으로 맞추기`)
+          );
+        }
+      }
 
       return h('details', { class: 'plan-box req-box', open: !req.found || req.mode === 'transfer' || edited ? true : null },
         h('summary', null, h('span', null, Tx.reqTitle),
@@ -426,11 +571,284 @@
             h('input', { type: 'text', list: 'dept-list', value: dept(), placeholder: Tx.profileDeptPh || '',
               onchange: (e) => { st.req.dept = e.target.value.trim(); save(); render(); } })),
           ...reqInputs),
+        balanceBar,
         edited ? h('button', { type: 'button', class: 'link-btn', onclick: () => {
           st.req = { dept: st.req.dept, mode: req.mode };
-          if (req.mode === 'transfer') st.req.total = 66;
+          if (req.mode === 'transfer') {
+            st.req.total = 66;
+            const trCredits = (st.transferred || []).reduce((s, x) => s + (Number(x.credit) || 0), 0);
+            if (trCredits > 0) {
+              st.req.major = Math.max(0, 66 - trCredits);
+              st.req.general = trCredits;
+            } else {
+              st.req.major = 66;
+              st.req.general = 0;
+            }
+          }
           save(); render();
         } }, Tx.reqReset) : null);
+    }
+
+    // 전적대 전공 인정 교과목 관리 (편입생 전용: 최대 15학점 · 건국대학교 규정상 재수강 불가)
+    function renderTransferredManager() {
+      const Tx = T();
+      const req = requirement();
+      if (req.mode !== 'transfer' && (!st.transferred || !st.transferred.length)) return null;
+
+      const list = st.transferred || [];
+      const totalTrCredits = list.reduce((s, x) => s + (Number(x.credit) || 0), 0);
+      const isMax15 = totalTrCredits >= 15;
+      const curTot = st.req.total || req.total || 66;
+      const neededMajor = Math.max(0, curTot - totalTrCredits);
+
+      const removeCourse = (name) => {
+        st.transferred = (st.transferred || []).filter((x) => P.normName(x.name) !== P.normName(name));
+        const newCredits = st.transferred.reduce((s, x) => s + (Number(x.credit) || 0), 0);
+        st.req.major = Math.max(0, curTot - newCredits);
+        st.req.general = Math.min(curTot, newCredits);
+        save();
+        render();
+        toast(`[${name}] 인정 과목이 삭제되었습니다. (전공 ${st.req.major} · 자유 ${st.req.general} 자동 갱신)`);
+      };
+
+      const addCourse = (e) => {
+        e.preventDefault();
+        const f = e.currentTarget;
+        const name = (f.elements.trName.value || '').trim();
+        const credit = Number(f.elements.trCredit.value) || 3;
+        const kind = f.elements.trKind.value || '전선';
+        if (!name) { toast('과목명을 입력해 주세요.'); return; }
+        if (st.transferred.some((x) => P.normName(x.name) === P.normName(name))) {
+          toast('이미 등록된 전적대 인정 과목입니다.');
+          return;
+        }
+        if (totalTrCredits + credit > 15) {
+          toast(`알림: 전적대 전공 인정은 통상 최대 15학점까지 권장됩니다. (현재 누적: ${totalTrCredits + credit}학점)`);
+        }
+        st.transferred.push({ name, credit, kind });
+        const newCredits = st.transferred.reduce((s, x) => s + (Number(x.credit) || 0), 0);
+        st.req.major = Math.max(0, curTot - newCredits);
+        st.req.general = Math.min(curTot, newCredits);
+        save();
+        render();
+        toast(`[${name}] (${credit}학점 · ${kind}) 인정 등록 완료! (건국대 전공 ${st.req.major} · 자유 ${st.req.general} 자동 연동)`);
+      };
+
+      // 전체 카탈로그 및 내 학과 과목 후보 구성 (내 학과 요람 과목 우선)
+      const CU = root.GongjiCurriculum;
+      const myDept = dept();
+      const myDeptObj = CU && CU.findDept ? CU.findDept(myDept, root.GONGJI_COURSES) : null;
+      const myCourses = (myDeptObj && myDeptObj.courses) || [];
+      const allCatalog = Array.from(cat().byName.values());
+
+      // 통합 과목 사전 (이름 -> { name, credit, kind, dept, term, prof })
+      const catalogMap = new Map();
+      const profDict = root.GONGJI_PROFESSORS || {};
+      const ttList = (root.GONGJI_TIMETABLE && root.GONGJI_TIMETABLE.courses) || [];
+
+      function resolveProf(name) {
+        if (profDict[`${name}:01`]) return profDict[`${name}:01`];
+        for (const [k, p] of Object.entries(profDict)) {
+          if (k.startsWith(`${name}:`) && p) return p;
+        }
+        const hit = ttList.find((c) => c.n === name && c.p);
+        return (hit && hit.p) || '';
+      }
+
+      // 1. 내 학과 요람 과목 등록 (컴퓨터공학과 1~4학년 전 과목 우선)
+      for (const [term, kind, name, credit] of myCourses) {
+        const norm = P.normName(name);
+        catalogMap.set(norm, {
+          name,
+          credit: Number(credit) || 3,
+          kind: kind === '전필' ? '전필' : '전선',
+          dept: myDept,
+          term,
+          prof: resolveProf(name)
+        });
+      }
+
+      // 2. 전체 카탈로그 등록
+      for (const c of allCatalog) {
+        const norm = P.normName(c.name);
+        if (!catalogMap.has(norm)) {
+          catalogMap.set(norm, {
+            name: c.name,
+            credit: Number(c.credit) || 3,
+            kind: P.cleanKind(c.kind) === '전필' ? '전필' : '전선',
+            dept: c.dept || '',
+            term: c.term || '',
+            prof: resolveProf(c.name)
+          });
+        }
+      }
+
+      // datalist 옵션 (모든 과목 포함, 내 학과 과목 최상단)
+      const datalistOptions = Array.from(catalogMap.values()).map((c) => h('option', { value: c.name }));
+
+      function onNameInput(inputEl) {
+        const val = (inputEl.value || '').trim();
+        const form = inputEl.form;
+        if (!form) return;
+        const creditSel = form.elements.trCredit;
+        const kindSel = form.elements.trKind;
+        const hintEl = form.querySelector('#tr-auto-hint');
+        const suggestBox = form.querySelector('#tr-suggest-box');
+
+        // 1. 완벽 일치 체크 및 학점/이수구분 자동 반영
+        const exactHit = catalogMap.get(P.normName(val));
+        if (exactHit) {
+          if (creditSel && exactHit.credit) creditSel.value = String(exactHit.credit);
+          if (kindSel && exactHit.kind) kindSel.value = exactHit.kind;
+          if (hintEl) {
+            hintEl.hidden = false;
+            hintEl.innerHTML = `✓ <strong>${exactHit.name}</strong> (${exactHit.dept ? exactHit.dept + ' · ' : ''}${exactHit.term ? exactHit.term + ' · ' : ''}${exactHit.credit}학점 ${exactHit.kind === '전필' ? '전공필수' : '전공선택'}${exactHit.prof ? ' · ' + exactHit.prof + ' 교수' : ''}) 정보가 자동 선택되었습니다.`;
+          }
+        } else if (hintEl) {
+          hintEl.hidden = true;
+        }
+
+        // 2. 입력 검색어에 따른 추천 목록 (한글 퍼지 + 오타 허용 매칭)
+        if (!val) {
+          if (suggestBox) suggestBox.hidden = true;
+          return;
+        }
+
+        const candidates = [];
+        for (const [norm, c] of catalogMap.entries()) {
+          let score = CU && CU.matchCourseName ? CU.matchCourseName(val, c.name) : 0;
+          if (score <= 0) {
+            if (norm.startsWith(P.normName(val))) score = 70;
+            else if (norm.includes(P.normName(val))) score = 50;
+          }
+          if (score > 0) {
+            if (c.dept && myDept && (c.dept.includes(myDept) || myDept.includes(c.dept))) score += 40;
+            if (c.kind === '전필') score += 15;
+            candidates.push({ c, score });
+          }
+        }
+
+        candidates.sort((a, b) => b.score - a.score || a.c.name.localeCompare(b.c.name, 'ko'));
+        const topMatches = candidates.slice(0, 8);
+
+        if (!topMatches.length || !suggestBox) {
+          if (suggestBox) suggestBox.hidden = true;
+          return;
+        }
+
+        suggestBox.hidden = false;
+        suggestBox.replaceChildren(...topMatches.map(({ c }) => {
+          const meta = [c.dept, c.term, `${c.credit}학점`, c.kind === '전필' ? '전공필수' : '전공선택', c.prof ? `${c.prof} 교수` : ''].filter(Boolean).join(' · ');
+          return h('li', {
+            class: 'tmc-suggest-item',
+            onpointerdown: (ev) => {
+              ev.preventDefault();
+              inputEl.value = c.name;
+              if (creditSel) creditSel.value = String(c.credit);
+              if (kindSel) kindSel.value = c.kind;
+              if (hintEl) {
+                hintEl.hidden = false;
+                hintEl.innerHTML = `✓ <strong>${c.name}</strong> (${meta}) 자동 선택됨`;
+              }
+              suggestBox.hidden = true;
+              inputEl.focus();
+            }
+          },
+            h('div', { class: 'tmc-si-head' },
+              h('strong', { class: 'tmc-si-name' }, c.name),
+              c.kind === '전필' ? h('span', { class: 'tmc-si-badge req' }, '전필') : null,
+              c.prof ? h('span', { class: 'tmc-si-badge prof' }, `${c.prof} 교수`) : null
+            ),
+            h('div', { class: 'tmc-si-meta' }, meta)
+          );
+        }));
+      }
+
+      return h('section', { class: 'plan-box transferred-mgr-card' },
+        h('div', { class: 'tmc-head' },
+          h('div', { class: 'tmc-title-group' },
+            h('div', { class: 'tmc-icon-badge' }, '🎓'),
+            h('div', null,
+              h('h3', null, '전적대 전공 인정 교과목 관리'),
+              h('p', { class: 'tmc-sub' },
+                '전적대에서 인정받은 전공 학점만큼 건국대에서 이수할 전공 의무가 줄어들고(66 - 인정학점), 그만큼 자유 학점(교양·일선)을 들을 수 있습니다. 인정받은 과목은 건국대 학칙상 재수강(중복 수강신청)할 수 없습니다.'
+              )
+            )
+          ),
+          h('div', { class: 'tmc-badges' },
+            h('span', { class: 'tmc-badge-credits ' + (isMax15 ? 'is-full' : totalTrCredits > 0 ? 'is-part' : '') },
+              `${totalTrCredits} / 15학점 인정` + (isMax15 ? ' (최대 한도)' : '')
+            ),
+            h('span', { class: 'tmc-badge-lock' }, '건국대 재수강 불가 🚫')
+          )
+        ),
+        h('div', { class: 'tmc-calc-guide' },
+          h('div', { class: 'tmc-guide-main' },
+            h('span', { class: 'tmc-guide-tag' }, '학점 연동 현황'),
+            h('span', { class: 'tmc-guide-text' },
+              totalTrCredits > 0
+                ? `전적대 전공 ${totalTrCredits}학점 인정 → 건국대 이수 필요: 전공 최소 ${neededMajor}학점 + 자유(교양·일선) ${totalTrCredits}학점`
+                : `현재 인정 과목 없음 → 건국대 이수 필요: 전공 66학점 전체 이수 (비동일계 편입 기본)`
+            )
+          ),
+          h('p', { class: 'tmc-guide-sub' },
+            '※ 학생마다 인정받은 과목과 학점이 다릅니다. (예: 6학점 인정 시 나머지 9학점은 전공을 더 들어 전공 60 + 자유 6, 15학점 인정 시 전공 51 + 자유 15) 심사받은 실제 과목을 아래에서 직접 등록하면 졸업 기준 및 수강신청 추천에 자동 반영됩니다.'
+          )
+        ),
+        list.length ? h('div', { class: 'tmc-chips-wrap' },
+          h('p', { class: 'tmc-chips-title' }, `인정된 전공 과목 목록 (${list.length}과목 · 총 ${totalTrCredits}학점)`),
+          h('div', { class: 'tmc-chips-grid' }, list.map((item) => h('div', { class: 'tm-chip' },
+            h('div', { class: 'tm-chip-info' },
+              h('strong', { class: 'tm-chip-name' }, item.name),
+              h('span', { class: 'tm-chip-meta' }, `${item.credit}학점 · ${item.kind === '전필' ? '전공필수' : '전공선택'}`),
+              h('span', { class: 'tm-chip-lock' }, '재수강 불가 🚫')
+            ),
+            h('button', {
+              type: 'button',
+              class: 'tm-chip-del',
+              'aria-label': `${item.name} 삭제`,
+              title: `${item.name} 삭제`,
+              onclick: () => removeCourse(item.name)
+            }, '✕')
+          )))
+        ) : h('div', { class: 'tmc-empty' },
+          h('p', null, '등록된 전적대 인정 과목이 없습니다. 전적대 학점 인정 심사를 거쳐 전공으로 인정받은 과목이 있다면 아래에서 직접 추가해 주세요.')
+        ),
+        h('form', { class: 'tmc-add-form', onsubmit: addCourse },
+          h('span', { class: 'tmc-form-label' }, '과목 직접 추가:'),
+          h('div', { class: 'tmc-input-wrap' },
+            h('input', {
+              type: 'text',
+              name: 'trName',
+              id: 'tr-custom-input',
+              list: 'tr-course-list',
+              placeholder: '과목명 입력 (예: 컴퓨터구조, 소프트웨어공학, 자료구조)',
+              required: true,
+              autocomplete: 'off',
+              class: 'tmc-input-name',
+              oninput: (e) => onNameInput(e.target),
+              onfocus: (e) => onNameInput(e.target),
+              onblur: (e) => {
+                setTimeout(() => {
+                  const sb = e.target.form && e.target.form.querySelector('#tr-suggest-box');
+                  if (sb) sb.hidden = true;
+                }, 200);
+              }
+            }),
+            h('datalist', { id: 'tr-course-list' }, datalistOptions),
+            h('ul', { id: 'tr-suggest-box', class: 'tmc-suggest-box', hidden: true })
+          ),
+          h('select', { name: 'trCredit', id: 'tr-credit-select', class: 'tmc-select' },
+            [3, 2, 1, 4].map((c) => h('option', { value: String(c) }, `${c}학점`))
+          ),
+          h('select', { name: 'trKind', id: 'tr-kind-select', class: 'tmc-select' },
+            h('option', { value: '전선' }, '전공선택'),
+            h('option', { value: '전필' }, '전공필수')
+          ),
+          h('button', { type: 'submit', class: 'btn primary small tmc-add-btn' }, '+ 인정 등록'),
+          h('div', { id: 'tr-auto-hint', class: 'tmc-auto-hint', hidden: true })
+        )
+      );
     }
 
     function addItems(items) {
@@ -478,14 +896,21 @@
           names.replaceChildren(...allCourseNames.slice(0, 500).map((n) => h('option', { value: n })));
           return;
         }
-        const prefix = [];
-        const contains = [];
+        const candidates = [];
         for (const item of allCatalog) {
-          const norm = P.normName(item.name);
-          if (norm.startsWith(q)) prefix.push(item.name);
-          else if (norm.includes(q)) contains.push(item.name);
+          let score = CU && CU.matchCourseName ? CU.matchCourseName(query, item.name) : 0;
+          if (score <= 0) {
+            const norm = P.normName(item.name);
+            if (norm.startsWith(q)) score = 80;
+            else if (norm.includes(q)) score = 60;
+          }
+          if (score > 0) {
+            if (item.dept && dept() && (item.dept.includes(dept()) || dept().includes(item.dept))) score += 40;
+            candidates.push({ name: item.name, score });
+          }
         }
-        const matched = [...new Set([...prefix, ...contains])].slice(0, 150);
+        candidates.sort((a, b) => b.score - a.score || a.name.localeCompare(b.name, 'ko'));
+        const matched = [...new Set(candidates.map((x) => x.name))].slice(0, 150);
         names.replaceChildren(...matched.map((n) => h('option', { value: n })));
       }
 
@@ -642,36 +1067,54 @@
       const target = Number(st.gpaSim.targetGpa) || 4.0;
       const rem = Math.max(1, Number(st.gpaSim.remCredits) || defaultRemCredits || 18);
 
-      const curSum = curCredits * curGpa;
-      const targetSum = (curCredits + rem) * target;
-      const neededSum = targetSum - curSum;
-      const neededGpa = neededSum / rem;
-      const maxPossible = Math.min(4.5, (curSum + rem * 4.5) / (curCredits + rem));
-      const maxRounded = Math.round(maxPossible * 100) / 100;
-      const targetRounded = Math.round(target * 100) / 100;
+      const sim = P.simGpa(curCredits, curGpa, rem, target);
+      const neededGpa = sim.neededGpa;
+      const maxRounded = sim.maxRounded;
+      const neededStr = neededGpa.toFixed(2);
+      const targetStr = target.toFixed(2);
+      const maxStr = maxRounded.toFixed(2);
 
       let resultBadge = '';
       let resultClass = '';
       let resultDesc = '';
 
       const Tx = T();
-      if (neededGpa <= 0) {
-        resultClass = 'is-achieved';
-        resultBadge = Tx.gpaSimDoneBadge || '🎉 목표 달성 완료';
-        resultDesc = Tx.gpaSimDoneDesc ? Tx.gpaSimDoneDesc(target.toFixed(2)) : `축하합니다! 이미 목표 평점(${target.toFixed(2)})을 달성했습니다.`;
-      } else if (targetRounded <= maxRounded && neededGpa > 4.495) {
-        // 남은 학점 전과목 A+(4.5) 취득 시 소수점 둘째 자리 반올림으로 정확히 목표 달성 가능한 최고 난도 케이스
-        resultClass = 'is-all-aplus';
-        resultBadge = Tx.gpaSimAllAplusBadge || '🔥 전과목 A+(4.5) 필요';
-        resultDesc = Tx.gpaSimAllAplusDesc ? Tx.gpaSimAllAplusDesc(rem, target.toFixed(2)) : `남은 ${rem}학점을 전과목 A+(4.5)로 취득하면 졸업 평점 ${target.toFixed(2)} 달성이 가능합니다! (단, 한 과목이라도 A0 이하면 미달)`;
-      } else if (neededGpa <= 4.495) {
-        resultClass = 'is-possible';
-        resultBadge = `✨ ${neededGpa.toFixed(2)}`;
-        resultDesc = Tx.gpaSimNeedDesc ? Tx.gpaSimNeedDesc(rem, neededGpa.toFixed(2), target.toFixed(2)) : `남은 ${rem}학점 동안 평균 ${neededGpa.toFixed(2)} 이상을 취득하면 졸업 평점 ${target.toFixed(2)}에 도달합니다!`;
-      } else {
-        resultClass = 'is-impossible';
-        resultBadge = Tx.gpaSimHardBadge || '⚠️ 목표 조정 필요';
-        resultDesc = Tx.gpaSimHardDesc ? Tx.gpaSimHardDesc(rem, maxRounded.toFixed(2)) : `남은 ${rem}학점을 모두 A+(4.5) 받아도 취득 가능한 최고 졸업 평점은 ${maxRounded.toFixed(2)}입니다. 목표 평점을 ${maxRounded.toFixed(2)} 이하로 조정해보세요.`;
+      switch (sim.status) {
+        case 'achieved':
+          resultClass = 'is-achieved';
+          resultBadge = Tx.gpaSimDoneBadge || '🎉 목표 달성 완료';
+          resultDesc = Tx.gpaSimDoneDesc ? Tx.gpaSimDoneDesc(targetStr) : `축하합니다! 이미 목표 평점(${targetStr})을 달성했습니다. 현재 성적을 잘 유지해보세요!`;
+          break;
+        case 'all-aplus':
+          resultClass = 'is-all-aplus';
+          resultBadge = Tx.gpaSimAllAplusBadge || '🔥 전과목 A+(4.5) 필수';
+          resultDesc = Tx.gpaSimAllAplusDesc ? Tx.gpaSimAllAplusDesc(rem, targetStr) : `남은 ${rem}학점을 전과목 A+(4.5) 만점으로 이수해야 졸업 평점 ${targetStr} 달성이 가능합니다. (단 1과목도 감점 허용 불가)`;
+          break;
+        case 'extreme':
+          resultClass = 'is-extreme';
+          resultBadge = Tx.gpaSimExtremeBadge ? Tx.gpaSimExtremeBadge(neededStr) : `🔥 극상 난이도 (평균 ${neededStr})`;
+          resultDesc = Tx.gpaSimExtremeDesc ? Tx.gpaSimExtremeDesc(rem, neededStr, targetStr) : `남은 ${rem}학점을 거의 전과목 A+(4.5) 수준(평균 ${neededStr})으로 이수해야 졸업 평점 ${targetStr}에 도달합니다. 1과목이라도 A0(4.0) 이하를 받으면 달성이 어려워질 수 있습니다.`;
+          break;
+        case 'challenging':
+          resultClass = 'is-challenging';
+          resultBadge = Tx.gpaSimChallengingBadge ? Tx.gpaSimChallengingBadge(neededStr) : `⚡ 고득점 필요 (평균 ${neededStr})`;
+          resultDesc = Tx.gpaSimChallengingDesc ? Tx.gpaSimChallengingDesc(rem, neededStr, targetStr) : `남은 ${rem}학점 동안 A+ 및 A0 위주(평균 ${neededStr})의 최상위 성적이 필요합니다. 졸업 평점 ${targetStr} 달성을 위해 B+ 이하 과목을 최소화하세요.`;
+          break;
+        case 'possible':
+          resultClass = 'is-possible';
+          resultBadge = Tx.gpaSimPossibleBadge ? Tx.gpaSimPossibleBadge(neededStr) : `🎯 달성 가능 (평균 ${neededStr})`;
+          resultDesc = Tx.gpaSimNeedDesc ? Tx.gpaSimNeedDesc(rem, neededStr, targetStr) : `남은 ${rem}학점 동안 평균 ${neededStr} 이상(A0·B+ 위주)을 취득하면 졸업 평점 ${targetStr}에 도달합니다!`;
+          break;
+        case 'comfortable':
+          resultClass = 'is-comfortable';
+          resultBadge = Tx.gpaSimComfortableBadge ? Tx.gpaSimComfortableBadge(neededStr) : `✨ 안정권 (평균 ${neededStr})`;
+          resultDesc = Tx.gpaSimComfortableDesc ? Tx.gpaSimComfortableDesc(rem, neededStr, targetStr) : `남은 ${rem}학점 동안 평균 ${neededStr} 이상을 유지하면 여유롭게 목표 평점(${targetStr})을 달성할 수 있습니다.`;
+          break;
+        default:
+          resultClass = 'is-impossible';
+          resultBadge = Tx.gpaSimHardBadge ? Tx.gpaSimHardBadge(maxStr) : `⚠️ 목표 조정 필요 (최대 ${maxStr})`;
+          resultDesc = Tx.gpaSimHardDesc ? Tx.gpaSimHardDesc(rem, maxStr) : `남은 ${rem}학점을 모두 A+(4.5) 받아도 취득 가능한 최고 졸업 평점은 ${maxStr}입니다. 목표 평점을 ${maxStr} 이하로 조정해보세요.`;
+          break;
       }
 
       return h('section', { class: `plan-box gpa-sim-box ${resultClass}` },
@@ -826,6 +1269,7 @@
         renderGpaSimulator(),
         renderGpaTrendChart(terms),
         renderReq(),
+        renderTransferredManager(),
         h('section', { class: 'plan-box add-box' },
           h('div', { class: 'add-head' }, h('h3', null, Tx.histAddTitle),
             h('button', { type: 'button', class: 'btn small', onclick: fromTimetable }, Tx.histFromTt)),
@@ -838,6 +1282,8 @@
     function takenSet() {
       const s = new Set();
       for (const x of st.history) { if (x.code) s.add(x.code); s.add(P.normName(x.name)); }
+      // 전적대 전공 인정과목은 이미 이수 완료된 상태이며 건국대학교 규정상 재수강 불가 -> 추천에서 100% 영구 제외!
+      for (const x of (st.transferred || [])) { if (x.code) s.add(x.code); s.add(P.normName(x.name)); }
       if (st.prefs.takenNow) for (const c of deps.getTimetable()) s.add(P.normName(c.name));
       return s;
     }
@@ -1131,10 +1577,11 @@
         return { total: req.total, done: tot.total, left, dept: req.dept, count: st.history.length, mode: req.mode };
       },
       // 백업 파일에 넣고 불러올 값
-      values: () => ({ history: st.history, gradReq: st.req, planPrefs: st.prefs }),
+      values: () => ({ history: st.history, gradReq: st.req, transferredCourses: st.transferred, planPrefs: st.prefs }),
       load(v) {
         if (Array.isArray(v.history)) st.history = P.cleanHistory(v.history);
         if (v.gradReq && typeof v.gradReq === 'object') st.req = v.gradReq;
+        if (Array.isArray(v.transferredCourses)) st.transferred = v.transferredCourses;
         if (v.planPrefs && typeof v.planPrefs === 'object') st.prefs = Object.assign(st.prefs, v.planPrefs);
         save();
         render();
