@@ -9,21 +9,24 @@
     // 이러닝 / 원격 수업 여부 판별 (강의시간이 없거나 방식·비고에 원격/이러닝 표기)
     const method = String(r.LT_MTHD_NM ?? r.LSSN_FORM_NM ?? r.CLS_MTHD ?? r.CYBER_DIV_NM ?? r.CYBER_AT ?? r.LSSN_MTHD_NM ?? r.RMK ?? '').trim();
     const isElearn = !t || /이러닝|원격|온라인|cyber|사이버|e-learning/i.test(method) || /이러닝|원격|사이버/i.test(t);
-    const prof = String(
+    // 담당 교수명 다각적 필드 감지 및 불필요한 부가설명 괄호 제거
+    const rawProf = String(
       r.PROF_NM ?? r.LCTR_PROF_NM ?? r.RESP_PROF_NM ?? r.EMP_NM ?? r.STAFF_NM ??
-      r.CHRG_PROF_NM ?? r.PROF_KRN_NM ?? r.PROF ?? r.TEACHER_NM ?? ''
+      r.CHRG_PROF_NM ?? r.PROF_KRN_NM ?? r.PROF ?? r.TEACHER_NM ?? r.INSTR_NM ?? ''
     ).trim();
+    const prof = rawProf.replace(/\(.*?\)/g, '').replace(/\[.*?\]/g, '').trim();
+
     const item = {
-      n: String(r.CORS_NM ?? '').trim(),            // 과목명
+      n: String(r.CORS_NM ?? r.SBJT_NM ?? r.SUBJ_NM ?? '').trim(),  // 과목명
       t: t,                                         // 강의시간(강의실) 예: 월0900-1030(인문사회관 101), 목1330-1500(...)
-      d: String(r.OPEN_SUST_NM ?? '').trim(),       // 개설 학과
-      k: String(r.POBT_DIV_NM ?? '').trim(),        // 이수구분 (전선·전필·교양 등)
-      y: String(r.OPEN_SHYR ?? '').trim(),          // 개설 학년
-      c: Number(r.PNT) || 0,                        // 학점
-      h: String(r.HAKSU_ID ?? '').trim(),           // 학수번호
-      s: String(r.CLSS_NO ?? '').trim()             // 분반
+      d: String(r.OPEN_SUST_NM ?? r.DEPT_NM ?? '').trim(),          // 개설 학과
+      k: String(r.POBT_DIV_NM ?? r.COMP_DIV_NM ?? '').trim(),       // 이수구분 (전선·전필·교양 등)
+      y: String(r.OPEN_SHYR ?? r.SHYR ?? '').trim(),                // 개설 학년
+      c: Number(r.PNT ?? r.CDT) || 0,                               // 학점
+      h: String(r.HAKSU_ID ?? r.SBJT_ID ?? '').trim(),              // 학수번호
+      s: String(r.CLSS_NO ?? r.BUNBAN ?? '').trim()                 // 분반
     };
-    if (prof) item.p = prof;                       // 담당 교수명
+    if (prof) item.p = prof;                       // 담당 교수명 (정제됨)
     if (isElearn && !t) item.m = 'elearn';
     else if (method && /실시간\s*온라인/i.test(method)) item.m = 'live';
     return item;
@@ -63,10 +66,23 @@
     if (msg.type !== 'lectures' || !Array.isArray(msg.rows)) return;
     clearTimeout(waiting);
     const key = `lec:${msg.year}:${msg.term}`;
-    await chrome.storage.local.set({
-      [key]: { year: msg.year, term: msg.term, count: msg.rows.length, rows: msg.rows.map(slim).filter((r) => r.n), collectedAt: Date.now() }
-    });
-    await setStatus({ state: 'ok', message: `${msg.year}년 ${msg.rows.length}개 과목을 저장했습니다.` });
+    const cleanedRows = msg.rows.map(slim).filter((r) => r.n);
+    const saveObj = {
+      [key]: { year: msg.year, term: msg.term, count: cleanedRows.length, rows: cleanedRows, collectedAt: Date.now() }
+    };
+    if (msg.isPersonal) {
+      saveObj['timetable:kis_mine'] = {
+        source: 'kis_personal',
+        year: msg.year,
+        term: msg.term,
+        count: cleanedRows.length,
+        items: cleanedRows,
+        collectedAt: Date.now()
+      };
+    }
+    await chrome.storage.local.set(saveObj);
+    const label = msg.isPersonal ? '내 수강 시간표' : '개설 강의';
+    await setStatus({ state: 'ok', message: `${msg.year}년 ${cleanedRows.length}개 ${label}(담당 교수 포함)을 저장했습니다.` });
   });
 
   chrome.runtime.onMessage.addListener((msg, _s, sendResponse) => {

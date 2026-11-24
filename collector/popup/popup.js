@@ -248,13 +248,31 @@ async function onStop() {
 async function renderLectures() {
   const all = await chrome.storage.local.get(null);
   const terms = Object.entries(all).filter(([k]) => k.startsWith('lec:')).map(([, v]) => v);
-  $('lecSummary').textContent = terms.length
-    ? terms.map((t) => {
-        const profCount = (t.rows || []).filter((r) => r.p).length;
-        const profText = profCount ? ` (교수명 ${profCount}개)` : '';
-        return `${t.year}년 ${t.term === 'B01011' ? '1학기' : t.term === 'B01012' ? '2학기' : t.term} · ${t.rows.length}개 과목${profText} (${fmtTime(t.collectedAt)})`;
-      }).join('\n')
-    : '아직 받은 강의 시간표가 없습니다.';
+  const lines = [];
+
+  if (terms.length) {
+    terms.forEach((t) => {
+      const profCount = (t.rows || []).filter((r) => r.p).length;
+      const profText = profCount ? ` (담당 교수 ${profCount}명 매칭)` : '';
+      lines.push(`📚 KIS ${t.year}년 ${t.term === 'B01011' ? '1학기' : t.term === 'B01012' ? '2학기' : t.term} · ${t.rows.length}개 과목${profText}`);
+    });
+  }
+
+  if (all['timetable:everytime']) {
+    const et = all['timetable:everytime'];
+    const pCount = (et.items || []).filter((i) => i.prof).length;
+    lines.push(`⚡ 에브리타임 시간표 · ${et.count || 0}개 과목 (교수명 ${pCount}개 연동됨)`);
+  }
+
+  if (all['timetable:kis_mine']) {
+    const km = all['timetable:kis_mine'];
+    lines.push(`🎓 KIS 내 수강 시간표 · ${km.count || 0}개 과목 연동됨`);
+  }
+
+  $('lecSummary').textContent = lines.length
+    ? lines.join('\n')
+    : '아직 받은 강의 시간표가 없습니다.\n(KIS 로그인 후 과목조회 또는 에브리타임 시간표를 열면 자동 연동)';
+
   const st = all['kis:status'];
   const box = $('lecStatus');
   box.className = 'status' + (st?.state === 'error' ? ' error' : '');

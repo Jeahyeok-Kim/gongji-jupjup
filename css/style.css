@@ -1433,8 +1433,8 @@ body[data-tab="budget"] .view-head[data-view="budget"] { display: flex; }
 #ask-result:not(:empty) { margin-bottom: 20px; padding: 20px 22px; border: 1px solid var(--line); border-radius: var(--w-radius); background: var(--surface); box-shadow: var(--elev-float); }
 #ask-result .ask-card { margin-top: 0; padding-top: 0; border-top: 0; }
 
-.home-v5 { display: grid; gap: 44px; padding-bottom: 56px; }
-.home-v5 > .setup-strip + .brief { margin-top: -30px; }
+.home-v5 { display: grid; gap: 40px; padding-bottom: 56px; }
+.home-v5 > .brief + .setup-suggestion-card { margin-top: -24px; }
 .home-cols { display: grid; grid-template-columns: minmax(0, 1.12fr) minmax(0, 1fr); gap: 44px; align-items: start; }
 .home-col { display: grid; gap: 40px; align-content: start; min-width: 0; }
 .home-col:empty { display: none; }
@@ -1485,23 +1485,199 @@ body[data-tab="budget"] .view-head[data-view="budget"] { display: flex; }
 .ss-list button:hover:not(:disabled) { border-color: var(--text); }
 .ss-list .is-done button { background: var(--surface-2); color: var(--faint); cursor: default; }
 
-/* 오늘의 브리핑: 숫자 하나 + 한 줄, 가는 세로줄로 나눈 띠 (토스 증권 요약) */
+/* ========================================================
+   Apple iOS / Samsung One UI Squircle Briefing Widget Cards
+   ======================================================== */
+.brief {
+  position: relative;
+  z-index: 2;
+  margin: 0;
+}
 .brief ul {
-  list-style: none; margin: 0; padding: 0; display: grid; grid-auto-flow: column; grid-auto-columns: minmax(0, 1fr); gap: 1px;
-  border: 1px solid var(--line); border-radius: var(--w-radius); background: var(--line); box-shadow: var(--elev-float); overflow: hidden;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 14px;
+  background: transparent;
+  border: none;
+  box-shadow: none;
+  overflow: visible;
 }
-.bf { display: flex; min-width: 0; }
+.bf {
+  display: flex;
+  min-width: 0;
+  background: var(--surface);
+  border: 1px solid var(--border-soft, rgba(255, 255, 255, 0.08));
+  border-radius: 20px;
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.06), inset 0 1px 0 rgba(255, 255, 255, 0.06);
+  transition: transform .22s cubic-bezier(0.16, 1, 0.3, 1), box-shadow .22s cubic-bezier(0.16, 1, 0.3, 1), border-color .22s ease;
+  position: relative;
+  overflow: hidden;
+}
+:root[data-theme="dark"] .bf {
+  background: rgba(27, 31, 36, 0.88);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-color: rgba(255, 255, 255, 0.08);
+  box-shadow: 0 8px 26px rgba(0, 0, 0, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.09);
+}
+:root:not([data-theme="dark"]) .bf {
+  background: #ffffff;
+  border-color: rgba(0, 0, 0, 0.08);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06), inset 0 1px 0 rgba(255, 255, 255, 0.9);
+}
+.bf:hover {
+  transform: translateY(-3px);
+  border-color: var(--border-strong, rgba(255, 255, 255, 0.18));
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.16), inset 0 1px 0 rgba(255, 255, 255, 0.12);
+}
+.bf:active {
+  transform: scale(0.985);
+}
 .bf button {
-  display: grid; align-content: start; gap: 3px; width: 100%; padding: 18px 22px 20px;
-  border: 0; background: var(--surface); color: var(--text); font: inherit; text-align: left; cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  width: 100%;
+  min-height: 124px;
+  padding: 16px 18px 16px;
+  border: 0;
+  background: transparent;
+  color: var(--text);
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+  box-sizing: border-box;
 }
-.bf button:hover { background: var(--surface-2); }
-.bf-label { overflow: hidden; font-size: 13px; font-weight: 700; color: var(--muted); text-overflow: ellipsis; white-space: nowrap; }
-.bf-big { font-family: var(--font-display); font-size: 34px; font-weight: 800; line-height: 1.15; letter-spacing: -0.045em; font-variant-numeric: tabular-nums; white-space: nowrap; }
-.bf-big small { margin-left: 3px; font-family: var(--font); font-size: 15px; font-weight: 700; letter-spacing: 0; color: var(--muted); }
-.bf-sub { overflow: hidden; font-size: 13px; color: var(--muted); text-overflow: ellipsis; white-space: nowrap; }
-.bf.is-hot .bf-big { color: var(--danger); }
-.bf-acad .bf-big { color: var(--accent-strong); }
+.bf-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+.bf-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 3px 9px 3px 7px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  line-height: 1.3;
+  white-space: nowrap;
+  max-width: calc(100% - 24px);
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.bf-icon {
+  font-size: 12px;
+  line-height: 1;
+  flex-shrink: 0;
+}
+.bf-arrow {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--muted);
+  transition: transform .2s ease, color .2s ease, opacity .2s ease;
+  opacity: 0.35;
+  line-height: 1;
+}
+.bf:hover .bf-arrow {
+  opacity: 1;
+  color: var(--accent);
+  transform: translate(2px, -2px);
+}
+.bf-today .bf-pill { background: rgba(239, 68, 68, 0.12); color: #ef4444; }
+:root[data-theme="dark"] .bf-today .bf-pill { background: rgba(239, 68, 68, 0.2); color: #f87171; }
+.bf-money .bf-pill { background: rgba(245, 158, 11, 0.12); color: #d97706; }
+:root[data-theme="dark"] .bf-money .bf-pill { background: rgba(245, 158, 11, 0.2); color: #fbbf24; }
+.bf-points .bf-pill { background: rgba(16, 185, 129, 0.12); color: #059669; }
+:root[data-theme="dark"] .bf-points .bf-pill { background: rgba(16, 185, 129, 0.2); color: #34d399; }
+.bf-acad .bf-pill { background: rgba(99, 102, 241, 0.12); color: #4f46e5; }
+:root[data-theme="dark"] .bf-acad .bf-pill { background: rgba(99, 102, 241, 0.2); color: #818cf8; }
+.bf-board .bf-pill { background: rgba(14, 165, 233, 0.12); color: #0284c7; }
+:root[data-theme="dark"] .bf-board .bf-pill { background: rgba(14, 165, 233, 0.2); color: #38bdf8; }
+.bf-clash .bf-pill { background: rgba(244, 63, 94, 0.12); color: #e11d48; }
+:root[data-theme="dark"] .bf-clash .bf-pill { background: rgba(244, 63, 94, 0.2); color: #fb7185; }
+
+.bf-value-wrap { display: flex; align-items: baseline; gap: 3px; margin-bottom: 4px; }
+.bf-big {
+  font-family: var(--font-display, var(--font));
+  font-size: 30px;
+  font-weight: 800;
+  line-height: 1.12;
+  letter-spacing: -0.04em;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+  color: var(--text);
+}
+.bf-big small { margin-left: 3px; font-size: 15px; font-weight: 700; letter-spacing: 0; color: var(--muted); }
+.bf.is-hot .bf-big { color: #ef4444; }
+:root[data-theme="dark"] .bf.is-hot .bf-big { color: #f87171; }
+.bf.bf-acad .bf-big { color: var(--accent-strong, #10b981); }
+.bf-sub {
+  font-size: 12.5px;
+  font-weight: 500;
+  color: var(--muted);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  letter-spacing: -0.015em;
+  display: block;
+  max-width: 100%;
+}
+
+/* Setup Suggestion Card (Apple Siri Suggestion / Samsung One UI Recommendation) */
+.setup-suggestion-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 12px 18px;
+  border-radius: 16px;
+  background: color-mix(in srgb, var(--accent) 7%, var(--surface));
+  border: 1px solid color-mix(in srgb, var(--accent) 22%, transparent);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.04);
+  transition: all .2s ease;
+  margin: 0;
+}
+.setup-suggestion-card:hover {
+  background: color-mix(in srgb, var(--accent) 10%, var(--surface));
+  border-color: color-mix(in srgb, var(--accent) 35%, transparent);
+}
+.sug-left { display: flex; align-items: center; gap: 12px; min-width: 0; }
+.sug-icon {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 32px; height: 32px; border-radius: 10px;
+  background: color-mix(in srgb, var(--accent) 18%, transparent);
+  font-size: 16px; flex-shrink: 0;
+}
+.sug-text { min-width: 0; display: flex; flex-direction: column; gap: 2px; }
+.sug-tag-row { display: flex; align-items: center; gap: 7px; }
+.sug-badge { font-size: 11px; font-weight: 700; color: var(--accent-strong, #10b981); text-transform: uppercase; letter-spacing: 0.02em; }
+.sug-count { font-size: 11px; color: var(--muted); font-variant-numeric: tabular-nums; }
+.sug-msg { margin: 0; font-size: 13.5px; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.sug-msg strong { font-weight: 700; color: var(--text); }
+.sug-actions { display: flex; align-items: center; gap: 8px; flex-shrink: 0; }
+.sug-btn {
+  display: inline-flex; align-items: center; padding: 6px 14px;
+  border-radius: 999px; background: var(--accent); color: var(--on-accent, #ffffff);
+  border: none; font-size: 12.5px; font-weight: 700; cursor: pointer;
+  transition: all .18s ease; white-space: nowrap;
+}
+.sug-btn:hover { filter: brightness(1.08); transform: translateY(-1px); }
+.sug-close {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 26px; height: 26px; border-radius: 50%; border: none;
+  background: transparent; color: var(--muted); font-size: 13px; cursor: pointer;
+  transition: all .15s ease;
+}
+.sug-close:hover { background: rgba(125, 125, 125, 0.15); color: var(--text); }
 
 /* 마감 티켓: 오려 쓰는 표 (왼쪽 D-day 꼭지 + 점선 + 반원 홈) */
 .tickets {
@@ -1743,10 +1919,14 @@ body.is-dragging .bcol { border-style: dashed; border-color: var(--border-strong
   .ss-list button { min-height: 50px; padding: 8px 10px; font-size: 13px; gap: 8px; }
   .setup-check { width: 20px; height: 20px; }
   .is-done .setup-check::after { left: 5px; top: 1px; }
-  .brief ul { grid-auto-flow: row; grid-template-columns: repeat(2, minmax(0, 1fr)); }
-  .bf:last-child:nth-child(odd) { grid-column: 1 / -1; }
-  .bf button { padding: 14px 16px 15px; }
-  .bf-big { font-size: 28px; }
+  .brief ul { grid-auto-flow: row; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+  .bf { border-radius: 16px; }
+  .bf button { min-height: 104px; padding: 13px 14px 13px; }
+  .bf-big { font-size: 24px; }
+  .bf-pill { font-size: 11px; padding: 2px 7px; }
+  .bf-sub { font-size: 11.5px; }
+  .setup-suggestion-card { flex-direction: column; align-items: flex-start; padding: 12px 14px; gap: 10px; }
+  .sug-actions { width: 100%; justify-content: space-between; }
   .tickets { margin-inline: -16px; padding-inline: 16px; scroll-padding-inline: 16px; }
   .ticket { flex-basis: 272px; --stub: 86px; min-height: 128px; }
   .tk-stub strong { font-size: 23px; }

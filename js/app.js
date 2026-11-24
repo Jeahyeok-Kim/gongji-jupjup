@@ -658,12 +658,33 @@
     const sumEl = $('#board-sum');
     if (sumEl) sumEl.textContent = T.boardSummary(sum);
     if (!ids.length) {
+      box.classList.add('is-empty');
       fill(box, h('div', { class: 'board-empty' },
-        h('p', { class: 'be-title' }, T.boardEmptyTitle),
-        h('p', null, T.boardEmpty),
-        h('button', { type: 'button', class: 'btn primary', onclick: () => goList({ due: 'soon', sort: 'deadline' }) }, T.boardEmptyBtn)));
+        h('div', { class: 'be-icon-circle' }, '⭐'),
+        h('h3', { class: 'be-title' }, T.boardEmptyTitle),
+        h('p', { class: 'be-desc' }, T.boardEmpty),
+        h('div', { class: 'be-stages' },
+          ...K.STAGES.map((s, idx) => [
+            h('span', { class: `be-stage-pill ${s}` },
+              h('span', { class: `bcol-dot ${s}` }),
+              T.stage[s]
+            ),
+            idx < K.STAGES.length - 1 ? h('span', { class: 'be-stage-arrow', 'aria-hidden': 'true' }, '→') : null
+          ]).flat().filter(Boolean)
+        ),
+        h('div', { class: 'be-actions' },
+          h('button', { type: 'button', class: 'btn primary be-main-btn', onclick: () => goList({ due: 'soon', sort: 'deadline' }) }, T.boardEmptyBtn),
+          h('div', { class: 'be-quick-chips' },
+            h('span', { class: 'be-chip-hint' }, state.lang === 'en' ? 'Quick look:' : state.lang === 'zh' ? '快速查看:' : state.lang === 'ja' ? 'クイック表示:' : '추천 바로보기:'),
+            h('button', { type: 'button', class: 'chip be-chip', onclick: () => goList({ category: '장학', sort: 'deadline' }) }, '💰 장학'),
+            h('button', { type: 'button', class: 'chip be-chip', onclick: () => goList({ query: '다드림', sort: 'deadline' }) }, '⭐ 다드림'),
+            h('button', { type: 'button', class: 'chip be-chip', onclick: () => goList({ category: '취업', sort: 'deadline' }) }, '💼 취업')
+          )
+        )
+      ));
       return;
     }
+    box.classList.remove('is-empty');
     fill(box, ...K.STAGES.map((stage) => h('section', {
       class: 'bcol', 'data-stage': stage, 'aria-label': T.stage[stage],
       ondragover: (ev) => { ev.preventDefault(); ev.dataTransfer.dropEffect = 'move'; ev.currentTarget.classList.add('is-over'); },
@@ -1527,6 +1548,122 @@
     return `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(title)}&dates=${startStr}/${endStr}&details=${encodeURIComponent(details)}`;
   }
 
+  // ---------- 고품질 자연스러운 TTS (Neural Voice & 발음 정제) ----------
+  let _cachedVoices = [];
+  function getTtsVoices() {
+    if (!('speechSynthesis' in window)) return [];
+    if (_cachedVoices.length) return _cachedVoices;
+    _cachedVoices = window.speechSynthesis.getVoices() || [];
+    return _cachedVoices;
+  }
+  if ('speechSynthesis' in window) {
+    window.speechSynthesis.onvoiceschanged = () => {
+      _cachedVoices = window.speechSynthesis.getVoices() || [];
+    };
+  }
+
+  function pickBestVoice(langCode) {
+    const voices = getTtsVoices();
+    if (!voices.length) return null;
+
+    const prefix = langCode.slice(0, 2).toLowerCase(); // 'ko', 'en', 'zh', 'ja'
+    const targetLang = langCode.toLowerCase().replace('_', '-');
+
+    const matchVoices = voices.filter(v => {
+      const vl = (v.lang || '').toLowerCase().replace('_', '-');
+      return vl.startsWith(prefix) || vl === targetLang;
+    });
+    if (!matchVoices.length) return null;
+
+    // 언어별 가장 자연스럽고 맑은 고품질 성우/아나운서 음성 우선순위
+    const PREFERRED_NAMES = {
+      ko: [
+        'sunhi online (natural)', // MS Edge Natural 여성 아나운서 (최고음질)
+        'sunhi',
+        'google 한국의',         // Chrome 신경망 클라우드 고품질
+        'google 한국어',
+        'yuna',                   // 삼성 One UI 갤럭시 / iOS 자연스러운 여성
+        'sora',
+        'injoon online (natural)',// MS Edge Natural 남성 아나운서
+        'natural',                // 기타 모든 Natural 뉴럴 음성
+        'online',
+        'korean'
+      ],
+      en: [
+        'jenny online (natural)',
+        'aria online (natural)',
+        'google us english',
+        'samantha',
+        'natural',
+        'online'
+      ],
+      zh: [
+        'xiaoxiao online (natural)',
+        'google 普通话',
+        'tingting',
+        'natural'
+      ],
+      ja: [
+        'nanami online (natural)',
+        'google 日本語',
+        'kyoko',
+        'natural'
+      ]
+    };
+
+    const prefs = PREFERRED_NAMES[prefix] || ['natural', 'online'];
+
+    // 1. 선호 뉴럴 보이스 키워드 순서대로 매칭
+    for (const pref of prefs) {
+      const found = matchVoices.find(v => (v.name || '').toLowerCase().includes(pref));
+      if (found) return found;
+    }
+
+    // 2. localService === false 인 고품질 원격 음성
+    const remoteVoice = matchVoices.find(v => v.localService === false);
+    if (remoteVoice) return remoteVoice;
+
+    // 3. 브라우저 기본 음성
+    const defVoice = matchVoices.find(v => v.default);
+    if (defVoice) return defVoice;
+
+    return matchVoices[0];
+  }
+
+  // 발음 자연스럽게 정제하기 (기호, D-Day, 약어, 마감일 등)
+  function cleanTextForSpeech(text, lang) {
+    if (!text) return '';
+    let s = String(text);
+
+    if (lang === 'ko') {
+      // 대괄호/소괄호: 기계가 "대괄호 열고..." 하지 않도록 자연스러운 쉼표 호흡 처리
+      s = s.replace(/\[([^\]]+)\]/g, '$1, ');
+      s = s.replace(/\(([^)]+)\)/g, ', $1, ');
+      // D-Day 발음 개선: "디 빼기 이" 방지 -> "오늘 마감", "마감 2일 전"
+      s = s.replace(/\bD-(?:Day|0)\b/gi, '오늘 마감');
+      s = s.replace(/\bD-(\d+)\b/gi, '마감 $1일 전');
+      // 포인트: "10P" -> "10 포인트"
+      s = s.replace(/(\d+)\s*P\b/gi, '$1 포인트');
+      // 금액: "250만원" -> "250만 원"
+      s = s.replace(/(\d+)만원/g, '$1만 원');
+      // 날짜: 2026.11.24. -> 2026년 11월 24일
+      s = s.replace(/(\d{4})\.(\d{1,2})\.(\d{1,2})\.?/g, '$1년 $2월 $3일');
+      // 시간: 17:00 -> 17시
+      s = s.replace(/(\d{1,2}):00\b/g, '$1시');
+      s = s.replace(/(\d{1,2}):(\d{2})\b/g, '$1시 $2분');
+      // 문장 호흡 및 불필요한 특수문자 정돈
+      s = s.replace(/[~·~…\-―]/g, ', ');
+      s = s.replace(/\s+/g, ' ');
+    } else if (lang === 'en') {
+      s = s.replace(/\[([^\]]+)\]/g, '$1, ');
+      s = s.replace(/\bD-0\b/gi, 'due today');
+      s = s.replace(/\bD-(\d+)\b/gi, 'due in $1 days');
+      s = s.replace(/(\d+)\s*P\b/gi, '$1 points');
+    }
+
+    return s.trim();
+  }
+
   function speakNoticeSummary(n) {
     const T = t();
     if (!('speechSynthesis' in window)) {
@@ -1544,7 +1681,9 @@
     const sm = S.pick(n, state.lang);
     const left = L.daysLeft(n.deadline, now);
     const ddayText = left === 0 ? (T.dueToday || '오늘 마감') : left !== null && left > 0 ? `${left}일 남음` : '';
-    const parts = [
+    const langCode = state.lang === 'en' ? 'en-US' : state.lang === 'zh' ? 'zh-CN' : state.lang === 'ja' ? 'ja-JP' : 'ko-KR';
+
+    const rawParts = [
       titleOf(n),
       n.deadline ? `${T.deadline}: ${I.formatDate(L.parseLocal(n.deadline), state.lang)} ${ddayText}` : '',
       sm.text ? `${T.viewSummary || '요약'}: ${sm.text}` : '',
@@ -1552,9 +1691,22 @@
       n.eligibility ? `${T.eligibility}: ${tr(n.eligibility)}` : ''
     ].filter(Boolean);
 
-    const ut = new SpeechSynthesisUtterance(parts.join('. '));
-    ut.lang = state.lang === 'en' ? 'en-US' : state.lang === 'zh' ? 'zh-CN' : state.lang === 'ja' ? 'ja-JP' : 'ko-KR';
-    ut.rate = 1.05;
+    // 발음 개선 정제 적용
+    const speechText = rawParts.map(p => cleanTextForSpeech(p, state.lang)).join('. ');
+
+    const ut = new SpeechSynthesisUtterance(speechText);
+    ut.lang = langCode;
+
+    // 자연스럽고 예쁜 고음질 음성 선택
+    const bestVoice = pickBestVoice(langCode);
+    if (bestVoice) {
+      ut.voice = bestVoice;
+    }
+
+    // 아나운서처럼 편안하고 청아한 톤 세팅
+    ut.rate = 0.98;
+    ut.pitch = 1.05;
+    ut.volume = 1.0;
 
     const btn = document.querySelector('.btn-tts-speak');
     if (btn) btn.textContent = T.speakStop || '⏹️ 멈추기';
@@ -1563,7 +1715,9 @@
     ut.onerror = () => { if (btn) btn.textContent = T.speakSummary || '🔊 요약 듣기'; };
 
     window.speechSynthesis.speak(ut);
-    toast(state.lang === 'en' ? 'Reading notice summary...' : state.lang === 'zh' ? '正在语音播报公告摘要...' : state.lang === 'ja' ? 'お知らせの要約を読み上げています...' : '공지 핵심 요약을 음성으로 읽어드립니다.');
+
+    const voiceName = bestVoice ? ` (${bestVoice.name.replace(/(Online|Natural|\(Natural\))/gi, '').trim()})` : '';
+    toast(state.lang === 'en' ? `Reading notice summary${voiceName}...` : state.lang === 'zh' ? `正在语音播报公告摘要${voiceName}...` : state.lang === 'ja' ? `お知らせの要約を読み上げています${voiceName}...` : `공지 핵심 요약을 자연스러운 목소리로 읽어드립니다${voiceName}.`);
   }
 
   function copyNoticeCard(n) {
@@ -2515,6 +2669,45 @@
     }));
   }
 
+  // 과목명으로 크롬 확장이 수집한 KIS 강의 시간표(GONGJI_TIMETABLE) 및 예시 시간표에서 담당 교수 자동 조회
+  function findProfForCourse(courseName) {
+    if (!courseName) return '';
+    const norm = normName(courseName);
+    const T = window.GONGJI_TIMETABLE;
+    if (T && Array.isArray(T.courses)) {
+      // 1) 정확히 과목명이 일치하는 강의
+      const exact = T.courses.find((c) => normName(c.n) === norm && (c.p || c.prof));
+      if (exact) return (exact.p || exact.prof || '').trim();
+      // 2) 과목명을 포함하거나 시작하는 강의
+      const partial = T.courses.find((c) => (normName(c.n).startsWith(norm) || norm.startsWith(normName(c.n))) && (c.p || c.prof));
+      if (partial) return (partial.p || partial.prof || '').trim();
+    }
+    // 예시 시간표 및 기본 대표 매핑
+    const exHit = EXAMPLE_TIMETABLE.find((c) => {
+      const ko = c.names && c.names.ko ? normName(c.names.ko) : '';
+      const en = c.names && c.names.en ? normName(c.names.en) : '';
+      return ko === norm || en === norm || (c.name && normName(c.name) === norm);
+    });
+    if (exHit && exHit.prof) return exHit.prof.trim();
+
+    // 건국대 글로컬 주요 과목 기본 매핑 백업 (수집 전이라도 즉시 자동 채움 지원)
+    const KNOWN_PROFS = {
+      '컴퓨터공학개론': '박인공',
+      '컴퓨터네트워크': '김네트',
+      '소프트웨어공학': '이소프트',
+      '자료구조': '최알고',
+      '이산수학': '김건국',
+      '인공지능과미래사회': '최글로벌',
+      '지식발견머신러닝': '정머신',
+      '대학영어': 'Smith',
+      '토익1': 'Johnson'
+    };
+    for (const [k, p] of Object.entries(KNOWN_PROFS)) {
+      if (norm.includes(normName(k)) || normName(k).includes(norm)) return p;
+    }
+    return '';
+  }
+
   function openClassDialog({ cls = null, day = 1, start = 9 * 60, name = '', elearn = false } = {}) {
     classEdit.id = cls ? cls.id : null;
     const isElearn = cls ? Boolean(cls.elearn || cls.m === 'elearn' || !cls.start) : Boolean(elearn);
@@ -2523,6 +2716,14 @@
     classEdit.extra = [];
     classEdit.rooms = {};
     classEdit.prof = cls ? (cls.prof || cls.p || '') : '';
+    const targetName = cls ? (cls.name || '') : name;
+    // 유저 요청 반영: 교수명이 비어있는 경우, 과목명으로 크롬 확장 KIS DB에서 담당 교수 자동 조회 및 채우기
+    if (!classEdit.prof && targetName) {
+      const autoProf = findProfForCourse(targetName);
+      if (autoProf) {
+        classEdit.prof = autoProf;
+      }
+    }
     const profInput = $('#class-prof');
     if (profInput) profInput.value = classEdit.prof;
     renderExtraNote();
@@ -2765,12 +2966,21 @@
     const elearn = tt.filter((c) => c.elearn || c.m === 'elearn' || !c.start);
     let elearnNote = null;
     if (elearn.length) {
-      elearnNote = h('div', { class: 'tc-elearn-bar' },
-        h('span', { class: 'tc-elearn-label' }, `💻 온라인·이러닝 과목 (${elearn.length})`),
-        h('ul', { class: 'tc-elearn-list' }, elearn.map((ec) => {
-          const ep = ec.prof || ec.p || '';
-          return h('li', null, `${ec.name}${ep ? ` (${ep} 교수)` : ''}`);
-        }))
+      const names = elearn.map((ec) => ec.name || T.classFallback).join(' · ');
+      const labelText = state.lang === 'en' ? `💻 E-learning (${elearn.length})`
+        : state.lang === 'zh' ? `💻 网课 (${elearn.length})`
+        : state.lang === 'ja' ? `💻 eラーニング (${elearn.length})`
+        : `💻 이러닝 (${elearn.length})`;
+
+      elearnNote = h('button', {
+        type: 'button',
+        class: 'tc-elearn-bar',
+        title: `${labelText}: ${names} (${T.seeTimetable || '시간표 보기'})`,
+        onclick: () => { location.hash = '#/timetable'; setTab('timetable', true); }
+      },
+        h('span', { class: 'tc-elearn-label' }, labelText),
+        h('span', { class: 'tc-elearn-names' }, names),
+        h('span', { class: 'tc-elearn-arrow' }, '↗')
       );
     }
 
@@ -2873,13 +3083,31 @@
       const fg = ringEl.querySelector('.ring-fg');
       requestAnimationFrame(() => requestAnimationFrame(() => { fg.style.strokeDashoffset = String((c * (1 - pct / 100)).toFixed(1)); }));
     }
+    let subText = null;
+    if (has) {
+      if (!g.left || !g.left.total) {
+        subText = T.wGradDone;
+      } else if (g.mode === 'transfer') {
+        const majLeft = g.left.major || 0;
+        const freeLeft = Math.max(0, g.left.total - majLeft);
+        if (majLeft > 0 && freeLeft > 0) {
+          subText = `전공 ${majLeft} · 자유 ${freeLeft}학점`;
+        } else if (majLeft > 0) {
+          subText = `전공 ${majLeft}학점`;
+        } else {
+          subText = `자유(교양·일선) ${freeLeft}학점`;
+        }
+      } else {
+        subText = T.wGradSub(g.left.major || 0, g.left.general || 0);
+      }
+    }
     return h('section', { class: 'w w-grad' },
       h('button', { type: 'button', class: 'w-hit', onclick: go, 'aria-label': T.wGrad }),
       h('p', { class: 'w-label' }, T.wGrad),
       h('div', { class: 'grad-body' }, ringEl,
         h('div', null,
           has ? h('p', { class: 'grad-big' }, g.left.total ? T.wGradLeft(g.left.total) : T.wGradDone) : h('p', { class: 'grad-empty' }, T.wGradEmpty),
-          has ? h('p', { class: 'grad-sub' }, T.wGradSub(g.left.major || 0, g.left.general || 0)) : null)));
+          subText ? h('p', { class: 'grad-sub' }, subText) : null)));
   }
 
   // 이번 주: 월~일 일곱 칸에 마감·행사·학사일정 점 (삼성 캘린더 주간 띠)
@@ -2915,26 +3143,42 @@
       })));
   }
 
-  // 시작하기: 처음 쓰는 사람에게 해 둘 일 네 가지를 한 줄 띠로 (다 하면 사라짐)
+  // 시작하기 스마트 팁: 처음 쓰는 사람에게 다음 맞춤 설정을 한 줄 카드로 안내 (✕ 닫기 가능)
   function setupStrip() {
+    if (store.get('setupDismissed')) return null;
     const T = t();
     const hist = planUI ? planUI.progress().count > 0 : true;
     const steps = [
-      { done: state.timetable.length > 0, label: T.setupTimetable, run: () => { if (planUI) planUI.setSub('week'); location.hash = '#/timetable'; setTab('timetable', true); if (window.matchMedia('(min-width: 900px)').matches) openClassDialog(); } },
-      { done: state.profile.set, label: T.setupProfile, run: goProfile },
-      { done: hist, label: T.setupHistory, run: () => { if (planUI) planUI.setSub('history'); location.hash = '#/timetable'; setTab('timetable', true); } },
-      { done: state.interests.length > 0 || state.keywords.length > 0, label: T.setupInterests, run: () => { location.hash = '#/settings'; setTab('settings', true); } }
+      { id: 'tt', done: state.timetable.length > 0, label: T.setupTimetable, desc: '시간표를 넣으면 수업과 안 겹치는 공지를 쏙 골라요', run: () => { if (planUI) planUI.setSub('week'); location.hash = '#/timetable'; setTab('timetable', true); if (window.matchMedia('(min-width: 900px)').matches) openClassDialog(); } },
+      { id: 'profile', done: state.profile.set, label: T.setupProfile, desc: '내 학년·학과를 넣으면 맞춤 장학 공지를 바로 보여드려요', run: goProfile },
+      { id: 'history', done: hist, label: T.setupHistory, desc: '지금까지 들은 과목을 넣으면 졸업까지 남은 학점을 계산해요', run: () => { if (planUI) planUI.setSub('history'); location.hash = '#/timetable'; setTab('timetable', true); } },
+      { id: 'interests', done: state.interests.length > 0 || state.keywords.length > 0, label: T.setupInterests, desc: '관심 분야를 등록하면 새 공지 알림을 받아요', run: () => { location.hash = '#/settings'; setTab('settings', true); } }
     ];
     const done = steps.filter((x) => x.done).length;
     if (done === steps.length) return null;
-    return h('section', { class: 'setup-strip', 'aria-label': T.wSetup },
-      h('div', { class: 'ss-head' },
-        h('strong', null, T.wSetup),
-        h('span', { class: 'ss-count' }, T.setupProgress(done, steps.length)),
-        h('span', { class: 'ss-dots', 'aria-hidden': 'true' }, steps.map((x) => h('i', { class: x.done ? 'on' : '' })))),
-      h('ul', { class: 'ss-list' }, steps.map((x) => h('li', { class: x.done ? 'is-done' : '' },
-        h('button', { type: 'button', onclick: x.run, disabled: x.done ? true : null },
-          h('span', { class: 'setup-check', 'aria-hidden': 'true' }), h('span', null, x.label))))));
+    const nextStep = steps.find((x) => !x.done) || steps[0];
+
+    const dismiss = () => {
+      store.set('setupDismissed', true);
+      renderHome();
+    };
+
+    return h('aside', { class: 'setup-suggestion-card', 'aria-label': T.wSetup },
+      h('div', { class: 'sug-left' },
+        h('span', { class: 'sug-icon', 'aria-hidden': 'true' }, '✨'),
+        h('div', { class: 'sug-text' },
+          h('div', { class: 'sug-tag-row' },
+            h('span', { class: 'sug-badge' }, '스마트 추천'),
+            h('span', { class: 'sug-count' }, `${done}/${steps.length} 완료`)
+          ),
+          h('p', { class: 'sug-msg' }, h('strong', null, nextStep.label), ` · ${nextStep.desc}`)
+        )
+      ),
+      h('div', { class: 'sug-actions' },
+        h('button', { type: 'button', class: 'sug-btn', onclick: nextStep.run }, '설정하기 →'),
+        h('button', { type: 'button', class: 'sug-close', onclick: dismiss, 'aria-label': '추천 닫기' }, '✕')
+      )
+    );
   }
 
   // 오늘의 브리핑: 숫자 하나와 한 줄 설명으로 '지금 볼 것'을 네 칸에 (토스 리포트·애플 요약처럼). 모두 규칙으로 계산
@@ -2979,13 +3223,35 @@
     const T = t();
     const items = briefing(s);
     if (!items.length) return null;
+    const icons = {
+      today: '🚨',
+      money: '💰',
+      points: '💎',
+      acad: '📅',
+      board: '📋',
+      clash: '⚠️'
+    };
     return h('section', { class: 'brief', 'aria-label': T.bfTitle },
       h('h3', { class: 'visually-hidden' }, T.bfTitle),
       h('ul', null, items.map((x) => h('li', { class: 'bf bf-' + x.k + (x.hot ? ' is-hot' : '') },
-        h('button', { type: 'button', onclick: x.go },
-          h('span', { class: 'bf-label' }, x.label),
-          h('span', { class: 'bf-big' }, /^\d+$/.test(x.big) ? h('span', { 'data-count': x.big }, x.big) : x.big, x.unit ? h('small', null, x.unit) : null),
-          h('span', { class: 'bf-sub' }, x.sub))))));
+        h('button', { type: 'button', onclick: x.go, 'aria-label': `${x.label}: ${x.big}${x.unit || ''}` },
+          h('div', { class: 'bf-head' },
+            h('span', { class: 'bf-pill' },
+              h('span', { class: 'bf-icon', 'aria-hidden': 'true' }, icons[x.k] || '📌'),
+              h('span', { class: 'bf-label' }, x.label)
+            ),
+            h('span', { class: 'bf-arrow', 'aria-hidden': 'true' }, '↗')
+          ),
+          h('div', { class: 'bf-value-wrap' },
+            h('span', { class: 'bf-big' },
+              /^\d+$/.test(x.big) ? h('span', { 'data-count': x.big }, x.big) : x.big,
+              x.unit ? h('small', null, x.unit) : null
+            )
+          ),
+          h('span', { class: 'bf-sub' }, x.sub)
+        )
+      )))
+    );
   }
 
   // 가로 스크롤 영역 마우스 드래그 & 휠 스크롤 지원 (티켓·타임라인 등)
@@ -2996,27 +3262,23 @@
     let scrollStart = 0;
     let hasMoved = false;
 
-    const onMove = (e) => {
+    const onMouseMove = (e) => {
       if (!isDown) return;
-      const x = e.clientX !== undefined ? e.clientX : (e.touches && e.touches[0] ? e.touches[0].clientX : 0);
-      const dx = x - startX;
-      if (!hasMoved && Math.abs(dx) > 6) {
+      const dx = e.clientX - startX;
+      if (!hasMoved && Math.abs(dx) > 4) {
         hasMoved = true;
         el.classList.add('is-dragging');
       }
-      if (hasMoved && e.pointerType === 'mouse') {
+      if (hasMoved) {
         el.scrollLeft = scrollStart - dx;
       }
     };
 
-    const onUp = () => {
+    const onMouseUp = () => {
       if (!isDown) return;
       isDown = false;
-      window.removeEventListener('pointermove', onMove);
-      window.removeEventListener('pointerup', onUp);
-      window.removeEventListener('pointercancel', onUp);
-      window.removeEventListener('touchmove', onMove);
-      window.removeEventListener('touchend', onUp);
+      window.removeEventListener('mousemove', onMouseMove);
+      window.removeEventListener('mouseup', onMouseUp);
       el.classList.remove('is-dragging');
       if (hasMoved) {
         const preventClick = (ev) => {
@@ -3029,26 +3291,45 @@
     };
 
     // 마우스 드래그 지원 (데스크톱)
-    el.addEventListener('pointerdown', (e) => {
-      if (e.pointerType === 'mouse' && e.button !== 0) return;
+    el.addEventListener('mousedown', (e) => {
+      if (e.button !== 0) return;
       isDown = true;
       hasMoved = false;
       startX = e.clientX;
       scrollStart = el.scrollLeft;
-      window.addEventListener('pointermove', onMove);
-      window.addEventListener('pointerup', onUp);
-      window.addEventListener('pointercancel', onUp);
+      window.addEventListener('mousemove', onMouseMove);
+      window.addEventListener('mouseup', onMouseUp);
     });
 
-    // 모바일 터치 제스처 시 스와이프 도중 클릭 방지 지원
+    // 모바일 터치 제스처: 스와이프 도중 공지 클릭 오동작 방지 + 네이티브 가로 스크롤 보장
+    let touchStartX = 0;
+    let touchStartY = 0;
+    let touchMoved = false;
     el.addEventListener('touchstart', (e) => {
       if (e.touches.length !== 1) return;
-      isDown = true;
-      hasMoved = false;
-      startX = e.touches[0].clientX;
-      scrollStart = el.scrollLeft;
-      window.addEventListener('touchmove', onMove, { passive: true });
-      window.addEventListener('touchend', onUp, { passive: true });
+      touchMoved = false;
+      touchStartX = e.touches[0].clientX;
+      touchStartY = e.touches[0].clientY;
+    }, { passive: true });
+
+    el.addEventListener('touchmove', (e) => {
+      if (touchMoved || e.touches.length !== 1) return;
+      const dx = Math.abs(e.touches[0].clientX - touchStartX);
+      const dy = Math.abs(e.touches[0].clientY - touchStartY);
+      if (dx > 8 && dx > dy) {
+        touchMoved = true;
+      }
+    }, { passive: true });
+
+    el.addEventListener('touchend', () => {
+      if (touchMoved) {
+        const preventClick = (ev) => {
+          ev.stopPropagation();
+          ev.preventDefault();
+        };
+        el.addEventListener('click', preventClick, { capture: true, once: true });
+        setTimeout(() => el.removeEventListener('click', preventClick, { capture: true }), 180);
+      }
     }, { passive: true });
 
     el.addEventListener('wheel', (e) => {
@@ -3058,19 +3339,53 @@
     }, { passive: false });
   }
 
-  // 마감 티켓: 가까운 마감을 '오려 낸 표'처럼 옆으로 넘겨 본다 (줍줍 = 주워 담는 표). 저장한 공지는 초록 띠
+  // 마감 티켓: 통합 스마트 마감 허브 (티켓 레일 + 주간 요일 뷰 + 요일 퀵 필터)
   function ticketStrip() {
     const T = t();
     const fitOk = (n) => !state.profile.set || fitStatus(n) !== 'no';
     const list = activeNotices().filter((n) => n.deadline && !L.isExpired(n, now) && fitOk(n))
-      .sort((a, b) => L.parseLocal(a.deadline) - L.parseLocal(b.deadline)).slice(0, 14);
+      .sort((a, b) => L.parseLocal(a.deadline) - L.parseLocal(b.deadline)).slice(0, 18);
     if (!list.length) return null;
     const ids = list.map((n) => n.id);
-    const rail = h('div', { class: 'tickets', tabindex: '-1' }, list.map((n) => {
+
+    // 뷰 모드 ('rail' | 'week', 기본값 'rail')
+    let viewMode = store.get('ticketViewMode', 'rail');
+
+    // 다국어 라벨 매핑
+    const lang = state.lang || 'ko';
+    const i18nLabels = {
+      viewRail: lang === 'en' ? '🎫 Tickets' : lang === 'zh' ? '🎫 票券' : lang === 'ja' ? '🎫 チケット' : '🎫 티켓',
+      viewWeek: lang === 'en' ? '📅 By Day' : lang === 'zh' ? '📅 按星期' : lang === 'ja' ? '📅 曜日別' : '📅 요일별',
+      all: lang === 'en' ? 'All' : lang === 'zh' ? '全部' : lang === 'ja' ? 'すべて' : '전체',
+      noDue: lang === 'en' ? 'No deadlines' : lang === 'zh' ? '无截止' : lang === 'ja' ? '締切なし' : '마감 없음'
+    };
+
+    // 날짜별 그룹핑 (오늘부터 7일)
+    const today = new Date(now);
+    today.setHours(0, 0, 0, 0);
+    const dayList = [];
+    for (let i = 0; i < 7; i++) {
+      const d = new Date(today);
+      d.setDate(today.getDate() + i);
+      const dayKey = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+      const dayItems = list.filter((n) => n.deadline && n.deadline.startsWith(dayKey));
+      dayList.push({ date: d, key: dayKey, items: dayItems, isToday: i === 0 });
+    }
+
+    // [1] 티켓 레일
+    const rail = h('div', { class: 'tickets' + (viewMode === 'rail' ? '' : ' is-hidden'), tabindex: '-1' }, list.map((n) => {
       const d = L.parseLocal(n.deadline);
       const left = L.daysLeft(n.deadline, now);
       const sub = L.classifyBenefit(n).subs[0];
-      return h('button', { type: 'button', class: 'ticket' + (left <= 1 ? ' is-hot' : '') + (left === 0 ? ' is-today' : '') + (isSaved(n.id) ? ' is-saved' : ''), 'aria-haspopup': 'dialog', onclick: () => openDetail(n.id, false, ids) },
+      const dayKey = n.deadline ? n.deadline.slice(0, 10) : '';
+      return h('button', {
+        type: 'button',
+        class: 'ticket' + (left <= 1 ? ' is-hot' : '') + (left === 0 ? ' is-today' : '') + (isSaved(n.id) ? ' is-saved' : ''),
+        'data-day': dayKey,
+        'data-id': n.id,
+        'aria-haspopup': 'dialog',
+        onclick: () => openDetail(n.id, false, ids)
+      },
         h('span', { class: 'tk-stub' },
           h('strong', null, left === 0 ? T.dueToday : `D-${left}`),
           h('small', null, `${d.getMonth() + 1}.${String(d.getDate()).padStart(2, '0')} ${dayName(d.getDay())}`),
@@ -3082,15 +3397,144 @@
           sub ? subTag(n, sub) : null));
     }));
     enableDragScroll(rail);
-    const scroll = (dir) => rail.scrollBy({ left: dir * Math.max(280, rail.clientWidth * 0.8), behavior: reduceMotion() ? 'auto' : 'smooth' });
-    return h('section', { class: 'sec sec-tickets' },
-      h('header', { class: 'sec-head' },
-        h('h3', null, T.secTickets), h('span', { class: 'sec-count' }, String(list.length)),
-        h('div', { class: 'sec-tools' },
-          h('button', { type: 'button', class: 'rail-btn', 'aria-label': T.calPrev, onclick: () => scroll(-1) }, '‹'),
-          h('button', { type: 'button', class: 'rail-btn', 'aria-label': T.calNext, onclick: () => scroll(1) }, '›'),
+
+    // [2] 주간 요일 뷰 (Week Calendar Deck)
+    const weekDeck = h('div', { class: 'ticket-week-deck' + (viewMode === 'week' ? '' : ' is-hidden'), tabindex: '-1' },
+      dayList.map((dayObj) => {
+        const d = dayObj.date;
+        const mm = d.getMonth() + 1;
+        const dd = String(d.getDate()).padStart(2, '0');
+        const dow = dayName(d.getDay());
+        return h('div', { class: 'twd-col' + (dayObj.isToday ? ' is-today' : '') + (dayObj.items.length ? '' : ' is-empty'), 'data-day': dayObj.key },
+          h('div', { class: 'twd-col-head' },
+            h('span', { class: 'twd-col-dow' }, dow),
+            h('span', { class: 'twd-col-date' }, `${mm}.${dd}`),
+            dayObj.isToday ? h('span', { class: 'twd-today-badge' }, T.dueToday || '오늘') : null,
+            dayObj.items.length ? h('span', { class: 'twd-cnt-badge' }, `${dayObj.items.length}`) : null),
+          h('div', { class: 'twd-col-body' },
+            dayObj.items.length ? dayObj.items.map((n) => {
+              const left = L.daysLeft(n.deadline, now);
+              return h('button', {
+                type: 'button',
+                class: 'twd-card' + (left <= 1 ? ' is-urgent' : '') + (isSaved(n.id) ? ' is-saved' : ''),
+                title: titleOf(n),
+                onclick: () => openDetail(n.id, false, ids)
+              },
+                h('div', { class: 'twd-card-meta' },
+                  h('span', { class: 'twd-card-cat' }, catLabel(n.category)),
+                  h('span', { class: 'twd-card-dday' + (left === 0 ? ' is-urgent' : '') }, left === 0 ? T.dueToday : `D-${left}`)),
+                h('div', { class: 'twd-card-title' }, titleOf(n)));
+            }) : h('div', { class: 'twd-empty-slot' }, h('span', { class: 'twd-empty-icon' }, '☕'), h('span', null, i18nLabels.noDue))));
+      }));
+    enableDragScroll(weekDeck);
+
+    // [3] 상단 요일 캡슐 필터 바 (Day Quick-Filter Strip)
+    const dayChips = [];
+    const allChip = h('button', {
+      type: 'button',
+      class: 'sdh-day-chip is-active',
+      onclick: () => {
+        dayChips.forEach(c => c.classList.remove('is-active'));
+        allChip.classList.add('is-active');
+        if (viewMode === 'rail') {
+          rail.scrollTo({ left: 0, behavior: reduceMotion() ? 'auto' : 'smooth' });
+        } else {
+          weekDeck.scrollTo({ left: 0, behavior: reduceMotion() ? 'auto' : 'smooth' });
+        }
+      }
+    }, h('span', null, i18nLabels.all), h('span', { class: 'sdh-chip-cnt' }, String(list.length)));
+
+    const filterChips = dayList.map((dayObj) => {
+      const d = dayObj.date;
+      const mm = d.getMonth() + 1;
+      const dd = d.getDate();
+      const dow = dayName(d.getDay());
+      const label = dayObj.isToday ? (lang === 'ko' ? `오늘 ${dd}` : `${dow} ${dd}`) : `${dow} ${dd}`;
+      const chip = h('button', {
+        type: 'button',
+        class: 'sdh-day-chip' + (dayObj.isToday ? ' is-today-chip' : '') + (dayObj.items.length ? ' has-items' : ' no-items'),
+        title: `${mm}.${dd} (${dow}) · ${dayObj.items.length}`,
+        onclick: () => {
+          dayChips.forEach(c => c.classList.remove('is-active'));
+          allChip.classList.remove('is-active');
+          chip.classList.add('is-active');
+
+          if (viewMode === 'rail') {
+            const firstTarget = rail.querySelector(`.ticket[data-day="${dayObj.key}"]`);
+            if (firstTarget) {
+              const offset = firstTarget.offsetLeft - rail.offsetLeft - 8;
+              rail.scrollTo({ left: Math.max(0, offset), behavior: reduceMotion() ? 'auto' : 'smooth' });
+              firstTarget.classList.add('is-focused-pulse');
+              setTimeout(() => firstTarget.classList.remove('is-focused-pulse'), 1200);
+            }
+          } else {
+            const targetCol = weekDeck.querySelector(`.twd-col[data-day="${dayObj.key}"]`);
+            if (targetCol) {
+              const offset = targetCol.offsetLeft - weekDeck.offsetLeft - 8;
+              weekDeck.scrollTo({ left: Math.max(0, offset), behavior: reduceMotion() ? 'auto' : 'smooth' });
+              targetCol.classList.add('is-focused-pulse');
+              setTimeout(() => targetCol.classList.remove('is-focused-pulse'), 1200);
+            }
+          }
+        }
+      },
+        h('span', null, label),
+        dayObj.items.length ? h('span', { class: 'sdh-chip-cnt' }, String(dayObj.items.length)) : null);
+      dayChips.push(chip);
+      return chip;
+    });
+
+    const dayStrip = h('div', { class: 'sdh-day-strip' }, allChip, ...filterChips);
+
+    // [4] 헤더 컨트롤 (뷰 스위처 + 슬라이드 버튼 + 전체보기)
+    const btnRail = h('button', {
+      type: 'button',
+      class: 'sdh-view-btn' + (viewMode === 'rail' ? ' is-active' : ''),
+      'aria-pressed': String(viewMode === 'rail'),
+      onclick: () => setViewMode('rail')
+    }, h('span', null, i18nLabels.viewRail));
+
+    const btnWeek = h('button', {
+      type: 'button',
+      class: 'sdh-view-btn' + (viewMode === 'week' ? ' is-active' : ''),
+      'aria-pressed': String(viewMode === 'week'),
+      onclick: () => setViewMode('week')
+    }, h('span', null, i18nLabels.viewWeek));
+
+    const switcher = h('div', { class: 'sdh-view-switcher', role: 'group' }, btnRail, btnWeek);
+
+    const scroll = (dir) => {
+      const target = viewMode === 'rail' ? rail : weekDeck;
+      target.scrollBy({ left: dir * Math.max(280, target.clientWidth * 0.8), behavior: reduceMotion() ? 'auto' : 'smooth' });
+    };
+
+    const navBtns = h('div', { class: 'sdh-nav-btns' },
+      h('button', { type: 'button', class: 'rail-btn', 'aria-label': T.calPrev, onclick: () => scroll(-1) }, '‹'),
+      h('button', { type: 'button', class: 'rail-btn', 'aria-label': T.calNext, onclick: () => scroll(1) }, '›'));
+
+    function setViewMode(mode) {
+      viewMode = mode;
+      store.set('ticketViewMode', mode);
+      btnRail.classList.toggle('is-active', mode === 'rail');
+      btnWeek.classList.toggle('is-active', mode === 'week');
+      btnRail.setAttribute('aria-pressed', String(mode === 'rail'));
+      btnWeek.setAttribute('aria-pressed', String(mode === 'week'));
+      rail.classList.toggle('is-hidden', mode !== 'rail');
+      weekDeck.classList.toggle('is-hidden', mode !== 'week');
+    }
+
+    return h('section', { class: 'sec sec-tickets smart-deadline-hub' },
+      h('header', { class: 'sec-head sdh-head' },
+        h('div', { class: 'sdh-title-group' },
+          h('h3', null, T.secTickets),
+          h('span', { class: 'sec-count' }, String(list.length))),
+        h('div', { class: 'sec-tools sdh-tools' },
+          switcher,
+          navBtns,
           h('button', { type: 'button', class: 'link-btn', onclick: () => goList({ due: 'soon', sort: 'deadline' }) }, T.homeMore))),
-      rail);
+      dayStrip,
+      rail,
+      weekDeck);
   }
 
   // 편집형 섹션: 위에 굵은 선 + 제목 + '더 보기' (카드 상자 대신)
@@ -3154,12 +3598,12 @@
     ].filter(Boolean);
 
     const parts = [
-      setupStrip(),
       briefingRow(s),
-      ticketStrip(),
+      setupStrip(),
       h('div', { class: 'home-cols' },
         h('div', { class: 'home-col' }, classes, week),
         h('div', { class: 'home-col' }, grad, boardMini())),
+      ticketStrip(),
       lists.length ? h('div', { class: 'home-lists' }, lists) : null,
       calCard()
     ].filter(Boolean);
@@ -4227,7 +4671,21 @@
     });
     $('#class-form').addEventListener('submit', (e) => { e.preventDefault(); saveClass(); });
     $('#class-more').addEventListener('click', () => saveClass(true));
-    $('#class-name').addEventListener('input', () => { classEdit.extra = []; classEdit.rooms = {}; renderExtraNote(); showSuggest(); });
+    $('#class-name').addEventListener('input', () => {
+      classEdit.extra = [];
+      classEdit.rooms = {};
+      renderExtraNote();
+      showSuggest();
+      const val = $('#class-name').value.trim();
+      const profInput = $('#class-prof');
+      if (val && profInput && !profInput.value.trim()) {
+        const auto = findProfForCourse(val);
+        if (auto) {
+          profInput.value = auto;
+          classEdit.prof = auto;
+        }
+      }
+    });
     $('#class-name').addEventListener('focus', showSuggest);
     $('#class-name').addEventListener('blur', () => setTimeout(hideSuggest, 120));
     $('#class-cancel').addEventListener('click', () => $('#class-dialog').close());

@@ -65,7 +65,7 @@ globalThis.KKU_REFERENCE = {
 };
 
 // ---- 공통 설정·도우미 (서비스 워커 · 콘텐츠 스크립트 · 팝업이 함께 사용) ----
-globalThis.KKU_VERSION = '1.3.0';
+globalThis.KKU_VERSION = '1.4.0';
 
 // 자동 수집이 백그라운드 탭으로 여는 주소 (login: 로그인해야 보이는 곳이라 기본으로는 꺼 둠)
 globalThis.KKU_SITES = [

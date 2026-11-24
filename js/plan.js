@@ -142,7 +142,11 @@
     }
     const edited = {};
     for (const k of ['total', 'major', 'general']) {
-      const v = num(c[k], 0, 300);
+      let v = num(c[k], 0, 300);
+      // 편입생 모드인데 total이 100을 초과하면 (신입생 4년제 총 학점 132 등이 남아있는 경우) 무시하고 편입생 기준 66 적용
+      if (mode === 'transfer' && k === 'total' && v !== null && v > 100) {
+        v = null;
+      }
       if (v !== null) { base[k] = v; edited[k] = true; }
     }
     return {
@@ -155,6 +159,19 @@
 
   function remaining(req, tot) {
     const left = (need, done) => (need === null || need === undefined ? null : Math.max(0, need - done));
+    if (req.mode === 'transfer') {
+      const majorLeft = left(req.major, tot.major);
+      const rawTotalLeft = left(req.total, tot.total);
+      const totalLeft = (rawTotalLeft !== null && majorLeft !== null) ? Math.max(rawTotalLeft, majorLeft) : rawTotalLeft;
+      const freeLeft = (totalLeft !== null && majorLeft !== null) ? Math.max(0, totalLeft - majorLeft) : null;
+      return {
+        total: totalLeft,
+        major: majorLeft,
+        general: freeLeft,
+        free: freeLeft,
+        gen: null
+      };
+    }
     const r = {
       total: left(req.total, tot.total),
       major: left(req.major, tot.major),

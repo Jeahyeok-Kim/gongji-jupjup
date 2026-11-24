@@ -113,6 +113,72 @@
       const majorElectDone = (st.history || []).filter((x) => x.kind === '전선').reduce((s, x) => s + (Number(x.credit) || 0), 0);
       const reqMajorReq = req.majorReq || 0;
 
+      if (req.mode === 'transfer') {
+        const freeReq = Math.max(0, (req.total || 66) - (req.major || 0));
+        const freeDone = Math.max(0, tot.total - Math.min(tot.major, req.major || 0));
+        const items = [
+          {
+            label: reqMajorReq > 0 ? '전공필수' : '전공필수 (학과)',
+            done: majorReqDone,
+            need: reqMajorReq || null,
+            tag: reqMajorReq > 0 ? (majorReqDone >= reqMajorReq ? '완료 ✓' : `${reqMajorReq - majorReqDone}학점 부족`) : '의무 없음',
+            ok: reqMajorReq > 0 ? majorReqDone >= reqMajorReq : true
+          },
+          {
+            label: `전공 이수 (${req.major || 0}학점)`,
+            done: tot.major,
+            need: req.major,
+            tag: (tot.major >= (req.major || 0)) ? '완료 ✓' : `${(req.major || 0) - tot.major}학점 부족`,
+            ok: tot.major >= (req.major || 0)
+          },
+          {
+            label: freeReq > 0 ? `자유 이수 (${freeReq}학점)` : '자유 이수',
+            done: freeDone,
+            need: freeReq > 0 ? freeReq : null,
+            tag: freeReq === 0 ? '자유 불필요 (전공 100%)' : (freeDone >= freeReq ? '완료 ✓' : `${freeReq - freeDone}학점 부족`),
+            ok: freeReq === 0 || freeDone >= freeReq
+          },
+          {
+            label: `편입 총 이수 (${req.total || 66}학점)`,
+            done: tot.total,
+            need: req.total || 66,
+            tag: (tot.total >= (req.total || 66)) ? '완료 ✓' : `${(req.total || 66) - tot.total}학점 부족`,
+            ok: tot.total >= (req.total || 66)
+          },
+          {
+            label: '교양 영역별 필수',
+            done: tot.general,
+            need: null,
+            tag: '면제 ✓ (의무 없음)',
+            ok: true,
+            isExempt: true
+          }
+        ];
+
+        return h('div', { class: 'grad-breakdown-card is-transfer-mode' },
+          h('div', { class: 'gbc-head' },
+            h('h4', null, '📊 영역별 세부 졸업요건 이수율'),
+            h('span', { class: 'gbc-sub' }, '편입생: 기초·심화·KU소양 필수 면제 · 전공 및 자유 학점 충족 여부')
+          ),
+          h('div', { class: 'gbc-grid' }, items.map((it) => {
+            const pct = it.need ? Math.min(100, Math.round((it.done / it.need) * 100)) : 100;
+            return h('div', { class: `gbc-item ${it.ok ? 'is-fulfilled' : 'is-pending'}` },
+              h('div', { class: 'gbc-item-top' },
+                h('span', { class: 'gbc-item-label' }, it.label),
+                h('span', { class: `gbc-item-badge ${it.ok ? 'ok' : 'warn'}` }, it.tag)
+              ),
+              h('div', { class: 'gbc-bar' },
+                h('div', { class: 'gbc-bar-fill', style: `width:${pct}%;` })
+              ),
+              h('div', { class: 'gbc-item-nums' },
+                it.isExempt ? h('span', { class: 'exempt-text' }, `이수 ${it.done}학점 (자유 학점으로 인정)`)
+                  : [h('strong', null, `${it.done}학점`), it.need ? h('span', null, ` / ${it.need}학점`) : null]
+              )
+            );
+          }))
+        );
+      }
+
       const items = [
         {
           label: '전공필수',
@@ -187,11 +253,30 @@
           h('p', { class: 'plan-kicker' }, [req.dept, req.mode === 'transfer' ? Tx.reqModeTransfer : ''].filter(Boolean).join(' · ') || Tx.histTitle),
           h('p', { class: 'plan-big' }, left.total !== null ? Tx.histLeft(left.total) : Tx.histLeftUnknown),
           h('p', { class: 'plan-side' }, [Tx.histDone(tot.total), (() => { const v = P.gpa(st.history); return v ? Tx.gpaHero(v.gpa.toFixed(2)) : ''; })()].filter(Boolean).join(' · '))));
-      const meters = h('div', { class: 'meters' },
-        meter(Tx.areaTotal, tot.total, req.total),
-        meter(Tx.areaMajor, tot.major, req.major),
-        meter(Tx.areaGeneral, tot.general, req.general,
-          req.gen ? h('p', { class: 'meter-sub' }, ['기초', '심화', '소양'].map((g) => `${Tx.genLabel[g]} ${tot.gen[g]}/${req.gen[g]}`).join(' · ')) : null));
+
+      let meters;
+      if (req.mode === 'transfer') {
+        const freeReq = Math.max(0, (req.total || 66) - (req.major || 0));
+        const freeDone = Math.max(0, tot.total - Math.min(tot.major, req.major || 0));
+        const extraMajor = Math.max(0, tot.major - (req.major || 0));
+        const freeBreakdown = [
+          tot.general ? `교양 ${tot.general}` : '',
+          tot.free ? `일선 ${tot.free}` : '',
+          extraMajor ? `초과전공 ${extraMajor}` : ''
+        ].filter(Boolean).join(' · ');
+
+        meters = h('div', { class: 'meters' },
+          meter(Tx.areaTotal, tot.total, req.total),
+          meter('전공 최소', tot.major, req.major),
+          meter('자유(교양·일선)', freeDone, freeReq,
+            freeBreakdown ? h('p', { class: 'meter-sub' }, freeBreakdown + '학점') : null));
+      } else {
+        meters = h('div', { class: 'meters' },
+          meter(Tx.areaTotal, tot.total, req.total),
+          meter(Tx.areaMajor, tot.major, req.major),
+          meter(Tx.areaGeneral, tot.general, req.general,
+            req.gen ? h('p', { class: 'meter-sub' }, ['기초', '심화', '소양'].map((g) => `${Tx.genLabel[g]} ${tot.gen[g]}/${req.gen[g]}`).join(' · ')) : null));
+      }
       return [head, meters, renderDetailedBreakdown(tot, req), renderRoadmap(left), renderRequired()];
     }
 
@@ -251,18 +336,81 @@
     function renderReq() {
       const Tx = T();
       const req = requirement();
-      const num = (key, label, value) => h('label', { class: 'req-field' },
+      const num = (key, label, value, onCustom) => h('label', { class: 'req-field' },
         h('span', null, label),
         h('input', {
           type: 'number', min: '0', max: '300', step: '1', inputmode: 'numeric', value: value === null || value === undefined ? '' : String(value),
           onchange: (e) => {
-            const v = e.target.value.trim();
-            if (v === '') delete st.req[key]; else st.req[key] = Number(v);
+            const raw = e.target.value.trim();
+            const v = raw === '' ? null : Number(raw);
+            if (onCustom) {
+              onCustom(v);
+            } else {
+              if (v === null) delete st.req[key]; else st.req[key] = v;
+            }
             save(); render();
           }
         }));
-      const setMode = (mode) => { st.req = { dept: st.req.dept, mode }; save(); render(); };
+      const setMode = (mode) => {
+        const curDept = st.req.dept;
+        st.req = { dept: curDept, mode };
+        if (mode === 'transfer') {
+          st.req.total = 66;
+        }
+        save(); render();
+      };
       const edited = Object.keys(req.edited).length > 0;
+
+      const applyPreset = (totVal, majVal, genVal) => {
+        st.req.total = totVal;
+        st.req.major = majVal;
+        st.req.general = genVal;
+        save(); render();
+      };
+
+      const transferPresets = req.mode === 'transfer' ? h('div', { class: 'req-presets-bar' },
+        h('button', {
+          type: 'button',
+          class: 'req-preset-chip' + (req.major === 51 && req.general === 15 ? ' is-active' : ''),
+          onclick: () => applyPreset(66, 51, 15)
+        }, Tx.reqPreset51 || '⚡ 전공 51 + 자유 15 (전적대 전공 15학점 인정 시)'),
+        h('button', {
+          type: 'button',
+          class: 'req-preset-chip' + (req.major === 66 && (req.general === 0 || !req.general) ? ' is-active' : ''),
+          onclick: () => applyPreset(66, 66, 0)
+        }, Tx.reqPreset66 || '⚡ 전공 66 (비동일계 전공 전체 이수)')
+      ) : null;
+
+      const reqInputs = req.mode === 'transfer' ? [
+        num('total', Tx.reqTotalTransfer || '편입 후 이수할 학점', req.total, (v) => {
+          if (v === null) delete st.req.total;
+          else {
+            st.req.total = v;
+            if (st.req.major) st.req.general = Math.max(0, v - st.req.major);
+          }
+        }),
+        num('major', Tx.reqMajorTransfer || '전공 최소 학점', req.major, (v) => {
+          if (v === null) delete st.req.major;
+          else {
+            st.req.major = v;
+            const curTot = st.req.total || req.total || 66;
+            st.req.general = Math.max(0, curTot - v);
+          }
+        }),
+        num('general', Tx.reqGeneralTransfer || '자유 학점 (교양/일선)', req.general !== null && req.general !== undefined ? req.general : Math.max(0, (req.total || 66) - (req.major || 0)), (v) => {
+          if (v === null) delete st.req.general;
+          else {
+            st.req.general = v;
+            const curTot = st.req.total || req.total || 66;
+            st.req.major = Math.max(0, curTot - v);
+          }
+        })
+      ] : [
+        num('total', Tx.reqTotal, req.total),
+        num('major', Tx.reqMajor, req.major),
+        num('general', Tx.reqGeneral, req.general)
+      ];
+
       return h('details', { class: 'plan-box req-box', open: !req.found || req.mode === 'transfer' || edited ? true : null },
         h('summary', null, h('span', null, Tx.reqTitle),
           h('small', null, !req.found ? Tx.reqNoDeptShort : req.mode === 'transfer' ? Tx.reqSourceTransfer(req.dept) : Tx.reqSource(req.dept))),
@@ -270,16 +418,19 @@
           ['regular', 'transfer'].map((m) => h('button', { type: 'button', 'aria-pressed': String(req.mode === m), onclick: () => setMode(m) },
             m === 'transfer' ? Tx.reqModeTransfer : Tx.reqModeRegular))),
         req.mode === 'transfer' ? h('p', { class: 'help' }, Tx.reqTransferHelp) : null,
+        transferPresets,
         !req.found ? h('p', { class: 'help warn-note' }, Tx.reqNoDept) : null,
         h('div', { class: 'req-grid' },
           h('label', { class: 'req-field wide' },
             h('span', null, Tx.reqDept),
             h('input', { type: 'text', list: 'dept-list', value: dept(), placeholder: Tx.profileDeptPh || '',
               onchange: (e) => { st.req.dept = e.target.value.trim(); save(); render(); } })),
-          num('total', req.mode === 'transfer' ? Tx.reqTotalTransfer : Tx.reqTotal, req.total),
-          num('major', Tx.reqMajor, req.major),
-          num('general', Tx.reqGeneral, req.general)),
-        edited ? h('button', { type: 'button', class: 'link-btn', onclick: () => { st.req = { dept: st.req.dept, mode: req.mode }; save(); render(); } }, Tx.reqReset) : null);
+          ...reqInputs),
+        edited ? h('button', { type: 'button', class: 'link-btn', onclick: () => {
+          st.req = { dept: st.req.dept, mode: req.mode };
+          if (req.mode === 'transfer') st.req.total = 66;
+          save(); render();
+        } }, Tx.reqReset) : null);
     }
 
     function addItems(items) {
@@ -478,7 +629,8 @@
       const curGpa = gpaData.gpa;
       const curCredits = gpaData.credits;
       const req = requirement();
-      const defaultRemCredits = Math.max(18, (req.total || 132) - totalsNow().total);
+      const left = leftNow();
+      const defaultRemCredits = Math.max(1, (left && left.total !== null) ? left.total : Math.max(18, (req.total || 66) - totalsNow().total));
 
       if (!st.gpaSim) {
         st.gpaSim = {
@@ -488,7 +640,7 @@
       }
 
       const target = Number(st.gpaSim.targetGpa) || 4.0;
-      const rem = Math.max(1, Number(st.gpaSim.remCredits) || 18);
+      const rem = Math.max(1, Number(st.gpaSim.remCredits) || defaultRemCredits || 18);
 
       const curSum = curCredits * curGpa;
       const targetSum = (curCredits + rem) * target;

@@ -418,6 +418,22 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
         sendResponse({ ok: true });
       } else if (msg?.type === 'pingServer') {
         sendResponse(await pingServer());
+      } else if (msg?.type === 'everytimeSync') {
+        // 에브리타임 시간표 수집 알림 및 전달
+        const data = msg.data || {};
+        if (chrome.notifications) {
+          try {
+            await chrome.notifications.create('gongji-everytime', {
+              type: 'basic',
+              iconUrl: 'icons/icon-128.png',
+              title: '에브리타임 시간표를 가져왔어요',
+              message: `${data.count || 0}개 과목(담당 교수명 포함)이 공지 줍줍에 연동되었습니다.`,
+              contextMessage: '공지 줍줍 수집기 v1.4'
+            });
+          } catch (_) {}
+        }
+        await markPending('lectures', true);
+        sendResponse({ ok: true });
       } else if (msg?.type === 'seen') {
         await setLocal({ badgeSeen: Date.now() });
         await refreshBadge();
@@ -431,3 +447,36 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
   })();
   return true;      // 비동기로 답한다
 });
+
+// ---------- 웹 앱(localhost / 127.0.0.1)과의 외부 연결 브리지 ----------
+if (chrome.runtime.onMessageExternal) {
+  chrome.runtime.onMessageExternal.addListener((msg, _sender, sendResponse) => {
+    (async () => {
+      try {
+        if (msg?.type === 'ping') {
+          sendResponse({ ok: true, version: KKU_VERSION, name: 'kku-collector' });
+        } else if (msg?.type === 'getLectures') {
+          const all = await chrome.storage.local.get(null);
+          const lecKeys = Object.keys(all).filter((k) => k.startsWith('lec:'));
+          const courses = [];
+          for (const k of lecKeys) {
+            if (all[k]?.rows) courses.push(...all[k].rows);
+          }
+          sendResponse({ ok: true, courses });
+        } else if (msg?.type === 'getTimetable') {
+          const got = await chrome.storage.local.get(['timetable:everytime', 'timetable:kis_mine']);
+          sendResponse({
+            ok: true,
+            everytime: got['timetable:everytime'] || null,
+            kisMine: got['timetable:kis_mine'] || null
+          });
+        } else {
+          sendResponse({ ok: false, error: 'unknown_external_message' });
+        }
+      } catch (e) {
+        sendResponse({ ok: false, error: errText(e) });
+      }
+    })();
+    return true;
+  });
+}

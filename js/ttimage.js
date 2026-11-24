@@ -179,16 +179,6 @@
     ctx.textAlign = 'left';
     return cv;
   }
-    ctx.font = `800 26px ${FONT}`;
-    ctx.textAlign = 'right';
-    ctx.fillStyle = C.text;
-    const brandY = H - pad + 8;
-    ctx.fillText('공지 ', W - pad - ctx.measureText('줍줍').width, brandY);
-    ctx.fillStyle = C.accent;
-    ctx.fillText('줍줍', W - pad, brandY);
-    ctx.textAlign = 'left';
-    return cv;
-  }
 
   async function download(classes, opt) {
     try { if (document.fonts && document.fonts.ready) await document.fonts.ready; } catch (e) { /* 기기 글꼴로 그림 */ }

@@ -44,6 +44,34 @@ test('편입생: 잔여 66학점을 기본으로, 전공·교양은 직접 고�
   assert.ok(mine.edited.major && mine.edited.general);
   const bad = P.requirement('컴퓨터공학과', REQ, { mode: 'transfer', major: -3, general: 'x' });
   assert.strictEqual(bad.major, 66, '이상한 값은 무시');
+  const tainted = P.requirement('컴퓨터공학과', REQ, { mode: 'transfer', total: 132 });
+  assert.strictEqual(tainted.total, 66, '신입생 132학점 오염값은 66으로 정정');
+});
+
+test('편입생 이수 계산: 전공 51 + 자유 15(교양/일선 무관) 케이스', () => {
+  const req = P.requirement('컴퓨터공학과', REQ, { mode: 'transfer', total: 66, major: 51, general: 15 });
+  assert.deepStrictEqual([req.total, req.major, req.general], [66, 51, 15]);
+  // 학생이 전공 36학점, 교양 6학점 이수한 경우
+  const tot1 = { total: 42, major: 36, general: 6, free: 0 };
+  const left1 = P.remaining(req, tot1);
+  assert.strictEqual(left1.major, 15, '전공 51 - 36 = 15학점 남음');
+  assert.strictEqual(left1.free, 9, '자유 학점 15 - 6 = 9학점 남음');
+  assert.strictEqual(left1.total, 24, '총 남은 학점 66 - 42 = 24학점 (15 + 9)');
+  assert.strictEqual(left1.gen, null, '기초/심화/소양 교양 세부 의무는 면제');
+
+  // 학생이 일반선택(일선)으로 6학점을 이수한 경우에도 똑같이 자유 학점으로 인정
+  const tot2 = { total: 42, major: 36, general: 0, free: 6 };
+  const left2 = P.remaining(req, tot2);
+  assert.strictEqual(left2.major, 15);
+  assert.strictEqual(left2.free, 9);
+  assert.strictEqual(left2.total, 24);
+
+  // 초과 전공으로 60학점을 이수한 경우
+  const tot3 = { total: 66, major: 60, general: 6, free: 0 };
+  const left3 = P.remaining(req, tot3);
+  assert.strictEqual(left3.major, 0);
+  assert.strictEqual(left3.free, 0);
+  assert.strictEqual(left3.total, 0);
 });
 
 test('이수 내역 정리·합계·남은 학점', () => {

@@ -353,9 +353,8 @@
     const onUp = () => {
       if (!isDown) return;
       isDown = false;
-      window.removeEventListener('pointermove', onMove);
-      window.removeEventListener('pointerup', onUp);
-      window.removeEventListener('pointercancel', onUp);
+      window.removeEventListener('mousemove', onMove);
+      window.removeEventListener('mouseup', onUp);
       el.classList.remove('is-dragging');
       if (hasMoved) {
         const preventClick = (ev) => {
@@ -367,441 +366,62 @@
       }
     };
 
-    el.addEventListener('pointerdown', (e) => {
-      if (e.pointerType !== 'mouse' || e.button !== 0) return;
+    el.addEventListener('mousedown', (e) => {
+      if (e.button !== 0) return;
       isDown = true;
       hasMoved = false;
       startX = e.clientX;
       scrollStart = el.scrollLeft;
-      window.addEventListener('pointermove', onMove);
-      window.addEventListener('pointerup', onUp);
-      window.addEventListener('pointercancel', onUp);
+      window.addEventListener('mousemove', onMove);
+      window.addEventListener('mouseup', onUp);
     });
 
+    // 모바일 터치 제스처 시 스와이프 도중 클릭 방지
+    let touchStartX = 0;
+    let touchStartY = 0;
+    let touchMoved = false;
+    el.addEventListener('touchstart', (e) => {
+      if (e.touches.length !== 1) return;
+      touchMoved = false;
+      touchStartX = e.touches[0].clientX;
+      touchStartY = e.touches[0].clientY;
+    }, { passive: true });
+
+    el.addEventListener('touchmove', (e) => {
+      if (touchMoved || e.touches.length !== 1) return;
+      const dx = Math.abs(e.touches[0].clientX - touchStartX);
+      const dy = Math.abs(e.touches[0].clientY - touchStartY);
+      if (dx > 8 && dx > dy) touchMoved = true;
+    }, { passive: true });
+
+    el.addEventListener('touchend', () => {
+      if (touchMoved) {
+        const preventClick = (ev) => {
+          ev.stopPropagation();
+          ev.preventDefault();
+        };
+        el.addEventListener('click', preventClick, { capture: true, once: true });
+        setTimeout(() => el.removeEventListener('click', preventClick, { capture: true }), 180);
+      }
+    }, { passive: true });
+
     el.addEventListener('wheel', (e) => {
-      if (el.scrollWidth <= el.clientWidth || Math.abs(e.deltaY) <= Math.abs(e.deltaX)) return;
-      el.scrollLeft += e.deltaY;
-      e.preventDefault();
-    }, { passive: false });
+      if (Math.abs(e.deltaY) > Math.abs(e.deltaX) && el.scrollWidth > el.clientWidth) {
+        el.scrollLeft += e.deltaY;
+      }
+    }, { passive: true });
   }
 
   /* ═══════════════════════════════════════════════════════
-     8. 주간 마감 타임라인 위젯 (모던 프리미엄 리디자인)
-        데스크톱: 7컬럼 모던 칸반 보드
-        모바일: 스마트 요일 캡슐 탭 + 선택 요일 시원한 카드 덱
+     8. 주간 마감 타임라인 위젯
+        (다가오는 마감 스마트 허브로 통합되어 중복 독립 섹션은 제거)
      ═══════════════════════════════════════════════════════ */
   function renderWeekTimeline() {
-    const notices = window.GONGJI_DATA && window.GONGJI_DATA.notices;
-    if (!notices || !notices.length) return;
-
-    // 언어 변경 및 리프레시 시 기존 위젯 깨끗하게 재구성
+    // 기존 잔여 독립 섹션이 있다면 깨끗하게 제거
     const existing = $('.week-timeline-sec');
     if (existing) existing.remove();
-
-    const lang = document.documentElement.lang || localStorage.getItem('gongji:lang') || 'ko';
-    const I = window.GongjiI18n;
-    const T = (I && I.T && I.T[lang]) || {};
-    const DOW_NAMES = (I && I.WEEKDAYS && I.WEEKDAYS[lang]) || ['일', '월', '화', '수', '목', '금', '토'];
-
-    const today = new Date();
-    today.setHours(0, 0, 0, 0);
-
-    // 이번 주 월요일부터 일요일까지
-    const dow = today.getDay(); // 0=일
-    const monday = new Date(today);
-    monday.setDate(today.getDate() - (dow === 0 ? 6 : dow - 1));
-
-    const days = Array.from({ length: 7 }, (_, i) => {
-      const d = new Date(monday);
-      d.setDate(monday.getDate() + i);
-      return d;
-    });
-
-    // 이번 주에 마감인 공지 필터
-    const weekEnd = new Date(days[6]);
-    weekEnd.setHours(23, 59, 59, 999);
-
-    const withDeadline = notices.filter(n => {
-      if (!n.deadline) return false;
-      const dl = new Date(n.deadline);
-      return dl >= today && dl <= weekEnd;
-    });
-
-    if (withDeadline.length < 1) return; // 1개 이상이면 표시
-
-    const saved = (() => {
-      try { return JSON.parse(localStorage.getItem('gongji:saved') || '[]'); } catch { return []; }
-    })();
-
-    const CAT_COLORS = {
-      '장학': 'var(--badge-money, #f59e0b)',
-      '학사': 'var(--accent, #10b981)',
-      '취업': 'var(--badge-exp, #3b82f6)',
-      '행사': '#8b5cf6',
-      '기타': 'var(--badge-info, #64748b)'
-    };
-
-    // 요일별 공지 매핑
-    const dayMap = {};
-    days.forEach(d => {
-      const dayStr = d.toISOString().slice(0, 10);
-      dayMap[dayStr] = withDeadline.filter(n => n.deadline && n.deadline.startsWith(dayStr));
-    });
-
-    // 섹션 컨테이너
-    const sec = document.createElement('div');
-    sec.className = 'home-card week-timeline-sec';
-    sec.style.marginTop = '0';
-
-    // 1. 헤더 영역
-    const headWrap = document.createElement('div');
-    headWrap.className = 'wt-sec-head';
-
-    const titleWrap = document.createElement('div');
-    titleWrap.className = 'wt-sec-title-wrap';
-
-    const h3 = document.createElement('h3');
-    h3.className = 'wt-sec-title';
-    h3.innerHTML = `📅 <span>${T.timelineTitle || '이번 주 마감 타임라인'}</span>`;
-
-    const count = document.createElement('span');
-    count.className = 'wt-sec-count';
-    count.textContent = T.unitCount ? `${withDeadline.length}${T.unitCount}` : `${withDeadline.length}`;
-    h3.append(count);
-
-    const sub = document.createElement('p');
-    sub.className = 'wt-sec-sub';
-    sub.textContent = T.timelineSub || '다가오는 일주일간의 주요 마감 일정입니다.';
-
-    titleWrap.append(h3, sub);
-
-    const viewAllBtn = document.createElement('button');
-    viewAllBtn.type = 'button';
-    viewAllBtn.className = 'wt-view-all-btn';
-    viewAllBtn.textContent = T.timelineViewAll || (lang === 'en' ? 'View all in list ↗' : lang === 'zh' ? '在列表中查看 ↗' : lang === 'ja' ? '一覧で確認 ↗' : '전체 마감 목록 ↗');
-    viewAllBtn.onclick = () => {
-      location.hash = '#/list';
-      if (window.GongjiApp && window.GongjiApp.goList) {
-        window.GongjiApp.goList({ due: 'soon', sort: 'deadline' });
-      }
-    };
-
-    headWrap.append(titleWrap, viewAllBtn);
-    sec.append(headWrap);
-
-    // 공지 카드 생성 헬퍼 함수
-    function createNoticeCard(n, isCompact = false) {
-      const item = document.createElement('button');
-      item.type = 'button';
-      item.className = 'wt-item' + (isCompact ? ' is-compact' : '');
-
-      const dl = new Date(n.deadline);
-      const hoursLeft = (dl - Date.now()) / 3600_000;
-      if (hoursLeft < 24) item.classList.add('is-urgent');
-      if (saved.includes(n.id)) item.classList.add('is-saved');
-
-      const cat = n.category || '기타';
-      const catColor = CAT_COLORS[cat] || CAT_COLORS['기타'];
-      item.style.setProperty('--wt-cat-color', catColor);
-
-      // 상단 메타 바
-      const metaRow = document.createElement('div');
-      metaRow.className = 'wt-item-meta';
-
-      const catTag = document.createElement('span');
-      catTag.className = 'wt-item-cat';
-      catTag.textContent = cat;
-
-      const ddayTag = document.createElement('span');
-      ddayTag.className = 'wt-item-dday';
-      const daysLeft = Math.ceil(hoursLeft / 24);
-      if (hoursLeft <= 24) {
-        ddayTag.textContent = T.dueToday || '오늘 마감';
-        ddayTag.classList.add('urgent');
-      } else {
-        ddayTag.textContent = `D-${daysLeft}`;
-      }
-
-      metaRow.append(catTag, ddayTag);
-
-      // 제목
-      const titleEl = document.createElement('div');
-      titleEl.className = 'wt-item-title';
-      const title = (lang !== 'ko' && n.titleTr && n.titleTr[lang]) || n.title;
-      titleEl.textContent = title;
-      item.title = title;
-
-      item.append(metaRow, titleEl);
-
-      // 모바일 등 여유 공간이 있을 때 혜택/게시판 배지 추가
-      if (!isCompact && ((n.benefit && n.benefit.text) || n.boardName)) {
-        const extraRow = document.createElement('div');
-        extraRow.className = 'wt-item-extra';
-        if (n.boardName) {
-          const boardTag = document.createElement('span');
-          boardTag.className = 'wt-extra-tag';
-          boardTag.textContent = n.boardName;
-          extraRow.append(boardTag);
-        }
-        if (n.benefit && n.benefit.text) {
-          const benTag = document.createElement('span');
-          benTag.className = 'wt-extra-benefit';
-          benTag.textContent = n.benefit.text;
-          extraRow.append(benTag);
-        }
-        item.append(extraRow);
-      }
-
-      item.addEventListener('click', () => {
-        if (window.GongjiApp && window.GongjiApp.openDetail) {
-          window.GongjiApp.openDetail(n.id);
-        } else {
-          location.hash = '#/n/' + encodeURIComponent(n.id);
-        }
-      });
-
-      return item;
-    }
-
-    // ═══════════════════════════════════════════════════════
-    // [1] 데스크톱 뷰: 7컬럼 모던 칸반 보드
-    // ═══════════════════════════════════════════════════════
-    const desktopTimeline = document.createElement('div');
-    desktopTimeline.className = 'week-timeline wt-grid-desktop';
-
-    let todayColEl = null;
-
-    days.forEach((day) => {
-      const isToday = day.getTime() === today.getTime();
-      const col = document.createElement('div');
-      col.className = 'wt-col' + (isToday ? ' is-today' : '');
-      if (isToday) todayColEl = col;
-
-      const dayStr = day.toISOString().slice(0, 10);
-      const items = dayMap[dayStr] || [];
-      const mm = String(day.getMonth() + 1);
-      const dd = String(day.getDate());
-      const dateText = `${mm}.${dd}`;
-
-      // 컬럼 헤더
-      const colHead = document.createElement('div');
-      colHead.className = 'wt-col-head';
-
-      const headLeft = document.createElement('div');
-      headLeft.className = 'wt-head-left';
-
-      const dowEl = document.createElement('span');
-      dowEl.className = 'wt-dow';
-      dowEl.textContent = DOW_NAMES[day.getDay()];
-
-      const dateEl = document.createElement('span');
-      dateEl.className = 'wt-date';
-      dateEl.textContent = dateText;
-
-      headLeft.append(dowEl, dateEl);
-
-      const headRight = document.createElement('div');
-      headRight.className = 'wt-head-right';
-
-      if (isToday) {
-        const todayBadge = document.createElement('span');
-        todayBadge.className = 'wt-today-pill';
-        todayBadge.textContent = T.timelineTodayBadge || '오늘';
-        headRight.append(todayBadge);
-      }
-
-      if (items.length > 0) {
-        const cntBadge = document.createElement('span');
-        cntBadge.className = 'wt-cnt-badge';
-        cntBadge.textContent = T.unitCount ? `${items.length}${T.unitCount}` : `${items.length}`;
-        headRight.append(cntBadge);
-      }
-
-      colHead.append(headLeft, headRight);
-      col.append(colHead);
-
-      // 컬럼 공지 목록
-      const colBody = document.createElement('div');
-      colBody.className = 'wt-col-body';
-
-      if (items.length === 0) {
-        const empty = document.createElement('div');
-        empty.className = 'wt-col-empty';
-        empty.innerHTML = `<span class="wt-empty-icon">☕</span><span>${T.timelineNoDeadlines || '마감 없음'}</span>`;
-        colBody.append(empty);
-      } else {
-        items.slice(0, 5).forEach(n => {
-          colBody.append(createNoticeCard(n, true));
-        });
-
-        if (items.length > 5) {
-          const moreBtn = document.createElement('button');
-          moreBtn.type = 'button';
-          moreBtn.className = 'wt-more-hint-btn';
-          moreBtn.textContent = `+${items.length - 5}건 더보기 ↗`;
-          moreBtn.onclick = () => {
-            if (window.GongjiApp && window.GongjiApp.goList) {
-              window.GongjiApp.goList({ due: 'soon', sort: 'deadline' });
-            }
-          };
-          colBody.append(moreBtn);
-        }
-      }
-
-      col.append(colBody);
-      desktopTimeline.append(col);
-    });
-
-    enableDragScroll(desktopTimeline);
-    sec.append(desktopTimeline);
-
-    // ═══════════════════════════════════════════════════════
-    // [2] 모바일 뷰: 스마트 요일 캡슐 탭 + 선택 요일 시원한 카드 덱
-    // ═══════════════════════════════════════════════════════
-    const mobileTimeline = document.createElement('div');
-    mobileTimeline.className = 'wt-deck-mobile';
-
-    // 기본 선택 요일: 오늘(마감 있든 없든) 또는 마감 있는 가장 가까운 요일
-    let selectedDayIdx = days.findIndex(d => d.getTime() === today.getTime());
-    if (selectedDayIdx === -1) selectedDayIdx = 0;
-
-    // 상단 7일 요일 스트립 바
-    const dayStrip = document.createElement('div');
-    dayStrip.className = 'wt-mob-day-strip';
-
-    const dayBtns = [];
-    const cardDeckContainer = document.createElement('div');
-    cardDeckContainer.className = 'wt-mob-cards-container';
-
-    function renderMobileCards(dayIndex) {
-      selectedDayIdx = dayIndex;
-      const targetDay = days[dayIndex];
-      const targetDayStr = targetDay.toISOString().slice(0, 10);
-      const items = dayMap[targetDayStr] || [];
-      const isTargetToday = targetDay.getTime() === today.getTime();
-
-      // 버튼 활성 상태 갱신
-      dayBtns.forEach((btn, idx) => {
-        btn.classList.toggle('is-active', idx === dayIndex);
-      });
-
-      cardDeckContainer.innerHTML = '';
-
-      // 선택 요일 정보 배너
-      const deckHeader = document.createElement('div');
-      deckHeader.className = 'wt-mob-deck-head';
-
-      const deckTitle = document.createElement('span');
-      deckTitle.className = 'wt-mob-deck-title';
-      const mm = String(targetDay.getMonth() + 1);
-      const dd = String(targetDay.getDate());
-      deckTitle.textContent = `${mm}월 ${dd}일 (${DOW_NAMES[targetDay.getDay()]})${isTargetToday ? ' · 오늘 마감' : ''}`;
-
-      const deckCount = document.createElement('span');
-      deckCount.className = 'wt-mob-deck-count';
-      deckCount.textContent = items.length > 0 ? (T.unitCount ? `${items.length}${T.unitCount} 마감` : `${items.length}건 마감`) : '마감 없음';
-      if (items.length > 0) deckCount.classList.add('has-items');
-
-      deckHeader.append(deckTitle, deckCount);
-      cardDeckContainer.append(deckHeader);
-
-      if (items.length === 0) {
-        const emptyDeck = document.createElement('div');
-        emptyDeck.className = 'wt-mob-empty';
-        emptyDeck.innerHTML = `
-          <div class="wt-mob-empty-icon">☕</div>
-          <div class="wt-mob-empty-title">${T.timelineNoDeadlines || '마감 공지가 없습니다'}</div>
-          <div class="wt-mob-empty-sub">이 날은 여유롭게 학업과 휴식을 즐겨보세요!</div>
-        `;
-        cardDeckContainer.append(emptyDeck);
-      } else {
-        const listWrap = document.createElement('div');
-        listWrap.className = 'wt-mob-cards-list';
-        items.forEach(n => {
-          listWrap.append(createNoticeCard(n, false));
-        });
-        cardDeckContainer.append(listWrap);
-      }
-    }
-
-    days.forEach((day, idx) => {
-      const isDayToday = day.getTime() === today.getTime();
-      const dayStr = day.toISOString().slice(0, 10);
-      const items = dayMap[dayStr] || [];
-
-      const dayBtn = document.createElement('button');
-      dayBtn.type = 'button';
-      dayBtn.className = 'wt-mob-day-pill' + (isDayToday ? ' is-today' : '') + (idx === selectedDayIdx ? ' is-active' : '');
-
-      const dowSpan = document.createElement('span');
-      dowSpan.className = 'wt-mob-dow';
-      dowSpan.textContent = DOW_NAMES[day.getDay()];
-
-      const numSpan = document.createElement('span');
-      numSpan.className = 'wt-mob-num';
-      numSpan.textContent = String(day.getDate());
-
-      dayBtn.append(dowSpan, numSpan);
-
-      if (items.length > 0) {
-        const dot = document.createElement('span');
-        dot.className = 'wt-mob-dot';
-        dot.textContent = String(items.length);
-        dayBtn.append(dot);
-      }
-
-      dayBtn.addEventListener('click', () => {
-        renderMobileCards(idx);
-      });
-
-      dayBtns.push(dayBtn);
-      dayStrip.append(dayBtn);
-    });
-
-    mobileTimeline.append(dayStrip, cardDeckContainer);
-
-    // 모바일 터치 스와이프로 요일 전환 제스처
-    let touchStartX = 0;
-    let touchStartY = 0;
-    cardDeckContainer.addEventListener('touchstart', (e) => {
-      touchStartX = e.changedTouches[0].screenX;
-      touchStartY = e.changedTouches[0].screenY;
-    }, { passive: true });
-
-    cardDeckContainer.addEventListener('touchend', (e) => {
-      const diffX = e.changedTouches[0].screenX - touchStartX;
-      const diffY = e.changedTouches[0].screenY - touchStartY;
-      if (Math.abs(diffX) > 45 && Math.abs(diffX) > Math.abs(diffY)) {
-        if (diffX < 0 && selectedDayIdx < 6) {
-          // 오른쪽으로 스와이프 -> 다음 요일
-          renderMobileCards(selectedDayIdx + 1);
-        } else if (diffX > 0 && selectedDayIdx > 0) {
-          // 왼쪽으로 스와이프 -> 이전 요일
-          renderMobileCards(selectedDayIdx - 1);
-        }
-      }
-    }, { passive: true });
-
-    renderMobileCards(selectedDayIdx);
-    sec.append(mobileTimeline);
-
-    // 홈 화면 상단에 주입
-    const homeWrap = $('.home-wrap, #home-body');
-    if (homeWrap) {
-      homeWrap.prepend(sec);
-    }
-
-    // 데스크톱 오늘 컬럼 포커스 스크롤
-    if (todayColEl) {
-      setTimeout(() => {
-        try {
-          const offset = todayColEl.offsetLeft - 16;
-          desktopTimeline.scrollTo({ left: Math.max(0, offset), behavior: 'smooth' });
-        } catch (_) {}
-      }, 150);
-    }
+    return;
   }
-
   /* ═══════════════════════════════════════════════════════
      8-1. 주요 학사일정 D-Day 로드맵 위젯
           오늘 이후 다가오는 핵심 학사일정 타임트랙 카드
@@ -809,7 +429,10 @@
   function renderAcademicDdayWidget() {
     const cal = window.GONGJI_CALENDAR;
     if (!cal || !cal.items || !cal.items.length) return;
-    if ($('.acad-roadmap-sec')) return;
+
+    // 언어 변경 및 갱신 시 기존 위젯 제거 후 재작성
+    const existing = $('.acad-roadmap-sec');
+    if (existing) existing.remove();
 
     const lang = document.documentElement.lang || localStorage.getItem('gongji:lang') || 'ko';
     const I = window.GongjiI18n;
@@ -1027,7 +650,11 @@
 
   /* ═══════════════════════════════════════════════════════
      13. 오늘 화면 "오늘 마감 투두 체크리스트" 위젯 (Today's Checklist)
-         오늘 마감 중 미완료 공지를 투두 형태로 제공 + 원클릭 지원완료 & 상세 열기
+         모던 인터랙티브 액션 카드 리디자인:
+         - 카테고리 칩 + D-Day 긴급 배지 + 남은 시간
+         - 커스텀 라운드 체크 서클 애니메이션
+         - 다국어 지원 및 클릭 시 상세 보기
+         - 진행률 게이지 및 완료 축하 애니메이션
      ═══════════════════════════════════════════════════════ */
   function renderTodayChecklist() {
     const notices = window.GONGJI_DATA && window.GONGJI_DATA.notices;
@@ -1057,36 +684,53 @@
 
     if (!todayDue.length) return;
 
-    const unapplied = todayDue.filter(n => !isApplied(n.id));
+    const appliedCount = todayDue.filter(n => isApplied(n.id)).length;
+    const totalCount = todayDue.length;
+    const unappliedCount = totalCount - appliedCount;
 
     const sec = document.createElement('div');
     sec.className = 'home-card today-checklist-sec';
 
     const getI18nText = () => {
-      const pendingCount = unapplied.length;
       if (lang === 'en') {
         return {
-          title: `Due today — ${pendingCount} pending`,
+          title: `Due Today`,
+          pendingBadge: `${unappliedCount} pending`,
           doneTitle: '🎉 All notices due today are completed!',
-          timeLabel: (tm) => tm ? `by ${tm}` : 'Today'
+          timeLabel: (tm) => tm ? `by ${tm}` : 'Today',
+          viewDetail: 'Detail ↗',
+          allDoneMsg: 'Great job! You have checked all deadlines today.',
+          progressText: `${appliedCount}/${totalCount} completed`
         };
       } else if (lang === 'zh') {
         return {
-          title: `今日截止 — 还有 ${pendingCount} 项待申请`,
+          title: `今日截止事项`,
+          pendingBadge: `还有 ${unappliedCount} 项待申请`,
           doneTitle: '🎉 今日截止的所有公告均已完成！',
-          timeLabel: (tm) => tm ? `${tm} 截止` : '今日截止'
+          timeLabel: (tm) => tm ? `${tm} 截止` : '今日截止',
+          viewDetail: '详情 ↗',
+          allDoneMsg: '太棒了！今日截止的所有项目均已确认。',
+          progressText: `已完成 ${appliedCount}/${totalCount}`
         };
       } else if (lang === 'ja') {
         return {
-          title: `今日締切 — 未応募 ${pendingCount}件`,
+          title: `今日締切のやること`,
+          pendingBadge: `未応募 ${unappliedCount}件`,
           doneTitle: '🎉 今日の締切のお知らせはすべて完了しました！',
-          timeLabel: (tm) => tm ? `${tm}まで` : '今日締切'
+          timeLabel: (tm) => tm ? `${tm}まで` : '今日締切',
+          viewDetail: '詳細 ↗',
+          allDoneMsg: '素晴らしい！今日の締切はすべて確認完了しました。',
+          progressText: `${appliedCount}/${totalCount} 完了`
         };
       }
       return {
-        title: `오늘 마감 — 아직 지원 안 한 ${pendingCount}건`,
-        doneTitle: '🎉 오늘 마감 공지를 모두 지원·확인했습니다!',
-        timeLabel: (tm) => tm ? `${tm} 마감` : '오늘 마감'
+        title: `오늘 마감 할 일`,
+        pendingBadge: `아직 ${unappliedCount}건 미지원`,
+        doneTitle: '🎉 오늘 마감 공지를 모두 완료했습니다!',
+        timeLabel: (tm) => tm ? `${tm} 마감` : '오늘 마감',
+        viewDetail: '상세 ↗',
+        allDoneMsg: '오늘 마감인 모든 장학금 및 프로그램을 확인했습니다.',
+        progressText: `${appliedCount}/${totalCount} 완료`
       };
     };
 
@@ -1095,80 +739,147 @@
     const headDiv = document.createElement('div');
     headDiv.className = 'tc-head';
 
+    const headLeft = document.createElement('div');
+    headLeft.className = 'tc-head-left';
+
     const h3 = document.createElement('h3');
-    h3.className = 'tc-title';
-    h3.textContent = unapplied.length > 0 ? i18n.title : i18n.doneTitle;
-    if (unapplied.length === 0) h3.classList.add('tc-all-done');
-    headDiv.append(h3);
+    h3.className = 'tc-title' + (unappliedCount === 0 ? ' tc-all-done' : '');
+    h3.innerHTML = unappliedCount > 0 ? `🚨 <span>${i18n.title}</span>` : `✨ <span>${i18n.doneTitle}</span>`;
+
+    const badge = document.createElement('span');
+    badge.className = 'tc-badge' + (unappliedCount === 0 ? ' is-done' : '');
+    badge.textContent = unappliedCount > 0 ? i18n.pendingBadge : '100% 완료';
+
+    headLeft.append(h3, badge);
+
+    const progressDiv = document.createElement('div');
+    progressDiv.className = 'tc-prog-wrap';
+    const pct = Math.round((appliedCount / totalCount) * 100);
+    progressDiv.innerHTML = `
+      <span class="tc-prog-label">${i18n.progressText}</span>
+      <div class="tc-prog-track"><div class="tc-prog-bar" style="width:${pct}%"></div></div>
+    `;
+
+    headDiv.append(headLeft, progressDiv);
     sec.append(headDiv);
 
-    if (unapplied.length === 0) {
+    if (unappliedCount === 0) {
       const doneCard = document.createElement('div');
       doneCard.className = 'tc-done-box';
-      doneCard.innerHTML = `<span class="tc-done-icon">👏</span><span class="tc-done-msg">${lang === 'en' ? 'Great job! You have checked all deadlines today.' : '오늘 마감인 모든 장학금 및 프로그램을 확인했습니다.'}</span>`;
+      doneCard.innerHTML = `<span class="tc-done-icon">👏</span><span class="tc-done-msg">${i18n.allDoneMsg}</span>`;
       sec.append(doneCard);
     } else {
       const ul = document.createElement('ul');
       ul.className = 'tc-list';
+
+      const CAT_COLORS = {
+        '장학': 'var(--badge-money, #f59e0b)',
+        '학사': 'var(--accent, #10b981)',
+        '취업': 'var(--badge-exp, #3b82f6)',
+        '행사': '#8b5cf6',
+        '기타': 'var(--badge-info, #64748b)'
+      };
 
       todayDue.slice(0, 5).forEach(n => {
         const appliedNow = isApplied(n.id);
         const li = document.createElement('li');
         li.className = 'tc-item' + (appliedNow ? ' is-done' : '');
 
-        const cb = document.createElement('input');
-        cb.type = 'checkbox';
-        cb.className = 'tc-cb';
-        cb.checked = appliedNow;
-        cb.id = `tdc-${n.id}`;
-        cb.setAttribute('aria-label', `${n.title} 지원 완료 토글`);
+        // 커스텀 체크박스 버튼
+        const checkBtn = document.createElement('button');
+        checkBtn.type = 'button';
+        checkBtn.className = 'tc-check-btn' + (appliedNow ? ' is-checked' : '');
+        checkBtn.setAttribute('aria-label', `${n.title} 지원 완료 토글`);
+        checkBtn.innerHTML = appliedNow ? '✓' : '';
 
-        // 마감 시간 추출 (예: '2026-11-24T18:00' -> '18:00')
+        const cat = n.category || '기타';
+        const catColor = CAT_COLORS[cat] || CAT_COLORS['기타'];
+
+        const contentWrap = document.createElement('div');
+        contentWrap.className = 'tc-content';
+
+        const tagRow = document.createElement('div');
+        tagRow.className = 'tc-tag-row';
+
+        const catBadge = document.createElement('span');
+        catBadge.className = 'tc-cat-badge';
+        catBadge.textContent = cat;
+        catBadge.style.color = catColor;
+        catBadge.style.backgroundColor = `color-mix(in srgb, ${catColor} 14%, transparent)`;
+
         let timeStr = '';
         if (n.deadline && n.deadline.includes('T')) {
           timeStr = n.deadline.split('T')[1].slice(0, 5);
         }
+        const timeBadge = document.createElement('span');
+        timeBadge.className = 'tc-time-badge';
+        timeBadge.textContent = i18n.timeLabel(timeStr);
+
+        tagRow.append(catBadge, timeBadge);
 
         const titleBtn = document.createElement('button');
         titleBtn.type = 'button';
         titleBtn.className = 'tc-title-btn';
-        titleBtn.textContent = n.title;
-        titleBtn.title = '공지 상세 보기';
+        const titleText = (lang !== 'ko' && n.titleTr && n.titleTr[lang]) || n.title;
+        titleBtn.textContent = titleText;
+        titleBtn.title = titleText;
         titleBtn.onclick = () => {
           if (app && typeof app.openDetail === 'function') {
             app.openDetail(n.id);
           }
         };
 
-        const metaSpan = document.createElement('span');
-        metaSpan.className = 'tc-time';
-        metaSpan.textContent = i18n.timeLabel(timeStr);
+        contentWrap.append(tagRow, titleBtn);
 
-        cb.addEventListener('change', () => {
+        const openBtn = document.createElement('button');
+        openBtn.type = 'button';
+        openBtn.className = 'tc-detail-link';
+        openBtn.textContent = i18n.viewDetail;
+        openBtn.onclick = () => {
+          if (app && typeof app.openDetail === 'function') {
+            app.openDetail(n.id);
+          }
+        };
+
+        const toggleHandler = () => {
           if (app && typeof app.toggleApplied === 'function') {
             app.toggleApplied(n.id);
           } else {
             try {
               const arr = JSON.parse(localStorage.getItem('gongji:applied') || '[]');
               const idx = arr.indexOf(n.id);
-              if (cb.checked && idx < 0) arr.push(n.id);
-              else if (!cb.checked && idx >= 0) arr.splice(idx, 1);
+              if (idx < 0) arr.push(n.id);
+              else arr.splice(idx, 1);
               localStorage.setItem('gongji:applied', JSON.stringify(arr));
             } catch {}
           }
-          // 리렌더링
           renderTodayChecklist();
-        });
+        };
 
-        li.append(cb, titleBtn, metaSpan);
+        checkBtn.onclick = toggleHandler;
+
+        li.append(checkBtn, contentWrap, openBtn);
         ul.append(li);
       });
 
       sec.append(ul);
     }
 
-    const homeWrap = $('#home-body, .home-wrap');
-    if (homeWrap) homeWrap.prepend(sec);
+    const homeWrap = $('#home-body .home-v5') || $('#home-body');
+    if (homeWrap) {
+      // 유저 피드백 반영: 시작하기 온보딩 및 4분할 브리핑 카드 뒤, 다가오는 마감 앞
+      const anchor = $('.brief, .bf-grid, .setup-strip', homeWrap);
+      if (anchor && anchor.parentNode) {
+        anchor.after(sec);
+      } else {
+        const firstSec = $('.sec-tickets, .sec', homeWrap);
+        if (firstSec && firstSec.parentNode) {
+          firstSec.before(sec);
+        } else {
+          homeWrap.append(sec);
+        }
+      }
+    }
   }
 
   /* ═══════════════════════════════════════════════════════
@@ -1216,24 +927,31 @@
     if (!homeBody) return;
 
     let injected = false;
+    const injectWidgets = () => {
+      injected = true;
+      try { renderWeekTimeline(); } catch (e) { console.warn('[enhanced] week timeline:', e); }
+      try { renderAcademicDdayWidget(); } catch (e) { console.warn('[enhanced] acad roadmap:', e); }
+      try { renderTodayChecklist(); } catch (e) { console.warn('[enhanced] today checklist:', e); }
+      try { startSmartCountdown(); } catch (e) {}
+    };
+
     const obs = new MutationObserver(() => {
       if (injected || !homeBody.children.length) return;
-      injected = true;
-      // DOM이 완성된 뒤 약간의 delay로 주입
-      setTimeout(() => {
-        try { renderWeekTimeline(); } catch (e) { console.warn('[enhanced] week timeline:', e); }
-        try { renderAcademicDdayWidget(); } catch (e) { console.warn('[enhanced] acad roadmap:', e); }
-        try { renderTodayChecklist(); } catch (e) { console.warn('[enhanced] today checklist:', e); }
-        try { startSmartCountdown(); } catch (e) {}
-      }, 200);
+      setTimeout(injectWidgets, 100);
     });
 
     obs.observe(homeBody, { childList: true, subtree: false });
 
+    // 이미 홈 화면 자식 요소가 그려져 있는 경우 즉시 주입 실행
+    if (homeBody.children.length > 0) {
+      setTimeout(injectWidgets, 60);
+    }
+
     // 탭 전환 시 재주입 허용
     document.body.addEventListener('gongji:tabchange', () => {
-      if (document.body.dataset.tab === 'home') {
+      if (document.body.dataset.tab === 'home' || location.hash === '#/home' || !location.hash) {
         injected = false;
+        setTimeout(injectWidgets, 100);
       }
     });
 
