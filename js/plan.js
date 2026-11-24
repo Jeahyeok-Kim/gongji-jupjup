@@ -291,8 +291,9 @@
   function resolveDept(input, req) {
     const raw = String(input || '').trim();
     if (!raw) return '';
-    const depts = (req && req.depts) || {};
-    const officialNames = Object.keys(depts);
+    const gradreq = req || (typeof window !== 'undefined' && window.GONGJI_GRADREQ) || null;
+    const depts = (gradreq && gradreq.depts) || {};
+    const officialNames = Object.keys(depts).length ? Object.keys(depts) : Object.keys(DEPT_MAP);
 
     // 1. Exact match with official name
     if (depts[raw]) return raw;
@@ -358,11 +359,12 @@
   }
 
   function findDept(dept, req) {
-    const depts = (req && req.depts) || {};
+    const gradreq = req || (typeof window !== 'undefined' && window.GONGJI_GRADREQ) || null;
+    const depts = (gradreq && gradreq.depts) || {};
     const d = String(dept || '').trim();
     if (!d) return null;
     if (depts[d]) return { name: d, row: depts[d] };
-    const resolved = resolveDept(d, req);
+    const resolved = resolveDept(d, gradreq);
     if (resolved && depts[resolved]) return { name: resolved, row: depts[resolved] };
     const hits = Object.keys(depts).filter((k) => k.includes(d) || d.includes(k)).sort((a, b) => b.length - a.length);
     return hits.length ? { name: hits[0], row: depts[hits[0]] } : null;
@@ -370,7 +372,8 @@
 
   function searchDepts(query, req, lang) {
     const q = normDeptStr(query);
-    const depts = (req && req.depts) || {};
+    const gradreq = req || (typeof window !== 'undefined' && window.GONGJI_GRADREQ) || null;
+    const depts = (gradreq && gradreq.depts) || {};
     const officialNames = Object.keys(depts).length ? Object.keys(depts) : Object.keys(DEPT_MAP);
     if (!q) {
       return officialNames.map((name) => {
@@ -554,15 +557,21 @@
   function buildCatalog(timetable, courses) {
     const byCode = new Map();
     const byName = new Map();
-    const add = (name, credit, kind, code) => {
+    const add = (name, credit, kind, code, dept, prof) => {
       const n = normName(name);
       if (!n) return;
-      if (code && !byCode.has(code)) byCode.set(code, { name, credit, kind });
-      if (!byName.has(n)) byName.set(n, { name, credit, kind, code: code || '' });
+      if (code && !byCode.has(code)) byCode.set(code, { name, credit, kind, dept: dept || '', prof: prof || '' });
+      const existing = byName.get(n);
+      if (!existing) {
+        byName.set(n, { name, credit, kind, code: code || '', dept: dept || '', prof: prof || '' });
+      } else {
+        if (!existing.dept && dept) existing.dept = dept;
+        if (!existing.prof && prof) existing.prof = prof;
+      }
     };
-    for (const c of (timetable && timetable.courses) || []) add(c.n, c.c, c.k, c.h);
-    for (const col of (courses && courses.colleges) || []) for (const d of col.depts) for (const [, kind, name, credit] of d.courses) add(name, credit, kind);
-    for (const [kind, , name, credit] of (courses && courses.general) || []) add(name, credit, kind);
+    for (const c of (timetable && timetable.courses) || []) add(c.n, c.c, c.k, c.h, c.d, c.p);
+    for (const col of (courses && courses.colleges) || []) for (const d of col.depts) for (const [, kind, name, credit] of d.courses) add(name, credit, kind, '', d.name, '');
+    for (const [kind, , name, credit] of (courses && courses.general) || []) add(name, credit, kind, '', '교양', '');
     const names = [...byName.keys()].filter((n) => n.length >= 2).sort((a, b) => b.length - a.length);
     return { byCode, byName, names };
   }

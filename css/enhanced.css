@@ -5796,12 +5796,14 @@ dialog[open]::backdrop {
 }
 
 .tmc-suggest-item:hover,
-.tmc-suggest-item:focus {
+.tmc-suggest-item:focus,
+.tmc-suggest-item.is-active {
   background: color-mix(in srgb, var(--accent, #00d26a) 12%, transparent) !important;
 }
 
 [data-theme="dark"] .tmc-suggest-item:hover,
-[data-theme="dark"] .tmc-suggest-item:focus {
+[data-theme="dark"] .tmc-suggest-item:focus,
+[data-theme="dark"] .tmc-suggest-item.is-active {
   background: color-mix(in srgb, var(--accent, #00d26a) 20%, transparent) !important;
 }
 
@@ -7081,4 +7083,498 @@ dialog[open]::backdrop {
 .dsi-sub {
   font-size: 12px !important;
   color: var(--muted, #71717a) !important;
+}
+
+
+/* ==========================================================================
+   캠퍼스 연강 동선 & 헐떡고개 10분 컷 판독기 & 귀가/교통 알리미 스타일
+   ========================================================================== */
+
+/* 1. 연강 동선 모달 (#route-dialog) */
+#route-dialog {
+  max-width: 520px;
+  width: 92vw;
+  border-radius: 16px;
+  border: 1px solid var(--border);
+  background: var(--bg);
+  color: var(--text);
+  padding: 0;
+  box-shadow: 0 20px 45px rgba(0, 0, 0, 0.28);
+  overflow: hidden;
+}
+
+#route-dialog::backdrop {
+  background: rgba(0, 0, 0, 0.55);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+}
+
+#route-dialog-body {
+  padding: 20px 22px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  max-height: 75vh;
+  overflow-y: auto;
+}
+
+/* 배너 헤더 */
+.rd-banner {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 14px 16px;
+  border-radius: 12px;
+  border: 1px solid transparent;
+}
+
+.rd-banner.is-danger {
+  background: rgba(239, 68, 68, 0.12);
+  border-color: rgba(239, 68, 68, 0.35);
+  color: #ef4444;
+}
+
+.rd-banner.is-warn {
+  background: rgba(245, 158, 11, 0.12);
+  border-color: rgba(245, 158, 11, 0.35);
+  color: #f59e0b;
+}
+
+.rd-banner.is-safe {
+  background: rgba(16, 185, 129, 0.12);
+  border-color: rgba(16, 185, 129, 0.35);
+  color: #10b981;
+}
+
+.rdb-icon {
+  font-size: 26px;
+  line-height: 1;
+  flex-shrink: 0;
+}
+
+.rdb-text {
+  flex: 1;
+}
+
+.rdb-title {
+  margin: 0 0 4px 0;
+  font-size: 16px;
+  font-weight: 700;
+  color: currentColor;
+}
+
+.rdb-sub {
+  margin: 0;
+  font-size: 13px;
+  line-height: 1.45;
+  color: var(--text);
+  opacity: 0.9;
+}
+
+/* 수치 요약 그리드 */
+.rd-metrics-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 8px;
+}
+
+@media (min-width: 480px) {
+  .rd-metrics-grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+.rd-metric-card {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 10px 12px;
+  border-radius: 10px;
+  background: var(--surface-2, rgba(0, 0, 0, 0.04));
+  border: 1px solid var(--border);
+}
+
+[data-theme="dark"] .rd-metric-card {
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.rdm-label {
+  font-size: 11px;
+  color: var(--muted, #71717a);
+  font-weight: 500;
+}
+
+.rdm-val {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--text);
+}
+
+.rdm-val.text-red { color: #ef4444 !important; }
+.rdm-val.text-amber { color: #f59e0b !important; }
+.rdm-val.text-green { color: #10b981 !important; }
+
+/* 타임라인 및 동선 */
+.rd-timeline {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 12px;
+  border-radius: 12px;
+  background: var(--surface-2, rgba(0, 0, 0, 0.02));
+  border: 1px solid var(--border);
+}
+
+[data-theme="dark"] .rd-timeline {
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.rdt-step {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.rdt-badge {
+  flex-shrink: 0;
+  padding: 3px 8px;
+  border-radius: 6px;
+  font-size: 11px;
+  font-weight: 700;
+  background: var(--surface-2, #e4e4e7);
+  color: var(--text);
+}
+
+[data-theme="dark"] .rdt-badge {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.rdt-badge.path {
+  background: var(--brand, #10b981);
+  color: #fff;
+}
+
+.rdt-step.path.is-danger .rdt-badge.path {
+  background: #ef4444;
+}
+
+.rdt-step.path.is-warn .rdt-badge.path {
+  background: #f59e0b;
+}
+
+.rdt-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  font-size: 13px;
+}
+
+.rdt-hill-reason {
+  margin: 2px 0 0 0;
+  font-size: 12px;
+  color: #ef4444;
+  font-weight: 600;
+}
+
+.rdt-shortcut-box {
+  margin: 4px 0 0 0;
+  padding: 6px 10px;
+  border-radius: 6px;
+  background: rgba(245, 158, 11, 0.12);
+  border-left: 3px solid #f59e0b;
+  font-size: 12px;
+  color: var(--text);
+  line-height: 1.4;
+}
+
+/* 건물별 계단/엘리베이터 안내 */
+.rd-building-notes {
+  padding: 10px 14px;
+  border-radius: 10px;
+  background: var(--surface-2, rgba(0, 0, 0, 0.03));
+  border: 1px solid var(--border);
+}
+
+.rdn-title {
+  margin: 0 0 6px 0;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--muted);
+}
+
+.rdn-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-size: 12px;
+  color: var(--text);
+}
+
+/* 2. 오늘 내 수업 리스트 연강 동선 아이템 (.tc-route-item) */
+.tc-route-item {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 8px 12px !important;
+  margin: 4px 0;
+  border-radius: 10px;
+  border-left: 3px solid #10b981;
+  background: rgba(16, 185, 129, 0.06);
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.tc-route-item:hover,
+.tc-route-item:focus-visible {
+  transform: translateX(2px);
+  filter: brightness(1.04);
+}
+
+.tc-route-item.is-danger {
+  border-left-color: #ef4444;
+  background: rgba(239, 68, 68, 0.08);
+}
+
+.tc-route-item.is-warn {
+  border-left-color: #f59e0b;
+  background: rgba(245, 158, 11, 0.08);
+}
+
+.tc-route-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.tc-route-badge {
+  font-size: 12px;
+  font-weight: 700;
+  color: #10b981;
+}
+
+.tc-route-badge.is-danger { color: #ef4444; }
+.tc-route-badge.is-warn { color: #d97706; }
+
+.tc-route-time-pill {
+  font-size: 11px;
+  color: var(--muted);
+  font-weight: 500;
+}
+
+.tc-route-body {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  color: var(--text);
+}
+
+.tc-route-path {
+  font-weight: 600;
+}
+
+.tc-route-hill-warning {
+  padding: 1px 6px;
+  border-radius: 4px;
+  background: rgba(239, 68, 68, 0.15);
+  color: #dc2626;
+  font-size: 10px;
+  font-weight: 700;
+}
+
+.tc-route-arrow {
+  margin-left: auto;
+  font-size: 11px;
+  color: var(--muted);
+  font-weight: 600;
+}
+
+/* 3. 주간 시간표 연속 강의 뱃지 (.tt-route-pill) */
+.tt-route-pill {
+  position: absolute;
+  left: 2px;
+  right: 2px;
+  z-index: 4;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1px 2px;
+  border-radius: 4px;
+  border: 1px dashed #10b981;
+  background: rgba(16, 185, 129, 0.12);
+  color: #059669;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  overflow: hidden;
+}
+
+.tt-route-pill.is-danger {
+  border-color: #ef4444;
+  background: rgba(239, 68, 68, 0.18);
+  color: #dc2626;
+}
+
+.tt-route-pill.is-warn {
+  border-color: #f59e0b;
+  background: rgba(245, 158, 11, 0.18);
+  color: #d97706;
+}
+
+.tt-route-pill:hover {
+  z-index: 10;
+  transform: scale(1.02);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+.ttrp-inner {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  font-size: 10px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+/* 4. 시간표 연동 귀가 & 하교 교통 알리미 (.tc-transit-box) */
+.tc-transit-box {
+  margin-top: 12px;
+  padding: 14px 16px;
+  border-radius: 12px;
+  background: var(--surface-2, rgba(0, 0, 0, 0.03));
+  border: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+[data-theme="dark"] .tc-transit-box {
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.tc-transit-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.tct-title-group {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.tct-icon {
+  font-size: 20px;
+  line-height: 1;
+}
+
+.tct-title {
+  display: block;
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--text);
+}
+
+.tct-subtitle {
+  display: block;
+  font-size: 11px;
+  color: var(--muted);
+  margin-top: 1px;
+}
+
+.tc-transit-dest-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.tc-transit-chip {
+  padding: 5px 11px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+  border: 1px solid var(--border);
+  background: var(--bg);
+  color: var(--muted);
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.tc-transit-chip:hover {
+  background: var(--surface-2, rgba(0, 0, 0, 0.05));
+  color: var(--text);
+}
+
+.tc-transit-chip.is-active {
+  background: var(--brand, #10b981) !important;
+  color: #fff !important;
+  border-color: var(--brand, #10b981) !important;
+  box-shadow: 0 2px 6px rgba(16, 185, 129, 0.28);
+}
+
+.tc-transit-detail {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 10px 12px;
+  border-radius: 10px;
+  background: var(--bg);
+  border: 1px solid var(--border);
+}
+
+.tct-step-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  flex-wrap: wrap;
+}
+
+.tct-step-row.is-target {
+  padding-top: 2px;
+}
+
+.tct-step-badge {
+  padding: 2px 7px;
+  border-radius: 4px;
+  font-size: 10px;
+  font-weight: 700;
+  background: var(--surface-2, #e4e4e7);
+  color: var(--text);
+}
+
+.tct-step-badge.shuttle { background: #3b82f6; color: #fff; }
+.tct-step-badge.ktx { background: #8b5cf6; color: #fff; }
+.tct-step-badge.bus { background: #f59e0b; color: #fff; }
+
+.tct-sub {
+  font-size: 11px;
+  color: var(--muted);
+}
+
+.tct-highlight {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--brand, #10b981);
+}
+
+.tct-route-flow {
+  font-size: 12px;
+  color: var(--muted);
+  margin-top: 2px;
+}
+
+.tc-transit-tips {
+  margin: 0;
+  font-size: 11px;
+  line-height: 1.4;
+  color: var(--muted);
+  padding: 6px 10px;
+  border-radius: 6px;
+  background: var(--surface-2, rgba(0, 0, 0, 0.02));
 }

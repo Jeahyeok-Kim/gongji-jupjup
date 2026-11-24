@@ -5,7 +5,7 @@ const CACHE = 'gongji-v68';
 const CORE = ['./', 'index.html', 'css/style.css?v=68', 'css/enhanced.css?v=68', 'manifest.webmanifest', 'icons/icon-192.png',
   'js/benefit.js', 'js/sync.js', 'js/logic.js', 'js/overrides.js', 'js/extras.js', 'js/summary.js', 'js/personal.js', 'js/eligibility.js', 'js/ask.js', 'js/cal.js',
   'js/i18n.js?v=68', 'js/i18n2.js', 'js/i18n3.js', 'js/i18n4.js', 'js/i18n5.js?v=68', 'js/theme.js', 'js/plan.js?v=68', 'js/planui.js?v=68', 'js/track.js?v=68', 'js/palette.js', 'js/ttimage.js', 'js/ttics.js', 'js/noticeimage.js?v=68', 'js/app.js?v=68', 'js/enhanced.js?v=68', 'icons/mark.svg',
-  'data/notices.js', 'data/glossary.js', 'data/calendar.js', 'data/config.js', 'data/courses.js', 'data/timetable.js', 'data/professors.js', 'data/gradreq.js', 'js/curriculum.js?v=68'];
+  'data/notices.js', 'data/glossary.js', 'data/calendar.js', 'data/config.js', 'data/courses.js', 'data/timetable.js', 'data/professors.js', 'data/gradreq.js', 'js/curriculum.js?v=68', 'js/campusroute.js?v=68'];
 const DATA_JSON = /\/data\/(version|notices|calendar|glossary|overrides)\.json$|\/data\/gongji\.ics$/;
 
 self.addEventListener('install', (e) => {

@@ -12,6 +12,7 @@
     const $ = (s) => document.querySelector(s);
     const TT = root.GONGJI_TIMETABLE || null;
     const REQ = root.GONGJI_GRADREQ || null;
+    const CU = root.GongjiCurriculum || null;
     const groups = P.groupOffered(TT);
     let catalog = null;
     const cat = () => (catalog = catalog || P.buildCatalog(TT, root.GONGJI_COURSES));
@@ -565,7 +566,7 @@
           box.replaceChildren();
           return;
         }
-        const hits = (P.searchDepts ? P.searchDepts(val, deps.gradreq, deps.lang || 'ko') : []).slice(0, 8);
+        const hits = (P.searchDepts ? P.searchDepts(val, REQ, deps.lang || 'ko') : []).slice(0, 8);
         if (!hits.length) {
           box.hidden = true;
           box.replaceChildren();
@@ -595,7 +596,7 @@
           save(); render();
           return;
         }
-        const resolved = (P.resolveDept ? P.resolveDept(v, deps.gradreq) : v) || v;
+        const resolved = (P.resolveDept ? P.resolveDept(v, REQ) : v) || v;
         st.req.dept = resolved;
         const inputEl = document.getElementById('req-dept-input');
         if (inputEl && inputEl.value !== resolved) inputEl.value = resolved;
@@ -852,10 +853,11 @@
         }
 
         suggestBox.hidden = false;
-        suggestBox.replaceChildren(...topMatches.map(({ c }) => {
+        suggestBox.replaceChildren(...topMatches.map(({ c }, idx) => {
           const meta = [c.dept, c.term, `${c.credit}학점`, c.kind === '전필' ? '전공필수' : '전공선택', c.prof ? `${c.prof} 교수` : ''].filter(Boolean).join(' · ');
           return h('li', {
-            class: 'tmc-suggest-item',
+            class: 'tmc-suggest-item' + (idx === 0 ? ' is-active' : ''),
+            'data-name': c.name,
             onpointerdown: (ev) => {
               ev.preventDefault();
               inputEl.value = c.name;
@@ -938,21 +940,44 @@
               type: 'text',
               name: 'trName',
               id: 'tr-custom-input',
-              list: 'tr-course-list',
               placeholder: Tx.tmcPlaceholder || '과목명 입력 (예: 컴퓨터구조, 소프트웨어공학, 자료구조)',
               required: true,
               autocomplete: 'off',
               class: 'tmc-input-name',
               oninput: (e) => onNameInput(e.target),
               onfocus: (e) => onNameInput(e.target),
+              onkeydown: (e) => {
+                const sb = e.target.form && e.target.form.querySelector('#tr-suggest-box');
+                if (!sb || sb.hidden) return;
+                const items = Array.from(sb.querySelectorAll('.tmc-suggest-item'));
+                if (!items.length) return;
+                const activeIdx = items.findIndex((el) => el.classList.contains('is-active'));
+                if (e.key === 'ArrowDown') {
+                  e.preventDefault();
+                  const next = activeIdx < items.length - 1 ? activeIdx + 1 : 0;
+                  items.forEach((el, i) => el.classList.toggle('is-active', i === next));
+                  items[next].scrollIntoView({ block: 'nearest' });
+                } else if (e.key === 'ArrowUp') {
+                  e.preventDefault();
+                  const prev = activeIdx > 0 ? activeIdx - 1 : items.length - 1;
+                  items.forEach((el, i) => el.classList.toggle('is-active', i === prev));
+                  items[prev].scrollIntoView({ block: 'nearest' });
+                } else if (e.key === 'Enter') {
+                  if (activeIdx >= 0 && items[activeIdx]) {
+                    e.preventDefault();
+                    items[activeIdx].dispatchEvent(new MouseEvent('pointerdown', { bubbles: true }));
+                  }
+                } else if (e.key === 'Escape') {
+                  sb.hidden = true;
+                }
+              },
               onblur: (e) => {
                 setTimeout(() => {
                   const sb = e.target.form && e.target.form.querySelector('#tr-suggest-box');
                   if (sb) sb.hidden = true;
-                }, 200);
+                }, 220);
               }
             }),
-            h('datalist', { id: 'tr-course-list' }, datalistOptions),
             h('ul', { id: 'tr-suggest-box', class: 'tmc-suggest-box', hidden: true })
           ),
           h('select', { name: 'trCredit', id: 'tr-credit-select', class: 'tmc-select' },

@@ -2395,9 +2395,222 @@
     fill(body, ...parts);
   }
 
+  // ---------- 하이브리드 시간표 드래그 & 롱프레스 시간 이동 핸들러 (PC & 모바일 대응) ----------
+  window.GONGJI_SNAP_STEP = 30;
+  try {
+    const savedStep = parseInt(localStorage.getItem('gongji:snapStep'), 10);
+    if (savedStep === 10 || savedStep === 30) window.GONGJI_SNAP_STEP = savedStep;
+  } catch {}
+
+  function updateSnapUI() {
+    const s30 = $('#btn-snap-30');
+    const s10 = $('#btn-snap-10');
+    const is30 = (window.GONGJI_SNAP_STEP || 30) === 30;
+    if (s30) {
+      s30.classList.toggle('is-active', is30);
+      s30.setAttribute('aria-checked', String(is30));
+    }
+    if (s10) {
+      s10.classList.toggle('is-active', !is30);
+      s10.setAttribute('aria-checked', String(!is30));
+    }
+  }
+
+  function attachClassDragHandler(btn, c, d, s, e, from, to, base, span, pct) {
+    let timer = null;
+    let isDragging = false;
+    let hasMoved = false;
+    let startX = 0;
+    let startY = 0;
+    let ghostEl = null;
+    let tipEl = null;
+    let targetCol = null;
+    let targetDay = d;
+    let targetStart = s;
+    let dur = e - s;
+
+    function cleanupGhostAndTip() {
+      btn.classList.remove('is-dragging-card');
+      document.body.classList.remove('is-tt-dragging-active');
+      if (ghostEl) { ghostEl.remove(); ghostEl = null; }
+      if (tipEl) { tipEl.remove(); tipEl = null; }
+    }
+
+    function startDrag(clientX, clientY) {
+      isDragging = true;
+      dur = e - s;
+      targetDay = d;
+      targetStart = s;
+      targetCol = btn.parentElement;
+
+      if (navigator.vibrate) {
+        try { navigator.vibrate(25); } catch {}
+      }
+
+      btn.classList.add('is-dragging-card');
+      document.body.classList.add('is-tt-dragging-active');
+
+      // 드래그 목적지 고스트 생성
+      ghostEl = document.createElement('div');
+      ghostEl.className = 'tt-drag-ghost';
+      ghostEl.style.cssText = `top:${pct(s)};height:${pct(dur + base)};--c:${classColor(c.name)}`;
+      ghostEl.innerHTML = `<span class="tt-dg-label">${c.name}</span><span class="tt-dg-time">${c.start}~${c.end}</span>`;
+      btn.parentElement.appendChild(ghostEl);
+
+      // 마우스/터치를 따라다니는 플로팅 안내 뱃지
+      tipEl = document.createElement('div');
+      tipEl.className = 'tt-drag-floating-tip';
+      updateTipContent(clientX, clientY, targetDay, targetStart, targetStart + dur);
+      document.body.appendChild(tipEl);
+    }
+
+    function updateTipContent(cx, cy, day, st, en) {
+      if (!tipEl) return;
+      const snapStep = window.GONGJI_SNAP_STEP || 30;
+      tipEl.style.left = `${Math.min(window.innerWidth - 190, Math.max(10, cx + 16))}px`;
+      tipEl.style.top = `${Math.max(10, cy - 44)}px`;
+      const stStr = fromMinutes(st);
+      const enStr = fromMinutes(en);
+      tipEl.innerHTML = `<span class="tt-tip-day">${dayName(day)}</span> <strong>${stStr}~${enStr}</strong> <span class="tt-tip-step">(${snapStep}분 스냅)</span>`;
+    }
+
+    function onPointerMove(mev) {
+      const dx = mev.clientX - startX;
+      const dy = mev.clientY - startY;
+      const dist = Math.hypot(dx, dy);
+
+      if (!isDragging) {
+        if (dist > 7) {
+          if (mev.pointerType === 'touch') {
+            // 모바일 터치 스크롤 동작 감지: 롱프레스 취소하고 자연스럽게 스크롤 허용
+            if (timer) { clearTimeout(timer); timer = null; }
+            cleanupListeners();
+            return;
+          } else {
+            // PC 마우스 드래그 동작: 7px 이상 움직이면 즉시 드래그 모드 진입
+            if (timer) { clearTimeout(timer); timer = null; }
+            startDrag(mev.clientX, mev.clientY);
+          }
+        } else {
+          return;
+        }
+      }
+
+      // 드래그 중 브라우저 기본 스크롤 차단
+      if (mev.cancelable) mev.preventDefault();
+      hasMoved = true;
+
+      // 커서 위치 기준 요일 컬럼 탐색
+      const elUnder = document.elementFromPoint(mev.clientX, mev.clientY);
+      const colUnder = elUnder?.closest('.tt-col');
+      if (colUnder && colUnder !== targetCol) {
+        targetCol = colUnder;
+        targetDay = parseInt(targetCol.getAttribute('data-day'), 10) || d;
+        if (ghostEl && ghostEl.parentElement !== targetCol) {
+          targetCol.appendChild(ghostEl);
+        }
+      }
+
+      // 목표 요일 컬럼 내 Y좌표로부터 시간 계산
+      const curCol = targetCol || btn.parentElement;
+      const rect = curCol.getBoundingClientRect();
+      const relY = Math.max(0, Math.min(rect.height, mev.clientY - rect.top));
+      const rawMin = base + (relY / rect.height) * span;
+
+      // 사용자가 선택한 단위(기본 30분, 미세조정 10분)로 정밀 스냅
+      const snapStep = window.GONGJI_SNAP_STEP || 30;
+      let snappedS = Math.round(rawMin / snapStep) * snapStep;
+      snappedS = Math.max(from * 60, Math.min(to * 60 - dur, snappedS));
+      targetStart = snappedS;
+      const targetEnd = targetStart + dur;
+
+      // 고스트 요소 위치 및 시간 라벨 업데이트
+      if (ghostEl) {
+        ghostEl.style.top = pct(targetStart);
+        ghostEl.style.height = pct(dur + base);
+        const timeSpan = ghostEl.querySelector('.tt-dg-time');
+        if (timeSpan) timeSpan.textContent = `${fromMinutes(targetStart)}~${fromMinutes(targetEnd)}`;
+      }
+
+      updateTipContent(mev.clientX, mev.clientY, targetDay, targetStart, targetEnd);
+    }
+
+    function onPointerUp(uev) {
+      if (timer) { clearTimeout(timer); timer = null; }
+      cleanupListeners();
+
+      if (isDragging && hasMoved) {
+        const finalDay = targetDay;
+        const finalStart = targetStart;
+        const finalEnd = finalStart + dur;
+        cleanupGhostAndTip();
+
+        // 실제 시간이나 요일이 바뀐 경우에만 저장 및 토스트 알림
+        if (finalDay !== d || finalStart !== s) {
+          const prevSchedule = state.timetable.map((x) => ({ ...x }));
+          const newStartStr = fromMinutes(finalStart);
+          const newEndStr = fromMinutes(finalEnd);
+
+          c.day = finalDay;
+          c.start = newStartStr;
+          c.end = newEndStr;
+          saveTimetable();
+          timetableChanged();
+
+          if (navigator.vibrate) {
+            try { navigator.vibrate([30, 45]); } catch {}
+          }
+
+          toast(`'${c.name}' 수업이 ${dayName(finalDay)} ${newStartStr}~${newEndStr}로 이동되었습니다.`, {
+            label: '실행 취소',
+            run: () => {
+              state.timetable = prevSchedule;
+              saveTimetable();
+              timetableChanged();
+            }
+          });
+        }
+        isDragging = false;
+        hasMoved = false;
+      } else {
+        // 드래그가 아니거나 이동량이 없는 단순 탭/클릭 -> 수업 수정 모달 오픈
+        cleanupGhostAndTip();
+        isDragging = false;
+        hasMoved = false;
+        openClassDialog({ cls: c });
+      }
+    }
+
+    function cleanupListeners() {
+      window.removeEventListener('pointermove', onPointerMove, { passive: false });
+      window.removeEventListener('pointerup', onPointerUp);
+      window.removeEventListener('pointercancel', onPointerUp);
+    }
+
+    btn.addEventListener('pointerdown', (ev) => {
+      if (ev.pointerType === 'mouse' && ev.button !== 0) return;
+      startX = ev.clientX;
+      startY = ev.clientY;
+      hasMoved = false;
+      isDragging = false;
+
+      // 모바일 터치 환경: 270ms 롱프레스 유지 시 드래그 활성화
+      if (ev.pointerType === 'touch') {
+        timer = setTimeout(() => {
+          startDrag(startX, startY);
+        }, 270);
+      }
+
+      window.addEventListener('pointermove', onPointerMove, { passive: false });
+      window.addEventListener('pointerup', onPointerUp, { once: true });
+      window.addEventListener('pointercancel', onPointerUp, { once: true });
+    });
+  }
+
   function renderTimetable() {
     renderTimetableSelector();
     renderTimetableStats();
+    updateSnapUI();
     renderCalendar();
     const badge = $('#badge-timetable');
     badge.hidden = state.timetable.length === 0;
@@ -2426,24 +2639,65 @@
     const hours = h('div', { class: 'tt-hours', 'aria-hidden': 'true' },
       ...Array.from({ length: to - from }, (_, i) => h('span', null, String(from + i))));
     const cols = days.map((d) => {
-      const blocks = timed.filter((c) => c.day === d).map((c) => {
+      const dayTimed = timed.filter((c) => c.day === d).sort((a, b) => L.toMinutes(a.start) - L.toMinutes(b.start));
+      const routePills = [];
+      const CR = (typeof window !== 'undefined' && window.GongjiCampusRoute) || root.GongjiCampusRoute;
+      if (CR && CR.calculateRoute) {
+        for (let i = 1; i < dayTimed.length; i++) {
+          const prev = dayTimed[i - 1];
+          const curr = dayTimed[i];
+          const gap = L.toMinutes(curr.start) - L.toMinutes(prev.end);
+          if (gap > 0 && gap <= 20) {
+            const route = CR.calculateRoute(prev.room, curr.room, gap);
+            const prevEnd = L.toMinutes(prev.end);
+            const isDanger = route.level === 'danger';
+            const isWarn = route.level === 'warning';
+            const badgeClass = isDanger ? 'is-danger' : isWarn ? 'is-warn' : 'is-safe';
+            const icon = isDanger ? '🚨' : isWarn ? '⚠️' : '🚶';
+            routePills.push(h('button', {
+              type: 'button',
+              class: 'tt-route-pill ' + badgeClass,
+              style: `top:${pct(prevEnd)};height:${pct(gap + base)};`,
+              title: `${prev.room || '이전'} ➔ ${curr.room || '다음'}: 도보 ${route.walkMin}분 (${route.statusText}) - 클릭하여 10분 컷 판독기 열기`,
+              onclick: (ev) => {
+                ev.stopPropagation();
+                openRouteDialog(prev, curr, route);
+              }
+            },
+              h('span', { class: 'ttrp-inner' },
+                h('span', { class: 'ttrp-icon' }, icon),
+                h('span', { class: 'ttrp-text' }, `${route.walkMin}분${route.hasHillAlert ? ' 헐떡고개' : ''}`)
+              )
+            ));
+          }
+        }
+      }
+
+      const blocks = dayTimed.map((c) => {
         const s = L.toMinutes(c.start);
         const e = L.toMinutes(c.end);
         const name = c.name || t().classFallback;
         const prof = c.prof || c.p || '';
         const profText = prof ? (prof.endsWith('교수') ? prof : `${prof} 교수`) : '';
         const isClash = clashIds.has(c.id);
-        return h('button', {
+        const btn = h('button', {
           type: 'button', class: 'tt-class' + (isClash ? ' has-clash' : ''),
           style: `top:${pct(s)};height:${pct(e - s + base)};--c:${classColor(c.name)}`,
           'aria-label': `${isClash ? '[시간 겹침] ' : ''}${dayName(d)} ${c.start}~${c.end} ${name}${profText ? ` (${profText})` : ''}`,
-          onclick: (ev) => { ev.stopPropagation(); openClassDialog({ cls: c }); }
+          'data-class-id': c.id,
+          'data-day': String(d),
+          'data-start': String(s),
+          'data-end': String(e)
         },
+          h('span', { class: 'tt-drag-handle', title: '길게 누르거나 드래그하여 이동', 'aria-hidden': 'true' }, '⋮⋮'),
           isClash ? h('span', { class: 'tt-clash-badge' }, '⚠️ 겹침') : null,
           h('span', { class: 'tt-name' }, name),
           profText ? h('span', { class: 'tt-prof' }, profText) : null,
           h('span', { class: 'tt-time' }, `${c.start}~\u200b${c.end}`),
           c.room ? h('span', { class: 'tt-room' }, c.room) : null);
+
+        attachClassDragHandler(btn, c, d, s, e, from, to, base, span, pct);
+        return btn;
       });
       const nowLine = d === today && nowMin >= base && nowMin <= base + span
         ? h('div', { class: 'tt-now', style: `top:${pct(nowMin)}`, 'aria-hidden': 'true' }, h('span', null, t().nowLine)) : null;
@@ -2455,7 +2709,7 @@
           const m = base + Math.floor(((ev.clientY - r.top) / r.height) * (to - from)) * 60;
           openClassDialog({ day: d, start: Math.max(TT_HOURS.first * 60, Math.min(m, TT_HOURS.last * 60 - 60)) });
         }
-      }, ...blocks, nowLine);
+      }, ...blocks, ...routePills, nowLine);
     });
     const body = h('div', { class: 'tt-body' }, hours, ...cols);
     const box = $('#tt');
@@ -3184,6 +3438,201 @@
       moreAction && items.length > limit ? h('button', { type: 'button', class: 'link-btn', onclick: moreAction }, t().homeMore) : null);
   }
 
+  // ---------- [1순위: 연강 동선 & 헐떡고개 10분 컷 판독기 모달] ----------
+  function openRouteDialog(clsA, clsB, route) {
+    const dlg = $('#route-dialog');
+    if (!dlg) return;
+    const body = $('#route-dialog-body');
+    if (!body) return;
+
+    const isDanger = route.level === 'danger';
+    const isWarn = route.level === 'warning';
+    const levelClass = isDanger ? 'is-danger' : isWarn ? 'is-warn' : 'is-safe';
+    const levelIcon = isDanger ? '🚨' : isWarn ? '⚠️' : '🟢';
+
+    fill(body,
+      h('div', { class: 'rd-banner ' + levelClass },
+        h('div', { class: 'rdb-icon' }, levelIcon),
+        h('div', { class: 'rdb-text' },
+          h('h3', { class: 'rdb-title' }, route.statusText),
+          h('p', { class: 'rdb-sub' }, route.tips)
+        )
+      ),
+      h('div', { class: 'rd-metrics-grid' },
+        h('div', { class: 'rd-metric-card' },
+          h('span', { class: 'rdm-label' }, '쉬는 시간'),
+          h('strong', { class: 'rdm-val' }, `${route.breakMin}분`)
+        ),
+        h('div', { class: 'rd-metric-card' },
+          h('span', { class: 'rdm-label' }, '예상 도보 소요'),
+          h('strong', { class: 'rdm-val' + (isDanger ? ' text-red' : isWarn ? ' text-amber' : ' text-green') }, `${route.walkMin}분`)
+        ),
+        h('div', { class: 'rd-metric-card' },
+          h('span', { class: 'rdm-label' }, '이동 거리 / 고저차'),
+          h('strong', { class: 'rdm-val' }, `${route.distM}m · ${route.elevationDiff > 0 ? '+' + route.elevationDiff + 'm 등판' : '평지/내리막'}`)
+        ),
+        h('div', { class: 'rd-metric-card' },
+          h('span', { class: 'rdm-label' }, '10분 컷 잔여 여유'),
+          h('strong', { class: 'rdm-val' + (route.remainMin <= 1 ? ' text-red' : ' text-green') }, `${route.remainMin}분`)
+        )
+      ),
+      h('div', { class: 'rd-timeline' },
+        h('div', { class: 'rdt-step start' },
+          h('span', { class: 'rdt-badge' }, '이전 수업'),
+          h('div', { class: 'rdt-info' },
+            h('strong', null, `${clsA.name || '과목A'} (${clsA.room || '강의실 미지정'})`),
+            h('span', { class: 'fine muted' }, `${route.fromBuilding} · ${clsA.end} 종료`)
+          )
+        ),
+        h('div', { class: 'rdt-step path ' + levelClass },
+          h('span', { class: 'rdt-badge path' }, '이동 동선'),
+          h('div', { class: 'rdt-info' },
+            h('strong', null, route.hasHillAlert ? '⚠️ 헐떡고개 급경사로 코스' : '🚶 완만 보도 이동'),
+            route.hillReason ? h('p', { class: 'rdt-hill-reason' }, route.hillReason) : null,
+            route.shortcut ? h('p', { class: 'rdt-shortcut-box' }, `💡 지름길 팁: ${route.shortcut}`) : null
+          )
+        ),
+        h('div', { class: 'rdt-step dest' },
+          h('span', { class: 'rdt-badge' }, '다음 수업'),
+          h('div', { class: 'rdt-info' },
+            h('strong', null, `${clsB.name || '과목B'} (${clsB.room || '강의실 미지정'})`),
+            h('span', { class: 'fine muted' }, `${route.toBuilding} · ${clsB.start} 시작`)
+          )
+        )
+      ),
+      h('div', { class: 'rd-building-notes' },
+        h('h4', { class: 'rdn-title' }, '🏢 건물별 계단 & 엘리베이터 특성'),
+        h('ul', { class: 'rdn-list' },
+          h('li', null, `📍 ${route.fromBuilding}: ${route.fromBuilding === '국제교육관' ? '❌ 엘리베이터 없음 (전 층 계단 보행 필수)' : '⭕ 엘리베이터 운행 (쉬는시간 혼잡 가능)'}`),
+          h('li', null, `📍 ${route.toBuilding}: ${route.toBuilding === '국제교육관' ? '❌ 엘리베이터 없음 (전 층 계단 보행 필수)' : '⭕ 엘리베이터 운행 (쉬는시간 혼잡 가능)'}`)
+        )
+      )
+    );
+
+    if (dlg.showModal) dlg.showModal();
+    else dlg.open = true;
+  }
+
+  function renderConsecutiveRouteItem(prev, next, route, gap) {
+    const isDanger = route.level === 'danger';
+    const isWarn = route.level === 'warning';
+    const badgeClass = isDanger ? 'is-danger' : isWarn ? 'is-warn' : 'is-safe';
+    const icon = isDanger ? '🚨' : isWarn ? '⚠️' : '🟢';
+
+    return h('li', {
+      class: 'home-row tc-route-item ' + badgeClass,
+      role: 'button',
+      tabindex: 0,
+      title: '클릭하여 연강 이동 동선 및 헐떡고개 상세 보기',
+      onclick: () => openRouteDialog(prev, next, route),
+      onkeydown: (ev) => { if (ev.key === 'Enter' || ev.key === ' ') { ev.preventDefault(); openRouteDialog(prev, next, route); } }
+    },
+      h('div', { class: 'tc-route-head' },
+        h('span', { class: 'tc-route-badge ' + badgeClass }, `${icon} ${route.statusText}`),
+        h('span', { class: 'tc-route-time-pill' }, `쉬는시간 ${gap}분 · 도보 ${route.walkMin}분`)
+      ),
+      h('div', { class: 'tc-route-body' },
+        h('span', { class: 'tc-route-path' }, `${prev.room || '강의실A'} ➔ ${next.room || '강의실B'}`),
+        route.hasHillAlert ? h('span', { class: 'tc-route-hill-warning' }, '⚠️ 헐떡고개') : null,
+        h('span', { class: 'tc-route-arrow' }, '동선 판독 ↗')
+      )
+    );
+  }
+
+  // ---------- [3순위: 시간표 연동 귀가 & 하교 교통 알리미] ----------
+  function renderTransitAssistantCard(today) {
+    const CR = (typeof window !== 'undefined' && window.GongjiCampusRoute) || root.GongjiCampusRoute;
+    if (!CR || !CR.getTransitRecommendation || !today || !today.length) return null;
+
+    const lastClass = today[today.length - 1];
+    let selectedDest = 'shuttle';
+    try { selectedDest = localStorage.getItem('gongji:transitDest') || 'shuttle'; } catch {}
+    const rec = CR.getTransitRecommendation(lastClass.end, lastClass.room, selectedDest);
+    if (!rec) return null;
+
+    const destinations = [
+      { id: 'shuttle', label: '🚌 교내 셔틀' },
+      { id: 'ktx', label: '🚄 충주역 KTX' },
+      { id: 'seoul', label: '🏙️ 동서울/강남' },
+      { id: 'suwon', label: '🚌 수원/경기' }
+    ];
+
+    const destChips = destinations.map((d) => h('button', {
+      type: 'button',
+      class: 'tc-transit-chip' + (selectedDest === d.id ? ' is-active' : ''),
+      onclick: (e) => {
+        e.stopPropagation();
+        try { localStorage.setItem('gongji:transitDest', d.id); } catch {}
+        renderHome();
+      }
+    }, d.label));
+
+    let scheduleContent = null;
+    if (selectedDest === 'ktx' && rec.bestMatch) {
+      const bm = rec.bestMatch;
+      scheduleContent = h('div', { class: 'tc-transit-detail' },
+        h('div', { class: 'tct-step-row' },
+          h('span', { class: 'tct-step-badge' }, '1단계 셔틀'),
+          h('strong', null, `${bm.shuttleDep} 대운동장 셔틀`),
+          h('span', { class: 'tct-sub' }, `(도보 ${rec.walkMin}분 · 정류장 ${bm.waitMinAtStop}분 대기)`)
+        ),
+        h('div', { class: 'tct-step-row' },
+          h('span', { class: 'tct-step-badge' }, '2단계 환승'),
+          h('strong', null, `${bm.stationArrive} 충주역 도착`),
+          h('span', { class: 'tct-sub' }, `(환승 여유 ${bm.waitMinAtStation}분)`)
+        ),
+        h('div', { class: 'tct-step-row is-target' },
+          h('span', { class: 'tct-step-badge ktx' }, '3단계 KTX'),
+          h('strong', null, `${bm.ktx.dep} ${bm.ktx.train} 탑승`),
+          h('span', { class: 'tct-highlight' }, `판교역 ${bm.arrPangyo} 도착 (약 50분 소요)`)
+        )
+      );
+    } else if ((selectedDest === 'seoul' || selectedDest === 'suwon') && rec.bestMatch) {
+      const bm = rec.bestMatch;
+      scheduleContent = h('div', { class: 'tc-transit-detail' },
+        h('div', { class: 'tct-step-row' },
+          h('span', { class: 'tct-step-badge' }, '1단계 셔틀'),
+          h('strong', null, `${bm.shuttleDep} 대운동장 셔틀`),
+          h('span', { class: 'tct-sub' }, `(충주터미널 ${bm.termArrive} 도착)`)
+        ),
+        h('div', { class: 'tct-step-row is-target' },
+          h('span', { class: 'tct-step-badge bus' }, '2단계 시외버스'),
+          h('strong', null, `${bm.estBusTime} ${bm.busInfo.dest}행 직통`),
+          h('span', { class: 'tct-highlight' }, `배차 ${bm.busInfo.intervalMin}분 간격 · 요금 ${bm.busInfo.fare}`)
+        )
+      );
+    } else if (rec.bestMatch) {
+      const bm = rec.bestMatch;
+      scheduleContent = h('div', { class: 'tc-transit-detail' },
+        h('div', { class: 'tct-step-row is-target' },
+          h('span', { class: 'tct-step-badge shuttle' }, '탑승 추천'),
+          h('strong', null, `${bm.shuttleDep} 셔틀버스 출발 (대운동장)`),
+          h('span', { class: 'tct-sub' }, `도보 ${rec.walkMin}분 소요`)
+        ),
+        h('div', { class: 'tct-route-flow' },
+          `대운동장(${bm.shuttleDep}) ➔ 충주터미널(${bm.termArrive}) ➔ 충주역(${bm.stationArrive})`
+        )
+      );
+    } else {
+      scheduleContent = h('p', { class: 'muted fine' }, '오늘 남은 셔틀버스 운행이 종료되었습니다.');
+    }
+
+    return h('div', { class: 'tc-transit-box' },
+      h('div', { class: 'tc-transit-header' },
+        h('div', { class: 'tct-title-group' },
+          h('span', { class: 'tct-icon' }, '🚌'),
+          h('div', null,
+            h('strong', { class: 'tct-title' }, '시간표 연동 하교 & 귀가 알리미'),
+            h('span', { class: 'tct-subtitle' }, `오늘 마지막 수업: ${lastClass.name} (${lastClass.end} 종료 · ${rec.fromBuilding || '교내'})`)
+          )
+        )
+      ),
+      h('div', { class: 'tc-transit-dest-chips' }, destChips),
+      scheduleContent,
+      h('p', { class: 'tc-transit-tips' }, `💡 ${rec.tips}`)
+    );
+  }
+
   // 오늘 내 수업: 시간표를 넣었으면 오늘 수업을 시간순으로, 수업 사이 빈 시간(공강)과 함께 보여 준다
   function todayClassCard() {
     const tt = state.timetable;
@@ -3209,8 +3658,19 @@
     today.forEach((c, i) => {
       const s = toMin(c.start);
       const e = toMin(c.end);
-      if (i > 0 && s - toMin(today[i - 1].end) >= 30) {
-        rows.push(h('li', { class: 'home-row tc-gap' }, T.freeGap(today[i - 1].end, c.start)));
+      if (i > 0) {
+        const prev = today[i - 1];
+        const gap = s - toMin(prev.end);
+        if (gap >= 30) {
+          rows.push(h('li', { class: 'home-row tc-gap' }, T.freeGap(prev.end, c.start)));
+        } else if (gap > 0 && gap <= 20) {
+          // [1순위: 연강 이동 동선 & 헐떡고개 10분 컷 판독기]
+          const CR = (typeof window !== 'undefined' && window.GongjiCampusRoute) || root.GongjiCampusRoute;
+          if (CR && CR.calculateRoute) {
+            const route = CR.calculateRoute(prev.room, c.room, gap);
+            rows.push(renderConsecutiveRouteItem(prev, c, route, gap));
+          }
+        }
       }
       const st = cur >= e ? 'done' : cur >= s ? 'now' : (!nextMarked ? 'next' : '');
       if (st === 'next' || st === 'now') nextMarked = true;
@@ -3309,6 +3769,7 @@
       header,
       liveBanner,
       today.length ? h('ul', { class: 'home-list' }, rows) : restingCard,
+      today.length ? renderTransitAssistantCard(today) : null,
       (today.length && foot) ? h('p', { class: 'fine' }, foot) : null,
       elearnNote ? h('div', { class: 'tc-elearn-wrap' }, elearnNote) : null);
   }
@@ -5040,6 +5501,56 @@
     $('#class-name').addEventListener('focus', showSuggest);
     $('#class-name').addEventListener('blur', () => setTimeout(hideSuggest, 120));
     $('#class-cancel').addEventListener('click', () => $('#class-dialog').close());
+
+    // 시간표 스냅 단위 토글 (30분 대학 표준 / 10분 미세조정)
+    $('#btn-snap-30')?.addEventListener('click', () => {
+      window.GONGJI_SNAP_STEP = 30;
+      try { localStorage.setItem('gongji:snapStep', '30'); } catch {}
+      updateSnapUI();
+      toast('30분 스냅 이동 모드로 설정되었습니다. (대학 정규 교시 표준)');
+    });
+    $('#btn-snap-10')?.addEventListener('click', () => {
+      window.GONGJI_SNAP_STEP = 10;
+      try { localStorage.setItem('gongji:snapStep', '10'); } catch {}
+      updateSnapUI();
+      toast('10분 미세조정 이동 모드로 설정되었습니다.');
+    });
+
+    // 수업 상세 수정 모달 빠른 시간 이동 버튼
+    $('#btn-shift-prev30')?.addEventListener('click', () => {
+      const s = getTime('start');
+      const e = getTime('end');
+      const dur = e - s;
+      const step = window.GONGJI_SNAP_STEP || 30;
+      const newS = Math.max(TT_HOURS.first * 60, s - step);
+      setTime('start', newS);
+      setTime('end', newS + dur);
+    });
+    $('#btn-shift-next30')?.addEventListener('click', () => {
+      const s = getTime('start');
+      const e = getTime('end');
+      const dur = e - s;
+      const step = window.GONGJI_SNAP_STEP || 30;
+      const newS = Math.min(TT_HOURS.last * 60 - dur, s + step);
+      setTime('start', newS);
+      setTime('end', newS + dur);
+    });
+    $('#btn-shift-add30')?.addEventListener('click', () => {
+      const s = getTime('start');
+      const e = getTime('end');
+      const step = window.GONGJI_SNAP_STEP || 30;
+      const newE = Math.min(TT_HOURS.last * 60, e + step);
+      setTime('end', newE);
+      renderDurations();
+    });
+    $('#btn-shift-sub30')?.addEventListener('click', () => {
+      const s = getTime('start');
+      const e = getTime('end');
+      const step = window.GONGJI_SNAP_STEP || 30;
+      const newE = Math.max(s + step, e - step);
+      setTime('end', newE);
+      renderDurations();
+    });
     $('#class-delete').addEventListener('click', () => {
       // 월·목처럼 요일마다 칸이 따로 저장되는 같은 수업(이름이 같은 칸)은 한꺼번에 지운다.
       const key = (c) => String(c.name || '').trim().toLowerCase();

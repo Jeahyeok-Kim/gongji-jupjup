@@ -14,7 +14,22 @@
   }
 
   function findDept(name, data) {
-    for (const c of dataOf(data).colleges) for (const d of c.depts) if (d.name === name) return d;
+    if (!name) return null;
+    const globalRoot = typeof window !== 'undefined' ? window : (typeof globalThis !== 'undefined' ? globalThis : null);
+    const resolved = (globalRoot && globalRoot.GongjiPlan && globalRoot.GongjiPlan.resolveDept)
+      ? globalRoot.GongjiPlan.resolveDept(name)
+      : name;
+    const targetName = resolved || name;
+    for (const c of dataOf(data).colleges) {
+      for (const d of c.depts) {
+        if (d.name === targetName || d.name === name) return d;
+      }
+    }
+    for (const c of dataOf(data).colleges) {
+      for (const d of c.depts) {
+        if (d.name.includes(targetName) || targetName.includes(d.name)) return d;
+      }
+    }
     return null;
   }
 
@@ -121,6 +136,10 @@
         }
         if (common >= qDec.length - 1 && common >= 3) {
           return 55;
+        }
+        const qDecPrefix = qDec.slice(0, -1);
+        if (qDecPrefix.length >= 3 && tDec.includes(qDecPrefix)) {
+          return 40;
         }
       }
     }
