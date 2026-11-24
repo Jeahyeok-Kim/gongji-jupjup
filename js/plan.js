@@ -118,13 +118,328 @@
   }
 
   // ---------- 졸업 기준과 남은 학점 ----------
+  const DEPT_MAP = {
+    '컴퓨터공학과': {
+      en: 'Computer Engineering', zh: '计算机工学', ja: 'コンピュータ工学科',
+      aliases: ['컴공', '컴공과', '컴퓨터', '컴퓨터공학', '컴터', '소웨', '소프트웨어', '소프트웨어공학', '전산', '정보통신',
+                'computer', 'cs', 'ce', 'sw', 'comp', 'coomputer', 'computor', 'se', 'software', 'soft', 'it']
+    },
+    '경영학과': {
+      en: 'Business Administration', zh: '经营学', ja: '経営学科',
+      aliases: ['경영', '경영과', '비즈니스', 'business', 'ba', 'biz', 'management', 'bus']
+    },
+    '경제통상학과': {
+      en: 'Economics & International Trade', zh: '经济通商学', ja: '経済通商学科',
+      aliases: ['경통', '경제', '통상', '경제학과', '통상학과', 'econ', 'economics', 'trade']
+    },
+    '경찰학과': {
+      en: 'Police Science', zh: '警察学', ja: '警察学科',
+      aliases: ['경찰', '경찰행정', '경행', 'police', 'cop', 'cj']
+    },
+    '소방방재융합학과': {
+      en: 'Fire Protection & Disaster Engineering', zh: '消防防灾融合学', ja: '消防防災融合学科',
+      aliases: ['소방', '소방방재', '방재', '소방과', '소방학과', 'fire', 'safety', 'disaster']
+    },
+    '문헌정보학과': {
+      en: 'Library & Information Science', zh: '文献信息学', ja: '文献情報学科',
+      aliases: ['문정', '문헌', '문헌정보', '사서', 'lis', 'library']
+    },
+    '유아교육과': {
+      en: 'Early Childhood Education', zh: '幼儿教育科', ja: '幼児教育科',
+      aliases: ['유교', '유아', '유아교육', '유치원', 'ece', 'kindergarten']
+    },
+    '사회복지학과': {
+      en: 'Social Welfare', zh: '社会福利学', ja: '社会福祉学科',
+      aliases: ['사복', '사회복지', '복지', 'social', 'welfare']
+    },
+    '신문방송학과': {
+      en: 'Journalism & Mass Communication', zh: '新闻传播学', ja: '新聞放送学科',
+      aliases: ['신방', '신문', '방송', '언론', '언론정보', 'journalism', 'media', 'comm']
+    },
+    '동화·한국어문화학과': {
+      en: 'Fairy Tale & Korean Culture', zh: '童话与韩国语文化学', ja: '童話・韓国語文化学科',
+      aliases: ['동화', '한국어', '한국어문화', '국문', 'fairy', 'korean']
+    },
+    '영어문화학과': {
+      en: 'English & Cultural Studies', zh: '英语文化学', ja: '英語文化学科',
+      aliases: ['영문', '영어', '영어문화', '영어영문', 'english', 'eng']
+    },
+    '메카트로닉스공학과': {
+      en: 'Mechatronics Engineering', zh: '机电工程学', ja: 'メカトロニクス工学科',
+      aliases: ['메카', '메카트로닉스', '기계', '로봇', '기계전자', 'mechatronics', 'mecha', 'robot']
+    },
+    '바이오메디컬공학과': {
+      en: 'Biomedical Engineering', zh: '生物医学工程', ja: '生体医工学科',
+      aliases: ['바메공', '바이오메디컬', '의공', '의공학', 'bme', 'biomedical', 'biomed']
+    },
+    '녹색기술융합학과': {
+      en: 'Green Technology Convergence', zh: '绿色技术融合学', ja: 'グリーンテクノロジー融合学科',
+      aliases: ['녹기', '녹색기술', '환경', '환경공학', 'green', 'env']
+    },
+    '에너지신소재공학과': {
+      en: 'Energy Materials Engineering', zh: '能源新材料工程', ja: 'エネルギー新素材工学科',
+      aliases: ['신소재', '에너지신소재', '재료', '재료공학', '신소재공학', 'mse', 'materials', 'energy']
+    },
+    '간호학과': {
+      en: 'Nursing', zh: '护理学', ja: '看護学科',
+      aliases: ['간호', '간호과', 'nurse', 'nursing']
+    },
+    '바이오의약학과': {
+      en: 'Biopharmaceuticals', zh: '生物医药学', ja: 'バイオ医薬学科',
+      aliases: ['바의약', '바의동', '바이오의약', '제약', '약학', 'pharma', 'biopharma']
+    },
+    '생명공학과': {
+      en: 'Biotechnology', zh: '生命工程学', ja: '生命工学科',
+      aliases: ['생공', '생명공학', '생명', '바이오', '생명과학', 'biotech', 'bio', 'bt']
+    },
+    '식품영양학과': {
+      en: 'Food & Nutrition', zh: '食品营养学', ja: '食品栄養学科',
+      aliases: ['식영', '식품영양', '영양', '영양학과', 'food', 'nutrition']
+    },
+    '뷰티화장품학과': {
+      en: 'Beauty & Cosmetic Science', zh: '美容化妆品学', ja: 'ビューティー化粧品学科',
+      aliases: ['뷰티', '화장품', '뷰티화장품', 'cosmetics', 'beauty', 'cosmetic']
+    },
+    '스포츠건강학과': {
+      en: 'Sports & Health Science', zh: '体育健康学', ja: 'スポーツ健康学科',
+      aliases: ['스건', '스포츠', '체육', '스포츠건강', '체육학과', 'sports', 'pe', 'kinesiology']
+    },
+    '골프산업학과': {
+      en: 'Golf Industry', zh: '高尔夫产业学', ja: 'ゴルフ産業学科',
+      aliases: ['골프', '골프산업', 'golf']
+    },
+    '배터리반도체융합산업전공': {
+      en: 'Battery & Semiconductor Convergence', zh: '电池与半导体融合学', ja: 'バッテリー半導体融合専攻',
+      aliases: ['배반', '배터리', '반도체', '배터리반도체', 'battery', 'semi', 'semiconductor']
+    },
+    'AI빅데이터전공': {
+      en: 'AI & Big Data', zh: '人工智能与大数据', ja: 'AI・ビッグデータ専攻',
+      aliases: ['에이아이', '인공지능', '빅데이터', 'ai', 'bigdata', 'ds', 'data', 'datascience']
+    },
+    '스마트푸드테크산업전공': {
+      en: 'Smart Food Tech Industry', zh: '智能食品科技产业', ja: 'スマートフードテック産業専攻',
+      aliases: ['푸드테크', '스마트푸드', 'foodtech']
+    },
+    '다문화·한국어교육전공': {
+      en: 'Multicultural & Korean Education', zh: '多元文化与韩语教育', ja: '多文化・韓国語教育専攻',
+      aliases: ['다문화', '한국어교육', 'multicultural']
+    },
+    '상담심리전공': {
+      en: 'Counseling Psychology', zh: '咨询心理学', ja: '相談心理学専攻',
+      aliases: ['상심', '상담', '심리', '심리학', 'psychology', 'counseling']
+    },
+    '창업경영전공': {
+      en: 'Entrepreneurship & Management', zh: '创业经营学', ja: '起業経営専攻',
+      aliases: ['창경', '창업', '창업경영', 'startup', 'entrepreneurship']
+    },
+    '국제경영학과': {
+      en: 'International Business', zh: '国际经营学', ja: '国際経営学科',
+      aliases: ['국경', '국제경영', '글로벌경영', 'ib', 'global']
+    },
+    '미디어영상학과': {
+      en: 'Media & Film', zh: '媒体影像学', ja: 'メディア映像学科',
+      aliases: ['미영', '영상', '미디어영상', '영상학과', 'film', 'video']
+    },
+    '산업디자인학과': {
+      en: 'Industrial Design', zh: '工业设计学', ja: '産業デザイン学科',
+      aliases: ['산디', '산업디자인', 'id', 'industrial', 'product']
+    },
+    '실내디자인학과': {
+      en: 'Interior Design', zh: '室内设计学', ja: '室内デザイン学科',
+      aliases: ['실디', '실내디자인', '인테리어', 'interior']
+    },
+    '패션디자인학과': {
+      en: 'Fashion Design', zh: '服装设计学', ja: 'ファッションデザイン学科',
+      aliases: ['패디', '패션디자인', '패션', 'fashion']
+    },
+    '시각영상디자인학과': {
+      en: 'Visual & Video Design', zh: '视觉传达与影像设计', ja: '視覚映像デザイン学科',
+      aliases: ['시디', '시각디자인', '시각영상', 'vcd', 'visual']
+    },
+    '미디어콘텐츠학과': {
+      en: 'Media Contents', zh: '媒体内容学', ja: 'メディアコンテンツ学科',
+      aliases: ['미콘', '미디어콘텐츠', 'contents', 'content']
+    },
+    '조형예술학과': {
+      en: 'Fine & Plastic Arts', zh: '造型艺术学', ja: '造形芸術学科',
+      aliases: ['조형', '조형예술', '회화', '순수미술', '미술', 'art', 'fineart']
+    }
+  };
+
+  function levenshteinDistance(s1, s2) {
+    if (s1 === s2) return 0;
+    const m = s1.length, n = s2.length;
+    if (!m) return n;
+    if (!n) return m;
+    if (Math.abs(m - n) > 3) return 999;
+    const d = [];
+    for (let i = 0; i <= m; i++) d[i] = [i];
+    for (let j = 0; j <= n; j++) d[0][j] = j;
+    for (let i = 1; i <= m; i++) {
+      for (let j = 1; j <= n; j++) {
+        const cost = s1[i - 1] === s2[j - 1] ? 0 : 1;
+        d[i][j] = Math.min(d[i - 1][j] + 1, d[i][j - 1] + 1, d[i - 1][j - 1] + cost);
+      }
+    }
+    return d[m][n];
+  }
+
+  function normDeptStr(s) {
+    return String(s || '').trim().toLowerCase().replace(/[\s\-_·•.,/()]/g, '');
+  }
+
+  function resolveDept(input, req) {
+    const raw = String(input || '').trim();
+    if (!raw) return '';
+    const depts = (req && req.depts) || {};
+    const officialNames = Object.keys(depts);
+
+    // 1. Exact match with official name
+    if (depts[raw]) return raw;
+    const normRaw = normDeptStr(raw);
+    for (const name of officialNames) {
+      if (normDeptStr(name) === normRaw) return name;
+    }
+
+    // 2. Exact match in DEPT_MAP multilingual names or aliases
+    for (const [name, meta] of Object.entries(DEPT_MAP)) {
+      if (normDeptStr(meta.en) === normRaw || normDeptStr(meta.zh) === normRaw || normDeptStr(meta.ja) === normRaw) {
+        return name;
+      }
+      for (const a of meta.aliases || []) {
+        if (normDeptStr(a) === normRaw) return name;
+      }
+    }
+
+    // 3. Substring in official names (longest match)
+    const subHits = officialNames.filter((k) => normDeptStr(k).includes(normRaw) || normRaw.includes(normDeptStr(k)))
+      .sort((a, b) => b.length - a.length);
+    if (subHits.length) return subHits[0];
+
+    // 4. Substring in aliases
+    if (normRaw.length >= 2) {
+      for (const [name, meta] of Object.entries(DEPT_MAP)) {
+        if (normDeptStr(meta.en).includes(normRaw) || normRaw.includes(normDeptStr(meta.en))) return name;
+        for (const a of meta.aliases || []) {
+          if (normDeptStr(a).includes(normRaw) || normRaw.includes(normDeptStr(a))) return name;
+        }
+      }
+    }
+
+    // 5. Fuzzy match (Levenshtein distance <= 2 for strings with length >= 4)
+    if (normRaw.length >= 4) {
+      let bestMatch = null;
+      let minDistance = 999;
+      for (const [name, meta] of Object.entries(DEPT_MAP)) {
+        const dOfficial = levenshteinDistance(normRaw, normDeptStr(name));
+        if (dOfficial <= 2 && dOfficial < minDistance) {
+          minDistance = dOfficial;
+          bestMatch = name;
+        }
+        const dEn = levenshteinDistance(normRaw, normDeptStr(meta.en));
+        if (dEn <= 2 && dEn < minDistance) {
+          minDistance = dEn;
+          bestMatch = name;
+        }
+        for (const a of meta.aliases || []) {
+          if (a.length >= 4) {
+            const da = levenshteinDistance(normRaw, normDeptStr(a));
+            if (da <= 2 && da < minDistance) {
+              minDistance = da;
+              bestMatch = name;
+            }
+          }
+        }
+      }
+      if (bestMatch && minDistance <= 2) return bestMatch;
+    }
+
+    return '';
+  }
+
   function findDept(dept, req) {
     const depts = (req && req.depts) || {};
     const d = String(dept || '').trim();
     if (!d) return null;
     if (depts[d]) return { name: d, row: depts[d] };
+    const resolved = resolveDept(d, req);
+    if (resolved && depts[resolved]) return { name: resolved, row: depts[resolved] };
     const hits = Object.keys(depts).filter((k) => k.includes(d) || d.includes(k)).sort((a, b) => b.length - a.length);
     return hits.length ? { name: hits[0], row: depts[hits[0]] } : null;
+  }
+
+  function searchDepts(query, req, lang) {
+    const q = normDeptStr(query);
+    const depts = (req && req.depts) || {};
+    const officialNames = Object.keys(depts).length ? Object.keys(depts) : Object.keys(DEPT_MAP);
+    if (!q) {
+      return officialNames.map((name) => {
+        const meta = DEPT_MAP[name] || { en: '', zh: '', ja: '', aliases: [] };
+        const local = (lang && lang !== 'ko' && meta[lang]) ? meta[lang] : '';
+        return {
+          name,
+          displayName: local ? `${name} (${local})` : name,
+          subText: [meta.en, ...(meta.aliases || []).slice(0, 3)].filter(Boolean).join(' · ')
+        };
+      });
+    }
+
+    const scored = [];
+    for (const name of officialNames) {
+      const meta = DEPT_MAP[name] || { en: '', zh: '', ja: '', aliases: [] };
+      const normName = normDeptStr(name);
+      let score = 0;
+      let matchNote = '';
+
+      if (normName === q) {
+        score = 1000;
+      } else if (normName.startsWith(q)) {
+        score = 600;
+      } else if (normName.includes(q)) {
+        score = 400;
+      }
+
+      for (const lk of ['en', 'zh', 'ja']) {
+        const val = normDeptStr(meta[lk]);
+        if (val) {
+          if (val === q) { score = Math.max(score, 900); matchNote = meta[lk]; }
+          else if (val.startsWith(q)) { score = Math.max(score, 550); matchNote = meta[lk]; }
+          else if (val.includes(q)) { score = Math.max(score, 350); matchNote = meta[lk]; }
+        }
+      }
+
+      for (const a of meta.aliases || []) {
+        const na = normDeptStr(a);
+        if (na === q) { score = Math.max(score, 850); matchNote = a; }
+        else if (na.startsWith(q)) { score = Math.max(score, 500); matchNote = a; }
+        else if (na.includes(q)) { score = Math.max(score, 300); matchNote = a; }
+      }
+
+      if (q.length >= 3 && score < 300) {
+        const dEn = levenshteinDistance(q, normDeptStr(meta.en));
+        if (dEn <= 2) { score = Math.max(score, 250 - dEn * 50); matchNote = meta.en; }
+        const dName = levenshteinDistance(q, normName);
+        if (dName <= 2) { score = Math.max(score, 250 - dName * 50); }
+        for (const a of meta.aliases || []) {
+          if (a.length >= 3) {
+            const da = levenshteinDistance(q, normDeptStr(a));
+            if (da <= 2) { score = Math.max(score, 220 - da * 50); matchNote = a; }
+          }
+        }
+      }
+
+      if (score > 0) {
+        const local = (lang && lang !== 'ko' && meta[lang]) ? meta[lang] : '';
+        scored.push({
+          name,
+          displayName: local ? `${name} (${local})` : name,
+          subText: [meta.en, matchNote, ...(meta.aliases || []).slice(0, 2)].filter(Boolean).filter((v, i, arr) => arr.indexOf(v) === i).join(' · '),
+          score
+        });
+      }
+    }
+
+    return scored.sort((a, b) => b.score - a.score);
   }
 
   // custom: { mode: 'regular'|'transfer', total, major, general } 사용자가 고친 값 (없으면 요람 값)
@@ -803,6 +1118,7 @@
     normName, cleanKind, area, genArea, cleanHistory, totals, byTerm, termKey, requirement, remaining,
     currentTerm, semestersLeft, pace, nextTerm, buildCatalog, parsePaste, overlaps, groupOffered, modeOf, split,
     candidates, recommend, toClasses, deptMatch, alternatives, roadmap, daysUsed, earliest,
-    GRADES, cleanGrade, gpa, requiredLeft, simGpa
+    GRADES, cleanGrade, gpa, requiredLeft, simGpa,
+    findDept, resolveDept, searchDepts, DEPT_MAP
   };
 }));

@@ -430,23 +430,23 @@
           )
         ),
         h('div', { class: 'req-preset-group' },
-          h('span', { class: 'req-preset-group-title' }, '🎓 다전공(복수전공)·융합전공·부전공 기준 (확장 학점)'),
+          h('span', { class: 'req-preset-group-title' }, Tx.reqPresetMultiTitle || '🎓 다전공(복수전공)·융합전공·부전공 기준 (확장 학점)'),
           h('div', { class: 'req-presets-bar' },
             h('button', {
               type: 'button',
               class: 'req-preset-chip' + (req.total === 87 && req.major === 51 && req.general === 36 ? ' is-active' : ''),
               onclick: () => applyPreset(87, 51, 36)
-            }, '🎓 다전공(복수전공) 기준 (총 87: 주전공 51 + 제2전공 36)'),
+            }, Tx.reqPresetDouble || '🎓 다전공(복수전공) 기준 (총 87: 주전공 51 + 제2전공 36)'),
             h('button', {
               type: 'button',
               class: 'req-preset-chip' + (req.total === 75 && req.major === 51 && req.general === 24 ? ' is-active' : ''),
               onclick: () => applyPreset(75, 51, 24)
-            }, '🧬 융합·연계전공 기준 (총 75: 주전공 51 + 융합전공 24)'),
+            }, Tx.reqPresetConvergence || '🧬 융합·연계전공 기준 (총 75: 주전공 51 + 융합전공 24)'),
             h('button', {
               type: 'button',
               class: 'req-preset-chip' + (req.total === 72 && req.major === 51 && req.general === 21 ? ' is-active' : ''),
               onclick: () => applyPreset(72, 51, 21)
-            }, '📘 부전공 기준 (총 72: 주전공 51 + 부전공 21)')
+            }, Tx.reqPresetMinor || '📘 부전공 기준 (총 72: 주전공 51 + 부전공 21)')
           )
         )
       ) : null;
@@ -464,11 +464,11 @@
         const diff = curTot - sum;
         barEl.className = 'req-balance-status ' + (diff === 0 ? 'is-balanced' : diff > 0 ? 'is-under' : 'is-over');
         if (diff === 0) {
-          barEl.innerHTML = `<span class="rbs-icon">✓</span><span class="rbs-text">학점 배분 일치: 전공(${curMaj}) + 자유·다전공(${curGen}) = 총 ${curTot}학점</span>`;
+          barEl.innerHTML = `<span class="rbs-icon">✓</span><span class="rbs-text">${Tx.reqBalanceMatched ? Tx.reqBalanceMatched(curMaj, curGen, curTot) : `학점 배분 일치: 전공(${curMaj}) + 자유·다전공(${curGen}) = 총 ${curTot}학점`}</span>`;
         } else if (diff > 0) {
-          barEl.innerHTML = `<span class="rbs-icon">💡</span><span class="rbs-text">전공(${curMaj}) + 자유·다전공(${curGen}) = ${sum}학점 · 총 목표(${curTot}학점) 대비 ${diff}학점 여유</span>`;
+          barEl.innerHTML = `<span class="rbs-icon">💡</span><span class="rbs-text">${Tx.reqBalanceUnder ? Tx.reqBalanceUnder(curMaj, curGen, sum, curTot, diff) : `전공(${curMaj}) + 자유·다전공(${curGen}) = ${sum}학점 · 총 목표(${curTot}학점) 대비 ${diff}학점 여유`}</span>`;
         } else {
-          barEl.innerHTML = `<span class="rbs-icon">⚠️</span><span class="rbs-text">전공(${curMaj}) + 자유·다전공(${curGen}) = ${sum}학점 · 총 목표(${curTot}학점)보다 ${-diff}학점 초과</span>`;
+          barEl.innerHTML = `<span class="rbs-icon">⚠️</span><span class="rbs-text">${Tx.reqBalanceOver ? Tx.reqBalanceOver(curMaj, curGen, sum, curTot, -diff) : `전공(${curMaj}) + 자유·다전공(${curGen}) = ${sum}학점 · 총 목표(${curTot}학점)보다 ${-diff}학점 초과`}</span>`;
         }
       };
 
@@ -523,35 +523,35 @@
         if (diff === 0) {
           balanceBar = h('div', { id: 'req-balance-indicator', class: 'req-balance-status is-balanced' },
             h('span', { class: 'rbs-icon' }, '✓'),
-            h('span', { class: 'rbs-text' }, `학점 배분 일치: 전공(${curMaj}) + 자유·다전공(${curGen}) = 총 ${curTot}학점`)
+            h('span', { class: 'rbs-text' }, Tx.reqBalanceMatched ? Tx.reqBalanceMatched(curMaj, curGen, curTot) : `학점 배분 일치: 전공(${curMaj}) + 자유·다전공(${curGen}) = 총 ${curTot}학점`)
           );
         } else if (diff > 0) {
           balanceBar = h('div', { id: 'req-balance-indicator', class: 'req-balance-status is-under' },
             h('span', { class: 'rbs-icon' }, '💡'),
-            h('span', { class: 'rbs-text' }, `전공(${curMaj}) + 자유·다전공(${curGen}) = ${sum}학점 · 총 목표(${curTot}학점) 대비 ${diff}학점 여유`),
+            h('span', { class: 'rbs-text' }, Tx.reqBalanceUnder ? Tx.reqBalanceUnder(curMaj, curGen, sum, curTot, diff) : `전공(${curMaj}) + 자유·다전공(${curGen}) = ${sum}학점 · 총 목표(${curTot}학점) 대비 ${diff}학점 여유`),
             h('button', {
               type: 'button',
               class: 'rbs-action-btn',
               onclick: () => {
                 st.req.general = curGen + diff;
                 save(); render();
-                toast(`잔여 ${diff}학점을 자유·다전공 학점에 배분했습니다. (총 ${curTot}학점)`);
+                toast(Tx.reqBalanceAutoDist ? Tx.reqBalanceAutoDist(diff) : `잔여 ${diff}학점을 자유·다전공 학점에 배분했습니다. (총 ${curTot}학점)`);
               }
-            }, `⚖️ 잔여 ${diff}학점을 자유·다전공에 자동 배분`)
+            }, Tx.reqBalanceAutoDist ? Tx.reqBalanceAutoDist(diff) : `⚖️ 잔여 ${diff}학점을 자유·다전공에 자동 배분`)
           );
         } else {
           balanceBar = h('div', { id: 'req-balance-indicator', class: 'req-balance-status is-over' },
             h('span', { class: 'rbs-icon' }, '⚠️'),
-            h('span', { class: 'rbs-text' }, `전공(${curMaj}) + 자유·다전공(${curGen}) = ${sum}학점 · 총 목표(${curTot}학점)보다 ${-diff}학점 초과`),
+            h('span', { class: 'rbs-text' }, Tx.reqBalanceOver ? Tx.reqBalanceOver(curMaj, curGen, sum, curTot, -diff) : `전공(${curMaj}) + 자유·다전공(${curGen}) = ${sum}학점 · 총 목표(${curTot}학점)보다 ${-diff}학점 초과`),
             h('button', {
               type: 'button',
               class: 'rbs-action-btn',
               onclick: () => {
                 st.req.total = sum;
                 save(); render();
-                toast(`편입 후 총 이수학점을 ${sum}학점으로 맞췄습니다.`);
+                toast(Tx.reqBalanceAutoFit ? Tx.reqBalanceAutoFit(sum) : `편입 후 총 이수학점을 ${sum}학점으로 맞췄습니다.`);
               }
-            }, `🎯 총 이수학점을 ${sum}학점으로 맞추기`)
+            }, Tx.reqBalanceAutoFit ? Tx.reqBalanceAutoFit(sum) : `🎯 총 이수학점을 ${sum}학점으로 맞추기`)
           );
         }
       }
@@ -769,60 +769,62 @@
           h('div', { class: 'tmc-title-group' },
             h('div', { class: 'tmc-icon-badge' }, '🎓'),
             h('div', null,
-              h('h3', null, '전적대 전공 인정 교과목 관리'),
+              h('h3', null, Tx.tmcTitle || '전적대 전공 인정 교과목 관리'),
               h('p', { class: 'tmc-sub' },
-                '전적대에서 인정받은 전공 학점만큼 건국대에서 이수할 전공 의무가 줄어들고(66 - 인정학점), 그만큼 자유 학점(교양·일선)을 들을 수 있습니다. 인정받은 과목은 건국대 학칙상 재수강(중복 수강신청)할 수 없습니다.'
+                Tx.tmcSub || '전적대에서 인정받은 전공 학점만큼 건국대에서 이수할 전공 의무가 줄어들고(66 - 인정학점), 그만큼 자유 학점(교양·일선)을 들을 수 있습니다. 인정받은 과목은 건국대 학칙상 재수강(중복 수강신청)할 수 없습니다.'
               )
             )
           ),
           h('div', { class: 'tmc-badges' },
             h('span', { class: 'tmc-badge-credits ' + (isMax15 ? 'is-full' : totalTrCredits > 0 ? 'is-part' : '') },
-              `${totalTrCredits} / 15학점 인정` + (isMax15 ? ' (최대 한도)' : '')
+              (Tx.tmcCreditsBadge ? Tx.tmcCreditsBadge(totalTrCredits, 15) : `${totalTrCredits} / 15학점 인정`) + (isMax15 ? (Tx.tmcMaxLimit || ' (최대 한도)') : '')
             ),
-            h('span', { class: 'tmc-badge-lock' }, '건국대 재수강 불가 🚫')
+            h('span', { class: 'tmc-badge-lock' }, Tx.tmcNoRetake || '건국대 재수강 불가 🚫')
           )
         ),
         h('div', { class: 'tmc-calc-guide' },
           h('div', { class: 'tmc-guide-main' },
-            h('span', { class: 'tmc-guide-tag' }, '학점 연동 현황'),
+            h('span', { class: 'tmc-guide-tag' }, Tx.tmcCalcGuideTag || '학점 연동 현황'),
             h('span', { class: 'tmc-guide-text' },
-              totalTrCredits > 0
-                ? `전적대 전공 ${totalTrCredits}학점 인정 → 건국대 이수 필요: 전공 최소 ${neededMajor}학점 + 자유(교양·일선) ${totalTrCredits}학점`
-                : `현재 인정 과목 없음 → 건국대 이수 필요: 전공 66학점 전체 이수 (비동일계 편입 기본)`
+              Tx.tmcCalcGuideText
+                ? Tx.tmcCalcGuideText(totalTrCredits, neededMajor)
+                : (totalTrCredits > 0
+                    ? `전적대 전공 ${totalTrCredits}학점 인정 → 건국대 이수 필요: 전공 최소 ${neededMajor}학점 + 자유(교양·일선) ${totalTrCredits}학점`
+                    : `현재 인정 과목 없음 → 건국대 이수 필요: 전공 66학점 전체 이수 (비동일계 편입 기본)`)
             )
           ),
           h('p', { class: 'tmc-guide-sub' },
-            '※ 학생마다 인정받은 과목과 학점이 다릅니다. (예: 6학점 인정 시 나머지 9학점은 전공을 더 들어 전공 60 + 자유 6, 15학점 인정 시 전공 51 + 자유 15) 심사받은 실제 과목을 아래에서 직접 등록하면 졸업 기준 및 수강신청 추천에 자동 반영됩니다.'
+            Tx.tmcCalcGuideSub || '※ 학생마다 인정받은 과목과 학점이 다릅니다. (예: 6학점 인정 시 나머지 9학점은 전공을 더 들어 전공 60 + 자유 6, 15학점 인정 시 전공 51 + 자유 15) 심사받은 실제 과목을 아래에서 직접 등록하면 졸업 기준 및 수강신청 추천에 자동 반영됩니다.'
           )
         ),
         list.length ? h('div', { class: 'tmc-chips-wrap' },
-          h('p', { class: 'tmc-chips-title' }, `인정된 전공 과목 목록 (${list.length}과목 · 총 ${totalTrCredits}학점)`),
+          h('p', { class: 'tmc-chips-title' }, Tx.tmcChipsTitle ? Tx.tmcChipsTitle(list.length, totalTrCredits) : `인정된 전공 과목 목록 (${list.length}과목 · 총 ${totalTrCredits}학점)`),
           h('div', { class: 'tmc-chips-grid' }, list.map((item) => h('div', { class: 'tm-chip' },
             h('div', { class: 'tm-chip-info' },
               h('strong', { class: 'tm-chip-name' }, item.name),
-              h('span', { class: 'tm-chip-meta' }, `${item.credit}학점 · ${item.kind === '전필' ? '전공필수' : '전공선택'}`),
-              h('span', { class: 'tm-chip-lock' }, '재수강 불가 🚫')
+              h('span', { class: 'tm-chip-meta' }, `${item.credit}${Tx.creditUnit || '학점'} · ${item.kind === '전필' ? (Tx.kindLabel && Tx.kindLabel.전필 || '전공필수') : (Tx.kindLabel && Tx.kindLabel.전선 || '전공선택')}`),
+              h('span', { class: 'tm-chip-lock' }, Tx.tmcNoRetake || '재수강 불가 🚫')
             ),
             h('button', {
               type: 'button',
               class: 'tm-chip-del',
-              'aria-label': `${item.name} 삭제`,
-              title: `${item.name} 삭제`,
+              'aria-label': `${item.name} ${Tx.histRemove || '삭제'}`,
+              title: `${item.name} ${Tx.histRemove || '삭제'}`,
               onclick: () => removeCourse(item.name)
             }, '✕')
           )))
         ) : h('div', { class: 'tmc-empty' },
-          h('p', null, '등록된 전적대 인정 과목이 없습니다. 전적대 학점 인정 심사를 거쳐 전공으로 인정받은 과목이 있다면 아래에서 직접 추가해 주세요.')
+          h('p', null, Tx.tmcEmpty || '등록된 전적대 인정 과목이 없습니다. 전적대 학점 인정 심사를 거쳐 전공으로 인정받은 과목이 있다면 아래에서 직접 추가해 주세요.')
         ),
         h('form', { class: 'tmc-add-form', onsubmit: addCourse },
-          h('span', { class: 'tmc-form-label' }, '과목 직접 추가:'),
+          h('span', { class: 'tmc-form-label' }, Tx.tmcAddLabel || '과목 직접 추가:'),
           h('div', { class: 'tmc-input-wrap' },
             h('input', {
               type: 'text',
               name: 'trName',
               id: 'tr-custom-input',
               list: 'tr-course-list',
-              placeholder: '과목명 입력 (예: 컴퓨터구조, 소프트웨어공학, 자료구조)',
+              placeholder: Tx.tmcPlaceholder || '과목명 입력 (예: 컴퓨터구조, 소프트웨어공학, 자료구조)',
               required: true,
               autocomplete: 'off',
               class: 'tmc-input-name',
@@ -839,13 +841,13 @@
             h('ul', { id: 'tr-suggest-box', class: 'tmc-suggest-box', hidden: true })
           ),
           h('select', { name: 'trCredit', id: 'tr-credit-select', class: 'tmc-select' },
-            [3, 2, 1, 4].map((c) => h('option', { value: String(c) }, `${c}학점`))
+            [3, 2, 1, 4].map((c) => h('option', { value: String(c) }, `${c}${Tx.creditUnit || '학점'}`))
           ),
           h('select', { name: 'trKind', id: 'tr-kind-select', class: 'tmc-select' },
-            h('option', { value: '전선' }, '전공선택'),
-            h('option', { value: '전필' }, '전공필수')
+            h('option', { value: '전선' }, Tx.kindLabel && Tx.kindLabel.전선 || '전공선택'),
+            h('option', { value: '전필' }, Tx.kindLabel && Tx.kindLabel.전필 || '전공필수')
           ),
-          h('button', { type: 'submit', class: 'btn primary small tmc-add-btn' }, '+ 인정 등록'),
+          h('button', { type: 'submit', class: 'btn primary small tmc-add-btn' }, Tx.tmcAddBtn || '+ 인정 등록'),
           h('div', { id: 'tr-auto-hint', class: 'tmc-auto-hint', hidden: true })
         )
       );

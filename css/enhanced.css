@@ -6787,3 +6787,215 @@ dialog[open]::backdrop {
   color: #334155 !important;
 }
 
+
+/* ---- 57. 지원 보드 (트렐로·노션형 칸반) 칼럼 겹침 완전 방지 & 대기업(Apple/Toss) UI 고도화 ---- */
+.board {
+  display: grid !important;
+  grid-template-columns: repeat(4, minmax(268px, 1fr)) !important;
+  gap: 16px !important;
+  align-items: stretch !important;
+  overflow-x: auto !important;
+  padding-bottom: 16px !important;
+  -webkit-overflow-scrolling: touch !important;
+}
+
+.bcol {
+  min-width: 268px !important;
+  box-sizing: border-box !important;
+  overflow: hidden !important;
+  background: var(--surface) !important;
+  border: 1px solid var(--border-soft, rgba(0, 0, 0, 0.08)) !important;
+  border-radius: 18px !important;
+  padding: 14px !important;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.03) !important;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease !important;
+}
+
+[data-theme="dark"] .bcol {
+  background: #181d22 !important;
+  border-color: rgba(255, 255, 255, 0.08) !important;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25) !important;
+}
+
+.bcol.is-over {
+  border-color: var(--stage-c) !important;
+  background: color-mix(in srgb, var(--stage-c) 6%, var(--surface)) !important;
+  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.08) !important;
+}
+
+.bcard {
+  box-sizing: border-box !important;
+  max-width: 100% !important;
+  overflow: hidden !important;
+  border: 1px solid var(--border-soft, rgba(0, 0, 0, 0.08)) !important;
+  border-radius: 14px !important;
+  padding: 14px !important;
+  background: var(--surface) !important;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.04) !important;
+  transition: transform 0.16s ease, box-shadow 0.16s ease, border-color 0.16s ease !important;
+}
+
+.bcard:hover {
+  transform: translateY(-2px) !important;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08) !important;
+  border-color: var(--border-strong, #c4c8cc) !important;
+}
+
+.bcard-foot {
+  display: flex !important;
+  align-items: center !important;
+  gap: 6px !important;
+  flex-wrap: wrap !important;
+}
+
+.bcard-move {
+  flex: 1 1 110px !important;
+  min-width: 0 !important;
+  max-width: 100% !important;
+  height: 32px !important;
+  border-radius: 8px !important;
+  font-size: 12px !important;
+}
+
+.bcard-next {
+  flex: 0 0 auto !important;
+  height: 32px !important;
+  padding: 0 10px !important;
+  border-radius: 8px !important;
+  font-size: 12px !important;
+  font-weight: 700 !important;
+}
+
+@media (max-width: 899px) {
+  .board {
+    grid-template-columns: none !important;
+    grid-auto-flow: column !important;
+    grid-auto-columns: min(84vw, 320px) !important;
+    scroll-snap-type: x mandatory !important;
+    margin-inline: -16px !important;
+    padding: 0 16px 16px !important;
+    scroll-padding-inline: 16px !important;
+  }
+  .bcol {
+    scroll-snap-align: start !important;
+    min-height: 360px !important;
+    min-width: unset !important;
+  }
+}
+
+/* ---- 58. 스마트 마감 허브 (Smart Deadline Hub) 모바일 반응형 2행 정렬 ---- */
+.sdh-head {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  gap: 12px !important;
+}
+
+.sdh-title-row {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 10px !important;
+}
+
+.sdh-tools {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+}
+
+@media (max-width: 640px) {
+  .sdh-head {
+    flex-direction: column !important;
+    align-items: stretch !important;
+    gap: 8px !important;
+  }
+  .sdh-title-row {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    width: 100% !important;
+  }
+  .sdh-tools {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    width: 100% !important;
+  }
+  .sdh-view-switcher {
+    flex: 1 1 auto !important;
+    justify-content: center !important;
+  }
+  .sdh-view-btn {
+    flex: 1 1 auto !important;
+    justify-content: center !important;
+    text-align: center !important;
+  }
+}
+
+/* ---- 59. 오늘 내 수업 카드 (헤더 '시간표 보기' & 하단 독립 이러닝 배너) ---- */
+.tc-head {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  gap: 10px !important;
+  margin-bottom: 8px !important;
+}
+
+.tc-title-wrap {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+}
+
+.tc-more-btn {
+  font-size: 13px !important;
+  font-weight: 700 !important;
+  color: var(--accent, #0c7a45) !important;
+  padding: 4px 8px !important;
+  border-radius: 8px !important;
+  transition: all 0.15s ease !important;
+}
+
+.tc-more-btn:hover {
+  background: color-mix(in srgb, var(--accent, #0c7a45) 8%, transparent) !important;
+}
+
+.tc-elearn-wrap {
+  margin-top: 12px !important;
+  padding-top: 10px !important;
+  border-top: 1px dashed var(--border-soft, rgba(0, 0, 0, 0.08)) !important;
+}
+
+[data-theme="dark"] .tc-elearn-wrap {
+  border-top-color: rgba(255, 255, 255, 0.08) !important;
+}
+
+.tc-elearn-bar {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  gap: 8px !important;
+  padding: 8px 12px !important;
+  background: var(--surface-2, rgba(0, 0, 0, 0.03)) !important;
+  border: 1px solid var(--border-soft, transparent) !important;
+  border-radius: 10px !important;
+  font-size: 12.5px !important;
+  color: var(--text) !important;
+  cursor: pointer !important;
+  transition: all 0.15s ease !important;
+}
+
+[data-theme="dark"] .tc-elearn-bar {
+  background: rgba(255, 255, 255, 0.04) !important;
+}
+
+.tc-elearn-bar:hover {
+  background: color-mix(in srgb, var(--accent, #0c7a45) 10%, var(--surface-2)) !important;
+  border-color: color-mix(in srgb, var(--accent, #0c7a45) 25%, transparent) !important;
+  transform: translateY(-1px) !important;
+}
+
+.tc-elearn-bar strong {
+  color: var(--accent, #0c7a45) !important;
+  font-weight: 700 !important;
+}
