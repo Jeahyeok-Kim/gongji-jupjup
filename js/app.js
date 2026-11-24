@@ -4404,7 +4404,18 @@
     };
     const dept = h('input', {
       type: 'text', id: pre + '-dept', maxlength: '30', value: p.dept || state.dept || '', placeholder: T.profileDeptPh,
-      list: pre + '-dept-list', autocomplete: 'off', 'aria-label': T.profileDept, onchange: (e) => set({ dept: e.target.value })
+      list: pre + '-dept-list', autocomplete: 'off', 'aria-label': T.profileDept,
+      onchange: (e) => {
+        const raw = e.target.value.trim();
+        const P = window.GongjiPlan;
+        const resolved = (P && P.resolveDept) ? P.resolveDept(raw, DATA.gradreq) : raw;
+        const val = resolved || raw;
+        e.target.value = val;
+        set({ dept: val });
+        if (resolved && resolved !== raw) {
+          toast(`'${raw}' → [${resolved}] 학과로 자동 인식되었습니다.`);
+        }
+      }
     });
     return h('div', { class: 'my-section profile-section', id: pre + '-section' },
       opts && opts.compact ? null : h('h3', null, T.profileTitle),
@@ -4423,12 +4434,16 @@
       p.set ? h('p', { class: 'fine ok-note' }, '✓ ' + T.profileSaved + ' ',
         h('button', { type: 'button', class: 'link-btn', onclick: () => { state.profile = cleanProfile(null); store.set('profile', null); profileChanged(); } }, T.profileClear)) : null);
   }
-  // 학과 이름 후보: 강의 시간표(data/timetable.js)의 개설 학과
+  // 학과 이름 후보: 강의 시간표(data/timetable.js)의 개설 학과 + 요람 기준 학과
   let deptCache = null;
   function deptList() {
     if (deptCache) return deptCache;
     const tt = window.GONGJI_TIMETABLE;
+    const gq = window.GONGJI_GRADREQ;
     const set = new Set(((tt && tt.courses) || []).map((c) => c.d).filter((d) => d && /(과|부|전공)$/.test(d)));
+    if (gq && gq.depts) {
+      for (const d of Object.keys(gq.depts)) set.add(d);
+    }
     deptCache = [...set].sort((a, b) => a.localeCompare(b, 'ko')).slice(0, 200);
     return deptCache;
   }

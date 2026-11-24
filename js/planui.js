@@ -556,6 +556,104 @@
         }
       }
 
+      const onDeptInput = (inputEl) => {
+        const val = inputEl.value.trim();
+        const box = inputEl.form ? inputEl.form.querySelector('#dept-suggest-box') : document.getElementById('dept-suggest-box');
+        if (!box) return;
+        if (!val) {
+          box.hidden = true;
+          box.replaceChildren();
+          return;
+        }
+        const hits = (P.searchDepts ? P.searchDepts(val, deps.gradreq, deps.lang || 'ko') : []).slice(0, 8);
+        if (!hits.length) {
+          box.hidden = true;
+          box.replaceChildren();
+          return;
+        }
+
+        box.replaceChildren(...hits.map((hit, idx) => h('li', {
+          class: 'dept-suggest-item' + (idx === 0 ? ' is-active' : ''),
+          'data-dept': hit.name,
+          onmousedown: (ev) => {
+            ev.preventDefault();
+            inputEl.value = hit.name;
+            box.hidden = true;
+            commitDept(hit.name);
+          }
+        },
+          h('strong', { class: 'dsi-name' }, hit.displayName),
+          hit.subText ? h('span', { class: 'dsi-sub' }, hit.subText) : null
+        )));
+        box.hidden = false;
+      };
+
+      const commitDept = (val) => {
+        const v = String(val || '').trim();
+        if (!v) {
+          st.req.dept = '';
+          save(); render();
+          return;
+        }
+        const resolved = (P.resolveDept ? P.resolveDept(v, deps.gradreq) : v) || v;
+        st.req.dept = resolved;
+        const inputEl = document.getElementById('req-dept-input');
+        if (inputEl && inputEl.value !== resolved) inputEl.value = resolved;
+        save();
+        render();
+        if (resolved && resolved !== v) {
+          toast(`'${v}' → [${resolved}] 학과로 자동 인식되었습니다.`);
+        }
+      };
+
+      const onDeptBlur = (inputEl) => {
+        setTimeout(() => {
+          const box = inputEl.form ? inputEl.form.querySelector('#dept-suggest-box') : document.getElementById('dept-suggest-box');
+          if (box) box.hidden = true;
+          if (inputEl.value.trim()) {
+            commitDept(inputEl.value);
+          }
+        }, 220);
+      };
+
+      const onDeptKeydown = (e) => {
+        const box = e.target.form ? e.target.form.querySelector('#dept-suggest-box') : document.getElementById('dept-suggest-box');
+        if (!box || box.hidden) {
+          if (e.key === 'Enter') {
+            e.preventDefault();
+            commitDept(e.target.value);
+          }
+          return;
+        }
+        const items = Array.from(box.querySelectorAll('.dept-suggest-item'));
+        if (!items.length) return;
+        const activeIdx = items.findIndex((el) => el.classList.contains('is-active'));
+        if (e.key === 'ArrowDown') {
+          e.preventDefault();
+          const next = activeIdx < items.length - 1 ? activeIdx + 1 : 0;
+          items.forEach((el, i) => el.classList.toggle('is-active', i === next));
+          items[next].scrollIntoView({ block: 'nearest' });
+        } else if (e.key === 'ArrowUp') {
+          e.preventDefault();
+          const prev = activeIdx > 0 ? activeIdx - 1 : items.length - 1;
+          items.forEach((el, i) => el.classList.toggle('is-active', i === prev));
+          items[prev].scrollIntoView({ block: 'nearest' });
+        } else if (e.key === 'Enter') {
+          e.preventDefault();
+          const sel = activeIdx >= 0 ? items[activeIdx] : items[0];
+          if (sel) {
+            const targetDept = sel.getAttribute('data-dept');
+            e.target.value = targetDept;
+            box.hidden = true;
+            commitDept(targetDept);
+          } else {
+            commitDept(e.target.value);
+          }
+        } else if (e.key === 'Escape') {
+          box.hidden = true;
+        }
+      };
+
       return h('details', { class: 'plan-box req-box', open: !req.found || req.mode === 'transfer' || edited ? true : null },
         h('summary', null, h('span', null, Tx.reqTitle),
           h('small', null, !req.found ? Tx.reqNoDeptShort : req.mode === 'transfer' ? Tx.reqSourceTransfer(req.dept) : Tx.reqSource(req.dept))),
@@ -566,10 +664,27 @@
         transferPresets,
         !req.found ? h('p', { class: 'help warn-note' }, Tx.reqNoDept) : null,
         h('div', { class: 'req-grid' },
-          h('label', { class: 'req-field wide' },
-            h('span', null, Tx.reqDept),
-            h('input', { type: 'text', list: 'dept-list', value: dept(), placeholder: Tx.profileDeptPh || '',
-              onchange: (e) => { st.req.dept = e.target.value.trim(); save(); render(); } })),
+          h('div', { class: 'req-field wide dept-field-wrap' },
+            h('label', { for: 'req-dept-input' }, Tx.reqDept),
+            h('div', { class: 'dept-input-container' },
+              h('input', {
+                type: 'text',
+                id: 'req-dept-input',
+                class: 'dept-input-name',
+                list: 'req-dept-datalist',
+                value: dept(),
+                placeholder: Tx.profileDeptPh || '학과명 입력 (예: 컴퓨터공학과, 컴공, Computer, CS)',
+                autocomplete: 'off',
+                oninput: (e) => onDeptInput(e.target),
+                onfocus: (e) => onDeptInput(e.target),
+                onkeydown: (e) => onDeptKeydown(e),
+                onblur: (e) => onDeptBlur(e.target),
+                onchange: (e) => commitDept(e.target.value)
+              }),
+              h('datalist', { id: 'req-dept-datalist' }, Object.keys((deps.gradreq && deps.gradreq.depts) || {}).map((d) => h('option', { value: d }))),
+              h('ul', { id: 'dept-suggest-box', class: 'dept-suggest-box', hidden: true })
+            )
+          ),
           ...reqInputs),
         balanceBar,
         edited ? h('button', { type: 'button', class: 'link-btn', onclick: () => {
