@@ -1671,6 +1671,50 @@ span.board::-webkit-scrollbar,
   gap: 10px !important;
 }
 
+.pr-sum-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+.var-pills {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 3px;
+  border-radius: 999px;
+  background: var(--fill, rgba(15, 23, 42, 0.06));
+}
+[data-theme="dark"] .var-pills {
+  background: rgba(255, 255, 255, 0.06);
+}
+.var-pill {
+  border: 0;
+  background: transparent;
+  color: var(--muted, #64748b);
+  padding: 4px 11px;
+  border-radius: 999px;
+  font: inherit;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background-color 0.15s ease, color 0.15s ease;
+}
+.var-pill:hover {
+  color: var(--text);
+}
+.var-pill.is-active {
+  background: var(--accent, #0c7a45);
+  color: #ffffff;
+}
+.var-pill:disabled,
+.var-pill.is-disabled {
+  opacity: 0.32;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
 .alt-tab {
   padding: 12px 14px !important;
   transition: all .18s var(--ease-spring) !important;
@@ -4173,6 +4217,7 @@ mark.kw-hl {
   padding: 14px 16px !important;
   z-index: 100 !important;
   opacity: 0;
+  visibility: hidden;
   pointer-events: none;
   transform: translateY(-6px);
   transition: all .18s cubic-bezier(0.16, 1, 0.3, 1) !important;
@@ -4184,6 +4229,7 @@ mark.kw-hl {
 }
 .search-suggest-popover.is-open {
   opacity: 1 !important;
+  visibility: visible !important;
   pointer-events: auto !important;
   transform: translateY(0) !important;
 }
@@ -5153,6 +5199,13 @@ mark.kw-hl {
   font-size: 12px !important;
   color: var(--muted) !important;
   text-align: right !important;
+}
+.sync-bar[hidden] {
+  display: none !important;
+}
+[data-theme="dark"] body[data-tab="home"] .sync-bar {
+  background: #0e2618 !important;
+  border-bottom: none !important;
 }
 #sync-text {
   display: inline-flex !important;
@@ -9232,6 +9285,29 @@ html, body {
   width: auto !important;
   min-width: 68px !important;
   height: 40px !important;
+}
+.tl-grade.cg-select-btn {
+  width: auto !important;
+  min-width: 72px !important;
+  height: 34px !important;
+  padding: 0 9px 0 11px !important;
+  gap: 5px !important;
+  border-radius: 10px !important;
+  font-size: 13.5px !important;
+}
+.tl-grade.cg-select-btn .cg-sel-text {
+  text-overflow: clip !important;
+}
+.tl-grade.cg-select-btn .cg-sel-chevron {
+  width: 12px !important;
+  height: 12px !important;
+}
+@media (max-width: 760px) {
+  .tl-grade.cg-select-btn {
+    min-width: 66px !important;
+    padding: 0 8px 0 10px !important;
+    gap: 4px !important;
+  }
 }
 
 /* Floating Liquid Glass Menu (matches #dept-suggest-box aesthetic) */

@@ -43,11 +43,15 @@
     return Math.round((startOfDay(d) - startOfDay(now)) / 86400000);
   }
 
-  // 이미 끝난 공지인가? 마감이 있으면 마감 시각, 없으면 마지막 행사가 끝난 시각으로 판단
+  // 이미 끝난 공지인가? 마감이 있으면 마감 시각, 없으면 마지막 행사가 끝난 시각, 둘 다 없으면 게시 후 60일 경과(고정 제외)로 판단
   function isExpired(notice, now) {
     if (notice.deadline) return parseLocal(notice.deadline) < now;
     const events = notice.events || [];
     if (events.length) return events.every((e) => parseLocal(e.date + 'T' + e.end) < now);
+    if (!notice.pinned && notice.date) {
+      const pd = parseLocal(notice.date);
+      if (pd && ((startOfDay(now) - startOfDay(pd)) / 86400000) > 60) return true;
+    }
     return false;
   }
 
@@ -175,16 +179,16 @@
       const d = parseLocal(s);
       return d ? d.getTime() : Number.POSITIVE_INFINITY;
     };
+    const endOf = (n) => {
+      const ev = (n.events || []).map((e) => parseLocal(e.date)).filter(Boolean).sort((x, y) => y - x)[0];
+      const d = parseLocal(n.deadline) || ev || parseLocal(n.date);
+      return d ? d.getTime() : 0;
+    };
     const cmpNum = (a, b) => (a === b ? 0 : a < b ? -1 : 1);
     if (key === 'latest') {
       arr.sort((a, b) => String(b.date || '').localeCompare(String(a.date || '')));
     } else if (key === 'recentClosed') {
       // 마감 지난 공지 보기: 최근에 끝난 것부터 (마감이 없으면 마지막 행사 날, 그것도 없으면 올린 날)
-      const endOf = (n) => {
-        const ev = (n.events || []).map((e) => parseLocal(e.date)).filter(Boolean).sort((x, y) => y - x)[0];
-        const d = parseLocal(n.deadline) || ev || parseLocal(n.date);
-        return d ? d.getTime() : 0;
-      };
       arr.sort((a, b) => endOf(b) - endOf(a));
     } else if (key === 'hits') {
       arr.sort((a, b) => (b.hits || 0) - (a.hits || 0));
@@ -202,10 +206,13 @@
       const v = (n) => (typeof n.hours === 'number' && n.hours > 0 ? n.hours : Number.POSITIVE_INFINITY);
       arr.sort((a, b) => cmpNum(Number(isExpired(a, now)), Number(isExpired(b, now))) || cmpNum(v(a), v(b)));
     } else {
-      // 진행 중인 공지 먼저, 그 안에서 마감이 빠른 순. 마감일이 없는 공지는 뒤로.
-      arr.sort((a, b) =>
-        cmpNum(Number(isExpired(a, now)), Number(isExpired(b, now))) ||
-        cmpNum(time(a.deadline), time(b.deadline)));
+      // 진행 중인 공지 먼저(마감 빠른 순, 마감일 없는 공지는 뒤로), 마감된 공지는 아래(최근 마감/게시 순)
+      arr.sort((a, b) => {
+        const ea = Number(isExpired(a, now)), eb = Number(isExpired(b, now));
+        if (ea !== eb) return cmpNum(ea, eb);
+        if (ea) return cmpNum(endOf(b), endOf(a));
+        return cmpNum(time(a.deadline), time(b.deadline));
+      });
     }
     return arr;
   }

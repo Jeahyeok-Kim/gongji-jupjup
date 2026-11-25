@@ -163,9 +163,11 @@
 
     chipContainers.forEach((c) => {
       attachClearBtns(c);
-      new MutationObserver(() => attachClearBtns(c)).observe(c, {
-        childList: true, subtree: true
-      });
+      new MutationObserver(() => {
+        if (c.dataset.cgChipBusy) return;
+        c.dataset.cgChipBusy = '1';
+        try { attachClearBtns(c); } finally { delete c.dataset.cgChipBusy; }
+      }).observe(c, { childList: true });
     });
   }
 
@@ -1451,6 +1453,22 @@
         openMenu(sel, btn);
       });
 
+      sel.addEventListener('mousedown', (ev) => {
+        ev.preventDefault();
+        openMenu(sel, btn);
+      });
+
+      const lbl = sel.closest('label') || (sel.id ? document.querySelector(`label[for="${sel.id}"]`) : null);
+      if (lbl && !lbl.dataset.cgSelectLbl) {
+        lbl.dataset.cgSelectLbl = '1';
+        lbl.addEventListener('click', (ev) => {
+          if (ev.target === btn || btn.contains(ev.target)) return;
+          ev.preventDefault();
+          ev.stopPropagation();
+          openMenu(sel, btn);
+        });
+      }
+
       sel.addEventListener('change', () => syncButtonText(sel, btn));
 
       // Watch dynamic option updates (e.g. #board, #tc-transit-dest-select)
@@ -1465,12 +1483,15 @@
     scanAll();
     new MutationObserver((muts) => {
       for (const m of muts) {
-        if (m.addedNodes && m.addedNodes.length) {
-          m.addedNodes.forEach((n) => {
-            if (n.nodeType !== 1) return;
-            if (n.tagName === 'SELECT') enhanceOne(n);
-            else if (n.querySelectorAll) n.querySelectorAll('select').forEach(enhanceOne);
-          });
+        const added = m.addedNodes;
+        for (let i = 0; i < added.length; i++) {
+          const n = added[i];
+          if (n.nodeType !== 1) continue;
+          if (n.tagName === 'SELECT') enhanceOne(n);
+          else if (n.getElementsByTagName) {
+            const sels = n.getElementsByTagName('select');
+            for (let j = 0; j < sels.length; j++) enhanceOne(sels[j]);
+          }
         }
       }
     }).observe(document.body, { childList: true, subtree: true });

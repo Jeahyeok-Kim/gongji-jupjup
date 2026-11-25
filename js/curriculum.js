@@ -99,52 +99,106 @@
     return out;
   }
 
-  // 한글 퍼지 및 오타 허용 매칭 (예: '컴퓨테' 입력 시 '컴퓨터구조' 매칭, 'ㅋㅍㅌ' 입력 시 '컴퓨터' 매칭)
+  const COURSE_ALIASES = {
+    os: ['운영체제'],
+    db: ['데이터베이스', '데이터베이스설계'],
+    ai: ['인공지능', '빅데이터와인공지능'],
+    ml: ['머신러닝', '머신러닝과기계학습', '지식발견머신러닝'],
+    dl: ['딥러닝'],
+    ds: ['자료구조'],
+    algo: ['알고리즘'],
+    se: ['소프트웨어공학'],
+    ca: ['컴퓨터구조'],
+    cn: ['컴퓨터네트워크'],
+    oop: ['객체지향프로그래밍'],
+    vr: ['멀티미디어와가상현실'],
+    py: ['python프로그래밍'],
+    cpp: ['c++프로그래밍'],
+    컴구: ['컴퓨터구조'],
+    컴네: ['컴퓨터네트워크'],
+    운체: ['운영체제'],
+    자구: ['자료구조'],
+    알고: ['알고리즘'],
+    소공: ['소프트웨어공학'],
+    데베: ['데이터베이스'],
+    컴개: ['컴퓨터공학개론'],
+    디논: ['디지털논리회로'],
+    객지: ['객체지향프로그래밍'],
+    이산: ['이산수학'],
+    고웹: ['고급웹프로그래밍'],
+    프종설: ['프로젝트종합설계'],
+    캡스톤: ['프로젝트종합설계'],
+    빅데: ['빅데이터기초', '빅데이터와인공지능'],
+    클라: ['클라우드컴퓨팅'],
+    计组: ['컴퓨터구조'],
+    计网: ['컴퓨터네트워크'],
+    软工: ['소프트웨어공학'],
+    数构: ['자료구조']
+  };
+
+  // 한글 퍼지 + 영어·중국어·일본어·약어 매칭
   function matchCourseName(query, target) {
     if (!query || !target) return 0;
     const qNorm = String(query).replace(/\s+/g, '').toLowerCase();
     const tNorm = String(target).replace(/\s+/g, '').toLowerCase();
     if (!qNorm || !tNorm) return 0;
 
-    // 1. 정확한 시작 (가장 높은 점수)
-    if (tNorm.startsWith(qNorm)) return 100;
-    // 2. 정확한 포함
-    if (tNorm.includes(qNorm)) return 80;
+    let best = 0;
 
-    // 3. 자모 분해 매칭
+    // 1. 정확한 시작 / 포함
+    if (tNorm.startsWith(qNorm)) best = 100;
+    else if (tNorm.includes(qNorm)) best = 80;
+
+    // 2. 약어 매칭 (OS, DB, 컴구, 计组 등)
+    const aliasHits = COURSE_ALIASES[qNorm];
+    if (aliasHits && aliasHits.some((a) => tNorm === a || tNorm.includes(a))) {
+      best = Math.max(best, 95);
+    }
+
+    // 3. 다국어 번역 사전 매칭 (영어·중국어·일본어)
+    const DI18n = typeof window !== 'undefined' ? window.GongjiDeptI18n : null;
+    const tr = DI18n && DI18n.COURSES && DI18n.COURSES[String(target).trim()];
+    if (tr) {
+      for (const langKey of ['en', 'zh', 'ja']) {
+        const val = tr[langKey];
+        if (!val) continue;
+        const vNorm = String(val).replace(/\s+/g, '').toLowerCase();
+        if (vNorm === qNorm) best = Math.max(best, 98);
+        else if (vNorm.startsWith(qNorm)) best = Math.max(best, 90);
+        else if (vNorm.includes(qNorm)) best = Math.max(best, 75);
+      }
+    }
+    if (best >= 75) return best;
+
+    // 4. 자모 분해 매칭
     const qDec = decomposeHangul(qNorm);
     const tDec = decomposeHangul(tNorm);
-    if (tDec.startsWith(qDec)) return 90;
-    if (tDec.includes(qDec)) return 70;
+    if (tDec.startsWith(qDec)) return Math.max(best, 90);
+    if (tDec.includes(qDec)) return Math.max(best, 70);
 
-    // 4. 초성 매칭 (예: ㅋㅍㅌ구조 -> 컴퓨터구조)
+    // 5. 초성 매칭 (예: ㅋㅍㅌ구조 -> 컴퓨터구조)
     const tCho = getChosung(tNorm);
-    if (tCho.startsWith(qNorm) || tCho.includes(qNorm)) return 65;
+    if (tCho.startsWith(qNorm) || tCho.includes(qNorm)) return Math.max(best, 65);
 
-    // 5. 오타 허용 (1글자 오타 또는 접두사 일치)
+    // 6. 오타 허용 (1글자 오타 또는 접두사 일치)
     if (qNorm.length >= 2) {
       const qPrefix = qNorm.slice(0, Math.max(2, qNorm.length - 1));
-      if (tNorm.startsWith(qPrefix)) return 60;
-      if (tNorm.includes(qPrefix)) return 45;
+      if (tNorm.startsWith(qPrefix)) return Math.max(best, 60);
+      if (tNorm.includes(qPrefix)) return Math.max(best, 45);
 
-      // 자모 레벨에서 공통 접두사가 3자 이상인 경우 (예: 컴퓨테 vs 컴퓨터)
       if (qDec.length >= 3) {
         let common = 0;
         for (let i = 0; i < Math.min(qDec.length, tDec.length); i++) {
           if (tDec[i] === qDec[i]) common++;
           else break;
         }
-        if (common >= qDec.length - 1 && common >= 3) {
-          return 55;
-        }
+        if (common >= qDec.length - 1 && common >= 3) return Math.max(best, 55);
         const qDecPrefix = qDec.slice(0, -1);
-        if (qDecPrefix.length >= 3 && tDec.includes(qDecPrefix)) {
-          return 40;
-        }
+        if (qDecPrefix.length >= 3 && tDec.includes(qDecPrefix)) return Math.max(best, 40);
       }
     }
 
-    return 0;
+    return best;
   }
 
   // 과목명 자동완성 후보: 내 학과 과목을 먼저, 그다음 교양. 같은 이름은 한 번만.

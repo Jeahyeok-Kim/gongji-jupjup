@@ -45,8 +45,8 @@
   const GRADE_POINTS = { 'A+': 4.5, A0: 4.0, 'B+': 3.5, B0: 3.0, 'C+': 2.5, C0: 2.0, 'D+': 1.5, D0: 1.0, F: 0 };
   const GRADES = ['A+', 'A0', 'B+', 'B0', 'C+', 'C0', 'D+', 'D0', 'P'];
   function cleanGrade(g) {
-    const x = String(g || '').trim().toUpperCase().replace(/^([ABCD])$/, '$10').replace(/^([ABCD])-$/, '$10').replace(/^PASS$|^S$/, 'P');
-    return GRADES.includes(x) || x === 'F' ? x : '';
+    const x = String(g || '').trim().toUpperCase().replace(/^([ABCD])$/, '$10').replace(/^([ABCD])-$/, '$10').replace(/^PASS$|^S$/, 'P').replace(/^NP$|^NON-?PASS$/, 'N/P');
+    return GRADES.includes(x) || x === 'F' || x === 'N/P' ? x : '';
   }
   // 평점평균: P(통과)와 성적 없는 과목은 빼고, 학점을 곱해 평균 (소수 둘째 자리)
   function gpa(history, filter) {
@@ -856,6 +856,7 @@
     const grades = Array.isArray(o.grades) && o.grades.length ? new Set(o.grades.map(Number)) : null;
     const avoid = new Set(o.avoidDays || []);
     const minStart = Number(o.minStart) || 0;
+    const maxEnd = Number(o.maxEnd) || 0;
     const deptCourses = o.deptCourses || new Set();
     const left = o.left || {};
     const reqLeftNames = new Set((o.requiredCourses || []).map(normName));
@@ -868,17 +869,22 @@
       const nm = normName(g.name);
       if ((g.code && taken.has(g.code)) || taken.has(nm)) { stats.taken += 1; continue; }
       const isLocked = lockedKeys.has(g.key);
-      const isReqLeft = (g.kind === '전필' || reqLeftNames.has(nm)) && (deptMatch(g.dept, o.dept) || deptCourses.has(nm));
+      const hasDept = Boolean(String(o.dept || '').trim());
+      const extraDepts = Array.isArray(o.extraDepts) ? o.extraDepts : [];
+      const isExtraMajor = extraDepts.some((ed) => deptMatch(g.dept, ed));
+      const isMyMajor = deptMatch(g.dept, o.dept) || isExtraMajor || deptCourses.has(nm);
+      const isReqLeft = (g.kind === '전필' || reqLeftNames.has(nm)) && isMyMajor;
       let ar = g.area;
 
-      if (ar === 'major' && !(deptMatch(g.dept, o.dept) || deptCourses.has(nm))) {
-        ar = 'free'; // 타 학과 전공은 일반선택 영역으로 전환
+      if (ar === 'major' && !isMyMajor) {
+        if (!isLocked && hasDept) { stats.area += 1; continue; } // 설정된 학과(주전공·다전공) 외 타학과 전공 제외
+        ar = 'free';
       }
 
       if (!isLocked) {
         if (ar === 'major' && !inc.major) { stats.area += 1; continue; }
         if (ar === 'general' && !inc.general) { stats.area += 1; continue; }
-        if (ar === 'free' && (!needFree && !isLocked && !inc.general)) { stats.area += 1; continue; }
+        if (ar === 'free' && (!inc.general || !needFree)) { stats.area += 1; continue; }
         if (grades && g.grade && !grades.has(g.grade)) { stats.grade += 1; continue; }
       }
 
@@ -886,7 +892,7 @@
         if (s.mode === 'elearn' && !inc.elearn) return false;
         if (s.mode === 'live' && !inc.live) return false;
         if (s.t && s.t.length) {
-          if (s.t.some(([d, a]) => avoid.has(d) || (minStart && toMin(a) < minStart))) return false;
+          if (s.t.some(([d, a, b]) => avoid.has(d) || (minStart && toMin(a) < minStart) || (maxEnd && toMin(b) > maxEnd))) return false;
           if (overlaps(s.t, o.busy || [])) return false;
         }
         return true;
@@ -917,7 +923,7 @@
       }
 
       if (deptCourses.has(nm)) score += 10;
-      if (ar === 'major' && deptMatch(g.dept, o.dept)) score += 10;
+      if (ar === 'major' && (deptMatch(g.dept, o.dept) || isExtraMajor)) score += 10;
       if (o.theme === 'smartMix' && sections.some((s) => s.mode === 'elearn')) score += 30;
 
       out.push({ g, sections, score, area: ar, isReqLeft });
@@ -971,8 +977,12 @@
     const names = new Set(fixedNames);
 
     const valueOf = (c) => {
+      if (o.freeQuota) return c.score * c.g.credit;
       const cap2 = c.area === 'major' ? quota.major : c.area === 'general' ? quota.general : 0;
       const over = areaUsed[c.area] >= cap2;
+      if (o.strictQuota && c.area !== 'free' && (areaUsed[c.area] + c.g.credit > cap2)) {
+        return cap2 === 0 ? -400 * c.g.credit : -60 * c.g.credit;
+      }
       return (over ? Math.min(c.score, 18) : c.score) * c.g.credit;
     };
 
@@ -1067,8 +1077,12 @@
       start: earliest(bestFree.r), quality: bestFree.r.quality
     });
 
-    // 3. 늦게 시작 (오전 10:30 이후)
-    const late = recommend({ ...o, theme: 'lateStart', minStart: 10 * 60 + 30 });
+    // 3. 오후 집중 (12:00 이후 시작 우선, 부족 시 10:30 이후)
+    let late = recommend({ ...o, theme: 'lateStart', minStart: 12 * 60 });
+    if (!enough(late)) {
+      const late1030 = recommend({ ...o, theme: 'lateStart', minStart: 10 * 60 + 30 });
+      if (late1030.credits > late.credits) late = late1030;
+    }
     out.push({
       key: 'lateStart', title: '오후 집중', result: late,
       days: daysUsed(late), start: earliest(late), quality: late.quality, ok: enough(late)
@@ -1079,6 +1093,37 @@
     out.push({
       key: 'smartMix', title: '이러닝 꿀조합', result: smart,
       days: daysUsed(smart), start: earliest(smart), quality: smart.quality
+    });
+
+    // 각 추천안별 1·2·3 세부 조합(서로 다른 과목 조합) 생성
+    const sigOf = (r) => (r.picks || []).map((p) => p.key).sort().join(',');
+    const lockedSet = new Set((o.locked || []).map((x) => x.key));
+    const altConfigs = [
+      { ...o, theme: 'balanced' },
+      { ...o, theme: 'freeDay', avoidDays: avoid0.concat(out[1].free || []) },
+      { ...o, theme: 'lateStart', minStart: (late.picks && late.picks.length && earliest(late) >= 12 * 60) ? 12 * 60 : 10 * 60 + 30 },
+      { ...o, theme: 'smartMix', include: { ...(o.include || {}), elearn: true } }
+    ];
+    out.forEach((alt, idx) => {
+      const baseCfg = altConfigs[idx] || o;
+      const vars = [alt.result];
+      const seen = new Set([sigOf(alt.result)]);
+      let extraExcl = [];
+      for (let step = 0; step < 3 && vars.length < 3; step++) {
+        const last = vars[vars.length - 1];
+        const drop = (last.picks || []).find((p) => !lockedSet.has(p.key) && !p.isReqLeft && !extraExcl.includes(p.key))
+          || (last.picks || []).find((p) => !lockedSet.has(p.key) && !extraExcl.includes(p.key));
+        if (!drop) break;
+        extraExcl = extraExcl.concat(drop.key);
+        const rNext = recommend({ ...baseCfg, excluded: (o.excluded || []).concat(extraExcl) });
+        const sg = sigOf(rNext);
+        if (rNext.picks && rNext.picks.length && !seen.has(sg) && enough(rNext)) {
+          seen.add(sg);
+          vars.push(rNext);
+        }
+      }
+      while (vars.length < 3) vars.push(null);
+      alt.variants = vars;
     });
 
     return out;

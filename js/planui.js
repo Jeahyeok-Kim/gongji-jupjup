@@ -30,22 +30,34 @@
       history: P.cleanHistory(store.get('history', [])),
       req: store.get('gradReq', null) || {},
       transferred: (store.get('transferredCourses', []) || []).filter((x) => x && x.name),
-      prefs: Object.assign({ target: null, grades: [], include: { major: true, general: true, elearn: true, live: true }, avoid: [], takenNow: true, semesters: null, locked: [], excluded: [] },
+      prefs: Object.assign({ target: null, quotaMajor: null, quotaGeneral: null, grades: [], include: { major: true, general: true, elearn: true, live: true }, avoid: [], takenNow: true, semesters: null, locked: [], excluded: [] },
         store.get('planPrefs', null) || {}),
       lastTerm: store.get('histLastTerm', curTermKey),
       paste: null,
       result: null
     };
-    const save = () => {
+    const save = (skipHome) => {
       store.set('history', st.history);
       store.set('gradReq', st.req);
       store.set('transferredCourses', st.transferred);
       store.set('planPrefs', st.prefs);
-      if (deps.onChange) deps.onChange();
+      if (!skipHome && deps.onChange) deps.onChange();
+    };
+    const rerenderReqOnly = () => {
+      const oldBox = document.querySelector('#history-view .req-box');
+      if (oldBox && oldBox.parentNode) {
+        oldBox.replaceWith(renderReq());
+      } else {
+        render();
+      }
     };
 
     // ---------- 공통 계산 ----------
     const dept = () => String(st.req.dept || (deps.getProfile().dept) || deps.getDept() || '').trim();
+    const extraDepts = () => {
+      const d2 = String(st.req.extraDept || (deps.getProfile().extraDept) || '').trim();
+      return d2 ? [d2] : [];
+    };
     const requirement = () => P.requirement(dept(), REQ, st.req);
     const totalsNow = () => P.totals(st.history);
     const leftNow = () => P.remaining(requirement(), totalsNow());
@@ -389,27 +401,39 @@
 
       const setMode = (mode) => {
         const curDept = st.req.dept;
-        st.req = { dept: curDept, mode };
+        const curMulti = st.req.multiType || '';
+        const curExtra = st.req.extraDept || '';
+        st.req = { dept: curDept, mode, multiType: curMulti, extraDept: curExtra };
         if (mode === 'transfer') {
-          st.req.total = 66;
-          const trCredits = (st.transferred || []).reduce((s, x) => s + (Number(x.credit) || 0), 0);
-          if (trCredits > 0) {
-            st.req.major = Math.max(0, 66 - trCredits);
-            st.req.general = Math.min(66, trCredits);
-          } else {
-            st.req.major = 66;
-            st.req.general = 0;
+          if (curMulti === 'double') { st.req.total = 87; st.req.major = 51; st.req.general = 36; }
+          else if (curMulti === 'converge') { st.req.total = 75; st.req.major = 51; st.req.general = 24; }
+          else if (curMulti === 'minor') { st.req.total = 72; st.req.major = 51; st.req.general = 21; }
+          else {
+            st.req.total = 66;
+            const trCredits = (st.transferred || []).reduce((s, x) => s + (Number(x.credit) || 0), 0);
+            if (trCredits > 0) {
+              st.req.major = Math.max(0, 66 - trCredits);
+              st.req.general = Math.min(66, trCredits);
+            } else {
+              st.req.major = 66;
+              st.req.general = 0;
+            }
           }
         }
         save(); render();
       };
       const edited = Object.keys(req.edited).length > 0;
 
-      const applyPreset = (totVal, majVal, genVal) => {
+      const applyPreset = (totVal, majVal, genVal, multiTypeVal) => {
         st.req.total = totVal;
         st.req.major = majVal;
         st.req.general = genVal;
-        save(); render();
+        if (multiTypeVal !== undefined) {
+          st.req.multiType = multiTypeVal;
+          if (!multiTypeVal) st.req.extraDept = '';
+          if (deps.setExtraDept) deps.setExtraDept(multiTypeVal, st.req.extraDept || '');
+        }
+        save(true); rerenderReqOnly();
       };
 
       const transferPresets = req.mode === 'transfer' ? h('div', { class: 'req-presets-wrapper' },
@@ -419,22 +443,22 @@
             h('button', {
               type: 'button',
               class: 'req-preset-chip' + (req.total === 66 && req.major === 66 && (req.general === 0 || !req.general) ? ' is-active' : ''),
-              onclick: () => applyPreset(66, 66, 0)
+              onclick: () => applyPreset(66, 66, 0, '')
             }, Tx.reqPreset66 || '⚡ 0학점 인정 (비동일계: 전공 66)'),
             h('button', {
               type: 'button',
               class: 'req-preset-chip' + (req.total === 66 && req.major === 60 && req.general === 6 ? ' is-active' : ''),
-              onclick: () => applyPreset(66, 60, 6)
+              onclick: () => applyPreset(66, 60, 6, '')
             }, Tx.reqPreset60 || '⚡ 6학점 인정 (전공 60 + 자유 6)'),
             h('button', {
               type: 'button',
               class: 'req-preset-chip' + (req.total === 66 && req.major === 57 && req.general === 9 ? ' is-active' : ''),
-              onclick: () => applyPreset(66, 57, 9)
+              onclick: () => applyPreset(66, 57, 9, '')
             }, Tx.reqPreset57 || '⚡ 9학점 인정 (전공 57 + 자유 9)'),
             h('button', {
               type: 'button',
               class: 'req-preset-chip' + (req.total === 66 && req.major === 51 && req.general === 15 ? ' is-active' : ''),
-              onclick: () => applyPreset(66, 51, 15)
+              onclick: () => applyPreset(66, 51, 15, '')
             }, Tx.reqPreset51 || '⚡ 15학점 인정 (동일계 최대: 전공 51 + 자유 15)')
           )
         ),
@@ -444,17 +468,17 @@
             h('button', {
               type: 'button',
               class: 'req-preset-chip' + (req.total === 87 && req.major === 51 && req.general === 36 ? ' is-active' : ''),
-              onclick: () => applyPreset(87, 51, 36)
+              onclick: () => applyPreset(87, 51, 36, 'double')
             }, Tx.reqPresetDouble || '🎓 다전공(복수전공) 기준 (총 87: 주전공 51 + 제2전공 36)'),
             h('button', {
               type: 'button',
               class: 'req-preset-chip' + (req.total === 75 && req.major === 51 && req.general === 24 ? ' is-active' : ''),
-              onclick: () => applyPreset(75, 51, 24)
+              onclick: () => applyPreset(75, 51, 24, 'converge')
             }, Tx.reqPresetConvergence || '🧬 융합·연계전공 기준 (총 75: 주전공 51 + 융합전공 24)'),
             h('button', {
               type: 'button',
               class: 'req-preset-chip' + (req.total === 72 && req.major === 51 && req.general === 21 ? ' is-active' : ''),
-              onclick: () => applyPreset(72, 51, 21)
+              onclick: () => applyPreset(72, 51, 21, 'minor')
             }, Tx.reqPresetMinor || '📘 부전공 기준 (총 72: 주전공 51 + 부전공 21)')
           )
         )
@@ -565,109 +589,133 @@
         }
       }
 
-      const onDeptInput = (inputEl) => {
-        const val = inputEl.value.trim();
-        const box = inputEl.form ? inputEl.form.querySelector('#dept-suggest-box') : document.getElementById('dept-suggest-box');
-        if (!box) return;
-        if (!val) {
-          box.hidden = true;
-          box.replaceChildren();
-          return;
-        }
-        const hits = (P.searchDepts ? P.searchDepts(val, REQ, currentLang()) : []).slice(0, 8);
-        if (!hits.length) {
-          box.hidden = true;
-          box.replaceChildren();
-          return;
-        }
-
-        box.replaceChildren(...hits.map((hit, idx) => h('li', {
-          class: 'dept-suggest-item' + (idx === 0 ? ' is-active' : ''),
-          'data-dept': hit.name,
-          onmousedown: (ev) => {
-            ev.preventDefault();
-            inputEl.value = hit.name;
-            box.hidden = true;
-            commitDept(hit.name);
-          }
-        },
-          h('strong', { class: 'dsi-name' }, hit.displayName),
-          hit.subText ? h('span', { class: 'dsi-sub' }, hit.subText) : null
-        )));
-        box.hidden = false;
-      };
-
-      const commitDept = (val) => {
-        const v = String(val || '').trim();
-        if (!v) {
-          st.req.dept = '';
-          save(); render();
-          return;
-        }
-        const resolved = (P.resolveDept ? P.resolveDept(v, REQ) : v) || v;
-        st.req.dept = resolved;
+      const formatDeptName = (name) => {
         const curLang = currentLang();
         const DI18n = window.GongjiDeptI18n || root.GongjiDeptI18n;
-        const resolvedDisplay = (DI18n && DI18n.formatDept) ? DI18n.formatDept(resolved, curLang) : resolved;
-        const inputEl = document.getElementById('req-dept-input');
+        return (DI18n && DI18n.formatDept && name) ? DI18n.formatDept(name, curLang) : (name || '');
+      };
+
+      const commitDeptField = (val, { inputId, getPrev, apply }) => {
+        const v = String(val || '').trim();
+        const prev = getPrev() || '';
+        const resolved = v ? ((P.resolveDept ? P.resolveDept(v, REQ) : v) || v) : '';
+        const resolvedDisplay = formatDeptName(resolved);
+        const inputEl = document.getElementById(inputId);
         if (inputEl && inputEl.value !== resolvedDisplay) inputEl.value = resolvedDisplay;
-        save();
-        render();
+        if (resolved === prev) return;
+        apply(resolved);
+        save(); render();
         if (resolved && resolved !== v) {
           toast(Tx.deptAutoResolved ? Tx.deptAutoResolved(v, resolvedDisplay) : `'${v}' → [${resolvedDisplay}] 학과로 자동 완성되었습니다.`);
         }
       };
 
-      const onDeptBlur = (inputEl) => {
-        setTimeout(() => {
-          const box = inputEl.form ? inputEl.form.querySelector('#dept-suggest-box') : document.getElementById('dept-suggest-box');
-          if (box) box.hidden = true;
-          if (inputEl.value.trim()) {
-            commitDept(inputEl.value);
-          }
-        }, 220);
-      };
-
-      const onDeptKeydown = (e) => {
-        const box = e.target.form ? e.target.form.querySelector('#dept-suggest-box') : document.getElementById('dept-suggest-box');
-        if (!box || box.hidden) {
-          if (e.key === 'Enter') {
-            e.preventDefault();
-            commitDept(e.target.value);
-          }
-          return;
+      const commitDept = (val) => commitDeptField(val, {
+        inputId: 'req-dept-input',
+        getPrev: () => st.req.dept,
+        apply: (resolved) => {
+          st.req.dept = resolved;
+          if (deps.setDept) deps.setDept(resolved);
         }
-        const items = Array.from(box.querySelectorAll('.dept-suggest-item'));
-        if (!items.length) return;
-        const activeIdx = items.findIndex((el) => el.classList.contains('is-active'));
-        if (e.key === 'ArrowDown') {
-          e.preventDefault();
-          const next = activeIdx < items.length - 1 ? activeIdx + 1 : 0;
-          items.forEach((el, i) => el.classList.toggle('is-active', i === next));
-          items[next].scrollIntoView({ block: 'nearest' });
-        } else if (e.key === 'ArrowUp') {
-          e.preventDefault();
-          const prev = activeIdx > 0 ? activeIdx - 1 : items.length - 1;
-          items.forEach((el, i) => el.classList.toggle('is-active', i === prev));
-          items[prev].scrollIntoView({ block: 'nearest' });
-        } else if (e.key === 'Enter') {
-          e.preventDefault();
-          const sel = activeIdx >= 0 ? items[activeIdx] : items[0];
-          if (sel) {
-            const targetDept = sel.getAttribute('data-dept');
-            e.target.value = targetDept;
+      });
+
+      const commitExtraDept = (val) => commitDeptField(val, {
+        inputId: 'req-extra-dept-input',
+        getPrev: () => st.req.extraDept,
+        apply: (resolved) => {
+          st.req.extraDept = resolved;
+          if (deps.setExtraDept) deps.setExtraDept(st.req.multiType || '', resolved);
+        }
+      });
+
+      const bindDeptAuto = (boxId, commitFn) => {
+        const getBox = (el) => (el && el.form ? el.form.querySelector('#' + boxId) : null) || document.getElementById(boxId);
+        const onInput = (inputEl) => {
+          const val = inputEl.value.trim();
+          const box = getBox(inputEl);
+          if (!box) return;
+          if (!val) {
             box.hidden = true;
-            commitDept(targetDept);
-          } else {
-            commitDept(e.target.value);
+            box.replaceChildren();
+            return;
           }
-        } else if (e.key === 'Escape') {
-          box.hidden = true;
-        }
+          const hits = (P.searchDepts ? P.searchDepts(val, REQ, currentLang()) : []).slice(0, 8);
+          if (!hits.length) {
+            box.hidden = true;
+            box.replaceChildren();
+            return;
+          }
+          box.replaceChildren(...hits.map((hit, idx) => h('li', {
+            class: 'dept-suggest-item' + (idx === 0 ? ' is-active' : ''),
+            'data-dept': hit.name,
+            onmousedown: (ev) => {
+              ev.preventDefault();
+              inputEl.value = hit.name;
+              box.hidden = true;
+              commitFn(hit.name);
+            }
+          },
+            h('strong', { class: 'dsi-name' }, hit.displayName),
+            hit.subText ? h('span', { class: 'dsi-sub' }, hit.subText) : null
+          )));
+          box.hidden = false;
+        };
+        const onBlur = (inputEl) => {
+          setTimeout(() => {
+            const box = getBox(inputEl);
+            if (box) box.hidden = true;
+            commitFn(inputEl.value);
+          }, 180);
+        };
+        const onKeydown = (e) => {
+          const box = getBox(e.target);
+          if (!box || box.hidden) {
+            if (e.key === 'Enter') {
+              e.preventDefault();
+              commitFn(e.target.value);
+            }
+            return;
+          }
+          const items = Array.from(box.querySelectorAll('.dept-suggest-item'));
+          if (!items.length) return;
+          const activeIdx = items.findIndex((el) => el.classList.contains('is-active'));
+          if (e.key === 'ArrowDown') {
+            e.preventDefault();
+            const next = activeIdx < items.length - 1 ? activeIdx + 1 : 0;
+            items.forEach((el, i) => el.classList.toggle('is-active', i === next));
+            items[next].scrollIntoView({ block: 'nearest' });
+          } else if (e.key === 'ArrowUp') {
+            e.preventDefault();
+            const prev = activeIdx > 0 ? activeIdx - 1 : items.length - 1;
+            items.forEach((el, i) => el.classList.toggle('is-active', i === prev));
+            items[prev].scrollIntoView({ block: 'nearest' });
+          } else if (e.key === 'Enter') {
+            e.preventDefault();
+            const sel = activeIdx >= 0 ? items[activeIdx] : items[0];
+            if (sel) {
+              const targetDept = sel.getAttribute('data-dept');
+              e.target.value = targetDept;
+              box.hidden = true;
+              commitFn(targetDept);
+            } else {
+              commitFn(e.target.value);
+            }
+          } else if (e.key === 'Escape') {
+            box.hidden = true;
+          }
+        };
+        return {
+          oninput: (e) => onInput(e.target),
+          onfocus: (e) => onInput(e.target),
+          onkeydown: onKeydown,
+          onblur: (e) => onBlur(e.target),
+          onchange: (e) => commitFn(e.target.value)
+        };
       };
 
+      const wasReqOpen = Boolean(document.querySelector('.req-box[open]'));
       const deptDisplay = (window.GongjiDeptI18n ? window.GongjiDeptI18n.formatDept(req.dept, deps.lang) : req.dept) || req.dept;
-      return h('details', { class: 'plan-box req-box', open: !req.found || req.mode === 'transfer' || edited ? true : null },
+      return h('details', { class: 'plan-box req-box', open: (wasReqOpen || !req.found || req.mode === 'transfer' || edited || Boolean(st.req.multiType)) ? true : null },
         h('summary', null, h('span', null, Tx.reqTitle),
           h('small', null, !req.found ? Tx.reqNoDeptShort : req.mode === 'transfer' ? Tx.reqSourceTransfer(deptDisplay) : Tx.reqSource(deptDisplay))),
         h('div', { class: 'seg req-mode', role: 'group' },
@@ -680,21 +728,79 @@
           h('div', { class: 'req-field wide dept-field-wrap' },
             h('label', { for: 'req-dept-input' }, Tx.reqDept),
             h('div', { class: 'dept-input-container' },
-              h('input', {
+              h('input', Object.assign({
                 type: 'text',
                 id: 'req-dept-input',
                 class: 'dept-input-name',
-                value: (window.GongjiDeptI18n ? window.GongjiDeptI18n.formatDept(dept(), currentLang()) : dept()) || dept(),
+                value: formatDeptName(dept()),
                 placeholder: Tx.profileDeptPh || '학과명 입력 (예: 컴퓨터공학과, 컴공, Computer, CS)',
-                autocomplete: 'off',
-                oninput: (e) => onDeptInput(e.target),
-                onfocus: (e) => onDeptInput(e.target),
-                onkeydown: (e) => onDeptKeydown(e),
-                onblur: (e) => onDeptBlur(e.target),
-                onchange: (e) => commitDept(e.target.value)
-              }),
+                autocomplete: 'off'
+              }, bindDeptAuto('dept-suggest-box', commitDept))),
               h('ul', { id: 'dept-suggest-box', class: 'dept-suggest-box', hidden: true })
             )
+          ),
+          h('div', { class: 'req-field wide dept-field-wrap' },
+            h('label', { for: 'req-extra-dept-input' }, Tx.multiMajorLabel || '다전공 (복수·융합·부전공)'),
+            h('div', { class: 'seg', role: 'group', style: 'margin-bottom:6px' },
+              [
+                ['', Tx.multiMajorNone || '단일전공'],
+                ['double', Tx.multiMajorDouble || '복수전공'],
+                ['converge', Tx.multiMajorConverge || '융합전공'],
+                ['minor', Tx.multiMajorMinor || '부전공']
+              ].map(([mk, ml]) =>
+                h('button', {
+                  type: 'button',
+                  'aria-pressed': String((st.req.multiType || '') === mk),
+                  onclick: () => {
+                    st.req.multiType = mk;
+                    if (!mk) st.req.extraDept = '';
+                    if (req.mode === 'transfer') {
+                      if (mk === 'double') { st.req.total = 87; st.req.major = 51; st.req.general = 36; }
+                      else if (mk === 'converge') { st.req.total = 75; st.req.major = 51; st.req.general = 24; }
+                      else if (mk === 'minor') { st.req.total = 72; st.req.major = 51; st.req.general = 21; }
+                      else { st.req.total = 66; st.req.major = 66; st.req.general = 0; }
+                    }
+                    if (deps.setExtraDept) deps.setExtraDept(mk, st.req.extraDept || '');
+                    save(true); rerenderReqOnly();
+                  }
+                }, ml)
+              )
+            ),
+            (st.req.multiType || '') ? h('div', { class: 'dept-input-container' },
+              h('input', Object.assign({
+                type: 'text',
+                id: 'req-extra-dept-input',
+                class: 'dept-input-name',
+                value: formatDeptName(st.req.extraDept),
+                placeholder: Tx.multiMajorPh || '복수·융합·부전공 학과명 입력 (예: 소방방재융합학과)',
+                autocomplete: 'off'
+              }, bindDeptAuto('extra-dept-suggest-box', commitExtraDept))),
+              h('ul', { id: 'extra-dept-suggest-box', class: 'dept-suggest-box', hidden: true })
+            ) : null,
+            (st.req.multiType || '') ? (() => {
+              const mt = st.req.multiType;
+              const exMap = {
+                double: { maj: 87, label: Tx.multiMajorExDouble || '복수전공 예시 (주전공 51 + 제2전공 36 = 전공 87학점)' },
+                converge: { maj: 75, label: Tx.multiMajorExConverge || '융합·연계전공 예시 (주전공 51 + 융합 24 = 전공 75학점)' },
+                minor: { maj: 72, label: Tx.multiMajorExMinor || '부전공 예시 (주전공 51 + 부전공 21 = 전공 72학점)' }
+              };
+              const ex = exMap[mt];
+              if (!ex) return null;
+              return req.mode === 'transfer'
+                ? h('p', { class: 'help', style: 'margin-top:6px' }, Tx.multiMajorTransferNote ? Tx.multiMajorTransferNote(ex.label) : `${ex.label}이 적용되었어요. 학과 기준이 다르면 아래 칸에 직접 입력해 바꿀 수 있어요.`)
+                : h('div', { class: 'help', style: 'margin-top:6px;display:flex;align-items:center;gap:8px;flex-wrap:wrap' },
+                    h('span', null, Tx.multiMajorRegularNote ? Tx.multiMajorRegularNote(ex.label) : `${ex.label} · 다르면 아래 학점 칸에 자유롭게 입력하세요.`),
+                    h('button', {
+                      type: 'button',
+                      class: 'btn small',
+                      onclick: () => {
+                        st.req.major = ex.maj;
+                        save(true); rerenderReqOnly();
+                        toast(Tx.multiMajorAppliedToast ? Tx.multiMajorAppliedToast(ex.maj) : `전공 목표를 ${ex.maj}학점으로 맞췄습니다.`);
+                      }
+                    }, Tx.multiMajorApplyEx ? Tx.multiMajorApplyEx(ex.maj) : `예시(${ex.maj}학점) 적용`)
+                  );
+            })() : null
           ),
           ...reqInputs),
         balanceBar,
@@ -1153,7 +1259,7 @@
             h('option', { value: '', selected: curTermVal === '' ? true : null }, Tx.histTermNone),
             terms.map((x) => h('option', { value: x, selected: x === curTermVal ? true : null }, termName(x))))),
         h('label', null, h('span', null, Tx.histGrade),
-          h('select', { name: 'grade' }, h('option', { value: '' }, Tx.gradeNone), P.GRADES.map((g) => h('option', { value: g }, g)))),
+          h('select', { name: 'grade' }, h('option', { value: '' }, Tx.gradeNone), P.GRADES.concat(['F', 'N/P']).map((g) => h('option', { value: g }, g)))),
         h('button', { type: 'submit', class: 'btn primary' }, Tx.histAdd));
 
       return [form];
@@ -1332,7 +1438,7 @@
               h('label', null, Tx.cemGrade || '취득 성적'),
               h('select', { name: 'editGrade' },
                 h('option', { value: '', selected: !courseItem.grade ? true : null }, Tx.cemGradeNone || '— (미입력/재학 중)'),
-                P.GRADES.concat('F').map((g) => h('option', {
+                P.GRADES.concat(['F', 'N/P']).map((g) => h('option', {
                   value: g,
                   selected: courseItem.grade === g ? true : null
                 }, g))
@@ -1407,7 +1513,7 @@
             st.history = st.history.map((y) => (y === x ? Object.assign({}, y, { grade: e.target.value }) : y));
             st.history = P.cleanHistory(st.history);
             save(); render();
-          } }, h('option', { value: '' }, '—'), P.GRADES.concat('F').map((gr) => h('option', { value: gr, selected: x.grade === gr ? true : null }, gr))),
+          } }, h('option', { value: '' }, '—'), P.GRADES.concat(['F', 'N/P']).map((gr) => h('option', { value: gr, selected: x.grade === gr ? true : null }, gr))),
           h('span', { class: 'tl-credit' }, String(x.credit)),
           h('div', { class: 'tl-actions' },
             h('button', {
@@ -1676,8 +1782,11 @@
     function deptCourses() {
       const C = root.GongjiCurriculum;
       const s = new Set();
-      const d = C && C.findDept ? C.findDept(dept(), root.GONGJI_COURSES) : null;
-      if (d) for (const [, , name] of d.courses) s.add(P.normName(name));
+      for (const dn of [dept(), ...extraDepts()]) {
+        if (!dn) continue;
+        const d = C && C.findDept ? C.findDept(dn, root.GONGJI_COURSES) : null;
+        if (d) for (const [, , name] of d.courses) s.add(P.normName(name));
+      }
       return s;
     }
     function nextGrade() {
@@ -1691,17 +1800,35 @@
       return pc.per ? Math.max(3, Math.min(21, pc.per)) : 18;
     }
 
-    // 추천: 세 가지 안(균형 · 공강 최대 · 늦게 시작)을 함께 계산하고, 고른 안을 보여 준다
+    function effectiveQuota(left, p, tgt) {
+      const inc = p.include || {};
+      const majOn = inc.major !== false;
+      const genOn = inc.general !== false;
+      const hasM = p.quotaMajor !== null && p.quotaMajor !== undefined && p.quotaMajor !== '';
+      const hasG = p.quotaGeneral !== null && p.quotaGeneral !== undefined && p.quotaGeneral !== '';
+      if (!majOn && genOn) return { major: 0, general: tgt, strict: true, freeQuota: false, hasM: false, hasG: false };
+      if (majOn && !genOn) return { major: tgt, general: 0, strict: true, freeQuota: false, hasM: false, hasG: false };
+      if (!hasM && !hasG) return { major: tgt, general: tgt, strict: false, freeQuota: true, hasM: false, hasG: false };
+      const m = hasM ? Math.max(0, Math.min(24, Number(p.quotaMajor) || 0)) : Math.max(0, tgt - (Number(p.quotaGeneral) || 0));
+      const g = hasG ? Math.max(0, Math.min(24, Number(p.quotaGeneral) || 0)) : Math.max(0, tgt - m);
+      return { major: m, general: g, strict: true, freeQuota: false, hasM, hasG };
+    }
+
+    // 추천: 6가지 세부 안을 함께 계산하고, 고른 안을 보여 준다
     function run() {
       const left = leftNow();
+      const tgt = Number(st.prefs.target) || defaultTarget();
+      const q = effectiveQuota(left, st.prefs, tgt);
       st.alts = P.alternatives({
-        groups, taken: takenSet(), left, target: Number(st.prefs.target) || defaultTarget(),
-        grades: st.prefs.grades, dept: dept(), deptCourses: deptCourses(), myGrade: nextGrade(),
+        groups, taken: takenSet(), left, target: tgt, quota: { major: q.major, general: q.general },
+        strictQuota: q.strict, freeQuota: q.freeQuota,
+        grades: st.prefs.grades, dept: dept(), extraDepts: extraDepts(), deptCourses: deptCourses(), myGrade: nextGrade(),
         include: st.prefs.include, avoidDays: st.prefs.avoid, locked: st.prefs.locked, excluded: st.prefs.excluded
       });
       const pick = st.alts.find((a) => a.key === st.altKey) || st.alts[0];
       st.altKey = pick.key;
-      st.result = pick.result;
+      st.varIdx = 0;
+      st.result = (pick.variants && pick.variants[0]) || pick.result;
       renderPlan();
     }
     function runSoon() {
@@ -1733,16 +1860,53 @@
             h('p', { class: 'plan-big' }, left.total !== null && sem ? Tx.planPace(left.total, sem, pc.per) : Tx.histLeftUnknown)),
           pc.over ? h('p', { class: 'plan-side warn-note' }, Tx.planPaceOver) : null,
           (() => {
-            const q = P.split(left, Number(p.target) || defaultTarget());
-            return left.major !== null || left.general !== null ? h('p', { class: 'plan-split' }, Tx.planSplit(Number(p.target) || defaultTarget(), q.major, q.general)) : null;
+            const tgt = Number(p.target) || defaultTarget();
+            const q = effectiveQuota(left, p, tgt);
+            const lang = currentLang();
+            if (q.freeQuota) {
+              const freeSplitMsg = lang === 'en' ? `Recommending ${tgt} credits freely without major/gen-ed caps`
+                : lang === 'zh' ? `不限制专业/通识比例，自由推荐 ${tgt} 学分`
+                : lang === 'ja' ? `専攻・教養の比率を固定せず、自由に ${tgt} 単位をおすすめします`
+                : `전공·교양 목표를 비워 두어 ${tgt}학점을 자유롭게 추천해요`;
+              return h('p', { class: 'plan-split' }, freeSplitMsg);
+            }
+            return left.major !== null || left.general !== null ? h('p', { class: 'plan-split' }, Tx.planSplit(tgt, q.major, q.general)) : null;
           })()),
-        h('div', { class: 'plan-fields' },
-          h('label', { class: 'req-field' }, h('span', null, Tx.planTarget),
-            h('input', { type: 'number', min: '1', max: '24', step: '1', inputmode: 'numeric', value: String(Number(p.target) || defaultTarget()),
-              onchange: (e) => setPref({ target: Number(e.target.value) || null }) })),
-          h('label', { class: 'req-field' }, h('span', null, Tx.planSemesters),
-            h('input', { type: 'number', min: '1', max: '12', step: '1', inputmode: 'numeric', value: sem ? String(sem) : '',
-              onchange: (e) => setPref({ semesters: Number(e.target.value) || null, target: null }) }))),
+        (() => {
+          const tgt = Number(p.target) || defaultTarget();
+          const inc = p.include || {};
+          const majOn = inc.major !== false;
+          const genOn = inc.general !== false;
+          const lang = currentLang();
+          const freePh = lang === 'en' ? 'Auto/Free' : lang === 'zh' ? '自由' : lang === 'ja' ? '自由' : '자유';
+          const parseOpt = (raw) => {
+            const s = String(raw ?? '').trim();
+            if (s === '') return null;
+            return Math.max(0, Math.min(24, Number(s) || 0));
+          };
+          const updateQuota = (rawM, rawG) => {
+            const m = parseOpt(rawM);
+            const g = parseOpt(rawG);
+            const patch = { quotaMajor: m, quotaGeneral: g };
+            if (m !== null && g !== null) patch.target = Math.max(1, Math.min(24, m + g));
+            setPref(patch);
+          };
+          return h('div', { class: 'plan-fields' },
+            h('label', { class: 'req-field' }, h('span', null, Tx.planTarget),
+              h('input', { type: 'number', min: '1', max: '24', step: '1', inputmode: 'numeric', value: String(tgt),
+                onchange: (e) => setPref({ target: Number(e.target.value) || null, quotaMajor: null, quotaGeneral: null }) })),
+            h('label', { class: 'req-field' }, h('span', null, Tx.planSemesters),
+              h('input', { type: 'number', min: '1', max: '12', step: '1', inputmode: 'numeric', value: sem ? String(sem) : '',
+                onchange: (e) => setPref({ semesters: Number(e.target.value) || null, target: null, quotaMajor: null, quotaGeneral: null }) })),
+            h('label', { class: 'req-field' }, h('span', null, Tx.planQuotaMajor || '전공 목표'),
+              h('input', { type: 'number', min: '0', max: '24', step: '1', inputmode: 'numeric', placeholder: !majOn ? '0' : freePh,
+                disabled: !majOn ? true : null, value: !majOn ? '0' : (p.quotaMajor !== null && p.quotaMajor !== undefined ? String(p.quotaMajor) : ''),
+                onchange: (e) => updateQuota(e.target.value, p.quotaGeneral) })),
+            h('label', { class: 'req-field' }, h('span', null, Tx.planQuotaGeneral || '교양 목표'),
+              h('input', { type: 'number', min: '0', max: '24', step: '1', inputmode: 'numeric', placeholder: !genOn ? '0' : freePh,
+                disabled: !genOn ? true : null, value: !genOn ? '0' : (p.quotaGeneral !== null && p.quotaGeneral !== undefined ? String(p.quotaGeneral) : ''),
+                onchange: (e) => updateQuota(p.quotaMajor, e.target.value) })));
+        })(),
         h('div', { class: 'plan-row' }, h('span', { class: 'plan-row-label' }, Tx.planGrades),
           h('div', { class: 'chips' },
             chipToggle(Tx.planGradeAll, allGrades, () => setPref({ grades: [] })),
@@ -1754,7 +1918,9 @@
         h('div', { class: 'plan-row' }, h('span', { class: 'plan-row-label' }, Tx.planInclude),
           h('div', { class: 'chips' },
             ['major', 'general', 'elearn', 'live'].map((k) => chipToggle(Tx['planInc_' + k], p.include[k] !== false, () => {
-              setPref({ include: Object.assign({}, p.include, { [k]: p.include[k] === false }) });
+              const patch = { include: Object.assign({}, p.include, { [k]: p.include[k] === false }) };
+              if (k === 'major' || k === 'general') { patch.quotaMajor = null; patch.quotaGeneral = null; }
+              setPref(patch);
             })))),
         h('div', { class: 'plan-row' }, h('span', { class: 'plan-row-label' }, Tx.planAvoid),
           h('div', { class: 'chips' },
@@ -1893,16 +2059,35 @@
           sub = (a.ok === false) ? Tx.altShort : (a.start !== null ? Tx.altStart(`${String(Math.floor(a.start / 60)).padStart(2, '0')}:${String(a.start % 60).padStart(2, '0')}`) : Tx.planModeElearn);
         } else if (a.key === 'smartMix') {
           sub = elearnCount ? (Tx.altSmartMixSub ? Tx.altSmartMixSub(elearnCount) : `이러닝 ${elearnCount}과목`) : Tx.altBalanced;
+        } else if (a.key === 'earlyEnd') {
+          const endStr = a.end ? `${String(Math.floor(a.end / 60)).padStart(2, '0')}:${String(a.end % 60).padStart(2, '0')}` : '15:30';
+          sub = (a.ok === false) ? Tx.altShort : `~${endStr}`;
+        } else if (a.key === 'campusCore') {
+          const majC = r2.byArea ? r2.byArea.major : 0;
+          sub = `전공 ${majC}${Tx.creditUnit}`;
         } else if (a.key === 'balanced') {
           sub = (a.quality && a.quality.lunchBreak) ? (Tx.altLunchBreak || '점심시간 확보') : Tx.altBalanced;
         }
         return h('button', { type: 'button', role: 'tab', class: 'alt-tab', 'aria-selected': String(a.key === st.altKey),
-          onclick: () => { st.altKey = a.key; st.result = a.result; renderPlan(); } },
+          onclick: () => { st.altKey = a.key; st.varIdx = 0; st.result = (a.variants && a.variants[0]) || a.result; renderPlan(); } },
           h('span', { class: 'alt-name' }, Tx['alt_' + a.key] || a.title || a.key),
           h('strong', null, `${r2.credits}${Tx.creditUnit}`, h('small', null, ` · ${Tx.altDays(wk)}`)),
           h('span', { class: 'alt-sub' }, sub));
       })) : null;
       const lang = currentLang();
+      const curAlt = st.alts ? (st.alts.find((a) => a.key === st.altKey) || st.alts[0]) : null;
+      const vars = (curAlt && curAlt.variants && curAlt.variants.length) ? curAlt.variants : [r, null, null];
+      const varIdx = (vars[st.varIdx || 0]) ? (st.varIdx || 0) : 0;
+      const noAltTip = lang === 'en' ? 'No distinct alternative' : lang === 'zh' ? '无其他不重复方案' : lang === 'ja' ? '別の組み合わせなし' : '겹치지 않는 다른 조합 없음';
+      const varPills = h('div', { class: 'var-pills', role: 'group', 'aria-label': lang === 'en' ? 'Alternative combinations' : '세부 조합' },
+        vars.slice(0, 3).map((vr, idx) => h('button', {
+          type: 'button',
+          disabled: !vr ? true : null,
+          title: !vr ? noAltTip : null,
+          class: 'var-pill' + (idx === varIdx ? ' is-active' : '') + (!vr ? ' is-disabled' : ''),
+          onclick: vr ? () => { st.varIdx = idx; st.result = vr; renderPlan(); } : null
+        }, Tx.planVariant ? Tx.planVariant(idx + 1) : `${idx + 1}${lang === 'en' ? '' : '안'}`))
+      );
       const simRoutes = (P.analyzeRoutes && P.analyzeRoutes(r.picks, lang)) || [];
       const CR = window.GongjiCampusRoute;
       const routeSummaryEl = simRoutes.length ? h('div', { class: 'plan-route-box' },
@@ -1927,7 +2112,10 @@
       return h('div', { class: 'plan-result' },
         altTabs,
         h('div', { class: 'pr-summary' },
-          h('p', { class: 'pr-total' }, h('strong', null, String(r.credits)), ` / ${r.target}${Tx.creditUnit}`),
+          h('div', { class: 'pr-sum-top' },
+            h('p', { class: 'pr-total' }, h('strong', null, String(r.credits)), ` / ${r.target}${Tx.creditUnit}`),
+            varPills
+          ),
           h('p', { class: 'pr-by' }, Tx.planBy(r.byArea.major, r.byArea.general, r.byArea.free)),
           r.short ? h('p', { class: 'help warn-note' }, Tx.planShort(r.short)) : null),
         miniGrid(r.picks),
@@ -1989,15 +2177,34 @@
     const api = {
       render,
       setSub,
-      // 빠른 실행에서 과목 찾기 (이름에 검색어가 든 과목, 내 학과 먼저)
+      syncDept(d, extra, mType) {
+        let changed = false;
+        if (d !== undefined && st.req.dept !== d) { st.req.dept = d; changed = true; }
+        if (extra !== undefined && st.req.extraDept !== extra) { st.req.extraDept = extra; changed = true; }
+        if (mType !== undefined && st.req.multiType !== mType) { st.req.multiType = mType; changed = true; }
+        if (changed) { save(); render(); }
+      },
+      // 빠른 실행에서 과목 찾기 (한국어·영어·중국어·일본어·약어 지원, 내 학과 먼저)
       findCourses(q, limit) {
         const n = P.normName(q);
         if (!n) return [];
+        const CU = root.GongjiCurriculum;
+        const DI18n = window.GongjiDeptI18n || root.GongjiDeptI18n;
+        const curLang = currentLang();
         const mine = (g) => (P.deptMatch(g.dept, dept()) ? 0 : 1);
-        return groups.filter((g) => P.normName(g.name).includes(n))
-          .sort((a, b) => mine(a) - mine(b) || (P.normName(a.name).startsWith(n) ? 0 : 1) - (P.normName(b.name).startsWith(n) ? 0 : 1) || a.name.localeCompare(b.name))
+        return groups
+          .map((g) => ({
+            g,
+            score: CU && CU.matchCourseName ? CU.matchCourseName(q, g.name) : (P.normName(g.name).includes(n) ? 80 : 0)
+          }))
+          .filter((x) => x.score > 0)
+          .sort((a, b) => mine(a.g) - mine(b.g) || b.score - a.score || a.g.name.localeCompare(b.g.name))
           .slice(0, limit || 5)
-          .map((g) => ({ key: g.key, name: g.name, sub: [kindLabel(g.kind), `${g.credit}${T().creditUnit}`, g.dept, T().planAlts ? `${g.sections.length}${T().secUnit}` : ''].filter(Boolean).join(' · ') }));
+          .map(({ g }) => ({
+            key: g.key,
+            name: (DI18n && DI18n.formatCourse) ? DI18n.formatCourse(g.name, curLang) : g.name,
+            sub: [kindLabel(g.kind), `${g.credit}${T().creditUnit}`, g.dept, T().planAlts ? `${g.sections.length}${T().secUnit}` : ''].filter(Boolean).join(' · ')
+          }));
       },
       // 과목을 추천에 고정하고 추천 화면으로
       pin(key) {

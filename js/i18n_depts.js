@@ -86,7 +86,64 @@
     '영화음악의이해': { en: 'Understanding Film Music', ja: '映画音楽の理解', zh: '电影音乐的理解' },
     '객체지향프로그래밍': { en: 'Object-Oriented Programming', ja: 'オブジェクト指向プログラミング', zh: '面向对象程序设计' },
     '웹프로그래밍': { en: 'Web Programming', ja: 'Webプログラミング', zh: 'Web程序设计' },
-    '시스템프로그래밍': { en: 'System Programming', ja: 'システムプログラミング', zh: '系统程序设计' }
+    '시스템프로그래밍': { en: 'System Programming', ja: 'システムプログラミング', zh: '系统程序设计' },
+    'C프로그래밍': { en: 'C Programming', ja: 'Cプログラミング', zh: 'C语言程序设计' },
+    'C++프로그래밍': { en: 'C++ Programming', ja: 'C++プログラミング', zh: 'C++程序设计' },
+    '고급웹프로그래밍': { en: 'Advanced Web Programming', ja: '上級Webプログラミング', zh: '高级Web程序设计' },
+    '프로젝트종합설계': { en: 'Capstone Project Design', ja: 'プロジェクト総合設計', zh: '项目综合设计' },
+    '빅데이터기초': { en: 'Intro to Big Data', ja: 'ビッグデータ基礎', zh: '大数据基础' },
+    '빅데이터와인공지능': { en: 'Big Data & AI', ja: 'ビッグデータとAI', zh: '大数据与人工智能' },
+    '클라우드컴퓨팅': { en: 'Cloud Computing', ja: 'クラウドコンピューティング', zh: '云计算' },
+    '멀티미디어와가상현실': { en: 'Multimedia & VR', ja: 'マルチメディアとVR', zh: '多媒体与虚拟现实' },
+    'Nano-LAB기초2(컴퓨터공학)': { en: 'Nano-LAB Basics 2 (CS)', ja: 'Nano-LAB基礎2(CS)', zh: 'Nano-LAB基础2(计算机)' },
+    '데이터베이스': { en: 'Database Systems', ja: 'データベース', zh: '数据库系统' },
+    '알고리즘': { en: 'Algorithms', ja: 'アルゴリズム', zh: '算法' },
+    '자료구조': { en: 'Data Structures', ja: 'データ構造', zh: '数据结构' },
+    '글쓰기1': { en: 'Writing 1', ja: 'ライティング1', zh: '写作1' },
+    '글쓰기2': { en: 'Writing 2', ja: 'ライティング2', zh: '写作2' },
+    '동물의행동': { en: 'Animal Behavior', ja: '動物の行動', zh: '动物行为学' },
+    '우주로의여행': { en: 'Journey to the Universe', ja: '宇宙への旅', zh: '宇宙之旅' },
+    '음악은왜치료적인가': { en: 'Why Is Music Therapeutic', ja: '音楽はなぜ治療的なのか', zh: '音乐为何具有治疗作用' },
+    '흔들리는20대:청년심리학': { en: 'Youth Psychology in Your 20s', ja: '揺れる20代：青年心理学', zh: '迷茫的20代：青年心理学' },
+    '건강한삶을위한미용관리': { en: 'Beauty Care for Healthy Living', ja: '健康な生活のための美容管理', zh: '健康生活的美容管理' },
+    '과학수사를통한진실발견': { en: 'Truth Discovery via Forensics', ja: '科学捜査を通じた真実発見', zh: '科学侦查与真相发现' },
+    'AI시대,성인을위한뇌과학': { en: 'Brain Science in the AI Era', ja: 'AI時代・成人のための脳科学', zh: 'AI时代成人脑科学' },
+    'AI시대문학읽기와쓰기': { en: 'Reading & Writing Literature in the AI Era', ja: 'AI時代の文学読み書き', zh: 'AI时代文学阅读与写作' },
+    'AI와법:알고리즘이 판결하는 세상': { en: 'AI & Law: World Judged by Algorithms', ja: 'AIと法：アルゴリズムが裁く世界', zh: 'AI与法律：算法裁决的世界' },
+    'K-FOOD농식품산업과유통': { en: 'K-Food Agri-Food Industry & Distribution', ja: 'K-FOOD農食品産業と流通', zh: 'K-FOOD农食品产业与流通' },
+    'K유학생을위한한국기업문화': { en: 'Korean Corporate Culture for Int\'l Students', ja: '留学生のための韓国企業文化', zh: '面向留学生的韩国企业文化' },
+    'MOS': { en: 'MOS (Microsoft Office Specialist)', ja: 'MOS資格対策', zh: 'MOS办公软件认证' },
+    '교류분석으로풀어보는소통과인간관계의심리학': { en: 'Psychology of Communication & Relationships', ja: '交流分析で解く疎通と人間関係の心理学', zh: '沟通与人际关系心理学' },
+    '기술사업화': { en: 'Technology Commercialization', ja: '技術事業化', zh: '技术商业化' },
+    '기술창업과생활형창업의이해': { en: 'Tech & Lifestyle Entrepreneurship', ja: '技術創業と生活型創業の理解', zh: '技术创业与生活型创业理解' },
+    '데이터베이스개론': { en: 'Intro to Databases', ja: 'データベース概論', zh: '数据库概论' },
+    '로컬리티와인문학': { en: 'Locality & Humanities', ja: 'ローカリティと人文学', zh: '地方性与人文学' },
+    '미디어리터러시': { en: 'Media Literacy', ja: 'メディアリテラシー', zh: '媒体素养' },
+    '산업구조분석론(창업네트워킹)': { en: 'Industrial Structure & Startup Networking', ja: '産業構造分析論（創業ネットワーキング）', zh: '产业结构分析论（创业人脉）' },
+    '상담이론과실제': { en: 'Counseling Theory & Practice', ja: '相談理論と実際', zh: '心理咨询理论与实践' },
+    '성격심리학': { en: 'Personality Psychology', ja: '性格心理学', zh: '人格心理学' },
+    '소방지휘론': { en: 'Fire Command Theory', ja: '消防指揮論', zh: '消防指挥论' },
+    '소설로읽는한국문화100년사': { en: '100 Years of Korean Culture in Novels', ja: '小説で読む韓国文化100年史', zh: '小说中的韩国文化百年史' },
+    '식품영양학개론': { en: 'Intro to Food & Nutrition', ja: '食品栄養学概論', zh: '食品营养学概论' },
+    '언어의세계': { en: 'World of Language', ja: '言語の世界', zh: '语言的世界' },
+    '여론과미디어': { en: 'Public Opinion & Media', ja: '世論とメディア', zh: '舆论与媒体' },
+    '와인과음악:감각과문화의인문학': { en: 'Wine & Music: Humanities of Sense', ja: 'ワインと音楽：感覚と文化の人文学', zh: '红酒与音乐：感官与文化人文学' },
+    '외국인유학생을위한생활예절': { en: 'Korean Etiquette for Int\'l Students', ja: '外国人留学生のための生活マナー', zh: '留学生韩国生活礼仪' },
+    '외국인유학생을위한의사소통문화의이해': { en: 'Korean Communication Culture for Int\'l', ja: '留学生のための意思疎通文化の理解', zh: '留学生沟通文化理解' },
+    '외국인을위한생활법률': { en: 'Everyday Law for Foreigners', ja: '外国人のための生活法律', zh: '外国人生活法律' },
+    '유학생의대학생활적응': { en: 'Campus Life Adaptation for Int\'l Students', ja: '留学生の大学生活適応', zh: '留学生大学生活适应' },
+    '이민정책론': { en: 'Immigration Policy', ja: '移民政策論', zh: '移民政策论' },
+    '입트이는영어동사': { en: 'Essential English Verbs', ja: '口が開く英語動詞', zh: '英语高频动词口语' },
+    '창업과경영': { en: 'Entrepreneurship & Management', ja: '創業と経営', zh: '创业与管理' },
+    '창업기획론': { en: 'Startup Planning', ja: '創業企画論', zh: '创业策划论' },
+    '창업실전마케팅': { en: 'Practical Startup Marketing', ja: '創業実践マーケティング', zh: '创业实战营销' },
+    '철학고전톺아보기': { en: 'Exploring Philosophy Classics', ja: '哲学古典を読み解く', zh: '哲学经典导读' },
+    '파이썬프로그래밍기초': { en: 'Python Programming Basics', ja: 'Pythonプログラミング基礎', zh: 'Python程序设计基础' },
+    '푸드테크개론': { en: 'Intro to Food Tech', ja: 'フードテック概論', zh: '食品科技概论' },
+    '한국고중세사특강': { en: 'Ancient & Medieval Korean History', ja: '韓国古中世史特講', zh: '韩国古代中世史特讲' },
+    '한국어이해교육론': { en: 'Korean Comprehension Pedagogy', ja: '韓国語理解教育論', zh: '韩国语理解教学论' },
+    '해외취업교육과정2(어학)': { en: 'Overseas Employment 2 (Language)', ja: '海外就職教育課程2（語学）', zh: '海外就业课程2（语言）' },
+    '해외취업교육과정2(직무)': { en: 'Overseas Employment 2 (Job)', ja: '海外就職教育課程2（職務）', zh: '海外就业课程2（实务）' }
   };
 
   // 오타 허용 거리 (Levenshtein distance)
@@ -259,38 +316,12 @@
     if (!raw) return '';
     if (!lang || lang === 'ko') return raw;
 
-    // 1. 사전 일치 검색
+    // 1. 사전 일치 검색 (부분 치환으로 한글+외국어가 섞이는 현상을 방지하기 위해 완전 일치만 번역)
     const hit = COURSES[raw];
     if (hit && hit[lang]) {
       return hit[lang] + ' (' + raw + ')';
     }
-
-    // 2. 일반적인 학술 접미사 패턴 자동 번역
-    let translated = raw;
-    if (lang === 'en') {
-      if (raw.endsWith('개론')) translated = 'Intro to ' + raw.slice(0, -2);
-      else if (raw.endsWith('실습')) translated = raw.slice(0, -2) + ' Lab';
-      else if (raw.endsWith('프로그래밍')) translated = raw.slice(0, -5) + ' Programming';
-      else if (raw.endsWith('의이해') || raw.endsWith('의 이해')) translated = 'Understanding ' + raw.replace(/의\s*이해$/, '');
-      else if (raw.endsWith('특론')) translated = 'Advanced ' + raw.slice(0, -2);
-      else if (raw.endsWith('설계')) translated = raw.slice(0, -2) + ' Design';
-    } else if (lang === 'ja') {
-      if (raw.endsWith('개론')) translated = raw.slice(0, -2) + '概論';
-      else if (raw.endsWith('실습')) translated = raw.slice(0, -2) + '実習';
-      else if (raw.endsWith('프로그래밍')) translated = raw.slice(0, -5) + 'プログラミング';
-      else if (raw.endsWith('의이해') || raw.endsWith('의 이해')) translated = raw.replace(/의\s*이해$/, '') + 'の理解';
-      else if (raw.endsWith('특론')) translated = raw.slice(0, -2) + '特論';
-      else if (raw.endsWith('설계')) translated = raw.slice(0, -2) + '設計';
-    } else if (lang === 'zh') {
-      if (raw.endsWith('개론')) translated = raw.slice(0, -2) + '概论';
-      else if (raw.endsWith('실습')) translated = raw.slice(0, -2) + '实习';
-      else if (raw.endsWith('프로그래밍')) translated = raw.slice(0, -5) + '程序设计';
-      else if (raw.endsWith('의이해') || raw.endsWith('의 이해')) translated = raw.replace(/의\s*이해$/, '') + '的理解';
-      else if (raw.endsWith('특론')) translated = raw.slice(0, -2) + '特论';
-      else if (raw.endsWith('설계')) translated = raw.slice(0, -2) + '设计';
-    }
-
-    return translated !== raw ? (translated + ' (' + raw + ')') : raw;
+    return raw;
   }
 
   return {

@@ -315,7 +315,7 @@
       }
     }
     const aboutVer = $('#about-ver') || document.querySelector('.settings-about-ver');
-    if (aboutVer) aboutVer.textContent = `${t().brandName || '공지 줍줍'} v92`;
+    if (aboutVer) aboutVer.textContent = `${t().brandName || '공지 줍줍'} v111`;
     document.querySelectorAll('.today-text').forEach((el) => { el.textContent = I.formatDate(now, state.lang); });
     const keep = DATA.meta.keep;
     const keepText = keep && keep.months && keep.since ? ' · ' + t().keepNote(keep.months, String(keep.since).replace(/-/g, '.')) : '';
@@ -1290,11 +1290,33 @@
   }
 
   const filtersActive = () => !!(state.query || state.board || state.category || state.group || state.sub || state.savedOnly || state.mineOnly || state.keywordsOnly || state.unreadOnly || state.due || state.status !== 'open');
+  function syncToolbarControls() {
+    if ($('#q')) $('#q').value = state.query || '';
+    if ($('#board')) $('#board').value = state.board || '';
+    if ($('#field')) $('#field').value = state.category || '';
+    if ($('#status')) $('#status').value = state.status || 'open';
+    if ($('#sort')) $('#sort').value = state.sort || 'deadline';
+    if ($('#saved-only')) $('#saved-only').checked = !!state.savedOnly;
+    if ($('#mine-only')) $('#mine-only').checked = !!state.mineOnly;
+    if ($('#hide-conflicts')) $('#hide-conflicts').checked = !!state.hideConflicts;
+    const pop = document.querySelector('.search-suggest-popover');
+    if (pop) pop.classList.remove('is-open');
+  }
+  function clearFilterState() {
+    Object.assign(state, {
+      query: '', board: '', category: '', group: '', sub: '',
+      savedOnly: false, mineOnly: false, keywordsOnly: false, unreadOnly: false,
+      due: '', status: 'open', sort: 'deadline', hideConflicts: false
+    });
+    store.set('hideConflicts', false);
+  }
   function resetFilters() {
-    Object.assign(state, { query: '', board: '', category: '', group: '', sub: '', savedOnly: false, mineOnly: false, keywordsOnly: false, unreadOnly: false, due: '', status: 'open' });
-    $('#q').value = '';
+    clearFilterState();
+    state.activePresetId = 'fp_all';
+    syncToolbarControls();
     applyStaticText();
     renderList();
+    renderFilterPresets();
   }
 
   const BUILTIN_FILTER_PRESETS = [
@@ -1304,7 +1326,8 @@
       defaultName: '전체 공지',
       icon: '🏛️',
       apply: () => {
-        resetFilters();
+        clearFilterState();
+        syncToolbarControls();
       }
     },
     {
@@ -1313,16 +1336,11 @@
       defaultName: '장학금 마감순',
       icon: '💰',
       apply: () => {
-        state.category = '장학';
-        state.group = '';
-        state.sub = '';
+        clearFilterState();
+        state.category = 'scholarship';
         state.status = 'open';
         state.sort = 'deadline';
-        state.savedOnly = false;
-        state.mineOnly = false;
-        state.due = '';
-        if ($('#sort')) $('#sort').value = 'deadline';
-        if ($('#status')) $('#status').value = 'open';
+        syncToolbarControls();
       }
     },
     {
@@ -1331,11 +1349,11 @@
       defaultName: '3일 내 마감',
       icon: '⚡',
       apply: () => {
+        clearFilterState();
         state.due = 'soon';
         state.status = 'open';
         state.sort = 'deadline';
-        if ($('#sort')) $('#sort').value = 'deadline';
-        if ($('#status')) $('#status').value = 'open';
+        syncToolbarControls();
       }
     },
     {
@@ -1344,10 +1362,10 @@
       defaultName: '내 맞춤 공지',
       icon: '🎯',
       apply: () => {
+        clearFilterState();
         state.mineOnly = true;
         state.status = 'open';
-        if ($('#mine-only')) $('#mine-only').checked = true;
-        if ($('#status')) $('#status').value = 'open';
+        syncToolbarControls();
       }
     },
     {
@@ -1356,10 +1374,10 @@
       defaultName: '공강 시간대 공지',
       icon: '🗓️',
       apply: () => {
+        clearFilterState();
         state.hideConflicts = true;
         store.set('hideConflicts', true);
-        const chk = $('#hide-conflicts');
-        if (chk) chk.checked = true;
+        syncToolbarControls();
       }
     }
   ];
@@ -1636,20 +1654,28 @@
     if (rest <= 0) { const arc = archiveHint(); if (arc) box.append(arc); }
   }
 
-  // 목록 끝: 보관 기간(기본 6개월 = 한 학기 이상) 동안 마감된 공지도 가지고 있다는 안내 + 바로 보기
+  // 목록 끝: 보관 기간(기본 12개월) 동안 마감된 공지도 가지고 있다는 안내 + 바로 보기 (검색 중에도 마감된 추가 결과 안내)
   function archiveHint() {
-    if (state.status !== 'open' || state.savedOnly || state.due || state.query.trim()) return null;
-    // 지금 고른 게시판·분야·받는 것 조건 그대로, 마감만 지난 공지 수
-    const past = L.filterNotices(DATA.notices, { board: state.board, category: state.category, group: state.group, sub: state.sub, status: 'past' }, now).length;
+    if (state.status !== 'open' || state.savedOnly || state.due) return null;
+    // 지금 고른 검색어·게시판·분야·받는 것 조건 그대로, 마감만 지난 공지 수
+    const past = L.filterNotices(DATA.notices, { query: state.query, board: state.board, category: state.category, group: state.group, sub: state.sub, status: 'past' }, now).length;
     if (!past) return null;
     const T = t();
     const keep = DATA.meta.keep;
+    const msg = state.query.trim()
+      ? (state.lang === 'en' ? `${past} more closed notices match "${state.query.trim()}".`
+        : state.lang === 'zh' ? `还有 ${past} 条已截止公告符合“${state.query.trim()}”。`
+        : state.lang === 'ja' ? `「${state.query.trim()}」に一致する締切済みのお知らせが他に ${past}件あります。`
+        : `'${state.query.trim()}' 검색 결과 중 마감 지난 공지가 ${past}건 더 있어요.`)
+      : T.archiveHint(past, keep && keep.months ? keep.months : 0);
     return h('div', { class: 'archive-hint' },
-      h('p', null, T.archiveHint(past, keep && keep.months ? keep.months : 0)),
+      h('p', null, msg),
       h('button', { type: 'button', class: 'btn small', onclick: () => {
-        state.status = 'past'; $('#status').value = 'past'; renderList();
+        state.status = state.query.trim() ? 'all' : 'past';
+        if ($('#status')) $('#status').value = state.status;
+        renderList();
         const top = $('#list'); if (top) top.scrollIntoView({ behavior: reduceMotion() ? 'auto' : 'smooth', block: 'start' });
-      } }, T.archiveBtn));
+      } }, state.query.trim() ? (T.searchAllStatus || '전체 기간으로 보기') : T.archiveBtn));
   }
 
   // ---------- 해독 카드 (상세 대화상자) ----------
@@ -5163,7 +5189,11 @@
       const ids = hits.map((n) => n.id);
       out.splice(0, 0, { title: T.palNotices, items: hits.map((n) => ({
         icon: 'doc', label: titleOf(n),
-        sub: [n.deadline ? I.formatDate(L.parseLocal(n.deadline), state.lang) : '', catLabel(n.category)].filter(Boolean).join(' · '),
+        sub: [
+          L.isExpired(n, now) ? T.closed : '',
+          n.deadline ? I.formatDate(L.parseLocal(n.deadline), state.lang) : (n.date ? I.formatDate(L.parseLocal(n.date), state.lang) : ''),
+          catLabel(n.category)
+        ].filter(Boolean).join(' · '),
         run: () => openDetail(n.id, false, ids)
       })) });
       if (planUI) {
@@ -5687,6 +5717,7 @@
     renderList();
     renderHome();
     renderAlerts();
+    if (planUI && planUI.syncDept) planUI.syncDept((state.profile && state.profile.dept) || '', state.profile && state.profile.extraDept, state.profile && state.profile.multiType);
     if (state.budgetResult) runBudget();
     if (ask.res) runAsk(ask.q);
     if ($('#detail').open && state.openId) openDetail(state.openId, true);
@@ -5704,23 +5735,25 @@
     if (!box || !AK) return;
     fill(box, t().askExamples.map((q) => h('button', { type: 'button', class: 'chip small', onclick: () => { $('#ask-q').value = q; runAsk(q); } }, q)));
   }
-  function runAsk(question) {
+  function runAsk(question, opts) {
     if (!AK) return;
     const q = String(question || '').trim();
+    const keepPast = Boolean(opts && opts.includePast);
     ask.q = q;
     ask.seq += 1;
     ask.ai = null;
     ask.aiState = '';
-    ask.all = false;
+    ask.all = keepPast;
+    ask.includePast = keepPast;
     if (!q) { ask.res = null; renderAsk(); return; }
     const cond = AK.parse(q);
     const r = AK.run(DATA.notices.filter((n) => !isApplied(n.id)), cond,
-      { now, fit: (n, p) => fitStatus(n, p), profileSet: state.profile.set });
+      { now, fit: (n, p) => fitStatus(n, p), profileSet: state.profile.set, includePast: keepPast });
     // 내 정보가 있으면 대상이 아닌 공지는 뺀다
     if (state.profile.set && state.fitOnly) r.list = r.list.filter((n) => fitStatus(n) !== 'no');
     ask.res = Object.assign({ cond }, r);
     renderAsk();
-    if (server.ok && r.list.length) askAi(q, r.list, ask.seq);
+    if (server.ok && r.list.length && !keepPast) askAi(q, r.list, ask.seq);
   }
   async function askAi(q, list, seq) {
     const brief = AK.brief(list, state.lang, 8);
@@ -5808,6 +5841,8 @@
       shown.length ? h('ul', { class: 'home-list' }, shown.map((n) => homeRow(n, ids))) : h('p', { class: 'ask-none' }, T.askNone),
       h('div', { class: 'ask-actions' },
         !ask.all && r.list.length > 5 ? h('button', { type: 'button', class: 'link-btn', onclick: () => { ask.all = true; renderAsk(); } }, T.askSeeAll(r.list.length)) : null,
+        !ask.includePast && r.pastCount > 0 ? h('button', { type: 'button', class: 'link-btn', onclick: () => runAsk(ask.q, { includePast: true }) }, T.askIncludePast ? T.askIncludePast(r.pastCount) : `마감 공지 포함 전체 보기 (+${r.pastCount}건)`) : null,
+        ask.q ? h('button', { type: 'button', class: 'link-btn', onclick: () => goList({ query: ask.q, status: 'all' }) }, T.askGoNoticesAll || '공지 탭에서 전체 보기 →') : null,
         h('button', { type: 'button', class: 'link-btn', onclick: () => { $('#ask-q').value = ''; runAsk(''); } }, T.askClear))));
   }
 
@@ -5873,6 +5908,13 @@
       input.addEventListener('focus', () => {
         renderSearchSuggestPopover();
         pop.classList.add('is-open');
+      });
+      input.addEventListener('blur', () => {
+        setTimeout(() => {
+          if (document.activeElement !== input && !pop.contains(document.activeElement)) {
+            pop.classList.remove('is-open');
+          }
+        }, 160);
       });
       document.addEventListener('click', (e) => {
         if (!parent.contains(e.target)) pop.classList.remove('is-open');
@@ -6602,6 +6644,17 @@
     getLang: () => state.lang,
     getProfile: () => state.profile,
     getDept: () => state.dept,
+    setDept: (d) => {
+      state.profile.dept = d || '';
+      state.profile.set = !!(state.profile.dept || state.profile.grade || state.profile.intl);
+      store.set('profile', state.profile);
+      renderMyPanel(); renderHome(); renderList();
+    },
+    setExtraDept: (mType, extra) => {
+      state.profile.multiType = mType || '';
+      state.profile.extraDept = extra || '';
+      store.set('profile', state.profile);
+    },
     getTimetable: () => state.timetable,
     onChange: () => renderHome(),
     setTimetable: (classes, msg) => {

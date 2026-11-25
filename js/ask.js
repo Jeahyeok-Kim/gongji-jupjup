@@ -85,27 +85,42 @@
   // 조건으로 공지 고르기. ctx: { now, fit(n, extraProfile) -> 'yes'|'check'|'no'|null, profileSet }
   function run(notices, cond, ctx) {
     const now = ctx.now;
-    let list = notices.filter((n) => !L.isExpired(n, now));
-    if (cond.due !== null) {
-      list = list.filter((n) => { const d = L.daysLeft(n.deadline, now); return d !== null && d >= 0 && d <= cond.due; });
-    }
-    if (cond.subs.length || cond.groups.length) {
-      list = list.filter((n) => {
-        const b = L.classifyBenefit(n);
-        return cond.subs.some((s) => b.subs.includes(s)) || cond.groups.some((g) => b.groups.includes(g));
-      });
-    }
-    if (cond.words.length) list = list.filter((n) => cond.words.some((w) => L.matchesQuery(n, w)));
-    if (ctx.fit && (cond.intl || cond.grade)) {
-      const p = { set: true, level: 'undergrad', status: 'enrolled', intl: cond.intl, grade: cond.grade, dept: '' };
-      list = list.filter((n) => ctx.fit(n, p) !== 'no');
-    }
-    if (ctx.fit && cond.mine && ctx.profileSet) list = list.filter((n) => ctx.fit(n) !== 'no');
-    // 남은 낱말: 하나라도 맞는 공지만. 아무것도 안 맞는 낱말은 빼고 알려 준다
+    const filterPool = (pool) => {
+      let arr = pool;
+      if (cond.due !== null) {
+        arr = arr.filter((n) => { const d = L.daysLeft(n.deadline, now); return d !== null && d >= 0 && d <= cond.due; });
+      }
+      if (cond.subs.length || cond.groups.length) {
+        arr = arr.filter((n) => {
+          const b = L.classifyBenefit(n);
+          return cond.subs.some((s) => b.subs.includes(s)) || cond.groups.some((g) => b.groups.includes(g));
+        });
+      }
+      if (cond.words.length) arr = arr.filter((n) => cond.words.some((w) => L.matchesQuery(n, w)));
+      if (ctx.fit && (cond.intl || cond.grade)) {
+        const p = { set: true, level: 'undergrad', status: 'enrolled', intl: cond.intl, grade: cond.grade, dept: '' };
+        arr = arr.filter((n) => ctx.fit(n, p) !== 'no');
+      }
+      if (ctx.fit && cond.mine && ctx.profileSet) arr = arr.filter((n) => ctx.fit(n) !== 'no');
+      return arr;
+    };
+
+    let list = filterPool(ctx.includePast ? notices : notices.filter((n) => !L.isExpired(n, now)));
+    let usedPast = Boolean(ctx.includePast);
+    // 남은 낱말: 하나라도 맞는 공지만. 진행 중 공지에 없으면 마감 지난 공지까지 확장
     let ignored = [];
     let hits = new Map();
     if (cond.tokens.length) {
-      const good = cond.tokens.filter((t) => list.some((n) => L.matchesQuery(n, t)));
+      let good = cond.tokens.filter((t) => list.some((n) => L.matchesQuery(n, t)));
+      if (!good.length && cond.due === null && !ctx.includePast) {
+        const allPool = filterPool(notices);
+        const goodAll = cond.tokens.filter((t) => allPool.some((n) => L.matchesQuery(n, t)));
+        if (goodAll.length) {
+          list = allPool;
+          good = goodAll;
+          usedPast = true;
+        }
+      }
       ignored = cond.tokens.filter((t) => !good.includes(t));
       if (good.length) {
         for (const n of list) {
@@ -115,8 +130,28 @@
         list = list.filter((n) => hits.has(n.id));
       }
     }
+    let pastCount = 0;
+    if (!usedPast && cond.due === null) {
+      const closedPool = filterPool(notices.filter((n) => L.isExpired(n, now)));
+      const activeToks = cond.tokens.filter((t) => !ignored.includes(t));
+      pastCount = activeToks.length
+        ? closedPool.filter((n) => activeToks.some((t) => L.matchesQuery(n, t))).length
+        : closedPool.length;
+    }
     const sort = cond.sort || (cond.due !== null ? 'deadline' : hits.size ? 'relevance' : 'deadline');
-    if (sort === 'relevance') {
+    if (usedPast) {
+      const endOf = (n) => {
+        const ev = (n.events || []).map((e) => L.parseLocal(e.date)).filter(Boolean).sort((x, y) => y - x)[0];
+        const d = L.parseLocal(n.deadline) || ev || L.parseLocal(n.date);
+        return d ? d.getTime() : 0;
+      };
+      list = list.slice().sort((a, b) => {
+        const ea = Number(L.isExpired(a, now)), eb = Number(L.isExpired(b, now));
+        if (ea !== eb) return ea - eb;
+        if (ea) return endOf(b) - endOf(a);
+        return (hits.get(b.id) || 0) - (hits.get(a.id) || 0) || String(b.date || '').localeCompare(String(a.date || ''));
+      });
+    } else if (sort === 'relevance') {
       const dl = (n) => (n.deadline ? L.parseLocal(n.deadline).getTime() : Infinity);
       list = list.slice().sort((a, b) => (hits.get(b.id) || 0) - (hits.get(a.id) || 0) || dl(a) - dl(b));
     } else {
@@ -127,7 +162,7 @@
       const forIntl = (n) => /(유학생|외국인|international)/i.test(((n.eligibility && n.eligibility.ko) || '') + ' ' + n.title);
       list = list.filter(forIntl).concat(list.filter((n) => !forIntl(n)));
     }
-    return { list, ignored, sort };
+    return { list, ignored, sort, pastCount, usedPast };
   }
 
   // 로컬 AI에게 넘길 짧은 공지 정보 (번호는 1부터)

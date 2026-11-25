@@ -23,6 +23,8 @@
   const AGE = /(만\s*\d{2}\s*세|\d{2}\s*[~∼\-]\s*\d{2}\s*세|\d{4}\s*년?\s*[~∼\-]\s*\d{4}\s*년\s*생|\d{4}년[^,]{0,12}(이전|이후)\s*출생)/;
   const EXTRA = /(성적|평점|백분위|학점\s*이상|이수한|소득\s*분위|학자금\s*지원\s*구간|분위\s*이(하|내)|다자녀|장애|기초생활|차상위|봉사\s*시간|토익|TOPIK|어학\s*성적|자격증)/i;
   const REGION = /((충북|충청북도|충주|강화군|서울|경기|인천|부산|대구|광주|대전|울산|세종|강원|전남|전북|경남|경북|제주)[^,·]{0,6}(거주|출신|소재|주소))/;
+  // 건국대 GLOCAL캠퍼스는 충북 충주 소재 대학이므로 '충북/충주 소재 대학(원)생'은 지역 조건 확인에서 제외
+  const LOCAL_UNIV_REGION = /(충북|충청북도|충주)\s*(지역\s*)?(소재|내)\s*대학/;
   const EXCLUDE_WORDS = /(제외|불가|불가능|안\s*됨|지원할\s*수\s*없)/;
 
   function norm(s) { return String(s || '').replace(/\s+/g, ' ').trim(); }
@@ -84,7 +86,7 @@
     c.enrolledOnly = /재학/.test(text) && !c.leaveOk;
     c.depts = departments(text);
     c.extra = EXTRA.test(text);
-    c.region = REGION.test(text);
+    c.region = REGION.test(text) && !(LOCAL_UNIV_REGION.test(text) && !/(거주|출신|주소|관외|도민|시민)/.test(text));
     c.age = AGE.test(text);
     c.open = /(누구나|제한\s*없|모든\s*(사람|학생)|전체\s*학생|전\s*국민|대학생|대학\s*\(?\s*원\s*\)?\s*생|재학생|학생|청년|학우|구성원|본교생|고졸\s*이상|개인\s*(또는|및)|팀\s*단위|관심\s*(이\s*)?있는|희망하는|싶은\s*(사람|분))/.test(text);
     return c;
