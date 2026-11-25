@@ -1752,7 +1752,7 @@ body[data-tab="budget"] .view-head[data-view="budget"] { display: flex; }
 .sec-board .fine { margin-top: 10px; }
 
 /* ---- 지원 보드 (트렐로·노션 보드): 단계 칸으로 끌어 옮기기 ---- */
-.board { display: grid; grid-template-columns: repeat(4, minmax(236px, 1fr)); gap: 14px; align-items: stretch; overflow-x: auto; padding-bottom: 10px; }
+.board { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 14px; align-items: stretch; overflow-x: visible; padding-bottom: 10px; }
 .bcol {
   display: grid; align-content: start; gap: 10px; min-height: 380px; padding: 12px;
   border: 1px solid var(--line); border-radius: 16px; background: color-mix(in srgb, var(--surface) 45%, var(--bg));

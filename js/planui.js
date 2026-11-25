@@ -9,6 +9,13 @@
   function mount(deps) {
     const { h, store, toast } = deps;
     const T = () => deps.t();
+    const currentLang = () => (deps.getLang ? deps.getLang() : deps.lang) || 'ko';
+    const Tx = new Proxy({}, {
+      get: (_, prop) => {
+        const tr = (deps.t && deps.t()) || {};
+        return tr[prop];
+      }
+    });
     const $ = (s) => document.querySelector(s);
     const TT = root.GONGJI_TIMETABLE || null;
     const REQ = root.GONGJI_GRADREQ || null;
@@ -111,6 +118,7 @@
 
     function renderDetailedBreakdown(tot, req) {
       if (!req || (!req.major && !req.general)) return null;
+      const Tx = T();
 
       const majorReqDone = (st.history || []).filter((x) => x.kind === '전필').reduce((s, x) => s + (Number(x.credit) || 0), 0);
       const majorElectDone = (st.history || []).filter((x) => x.kind === '전선').reduce((s, x) => s + (Number(x.credit) || 0), 0);
@@ -125,45 +133,45 @@
         const freeDone = Math.max(0, tot.total - Math.min(tot.major, req.major || 0));
         const items = [
           {
-            label: reqMajorReq > 0 ? '전공필수' : '전공필수 (학과)',
+            label: reqMajorReq > 0 ? (Tx.kindLabel ? Tx.kindLabel.전필 : '전공필수') : (Tx.kindLabel ? `${Tx.kindLabel.전필} (학과)` : '전공필수 (학과)'),
             done: effectiveMajorReqDone,
             need: reqMajorReq || null,
-            tag: reqMajorReq > 0 ? (effectiveMajorReqDone >= reqMajorReq ? (trMajorReqDone > 0 ? '완료 ✓ (전적대 인정)' : '완료 ✓') : `${reqMajorReq - effectiveMajorReqDone}학점 부족`) : '의무 없음',
+            tag: reqMajorReq > 0 ? (effectiveMajorReqDone >= reqMajorReq ? (trMajorReqDone > 0 ? `${Tx.gbTagDone || '완료 ✓'} (${Tx.trRecognizedShort || '전적대 인정'})` : (Tx.gbTagDone || '완료 ✓')) : (Tx.gbTagShort ? Tx.gbTagShort(reqMajorReq - effectiveMajorReqDone) : `${reqMajorReq - effectiveMajorReqDone}학점 부족`)) : (Tx.reqNoDuty || '의무 없음'),
             ok: reqMajorReq > 0 ? effectiveMajorReqDone >= reqMajorReq : true
           },
           {
-            label: '전적대 전공 인정 (최대 15학점)',
+            label: Tx.gbItemTrMajor || '전적대 전공 인정 (최대 15학점)',
             done: trMajorCredits,
             need: 15,
-            tag: trMajorCredits >= 15 ? '15학점 인정 완료 ✓ (재수강 불가)' : trMajorCredits > 0 ? `${trMajorCredits}학점 인정 (재수강 불가 🚫)` : '인정 과목 미등록',
+            tag: trMajorCredits >= 15 ? `15${Tx.creditUnit || '학점'} ${Tx.gbTagDone || '완료 ✓'}` : trMajorCredits > 0 ? `${trMajorCredits}${Tx.creditUnit || '학점'} 인정` : (Tx.trNoCourses || '인정 과목 미등록'),
             ok: trMajorCredits > 0
           },
           {
-            label: `건국대 전공 이수 (${req.major || 0}학점)`,
+            label: Tx.gbItemKkuMajor ? Tx.gbItemKkuMajor(req.major || 0) : `건국대 전공 이수 (${req.major || 0}학점)`,
             done: tot.major,
             need: req.major,
-            tag: (tot.major >= (req.major || 0)) ? '완료 ✓' : `${(req.major || 0) - tot.major}학점 부족`,
+            tag: (tot.major >= (req.major || 0)) ? (Tx.gbTagDone || '완료 ✓') : (Tx.gbTagShort ? Tx.gbTagShort((req.major || 0) - tot.major) : `${(req.major || 0) - tot.major}학점 부족`),
             ok: tot.major >= (req.major || 0)
           },
           {
-            label: targetFree > 0 ? `건국대 자유·다전공 이수 (${targetFree}학점)` : '자유·다전공 이수',
+            label: targetFree > 0 ? (Tx.gbItemKkuFree ? Tx.gbItemKkuFree(targetFree) : `건국대 자유·다전공 이수 (${targetFree}학점)`) : (Tx.areaFree || '자유·다전공 이수'),
             done: freeDone,
             need: targetFree > 0 ? targetFree : null,
-            tag: targetFree === 0 ? '자유 불필요 (전공 100%)' : (freeDone >= targetFree ? '완료 ✓' : `${targetFree - freeDone}학점 부족`),
+            tag: targetFree === 0 ? (Tx.gbTagNoFreeNeeded || '자유 불필요 (전공 100%)') : (freeDone >= targetFree ? (Tx.gbTagDone || '완료 ✓') : (Tx.gbTagShort ? Tx.gbTagShort(targetFree - freeDone) : `${targetFree - freeDone}학점 부족`)),
             ok: targetFree === 0 || freeDone >= targetFree
           },
           {
-            label: `편입 총 이수 (${req.total || 66}학점)`,
+            label: Tx.gbItemTrTotal ? Tx.gbItemTrTotal(req.total || 66) : `편입 총 이수 (${req.total || 66}학점)`,
             done: tot.total,
             need: req.total || 66,
-            tag: (tot.total >= (req.total || 66)) ? '완료 ✓' : `${(req.total || 66) - tot.total}학점 부족`,
+            tag: (tot.total >= (req.total || 66)) ? (Tx.gbTagDone || '완료 ✓') : (Tx.gbTagShort ? Tx.gbTagShort((req.total || 66) - tot.total) : `${(req.total || 66) - tot.total}학점 부족`),
             ok: tot.total >= (req.total || 66)
           },
           {
-            label: '교양 영역별 필수',
+            label: Tx.gbItemGenExempt || '교양 영역별 필수',
             done: tot.general,
             need: null,
-            tag: '면제 ✓ (의무 없음)',
+            tag: Tx.gbTagExempt || '면제 ✓ (의무 없음)',
             ok: true,
             isExempt: true
           }
@@ -171,8 +179,8 @@
 
         return h('div', { class: 'grad-breakdown-card is-transfer-mode' },
           h('div', { class: 'gbc-head' },
-            h('h4', null, '📊 영역별 세부 졸업요건 이수율'),
-            h('span', { class: 'gbc-sub' }, '편입생: 기초·심화·KU소양 필수 면제 · 주전공 및 다전공·자유 학점 충족 여부')
+            h('h4', null, Tx.gradBreakdownTitle || '📊 영역별 세부 졸업요건 이수율'),
+            h('span', { class: 'gbc-sub' }, Tx.gradBreakdownSubTransfer || '편입생: 기초·심화·KU소양 필수 면제 · 주전공 및 다전공·자유 학점 충족 여부')
           ),
           h('div', { class: 'gbc-grid' }, items.map((it) => {
             const pct = it.need ? Math.min(100, Math.round((it.done / it.need) * 100)) : 100;
@@ -185,8 +193,8 @@
                 h('div', { class: 'gbc-bar-fill', style: `width:${pct}%;` })
               ),
               h('div', { class: 'gbc-item-nums' },
-                it.isExempt ? h('span', { class: 'exempt-text' }, `이수 ${it.done}학점 (자유 학점으로 인정)`)
-                  : [h('strong', null, `${it.done}학점`), it.need ? h('span', null, ` / ${it.need}학점`) : null]
+                it.isExempt ? h('span', { class: 'exempt-text' }, Tx.gbExemptEarned ? Tx.gbExemptEarned(it.done) : `이수 ${it.done}학점 (자유 학점으로 인정)`)
+                  : [h('strong', null, `${it.done}${Tx.creditUnit || '학점'}`), it.need ? h('span', null, ` / ${it.need}${Tx.creditUnit || '학점'}`) : null]
               )
             );
           }))
@@ -233,8 +241,8 @@
 
       return h('div', { class: 'grad-breakdown-card' },
         h('div', { class: 'gbc-head' },
-          h('h4', null, '📊 영역별 세부 졸업요건 이수율'),
-          h('span', { class: 'gbc-sub' }, '전필·교양 필수 영역별 충족 여부')
+          h('h4', null, Tx.gradBreakdownTitle || '📊 영역별 세부 졸업요건 이수율'),
+          h('span', { class: 'gbc-sub' }, Tx.gradBreakdownSubRegular || '전필·교양 필수 영역별 충족 여부')
         ),
         h('div', { class: 'gbc-grid' }, items.map((it) => {
           const pct = it.need ? Math.min(100, Math.round((it.done / it.need) * 100)) : 100;
@@ -566,7 +574,7 @@
           box.replaceChildren();
           return;
         }
-        const hits = (P.searchDepts ? P.searchDepts(val, REQ, deps.lang || 'ko') : []).slice(0, 8);
+        const hits = (P.searchDepts ? P.searchDepts(val, REQ, currentLang()) : []).slice(0, 8);
         if (!hits.length) {
           box.hidden = true;
           box.replaceChildren();
@@ -598,12 +606,15 @@
         }
         const resolved = (P.resolveDept ? P.resolveDept(v, REQ) : v) || v;
         st.req.dept = resolved;
+        const curLang = currentLang();
+        const DI18n = window.GongjiDeptI18n || root.GongjiDeptI18n;
+        const resolvedDisplay = (DI18n && DI18n.formatDept) ? DI18n.formatDept(resolved, curLang) : resolved;
         const inputEl = document.getElementById('req-dept-input');
-        if (inputEl && inputEl.value !== resolved) inputEl.value = resolved;
+        if (inputEl && inputEl.value !== resolvedDisplay) inputEl.value = resolvedDisplay;
         save();
         render();
         if (resolved && resolved !== v) {
-          toast(`'${v}' → [${resolved}] 학과로 자동 인식되었습니다.`);
+          toast(Tx.deptAutoResolved ? Tx.deptAutoResolved(v, resolvedDisplay) : `'${v}' → [${resolvedDisplay}] 학과로 자동 완성되었습니다.`);
         }
       };
 
@@ -673,7 +684,6 @@
                 type: 'text',
                 id: 'req-dept-input',
                 class: 'dept-input-name',
-                list: 'req-dept-datalist',
                 value: dept(),
                 placeholder: Tx.profileDeptPh || '학과명 입력 (예: 컴퓨터공학과, 컴공, Computer, CS)',
                 autocomplete: 'off',
@@ -683,7 +693,6 @@
                 onblur: (e) => onDeptBlur(e.target),
                 onchange: (e) => commitDept(e.target.value)
               }),
-              h('datalist', { id: 'req-dept-datalist' }, Object.keys((deps.gradreq && deps.gradreq.depts) || {}).map((d) => h('option', { value: d }))),
               h('ul', { id: 'dept-suggest-box', class: 'dept-suggest-box', hidden: true })
             )
           ),
@@ -1223,30 +1232,30 @@
       },
         h('form', { class: 'course-edit-modal-card', onsubmit: onSave },
           h('div', { class: 'cem-head' },
-            h('h3', { class: 'cem-title' }, `✏️ 과목 정보 수정`),
+            h('h3', { class: 'cem-title' }, Tx.cemTitle || `✏️ 과목 정보 수정`),
             h('button', {
               type: 'button',
               class: 'icon-x',
-              title: '닫기',
+              title: Tx.close || '닫기',
               onclick: () => backdrop.remove()
             }, '×')
           ),
           h('div', { class: 'cem-fields' },
             h('div', { class: 'cem-field-group' },
-              h('label', null, '과목명'),
+              h('label', null, Tx.cemName || '과목명'),
               h('input', {
                 type: 'text',
                 name: 'editName',
                 value: courseItem.name,
                 required: true,
                 maxlength: '60',
-                placeholder: '과목명'
+                placeholder: Tx.cemName || '과목명'
               })
             ),
             h('div', { class: 'cem-field-group' },
-              h('label', null, '이수 학기 (학기 변경 시 해당 학기로 바로 이동)'),
+              h('label', null, Tx.cemTerm || '이수 학기 (학기 변경 시 해당 학기로 바로 이동)'),
               h('select', { name: 'editTerm' },
-                h('option', { value: '', selected: !courseItem.term ? true : null }, '학기 모름'),
+                h('option', { value: '', selected: !courseItem.term ? true : null }, Tx.cemTermUnknown || '학기 모름'),
                 terms.map((t) => h('option', {
                   value: t,
                   selected: courseItem.term === t ? true : null
@@ -1255,7 +1264,7 @@
             ),
             h('div', { class: 'cem-row' },
               h('div', { class: 'cem-field-group' },
-                h('label', null, '이수구분'),
+                h('label', null, Tx.cemKind || '이수구분'),
                 h('select', { name: 'editKind' },
                   allKinds.map((k) => h('option', {
                     value: k,
@@ -1264,7 +1273,7 @@
                 )
               ),
               h('div', { class: 'cem-field-group' },
-                h('label', null, '학점'),
+                h('label', null, Tx.cemCredit || '학점'),
                 h('input', {
                   type: 'number',
                   name: 'editCredit',
@@ -1277,9 +1286,9 @@
               )
             ),
             h('div', { class: 'cem-field-group' },
-              h('label', null, '취득 성적'),
+              h('label', null, Tx.cemGrade || '취득 성적'),
               h('select', { name: 'editGrade' },
-                h('option', { value: '', selected: !courseItem.grade ? true : null }, '— (미입력/재학 중)'),
+                h('option', { value: '', selected: !courseItem.grade ? true : null }, Tx.cemGradeNone || '— (미입력/재학 중)'),
                 P.GRADES.concat('F').map((g) => h('option', {
                   value: g,
                   selected: courseItem.grade === g ? true : null
@@ -1293,16 +1302,16 @@
               class: 'btn small',
               style: 'margin-right: auto; color: var(--danger, #ef4444); border-color: rgba(239, 68, 68, 0.3);',
               onclick: onDelete
-            }, '과목 삭제'),
+            }, Tx.cemDelete || '과목 삭제'),
             h('button', {
               type: 'button',
               class: 'btn small',
               onclick: () => backdrop.remove()
-            }, '취소'),
+            }, Tx.cancel || '취소'),
             h('button', {
               type: 'submit',
               class: 'btn small primary'
-            }, '수정 저장')
+            }, Tx.cemSave || '수정 저장')
           )
         )
       );

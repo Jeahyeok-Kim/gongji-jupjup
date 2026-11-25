@@ -691,10 +691,10 @@
             )
           ),
           h('div', { class: 'bpg-chips' },
-            h('span', { class: 'bpg-chip-label' }, state.lang === 'en' ? 'Explore:' : '추천 바로담기:'),
-            h('button', { type: 'button', class: 'chip small bpg-chip', onclick: () => goList({ due: 'soon', sort: 'deadline' }) }, '🔥 마감 임박'),
-            h('button', { type: 'button', class: 'chip small bpg-chip', onclick: () => goList({ category: '장학', sort: 'deadline' }) }, '💰 장학금'),
-            h('button', { type: 'button', class: 'chip small bpg-chip', onclick: () => goList({ category: '공모전', sort: 'deadline' }) }, '🏆 공모전')
+            h('span', { class: 'bpg-chip-label' }, T.bpgLabel || (state.lang === 'en' ? 'Explore:' : state.lang === 'ja' ? 'おすすめクイック追加:' : state.lang === 'zh' ? '推荐快捷添加:' : '추천 바로담기:')),
+            h('button', { type: 'button', class: 'chip small bpg-chip', onclick: () => goList({ due: 'soon', sort: 'deadline' }) }, T.bpgChipSoon || '🔥 마감 임박'),
+            h('button', { type: 'button', class: 'chip small bpg-chip', onclick: () => goList({ category: '장학', sort: 'deadline' }) }, T.bpgChipScholar || '💰 장학금'),
+            h('button', { type: 'button', class: 'chip small bpg-chip', onclick: () => goList({ category: '공모전', sort: 'deadline' }) }, T.bpgChipContest || '🏆 공모전')
           )
         );
       } else {
@@ -829,8 +829,9 @@
     const setResult = (val) => {
       const trimmed = (val || '').trim();
       setTrack(K.update(state.track, n.id, { result: trimmed }), n.id);
-      if (trimmed) toast(`결과가 [${trimmed}](으)로 저장되었습니다.`);
-      else toast('결과가 초기화되었습니다.');
+      const T = t();
+      if (trimmed) toast(T.resultSaved ? T.resultSaved(trimmed) : `결과가 [${trimmed}](으)로 저장되었습니다.`);
+      else toast(T.resultCleared || '결과가 초기화되었습니다.');
     };
 
     return h('div', { class: 'result-tracker-wrap' },
@@ -841,11 +842,11 @@
           h('button', {
             type: 'button',
             class: 'result-clear-btn',
-            title: '결과 초기화',
-            'aria-label': '결과 초기화',
+            title: t().resultClearBtn || '결과 초기화',
+            'aria-label': t().resultClearBtn || '결과 초기화',
             onclick: () => setResult('')
           }, '✕')
-        ) : h('span', { class: 'fine' }, '결과를 선택하거나 직접 입력하세요')
+        ) : h('span', { class: 'fine' }, t().resultPickOrType || '결과를 선택하거나 직접 입력하세요')
       ),
       h('div', { class: 'result-presets-grid', role: 'group', 'aria-label': '추천 결과 목록' },
         cat.presets.map((p) => {
@@ -1442,7 +1443,13 @@
         n.deadline
           ? fact(T.deadline, [I.formatDateTime(L.parseLocal(n.deadline), state.lang), ' ', ddayBadge(n)])
           : fact(T.deadline, T.notStated, true),
-        n.benefit ? fact(T.benefit, tr(n.benefit.text)) : fact(T.benefit, T.notStated, true),
+        n.benefit ? fact(T.benefit, [
+          tr(n.benefit.text),
+          (L.classifyBenefit(n).subs.includes('dadream') || (n.benefit && n.benefit.points)) ? h('div', { class: 'dadream-scholarship-tip' },
+            h('span', { class: 'dst-badge' }, '🍱 ' + ((T.subs && T.subs.dadream) || '다드림 포인트')),
+            h('span', { class: 'dst-desc' }, T.dadreamScholarshipTip || '건국대 다드림 포인트 장학금: 학기별 상위 400명에게 현금 장학금(대상 70만·최우수 50만·우수 30만·장려 10만 원) 지급!')
+          ) : null
+        ]) : fact(T.benefit, T.notStated, true),
         fact(T.category, catLabel(n.category)),
         n.eligibility ? fact(T.eligibility, tr(n.eligibility)) : fact(T.eligibility, T.notStated, true),
         state.profile.set && fitOf(n) ? fact(T.fitLabel, [fitBadge(n), ' ',
@@ -2009,11 +2016,13 @@
     store.set('timetable', state.timetable);
     timetableChanged();
     renderTimetable();
-    toast(`'${target.name}' 시간표로 전환되었습니다.`);
+    const T = t();
+    toast(T.ttSwitched ? T.ttSwitched(target.name) : `'${target.name}' 시간표로 전환되었습니다.`);
   }
 
   function addTimetable(name, classes) {
-    const newName = (name || prompt('새 시간표 이름을 입력해주세요:', `시간표 ${state.timetables.length + 1}`) || '').trim();
+    const T = t();
+    const newName = (name || prompt(T.ttNewPrompt || '새 시간표 이름을 입력해주세요:', `시간표 ${state.timetables.length + 1}`) || '').trim();
     if (!newName) return;
     const newId = 'tt_' + Date.now().toString(36) + '_' + Math.random().toString(36).slice(2, 6);
     const newEntry = {
@@ -2028,13 +2037,14 @@
     saveTimetable();
     timetableChanged();
     renderTimetable();
-    toast(`새 시간표 '${newName}'이(가) 생성되었습니다.`);
+    toast(T.ttNewCreated ? T.ttNewCreated(newName) : `새 시간표 '${newName}'이(가) 생성되었습니다.`);
   }
 
   function duplicateTimetable() {
     const cur = state.timetables.find((t) => t.id === state.activeTimetableId);
     const baseName = cur ? cur.name : '시간표';
-    const newName = (prompt('복제할 시간표 이름을 입력해주세요:', `${baseName} (사본)`) || '').trim();
+    const T = t();
+    const newName = (prompt(T.ttCopyPrompt || '복제할 시간표 이름을 입력해주세요:', `${baseName} (사본)`) || '').trim();
     if (!newName) return;
     const newId = 'tt_' + Date.now().toString(36) + '_' + Math.random().toString(36).slice(2, 6);
     const clonedClasses = JSON.parse(JSON.stringify(state.timetable)).map((c) => ({
@@ -2053,7 +2063,7 @@
     saveTimetable();
     timetableChanged();
     renderTimetable();
-    toast(`'${newName}'으로 복제되었습니다.`);
+    toast(T.ttCopyDone ? T.ttCopyDone(newName) : `'${newName}'(으)로 복제되었습니다.`);
   }
 
   function manageTimetable() {
@@ -2062,14 +2072,16 @@
     const isOnly = state.timetables.length <= 1;
     const choice = confirm(`[시간표 관리: ${cur.name}]\n\n• 확인(OK): 이름 변경\n• 취소(Cancel): ${isOnly ? '닫기' : '이 시간표 삭제'}`);
     if (choice) {
-      const newName = (prompt('새 이름을 입력해주세요:', cur.name) || '').trim();
+      const T = t();
+      const newName = (prompt(T.ttRenamePrompt || '새 이름을 입력해주세요:', cur.name) || '').trim();
       if (newName && newName !== cur.name) {
         cur.name = newName;
         saveTimetable();
-        toast(`시간표 이름이 '${newName}'(으)로 변경되었습니다.`);
+        toast(T.ttRenameDone ? T.ttRenameDone(newName) : `시간표 이름이 '${newName}'(으)로 변경되었습니다.`);
       }
     } else if (!isOnly) {
-      const delConfirm = confirm(`정말 '${cur.name}' 시간표를 삭제하시겠습니까?\n이 작업은 취소할 수 없습니다.`);
+      const T = t();
+      const delConfirm = confirm(T.ttDeleteConfirm ? T.ttDeleteConfirm(cur.name) : `정말 '${cur.name}' 시간표를 삭제하시겠습니까?\n이 작업은 취소할 수 없습니다.`);
       if (delConfirm) {
         const delName = cur.name;
         state.timetables = state.timetables.filter((t) => t.id !== cur.id);
@@ -2078,7 +2090,7 @@
         saveTimetable();
         timetableChanged();
         renderTimetable();
-        toast(`'${delName}' 시간표가 삭제되었습니다.`);
+        toast(T.ttDeleted ? T.ttDeleted(delName) : `'${delName}' 시간표가 삭제되었습니다.`);
       }
     }
   }
@@ -5022,12 +5034,28 @@
       else if (ask.ai) ai = h('div', { class: 'ask-ai' }, h('h4', null, T.askAiTitle), h('p', null, cited(ask.ai.answer, ask.ai.brief, ids)), h('p', { class: 'fine' }, T.askAiNote));
       else if (server.checked && !server.ok) ai = h('p', { class: 'fine ask-ai-hint' }, T.askAiLocalOnly);
     }
+    const isDadreamQuery = c.subs.includes('dadream') || (ask.q && /다드림|포인트|비교과|dadream/i.test(ask.q));
+    const dadreamBanner = isDadreamQuery ? h('div', { class: 'ask-dadream-banner' },
+      h('div', { class: 'adb-head' },
+        h('span', { class: 'adb-icon' }, '🍱'),
+        h('strong', { class: 'adb-title' }, T.dadreamBannerTitle || '건국대 글로컬 다드림 포인트 장학금 지급 기준'),
+        h('span', { class: 'adb-badge' }, T.dadreamBannerTotal || '총 400명 선발 · 1.1억 원 규모')
+      ),
+      h('div', { class: 'adb-table' },
+        h('div', { class: 'adb-row gold' }, h('span', { class: 'adb-tier' }, T.dadreamTierGrand || '대상 (상위 20명)'), h('strong', { class: 'adb-amount' }, '700,000원')),
+        h('div', { class: 'adb-row silver' }, h('span', { class: 'adb-tier' }, T.dadreamTierFirst || '최우수 (상위 60명)'), h('strong', { class: 'adb-amount' }, '500,000원')),
+        h('div', { class: 'adb-row bronze' }, h('span', { class: 'adb-tier' }, T.dadreamTierSecond || '우수 (상위 120명)'), h('strong', { class: 'adb-amount' }, '300,000원')),
+        h('div', { class: 'adb-row green' }, h('span', { class: 'adb-tier' }, T.dadreamTierEnc || '장려 (상위 200명)'), h('strong', { class: 'adb-amount' }, '100,000원'))
+      ),
+      h('p', { class: 'adb-note' }, T.dadreamBannerNote || '※ 선발 대상: 당해 학기 다드림 포인트 상위 획득자 순으로 선발하여 현금 장학금으로 지급됩니다.')
+    ) : null;
     fill(box, h('div', { class: 'ask-card' },
       h('div', { class: 'ask-cond' },
         h('span', { class: 'ask-cond-label' }, T.askUnderstood),
         chips.map((x) => h('span', { class: 'cond-chip' }, x)),
         h('span', { class: 'ask-count' }, T.askCount(r.list.length))),
       r.ignored.length ? h('p', { class: 'fine' }, T.askIgnored(r.ignored.join(', '))) : null,
+      dadreamBanner,
       ai,
       shown.length ? h('ul', { class: 'home-list' }, shown.map((n) => homeRow(n, ids))) : h('p', { class: 'ask-none' }, T.askNone),
       h('div', { class: 'ask-actions' },
@@ -5818,6 +5846,7 @@
   // 이수 내역 · 수강신청 추천 (js/planui.js): 시간표 화면 안의 두 보기
   planUI = window.GongjiPlanUI && window.GongjiPlan ? window.GongjiPlanUI.mount({
     h, store, toast, t, now, dayName, classColor,
+    getLang: () => state.lang,
     getProfile: () => state.profile,
     getDept: () => state.dept,
     getTimetable: () => state.timetable,

@@ -342,6 +342,14 @@
           minDistance = dEn;
           bestMatch = name;
         }
+        const enWords = (meta.en || '').toLowerCase().split(/[\s&/·,-]+/).filter((w) => w.length >= 3);
+        for (const w of enWords) {
+          const dWord = levenshteinDistance(normRaw, normDeptStr(w));
+          if (dWord <= 2 && dWord < minDistance) {
+            minDistance = dWord;
+            bestMatch = name;
+          }
+        }
         for (const a of meta.aliases || []) {
           if (a.length >= 4) {
             const da = levenshteinDistance(normRaw, normDeptStr(a));
@@ -435,7 +443,7 @@
         const local = (lang && lang !== 'ko' && meta[lang]) ? meta[lang] : '';
         scored.push({
           name,
-          displayName: local ? `${name} (${local})` : name,
+          displayName: local ? (lang === 'ko' ? `${name} (${local})` : `${local} (${name})`) : name,
           subText: [meta.en, matchNote, ...(meta.aliases || []).slice(0, 2)].filter(Boolean).filter((v, i, arr) => arr.indexOf(v) === i).join(' · '),
           score
         });

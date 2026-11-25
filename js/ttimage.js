@@ -185,10 +185,29 @@
     const cv = draw(classes, opt);
     const blob = await new Promise((res) => cv.toBlob(res, 'image/png'));
     if (!blob) return false;
+    const filename = (opt && opt.filename) || 'gongji-timetable.png';
+
+    // 모바일(iOS Safari / Android)에서 네이티브 공유 및 사진첩 저장 지원 (Web Share API)
+    if (typeof navigator !== 'undefined' && navigator.share && navigator.canShare) {
+      try {
+        const file = new File([blob], filename, { type: 'image/png' });
+        if (navigator.canShare({ files: [file] })) {
+          await navigator.share({
+            files: [file],
+            title: opt.title || '공지 줍줍 시간표',
+            text: opt.sub || ''
+          });
+          return true;
+        }
+      } catch (err) {
+        if (err.name === 'AbortError') return false; // 사용자가 공유창 닫음
+      }
+    }
+
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
-    a.download = (opt && opt.filename) || 'gongji-timetable.png';
+    a.download = filename;
     document.body.append(a);
     a.click();
     a.remove();
