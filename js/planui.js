@@ -1707,7 +1707,9 @@
     function runSoon() {
       st.busy = true;
       renderPlan();
-      setTimeout(() => { st.busy = false; run(); }, 30);
+      setTimeout(() => {
+        try { run(); } finally { st.busy = false; renderPlan(); }
+      }, 20);
     }
 
     function chipToggle(label, on, onclick, extra) {
@@ -1847,6 +1849,7 @@
         const CR = window.GongjiCampusRoute;
         const DI18n = window.GongjiDeptI18n;
         const lang = currentLang();
+        const profTitle = (pr) => (lang === 'en' ? `Prof. ${pr}` : lang === 'zh' || lang === 'ja' ? `${pr} 教授` : `${pr} 교수`);
         const room = [...new Set(sec.t.map((y) => y[3]).filter(Boolean))].map((rm) => (CR && CR.formatRoom) ? CR.formatRoom(rm, lang) : rm).join(', ');
         const courseName = (DI18n && DI18n.formatCourse) ? DI18n.formatCourse(g.name, lang) : g.name;
         const deptName = (g.area === 'major' && g.dept) ? ((DI18n && DI18n.formatDept) ? DI18n.formatDept(g.dept, lang) : g.dept) : '';

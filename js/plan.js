@@ -763,6 +763,23 @@
 
   // ---------- 시간표 품질 평가 (Schedule Quality Fitness) ----------
   // 공강일 수, 우주공강 방지, 점심시간 확보, 하루 1과목 낭비 등교 방지 등을 점수화
+  // Memoized consecutive-class route penalty so DFS never re-parses campus buildings
+  const routePenaltyCache = new Map();
+  function routePenalty(roomA, roomB, gap) {
+    if (!roomA || !roomB) return 0;
+    const key = `${roomA}|${roomB}|${gap}`;
+    if (routePenaltyCache.has(key)) return routePenaltyCache.get(key);
+    const CR = (typeof window !== 'undefined' && window.GongjiCampusRoute) || root.GongjiCampusRoute;
+    let p = 0;
+    if (CR && CR.calculateRoute) {
+      const rt = CR.calculateRoute(roomA, roomB, gap, 'ko');
+      p = rt.level === 'danger' ? -30 : rt.level === 'warning' ? -10 : 5;
+    }
+    if (routePenaltyCache.size > 4000) routePenaltyCache.clear();
+    routePenaltyCache.set(key, p);
+    return p;
+  }
+
   function scheduleQuality(slots, theme) {
     if (!slots || !slots.length) return 60;
     const byDay = {};
@@ -770,7 +787,6 @@
       if (!byDay[d]) byDay[d] = [];
       byDay[d].push([toMin(a), toMin(b), room || '']);
     }
-    const CR = (typeof window !== 'undefined' && window.GongjiCampusRoute) || root.GongjiCampusRoute;
     let score = 100;
     const weekdays = [1, 2, 3, 4, 5];
     const daysAttending = weekdays.filter((d) => byDay[d] && byDay[d].length > 0);
@@ -801,11 +817,8 @@
           score -= Math.min(50, 20 + Math.round((gap - 150) / 3)); // 우주공강 감점
         } else if (gap >= 20 && gap <= 80) {
           score += 8; // 편안한 쉬는시간
-        } else if (gap > 0 && gap <= 20 && CR && CR.calculateRoute && times[i][2] && times[i + 1][2]) {
-          const rt = CR.calculateRoute(times[i][2], times[i + 1][2], gap, 'ko');
-          if (rt.level === 'danger') score -= 30;
-          else if (rt.level === 'warning') score -= 10;
-          else score += 5;
+        } else if (gap > 0 && gap <= 20 && times[i][2] && times[i + 1][2]) {
+          score += routePenalty(times[i][2], times[i + 1][2], gap);
         }
         // 점심시간(11:30~13:30 사이) 40분 이상 공강 확보
         if (times[i][1] <= 12 * 60 + 20 && times[i + 1][0] >= 12 * 60 + 40 && gap >= 40) {
@@ -944,7 +957,8 @@
     const pool = ['major', 'general', 'free'].flatMap((a) => free.filter((c) => c.area === a).slice(0, a === 'free' ? 6 : per))
       .sort((a, b) => (b.score / b.g.credit) - (a.score / a.g.credit) || b.score - a.score);
     const n = pool.length;
-    const maxNodes = o.maxNodes || 50000;
+    const maxNodes = o.maxNodes || 8000;
+    const deadlineMs = Date.now() + (o.maxMs || 45);
     let nodes = 0;
 
     let best = { val: -1, quality: -1, credits: -1, chosen: [] };
@@ -962,24 +976,17 @@
       return (over ? Math.min(c.score, 18) : c.score) * c.g.credit;
     };
 
-    function evaluateCombo(items, currentCredits, currentSlots) {
-      const courseVal = items.reduce((sum, item) => sum + valueOf(item.c), 0);
-      const quality = scheduleQuality(currentSlots, o.theme);
-      // 목표 학점을 맞추는 것이 1순위, 그 다음 과목 가치와 시간표 품질
-      const creditScore = currentCredits === cap ? 200 : currentCredits > (cap - 2) ? 100 : 0;
-      return (courseVal * 0.7) + (quality * 0.8) + creditScore;
-    }
-
     function dfs(i, credits, slots, val) {
       nodes += 1;
-      if (credits <= cap) {
+      if (credits <= cap && credits >= best.credits - 3) {
         const quality = scheduleQuality(slots, o.theme);
-        const comboScore = evaluateCombo(chosen, credits, slots);
+        const creditScore = credits === cap ? 200 : credits > (cap - 2) ? 100 : 0;
+        const comboScore = (val * 0.7) + (quality * 0.8) + creditScore;
         if (comboScore > best.val || (comboScore === best.val && credits > best.credits)) {
           best = { val: comboScore, quality, credits, chosen: chosen.slice() };
         }
       }
-      if (i >= n || nodes > maxNodes || credits >= cap) return;
+      if (i >= n || nodes > maxNodes || (nodes % 256 === 0 && Date.now() > deadlineMs) || credits >= cap) return;
 
       const c = pool[i];
       const nm = normName(c.g.name);
@@ -1036,7 +1043,7 @@
   // 3. lateStart: 오후 집중형 (오전 10:30 이전 1교시 배제)
   // 4. smartMix: 이러닝+대면 꿀조합 (원격 과목 활용으로 등교 부담 최소화)
   function alternatives(opts) {
-    const o = { ...(opts || {}), maxNodes: (opts && opts.maxNodes) || 30000 };
+    const o = { ...(opts || {}), maxNodes: (opts && opts.maxNodes) || 6000, maxMs: (opts && opts.maxMs) || 40 };
     const base = recommend({ ...o, theme: 'balanced' });
     const enough = (r) => r.credits >= Math.min(base.credits, base.target - 2);
     const out = [{ key: 'balanced', title: '황금 밸런스', result: base, days: daysUsed(base), start: earliest(base), quality: base.quality }];
