@@ -2726,6 +2726,7 @@
     let justDragged = false;
     let startX = 0;
     let startY = 0;
+    let grabOffsetY = 0;
     let ghostEl = null;
     let tipEl = null;
     let targetCol = null;
@@ -2746,6 +2747,8 @@
       targetDay = d;
       targetStart = s;
       targetCol = btn.parentElement;
+      const btnRect = btn.getBoundingClientRect();
+      grabOffsetY = Math.max(0, Math.min(btnRect.height, clientY - btnRect.top));
 
       if (navigator.vibrate) {
         try { navigator.vibrate(25); } catch {}
@@ -2757,13 +2760,14 @@
       // 드래그 목적지 고스트 생성
       ghostEl = document.createElement('div');
       ghostEl.className = 'tt-drag-ghost';
-      ghostEl.style.cssText = `top:${pct(s)};height:${pct(dur + base)};--c:${classColor(c.name)}`;
+      ghostEl.style.cssText = `top:${pct(s)};height:${pct(dur + base)};--c:${classColor(c.name)};pointer-events:none;`;
       ghostEl.innerHTML = `<span class="tt-dg-label">${c.name}</span><span class="tt-dg-time">${c.start}~${c.end}</span>`;
       btn.parentElement.appendChild(ghostEl);
 
       // 마우스/터치를 따라다니는 플로팅 안내 뱃지
       tipEl = document.createElement('div');
       tipEl.className = 'tt-drag-floating-tip';
+      tipEl.style.pointerEvents = 'none';
       updateTipContent(clientX, clientY, targetDay, targetStart, targetStart + dur);
       document.body.appendChild(tipEl);
     }
@@ -2771,42 +2775,28 @@
     function updateTipContent(cx, cy, day, st, en) {
       if (!tipEl) return;
       const snapStep = window.GONGJI_SNAP_STEP || 30;
+      const lang = state.lang || 'ko';
+      const stepLbl = lang === 'en' ? `${snapStep}m snap` : lang === 'zh' ? `${snapStep}分微调` : lang === 'ja' ? `${snapStep}分スナップ` : `${snapStep}분 스냅`;
       tipEl.style.left = `${Math.min(window.innerWidth - 190, Math.max(10, cx + 16))}px`;
-      tipEl.style.top = `${Math.max(10, cy - 44)}px`;
+      tipEl.style.top = `${Math.max(10, cy - 54)}px`;
       const stStr = fromMinutes(st);
       const enStr = fromMinutes(en);
-      tipEl.innerHTML = `<span class="tt-tip-day">${dayName(day)}</span> <strong>${stStr}~${enStr}</strong> <span class="tt-tip-step">(${snapStep}분 스냅)</span>`;
+      tipEl.innerHTML = `<span class="tt-tip-day">${dayName(day)}</span> <strong>${stStr}~${enStr}</strong> <span class="tt-tip-step">(${stepLbl})</span>`;
     }
 
-    function onPointerMove(mev) {
-      const dx = mev.clientX - startX;
-      const dy = mev.clientY - startY;
-      const dist = Math.hypot(dx, dy);
-
-      if (!isDragging) {
-        if (dist > 7) {
-          if (mev.pointerType === 'touch') {
-            // 모바일 터치 스크롤 동작 감지: 롱프레스 취소하고 자연스럽게 스크롤 허용
-            if (timer) { clearTimeout(timer); timer = null; }
-            cleanupListeners();
-            return;
-          } else {
-            // PC 마우스 드래그 동작: 7px 이상 움직이면 즉시 드래그 모드 진입
-            if (timer) { clearTimeout(timer); timer = null; }
-            startDrag(mev.clientX, mev.clientY);
-          }
-        } else {
-          return;
-        }
-      }
-
-      // 드래그 중 브라우저 기본 스크롤 차단
-      if (mev.cancelable) mev.preventDefault();
+    function applyMove(cx, cy) {
       hasMoved = true;
 
-      // 커서 위치 기준 요일 컬럼 탐색
-      const elUnder = document.elementFromPoint(mev.clientX, mev.clientY);
-      const colUnder = elUnder?.closest('.tt-col');
+      // 커서/손가락 위치 기준 요일 컬럼 탐색 (X좌표로도 fallback 탐색)
+      const elUnder = document.elementFromPoint(cx, cy);
+      let colUnder = elUnder?.closest('.tt-col');
+      if (!colUnder) {
+        const cols = document.querySelectorAll('.tt-col[data-day]');
+        for (const col of cols) {
+          const r = col.getBoundingClientRect();
+          if (cx >= r.left && cx <= r.right) { colUnder = col; break; }
+        }
+      }
       if (colUnder && colUnder !== targetCol) {
         targetCol = colUnder;
         targetDay = parseInt(targetCol.getAttribute('data-day'), 10) || d;
@@ -2815,20 +2805,19 @@
         }
       }
 
-      // 목표 요일 컬럼 내 Y좌표로부터 시간 계산
+      // 목표 요일 컬럼 내 카드 상단 기준 Y좌표로부터 시간 계산 (grabOffsetY 보정!)
       const curCol = targetCol || btn.parentElement;
       const rect = curCol.getBoundingClientRect();
-      const relY = Math.max(0, Math.min(rect.height, mev.clientY - rect.top));
+      const cardTopY = cy - grabOffsetY;
+      const relY = Math.max(0, Math.min(rect.height, cardTopY - rect.top));
       const rawMin = base + (relY / rect.height) * span;
 
-      // 사용자가 선택한 단위(기본 30분, 미세조정 10분)로 정밀 스냅
       const snapStep = window.GONGJI_SNAP_STEP || 30;
       let snappedS = Math.round(rawMin / snapStep) * snapStep;
       snappedS = Math.max(from * 60, Math.min(to * 60 - dur, snappedS));
       targetStart = snappedS;
       const targetEnd = targetStart + dur;
 
-      // 고스트 요소 위치 및 시간 라벨 업데이트
       if (ghostEl) {
         ghostEl.style.top = pct(targetStart);
         ghostEl.style.height = pct(dur + base);
@@ -2836,10 +2825,50 @@
         if (timeSpan) timeSpan.textContent = `${fromMinutes(targetStart)}~${fromMinutes(targetEnd)}`;
       }
 
-      updateTipContent(mev.clientX, mev.clientY, targetDay, targetStart, targetEnd);
+      updateTipContent(cx, cy, targetDay, targetStart, targetEnd);
     }
 
-    function onPointerUp(uev) {
+    function onPointerMove(mev) {
+      if (mev.pointerType === 'touch') return; // 터치는 전용 touchmove 핸들러가 제어
+      const dx = mev.clientX - startX;
+      const dy = mev.clientY - startY;
+      const dist = Math.hypot(dx, dy);
+
+      if (!isDragging) {
+        if (dist > 7) {
+          if (timer) { clearTimeout(timer); timer = null; }
+          startDrag(mev.clientX, mev.clientY);
+        } else {
+          return;
+        }
+      }
+
+      if (mev.cancelable) mev.preventDefault();
+      applyMove(mev.clientX, mev.clientY);
+    }
+
+    function onTouchMove(tev) {
+      const t0 = tev.touches && tev.touches[0];
+      if (!t0) return;
+      const dx = t0.clientX - startX;
+      const dy = t0.clientY - startY;
+      const dist = Math.hypot(dx, dy);
+
+      if (!isDragging) {
+        if (dist > 14) {
+          // 롱프레스 전에 손가락이 크게 움직이면 일반 스크롤로 간주
+          if (timer) { clearTimeout(timer); timer = null; }
+          cleanupListeners();
+        }
+        return;
+      }
+
+      // 드래그 활성 상태에서는 브라우저 스크롤 완전 차단
+      if (tev.cancelable) tev.preventDefault();
+      applyMove(t0.clientX, t0.clientY);
+    }
+
+    function finishDrag() {
       if (timer) { clearTimeout(timer); timer = null; }
       cleanupListeners();
 
@@ -2849,7 +2878,6 @@
         const finalEnd = finalStart + dur;
         cleanupGhostAndTip();
 
-        // 실제 시간이나 요일이 바뀐 경우에만 저장 및 토스트 알림
         if (finalDay !== d || finalStart !== s) {
           const prevSchedule = state.timetable.map((x) => ({ ...x }));
           const newStartStr = fromMinutes(finalStart);
@@ -2865,8 +2893,14 @@
             try { navigator.vibrate([30, 45]); } catch {}
           }
 
-          toast(`'${c.name}' 수업이 ${dayName(finalDay)} ${newStartStr}~${newEndStr}로 이동되었습니다.`, {
-            label: '실행 취소',
+          const lang = state.lang || 'ko';
+          const moveMsg = lang === 'en' ? `Moved '${c.name}' to ${dayName(finalDay)} ${newStartStr}~${newEndStr}`
+            : lang === 'zh' ? `已将「${c.name}」移动至 ${dayName(finalDay)} ${newStartStr}~${newEndStr}`
+            : lang === 'ja' ? `「${c.name}」を${dayName(finalDay)} ${newStartStr}~${newEndStr}に移動しました`
+            : `'${c.name}' 수업이 ${dayName(finalDay)} ${newStartStr}~${newEndStr}로 이동되었습니다.`;
+
+          toast(moveMsg, {
+            label: t().undo || '실행 취소',
             run: () => {
               state.timetable = prevSchedule;
               saveTimetable();
@@ -2877,9 +2911,8 @@
         isDragging = false;
         hasMoved = false;
         justDragged = true;
-        setTimeout(() => { justDragged = false; }, 300);
+        setTimeout(() => { justDragged = false; }, 320);
       } else {
-        // 드래그가 아니거나 이동량이 없는 단순 탭/클릭
         cleanupGhostAndTip();
         isDragging = false;
         hasMoved = false;
@@ -2888,27 +2921,42 @@
 
     function cleanupListeners() {
       window.removeEventListener('pointermove', onPointerMove, { passive: false });
-      window.removeEventListener('pointerup', onPointerUp);
-      window.removeEventListener('pointercancel', onPointerUp);
+      window.removeEventListener('pointerup', finishDrag);
+      window.removeEventListener('pointercancel', finishDrag);
+      window.removeEventListener('touchmove', onTouchMove, { passive: false });
+      window.removeEventListener('touchend', finishDrag);
+      window.removeEventListener('touchcancel', finishDrag);
     }
 
+    btn.addEventListener('touchstart', (ev) => {
+      if (ev.touches.length !== 1) return;
+      const t0 = ev.touches[0];
+      startX = t0.clientX;
+      startY = t0.clientY;
+      hasMoved = false;
+      isDragging = false;
+
+      clearTimeout(timer);
+      timer = setTimeout(() => {
+        startDrag(startX, startY);
+      }, 240);
+
+      window.addEventListener('touchmove', onTouchMove, { passive: false });
+      window.addEventListener('touchend', finishDrag, { once: true });
+      window.addEventListener('touchcancel', finishDrag, { once: true });
+    }, { passive: true });
+
     btn.addEventListener('pointerdown', (ev) => {
+      if (ev.pointerType === 'touch') return; // 터치는 touchstart/touchmove로 전담 처리
       if (ev.pointerType === 'mouse' && ev.button !== 0) return;
       startX = ev.clientX;
       startY = ev.clientY;
       hasMoved = false;
       isDragging = false;
 
-      // 모바일 터치 환경: 270ms 롱프레스 유지 시 드래그 활성화
-      if (ev.pointerType === 'touch') {
-        timer = setTimeout(() => {
-          startDrag(startX, startY);
-        }, 270);
-      }
-
       window.addEventListener('pointermove', onPointerMove, { passive: false });
-      window.addEventListener('pointerup', onPointerUp, { once: true });
-      window.addEventListener('pointercancel', onPointerUp, { once: true });
+      window.addEventListener('pointerup', finishDrag, { once: true });
+      window.addEventListener('pointercancel', finishDrag, { once: true });
     });
 
     btn.addEventListener('click', (ev) => {
@@ -3963,31 +4011,73 @@
     const localizedClassName = (DI18n && DI18n.formatCourse) ? DI18n.formatCourse(lastClass.name, state.lang) : lastClass.name;
     const localizedBldg = (CR && CR.formatRoom) ? CR.formatRoom(rec.fromBuilding || lastClass.room, state.lang) : (rec.fromBuilding || '교내');
 
-    const destinations = [
-      { id: 'shuttle', icon: '🚌', names: { ko: '교내 셔틀', en: 'Shuttle', zh: '校内校车', ja: '校内シャトル' } },
-      { id: 'ktx', icon: '🚅', names: { ko: '충주역 KTX', en: 'KTX Train', zh: '忠州站KTX', ja: '忠州駅KTX' } },
-      { id: 'downtown', icon: '🛍️', names: { ko: '충주 시내', en: 'Downtown', zh: '忠州市区', ja: '忠州市内' } },
-      { id: 'seoul', icon: '🏙️', names: { ko: '동서울/강남', en: 'Seoul', zh: '首尔', ja: '東ソウル/江南' } },
-      { id: 'suwon', icon: '🛣️', names: { ko: '수원/경기', en: 'Suwon', zh: '水原/京畿', ja: '水原/京畿' } },
-      { id: 'cheongju', icon: '🏬', names: { ko: '청주/충청', en: 'Cheongju', zh: '清州', ja: '清州' } },
-      { id: 'daejeon', icon: '🏢', names: { ko: '대전', en: 'Daejeon', zh: '大田', ja: '大田' } },
-      { id: 'incheon', icon: '🌊', names: { ko: '인천/안산', en: 'Incheon', zh: '仁川/安山', ja: '仁川/安山' } },
-      { id: 'wonju', icon: '⛰️', names: { ko: '원주/강원', en: 'Wonju', zh: '原州', ja: '原州' } },
-      { id: 'commuter', icon: '🚌', names: { ko: '금요 통학버스', en: 'Friday Bus', zh: '周五专车', ja: '金曜通学バス' } }
+    const lang = state.lang || 'ko';
+    const campusOpts = [
+      { id: 'shuttle', names: { ko: '🚌 교내 무료 셔틀 (터미널·충주역)', en: '🚌 Free Campus Shuttle (Terminal·Station)', zh: '🚌 校内免费校车 (客运站·忠州站)', ja: '🚌 校内無料シャトル (ターミナル・忠州駅)' } },
+      { id: 'downtown', names: { ko: '🛍️ 충주 시내 (성서동·상권)', en: '🛍️ Chungju Downtown (Seongseo-dong)', zh: '🛍️ 忠州市区 (城西洞商业街)', ja: '🛍️ 忠州市内 (城西洞・繁華街)' } }
+    ];
+    const intercityOpts = [
+      { id: 'seoul', names: { ko: '🏙️ 동서울터미널 (강변역 2호선)', en: '🏙️ East Seoul Terminal (Gangbyeon)', zh: '🏙️ 东首尔客运站 (江边站)', ja: '🏙️ 東ソウルターミナル (江辺駅)' } },
+      { id: 'gangnam', names: { ko: '🏢 서울 강남 센트럴시티 (고속터미널)', en: '🏢 Seoul Gangnam Central City', zh: '🏢 首尔江南中心城客运站', ja: '🏢 ソウル江南セントラルシティ' } },
+      { id: 'suwon', names: { ko: '🛣️ 수원버스터미널 / 경기남부', en: '🛣️ Suwon Terminal / S. Gyeonggi', zh: '🛣️ 水原客运站 / 京畿南部', ja: '🛣️ 水原ターミナル / 京畿南部' } },
+      { id: 'seongnam', names: { ko: '🚉 성남(야탑) 터미널', en: '🚉 Seongnam (Yatap) Terminal', zh: '🚉 城南(野塔)客运站', ja: '🚉 城南(野塔)ターミナル' } },
+      { id: 'cheongju', names: { ko: '🏬 청주 시외버스터미널 (북부·사창)', en: '🏬 Cheongju Intercity Terminal', zh: '🏬 清州长途汽车站', ja: '🏬 清州市外バスターミナル' } },
+      { id: 'daejeon', names: { ko: '🏢 대전 복합터미널 / 유성', en: '🏢 Daejeon Complex Terminal', zh: '🏢 大田综合客运站', ja: '🏢 大田複合ターミナル' } },
+      { id: 'incheon', names: { ko: '🌊 인천 / 안산 / 부천 터미널', en: '🌊 Incheon / Ansan / Bucheon', zh: '🌊 仁川 / 安山 / 富川客运站', ja: '🌊 仁川 / 安山 / 富川ターミナル' } },
+      { id: 'wonju', names: { ko: '⛰️ 원주 시외버스터미널 (강원)', en: '⛰️ Wonju Intercity Terminal', zh: '⛰️ 原州长途汽车站', ja: '⛰️ 原州市外バスターミナル' } }
     ];
 
-    const destChips = destinations.map((d) => h('button', {
+    const railOpts = [
+      { id: 'ktx', names: { ko: '🚅 판교·수도권 방면 (KTX-이음 상행)', en: '🚅 Pangyo / Seoul Metro (KTX-Eum)', zh: '🚅 板桥·首尔方向 (KTX-Eum)', ja: '🚅 板橋・首都圏方面 (KTX-イウム)' } },
+      { id: 'ktx_mungyeong', names: { ko: '🚅 문경·수안보·경북 방면 (KTX-이음 하행)', en: '🚅 Mungyeong / Suanbo (KTX-Eum South)', zh: '🚅 闻庆·水安堡方向 (KTX-Eum)', ja: '🚅 聞慶・水安堡方面 (KTX-イウム)' } },
+      { id: 'rail_daejeon', names: { ko: '🚆 오송(KTX환승)·청주·대전 방면 (충북선)', en: '🚆 Osong (KTX)·Cheongju·Daejeon', zh: '🚆 五松(换乘KTX)·清州·大田方向', ja: '🚆 五松(KTX乗換)・清州・大田方面' } },
+      { id: 'rail_jecheon', names: { ko: '🚆 제천·원주·중앙선 방면 (충북선)', en: '🚆 Jecheon·Wonju (Jungang Transfer)', zh: '🚆 堤川·原州方向 (换乘中央线)', ja: '🚆 堤川・原州方面 (中央線乗換)' } }
+    ];
+
+    const isRailDest = selectedDest === 'ktx' || selectedDest === 'ktx_pangyo' || selectedDest === 'ktx_mungyeong' || selectedDest === 'rail_daejeon' || selectedDest === 'rail_jecheon';
+    const activeGroup = isRailDest ? 'ktx'
+      : selectedDest === 'commuter' ? 'commuter'
+      : (selectedDest === 'shuttle' || selectedDest === 'downtown') ? 'campus'
+      : 'intercity';
+
+    const groups = [
+      { id: 'campus', defaultDest: 'shuttle', names: { ko: '🚌 셔틀·시내', en: '🚌 Shuttle/City', zh: '🚌 校车/市区', ja: '🚌 シャトル・市内' } },
+      { id: 'ktx', defaultDest: 'ktx', names: { ko: '🚅 KTX·기차', en: '🚅 KTX / Rail', zh: '🚅 KTX·铁路', ja: '🚅 KTX・鉄道' } },
+      { id: 'intercity', defaultDest: 'seoul', names: { ko: '🛣️ 시외버스', en: '🛣️ Intercity Bus', zh: '🛣️ 城际客运', ja: '🛣️ 市外バス' } },
+      { id: 'commuter', defaultDest: 'commuter', names: { ko: '🚌 금요통학', en: '🚌 Friday Bus', zh: '🚌 周五专线', ja: '🚌 金曜通学' } }
+    ];
+
+    const setDest = (destId) => {
+      try { localStorage.setItem('gongji:transitDest', destId); } catch {}
+      renderHome();
+    };
+
+    const groupTabs = groups.map((g) => h('button', {
       type: 'button',
-      class: 'tc-transit-chip' + (selectedDest === d.id ? ' is-active' : ''),
+      class: 'tc-transit-chip' + (activeGroup === g.id ? ' is-active' : ''),
       onclick: (e) => {
         e.stopPropagation();
-        try { localStorage.setItem('gongji:transitDest', d.id); } catch {}
-        renderHome();
+        if (g.id === 'campus' && (selectedDest === 'shuttle' || selectedDest === 'downtown')) return;
+        if (g.id === 'ktx' && isRailDest) return;
+        if (g.id === 'intercity' && activeGroup === 'intercity') return;
+        setDest(g.defaultDest);
       }
-    }, `${d.icon} ${(d.names && d.names[state.lang]) || d.names.ko}`));
+    }, (g.names && g.names[lang]) || g.names.ko));
+
+    const subOpts = activeGroup === 'campus' ? campusOpts : activeGroup === 'ktx' ? railOpts : activeGroup === 'intercity' ? intercityOpts : null;
+    const subSelect = subOpts ? h('div', { class: 'tc-transit-select-row' },
+      h('label', { class: 'tct-sel-label', for: 'tc-transit-dest-select' },
+        lang === 'en' ? 'Destination' : lang === 'zh' ? '目的地' : lang === 'ja' ? '行き先' : '방면 선택'),
+      h('select', {
+        id: 'tc-transit-dest-select',
+        class: 'tc-transit-select',
+        'aria-label': lang === 'en' ? 'Select transit destination' : lang === 'zh' ? '选择乘车目的地' : lang === 'ja' ? '行き先を選択' : '하교 방면 선택',
+        onchange: (e) => { e.stopPropagation(); setDest(e.target.value); }
+      }, ...subOpts.map((opt) => h('option', { value: opt.id, selected: selectedDest === opt.id ? true : null }, (opt.names && opt.names[lang]) || opt.names.ko)))
+    ) : null;
 
     let scheduleContent = null;
-    if (selectedDest === 'ktx' && rec.bestMatch) {
+    if (rec.type === 'ktx' && rec.bestMatch) {
       const bm = rec.bestMatch;
       scheduleContent = h('div', { class: 'tc-transit-detail' },
         h('div', { class: 'tct-step-row' },
@@ -4003,7 +4093,7 @@
         h('div', { class: 'tct-step-row is-target' },
           h('span', { class: 'tct-step-badge ktx' }, T.ttStepKtx || '3단계 KTX'),
           h('strong', null, `${bm.ktx.dep} ${bm.ktx.train}`),
-          h('span', { class: 'tct-highlight' }, `${state.lang === 'en' ? `Arrives Pangyo ${bm.arrPangyo} (~50m)` : state.lang === 'zh' ? `到达板桥站 ${bm.arrPangyo} (约50分)` : state.lang === 'ja' ? `板橋駅 ${bm.arrPangyo} 到着 (約50分)` : `판교역 ${bm.arrPangyo} 도착 (약 50분 소요)`}`)
+          h('span', { class: 'tct-highlight' }, bm.destLabel || `${state.lang === 'en' ? `Arrives Pangyo ${bm.arrPangyo} (~50m)` : state.lang === 'zh' ? `到达板桥站 ${bm.arrPangyo} (约50分)` : state.lang === 'ja' ? `板橋駅 ${bm.arrPangyo} 到着 (約50分)` : `판교역 ${bm.arrPangyo} 도착 (약 50분 소요)`}`)
         )
       );
     } else if (selectedDest === 'commuter' && rec.bestMatch) {
@@ -4023,6 +4113,15 @@
       );
     } else if (rec.type === 'terminal' && rec.bestMatch) {
       const bm = rec.bestMatch;
+      const durMin = bm.busInfo.durationMin;
+      const firstBus = bm.busInfo.firstBus;
+      const lastBus = bm.busInfo.lastBus;
+      const busHoursLine = durMin && firstBus && lastBus
+        ? (state.lang === 'en' ? `Est. travel ~${durMin}m · First ${firstBus} / Last ${lastBus}`
+          : state.lang === 'zh' ? `车程约${durMin}分钟 · 首班 ${firstBus} / 末班 ${lastBus}`
+          : state.lang === 'ja' ? `所要約${durMin}分 · 始発 ${firstBus} / 終発 ${lastBus}`
+          : `소요 약 ${durMin}분 · 첫차 ${firstBus} ~ 막차 ${lastBus}`)
+        : '';
       scheduleContent = h('div', { class: 'tc-transit-detail' },
         h('div', { class: 'tct-step-row' },
           h('span', { class: 'tct-step-badge' }, T.ttStepShuttle || '1단계 셔틀'),
@@ -4033,7 +4132,8 @@
           h('span', { class: 'tct-step-badge bus' }, T.ttStepBus || '2단계 시외버스'),
           h('strong', null, `${bm.estBusTime} ${bm.busInfo.dest}`),
           h('span', { class: 'tct-highlight' }, T.ttBusMetaFmt ? T.ttBusMetaFmt(bm.busInfo.intervalMin, bm.busInfo.fare) : `배차 ${bm.busInfo.intervalMin}분 간격 · 요금 ${bm.busInfo.fare}`)
-        )
+        ),
+        busHoursLine ? h('div', { class: 'tct-route-flow' }, `⏱️ ${busHoursLine}`) : null
       );
     } else if (rec.bestMatch) {
       const bm = rec.bestMatch;
@@ -4073,7 +4173,8 @@
         ),
         walkBadge
       ),
-      h('div', { class: 'tc-transit-dest-chips' }, destChips),
+      h('div', { class: 'tc-transit-dest-chips' }, groupTabs),
+      subSelect,
       scheduleContent,
       upcomingList,
       h('p', { class: 'tc-transit-tips' }, `💡 ${rec.tips}`)
@@ -4108,11 +4209,32 @@
       if (i > 0) {
         const prev = today[i - 1];
         const gap = s - toMin(prev.end);
+        const CR = (typeof window !== 'undefined' && window.GongjiCampusRoute) || root.GongjiCampusRoute;
         if (gap >= 30) {
-          rows.push(h('li', { class: 'home-row tc-gap' }, T.freeGap(prev.end, c.start)));
+          const advice = (gap <= 120 && CR && CR.getFreeGapAdvice)
+            ? CR.getFreeGapAdvice(prev.room, c.room, prev.end, c.start, gap, state.lang)
+            : null;
+          const isNowInGap = cur >= toMin(prev.end) && cur < s;
+          const remainGap = s - cur;
+          const countdownBadge = isNowInGap
+            ? h('span', { class: 'tc-gap-live' },
+                state.lang === 'en' ? `⏱️ ${remainGap}m left`
+                : state.lang === 'zh' ? `⏱️ 剩余 ${remainGap}分`
+                : state.lang === 'ja' ? `⏱️ 残り ${remainGap}分`
+                : `⏱️ ${remainGap}분 남음`)
+            : null;
+          rows.push(h('li', { class: 'home-row tc-gap' + (advice ? ' has-routine' : '') },
+            h('div', { class: 'tc-gap-top' },
+              h('span', null, T.freeGap(prev.end, c.start)),
+              countdownBadge
+            ),
+            advice ? h('div', { class: 'tc-gap-routine' },
+              h('strong', { class: 'tcgr-place' }, `${advice.icon} ${advice.place}`),
+              h('span', { class: 'tcgr-desc' }, advice.desc)
+            ) : null
+          ));
         } else if (gap > 0 && gap <= 20) {
           // [1순위: 연강 이동 동선 & 헐떡고개 10분 컷 판독기]
-          const CR = (typeof window !== 'undefined' && window.GongjiCampusRoute) || root.GongjiCampusRoute;
           if (CR && CR.calculateRoute) {
             const route = CR.calculateRoute(prev.room, c.room, gap, state.lang);
             rows.push(renderConsecutiveRouteItem(prev, c, route, gap));
@@ -4432,7 +4554,17 @@
     });
     const week = activeNotices().filter((n) => n.deadline && !L.isExpired(n, now) && L.daysLeft(n.deadline, now) <= 7 && fitOk(n));
     const money = week.map((n) => ({ n, won: (n.benefit && (n.benefit.won || 0)) || 0 })).filter((x) => x.won > 0).sort((a, b) => b.won - a.won)[0];
-    if (money) out.push({ k: 'money', big: I.formatWon(money.won, state.lang), label: T.bfMoney, sub: titleOf(money.n), go: () => openDetail(money.n.id) });
+    if (money) {
+      out.push({ k: 'money', big: I.formatWon(money.won, state.lang), label: T.bfMoney, sub: titleOf(money.n), go: () => openDetail(money.n.id) });
+    } else if (state.profile.set) {
+      const openMoney = activeNotices().filter((n) => !L.isExpired(n, now) && fitOk(n) && n.benefit && n.benefit.won > 0);
+      if (openMoney.length) {
+        const totalWon = openMoney.reduce((sum, n) => sum + (n.benefit.won || 0), 0);
+        const lbl = state.lang === 'en' ? 'Eligible Grants' : state.lang === 'zh' ? '可申请奖学金池' : state.lang === 'ja' ? '応募可能特典' : '지원 가능 혜택 합계';
+        const sub = state.lang === 'en' ? `${openMoney.length} open matches` : state.lang === 'zh' ? `共 ${openMoney.length} 项符合条件` : state.lang === 'ja' ? `対象 ${openMoney.length}件` : `내 조건 맞춤 ${openMoney.length}건`;
+        out.push({ k: 'money', big: I.formatWon(totalWon, state.lang), label: lbl, sub, go: () => goList({ mineOnly: true, sort: 'benefit' }) });
+      }
+    }
     const pts = week.filter((n) => n.benefit && n.benefit.points > 0);
     if (pts.length) out.push({ k: 'points', big: String(pts.reduce((a, n) => a + n.benefit.points, 0)), unit: 'P', label: T.bfPoints, sub: T.bfPointsSub(pts.length), go: () => goList({ sub: 'dadream', sort: 'deadline' }) });
     const ac = nextAcademic();

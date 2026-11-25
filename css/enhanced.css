@@ -1649,7 +1649,7 @@ span.board::-webkit-scrollbar,
 }
 
 [data-theme="dark"] .tt-prof {
-  color: rgba(255, 255, 255, 0.82) !important;
+  color: rgba(17, 24, 39, 0.78) !important;
 }
 
 .tt-elearn-prof {
@@ -7762,6 +7762,37 @@ body[data-tab="track"] .layout {
   gap: 6px;
 }
 
+.tc-transit-select-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.tct-sel-label {
+  font-size: 11.5px;
+  font-weight: 700;
+  color: var(--muted);
+  white-space: nowrap;
+}
+
+.tc-transit-select {
+  flex: 1;
+  min-width: 0;
+  height: 34px !important;
+  padding: 0 10px !important;
+  border-radius: 10px !important;
+  font-size: 12.5px !important;
+  font-weight: 600 !important;
+  border: 1px solid var(--border) !important;
+  background: var(--surface, #ffffff) !important;
+  color: var(--text) !important;
+}
+
+[data-theme="dark"] .tc-transit-select {
+  background: var(--surface-1, #182026) !important;
+  border-color: rgba(255, 255, 255, 0.14) !important;
+}
+
 .tc-transit-chip {
   padding: 5px 11px;
   border-radius: 20px;
@@ -8885,6 +8916,199 @@ html, body {
 [data-theme="dark"] #class-delete:hover {
   background: #ef4444 !important;
   color: #ffffff !important;
+}
+
+/* 9. Course Registration Recommendation Walk Check (.plan-route-box) */
+.plan-route-box {
+  margin: 10px 0 12px;
+  padding: 10px 12px;
+  border-radius: 12px;
+  background: var(--surface-2, #f6f7f9);
+  border: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+[data-theme="dark"] .plan-route-box {
+  background: rgba(255, 255, 255, 0.03);
+  border-color: rgba(255, 255, 255, 0.1);
+}
+.prb-head strong {
+  font-size: 12.5px;
+  color: var(--text);
+}
+.prb-list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.prb-item {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 6px 8px;
+  padding: 6px 10px;
+  border-radius: 8px;
+  font-size: 12px;
+  background: var(--surface, #ffffff);
+  border-left: 3px solid #10b981;
+}
+[data-theme="dark"] .prb-item {
+  background: var(--surface-1, #182026);
+}
+.prb-item.is-warn { border-left-color: #f59e0b; }
+.prb-item.is-danger { border-left-color: #ef4444; }
+.prb-day {
+  font-weight: 800;
+  color: var(--text);
+}
+.prb-path {
+  color: var(--muted);
+  flex: 1 1 auto;
+}
+.prb-status {
+  font-weight: 700;
+  color: #059669;
+}
+.prb-item.is-warn .prb-status { color: #b45309; }
+.prb-item.is-danger .prb-status { color: #dc2626; }
+[data-theme="dark"] .prb-status { color: #34d399; }
+[data-theme="dark"] .prb-item.is-warn .prb-status { color: #fbbf24; }
+[data-theme="dark"] .prb-item.is-danger .prb-status { color: #fca5a5; }
+
+/* 10. Mobile Timetable Polish & Touch Drag Lock */
+body.is-tt-dragging-active,
+body.is-tt-dragging-active .tt-grid,
+body.is-tt-dragging-active .tt-col,
+.tt-class.is-dragging-card {
+  touch-action: none !important;
+  overscroll-behavior: contain !important;
+}
+
+@media (max-width: 640px) {
+  .tt-stats-bar {
+    display: grid !important;
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    gap: 8px 10px !important;
+    padding: 10px 12px !important;
+  }
+  .tt-stat-item {
+    justify-content: space-between !important;
+    gap: 6px !important;
+    min-width: 0 !important;
+  }
+  .tt-stat-lbl {
+    white-space: nowrap !important;
+    font-size: 11px !important;
+  }
+  .tt-interaction-bar {
+    justify-content: space-between !important;
+    gap: 6px !important;
+  }
+  .tti-hint {
+    font-size: 11px !important;
+    flex: 1 1 100% !important;
+  }
+  .tti-snap-pills {
+    width: 100% !important;
+    display: grid !important;
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  }
+  .tt-class {
+    padding: 3px 4px !important;
+    gap: 1px !important;
+    overflow: hidden !important;
+  }
+  .tt-class .tt-name {
+    font-size: 10.5px !important;
+    line-height: 1.18 !important;
+    display: -webkit-box !important;
+    -webkit-line-clamp: 2 !important;
+    -webkit-box-orient: vertical !important;
+    overflow: hidden !important;
+  }
+  .tt-class .tt-prof {
+    font-size: 9px !important;
+    line-height: 1.15 !important;
+    margin-top: 0 !important;
+  }
+  .tt-class .tt-time {
+    font-size: 9px !important;
+    line-height: 1.15 !important;
+  }
+  .tt-class .tt-room {
+    font-size: 9px !important;
+    line-height: 1.15 !important;
+    word-break: break-all !important;
+    display: -webkit-box !important;
+    -webkit-line-clamp: 2 !important;
+    -webkit-box-orient: vertical !important;
+    overflow: hidden !important;
+  }
+  .tt-actions {
+    display: grid !important;
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    gap: 8px !important;
+  }
+  .tt-actions .btn {
+    width: 100% !important;
+    justify-content: center !important;
+    padding: 0 8px !important;
+    font-size: 12.5px !important;
+  }
+}
+
+/* 11. Free Gap Routine Helper (.tc-gap-routine) */
+.tc-gap.has-routine {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 5px;
+  padding: 9px 12px;
+  border-radius: 10px;
+  background: var(--surface-2, #f6f7f9);
+  border: 1px dashed var(--border);
+}
+[data-theme="dark"] .tc-gap.has-routine {
+  background: rgba(255, 255, 255, 0.03);
+  border-color: rgba(255, 255, 255, 0.12);
+}
+.tc-gap-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--muted);
+}
+.tc-gap-live {
+  font-size: 11px;
+  font-weight: 800;
+  padding: 1px 8px;
+  border-radius: 9999px;
+  background: var(--accent-soft, #e9f4ee);
+  color: var(--accent, #0c7a45);
+}
+[data-theme="dark"] .tc-gap-live {
+  background: rgba(61, 184, 122, 0.16);
+  color: #46c486;
+}
+.tc-gap-routine {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding-top: 4px;
+  border-top: 1px solid var(--border);
+}
+.tcgr-place {
+  font-size: 12.5px;
+  font-weight: 700;
+  color: var(--text);
+}
+.tcgr-desc {
+  font-size: 11.5px;
+  color: var(--muted);
 }
 
 /* 8. Viewport Horizontal Overflow Guard */

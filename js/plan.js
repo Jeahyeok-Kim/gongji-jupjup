@@ -766,10 +766,11 @@
   function scheduleQuality(slots, theme) {
     if (!slots || !slots.length) return 60;
     const byDay = {};
-    for (const [d, a, b] of slots) {
+    for (const [d, a, b, room] of slots) {
       if (!byDay[d]) byDay[d] = [];
-      byDay[d].push([toMin(a), toMin(b)]);
+      byDay[d].push([toMin(a), toMin(b), room || '']);
     }
+    const CR = (typeof window !== 'undefined' && window.GongjiCampusRoute) || root.GongjiCampusRoute;
     let score = 100;
     const weekdays = [1, 2, 3, 4, 5];
     const daysAttending = weekdays.filter((d) => byDay[d] && byDay[d].length > 0);
@@ -792,7 +793,7 @@
         score -= 20;
       }
 
-      // 우주공강(2.5시간 이상 틈) 페널티 및 적정 이동시간 보너스
+      // 우주공강(2.5시간 이상 틈) 페널티 및 적정 이동시간·캠퍼스 동선 보너스/감점
       let hasLunch = false;
       for (let i = 0; i < times.length - 1; i++) {
         const gap = times[i + 1][0] - times[i][1];
@@ -800,6 +801,11 @@
           score -= Math.min(50, 20 + Math.round((gap - 150) / 3)); // 우주공강 감점
         } else if (gap >= 20 && gap <= 80) {
           score += 8; // 편안한 쉬는시간
+        } else if (gap > 0 && gap <= 20 && CR && CR.calculateRoute && times[i][2] && times[i + 1][2]) {
+          const rt = CR.calculateRoute(times[i][2], times[i + 1][2], gap, 'ko');
+          if (rt.level === 'danger') score -= 30;
+          else if (rt.level === 'warning') score -= 10;
+          else score += 5;
         }
         // 점심시간(11:30~13:30 사이) 40분 이상 공강 확보
         if (times[i][1] <= 12 * 60 + 20 && times[i + 1][0] >= 12 * 60 + 40 && gap >= 40) {
@@ -1150,10 +1156,48 @@
     return out;
   }
 
+  // 추천 시간표의 연강(20분 이하 간격) 캠퍼스 이동 동선 및 헐떡고개 시뮬레이션
+  function analyzeRoutes(picks, lang) {
+    const CR = (typeof window !== 'undefined' && window.GongjiCampusRoute) || root.GongjiCampusRoute;
+    if (!CR || !CR.calculateRoute) return [];
+    const byDay = {};
+    for (const p of picks || []) {
+      const sec = p.section;
+      if (!sec || !sec.t || !sec.t.length) continue;
+      for (const [day, start, end, room] of sec.t) {
+        if (!byDay[day]) byDay[day] = [];
+        byDay[day].push({
+          name: p.group.name,
+          prof: sec.prof || p.group.prof || '',
+          day,
+          start,
+          end,
+          room: room || '',
+          sMin: toMin(start),
+          eMin: toMin(end)
+        });
+      }
+    }
+    const routes = [];
+    for (const day of [1, 2, 3, 4, 5, 6]) {
+      const list = (byDay[day] || []).sort((a, b) => a.sMin - b.sMin);
+      for (let i = 1; i < list.length; i++) {
+        const prev = list[i - 1];
+        const next = list[i];
+        const gap = next.sMin - prev.eMin;
+        if (gap > 0 && gap <= 20 && prev.room && next.room) {
+          const route = CR.calculateRoute(prev.room, next.room, gap, lang || 'ko');
+          routes.push({ day, gap, prev, next, route });
+        }
+      }
+    }
+    return routes;
+  }
+
   return {
     normName, cleanKind, area, genArea, cleanHistory, totals, byTerm, termKey, requirement, remaining,
     currentTerm, semestersLeft, pace, nextTerm, buildCatalog, parsePaste, overlaps, groupOffered, modeOf, split,
-    candidates, recommend, toClasses, deptMatch, alternatives, roadmap, daysUsed, earliest,
+    candidates, recommend, toClasses, deptMatch, alternatives, roadmap, daysUsed, earliest, analyzeRoutes,
     GRADES, cleanGrade, gpa, requiredLeft, simGpa,
     findDept, resolveDept, searchDepts, DEPT_MAP
   };

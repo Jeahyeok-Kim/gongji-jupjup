@@ -513,6 +513,71 @@
       { train: 'KTX 726', dep: '19:42', arrPangyo: '20:32' },
       { train: 'KTX 728', dep: '21:28', arrPangyo: '22:18' }
     ],
+    // 충주역 방면별 철도 노선 (중부내륙선 KTX-이음 상·하행 + 충북선 무궁화호)
+    railRoutes: {
+      'ktx_mungyeong': {
+        line: { ko: '중부내륙선 KTX-이음 (하행)', en: 'Jungbunaeryuk KTX-Eum (South)', zh: '中部内陆线 KTX-Eum (下行)', ja: '中部内陸線 KTX-イウム (下り)' },
+        dest: { ko: '수안보온천 · 연풍 · 문경역', en: 'Suanbo · Yeonpung · Mungyeong Sta.', zh: '水安堡 · 延丰 · 闻庆站', ja: '水安堡・延豊・聞慶駅' },
+        durationMin: 28,
+        trains: [
+          { train: 'KTX 701', dep: '07:36', arr: '08:04' },
+          { train: 'KTX 703', dep: '09:42', arr: '10:10' },
+          { train: 'KTX 705', dep: '11:50', arr: '12:18' },
+          { train: 'KTX 707', dep: '14:05', arr: '14:33' },
+          { train: 'KTX 709', dep: '16:15', arr: '16:43' },
+          { train: 'KTX 711', dep: '18:22', arr: '18:50' },
+          { train: 'KTX 713', dep: '20:28', arr: '20:56' },
+          { train: 'KTX 715', dep: '22:12', arr: '22:40' }
+        ],
+        tip: {
+          ko: '중부내륙선 하행 KTX-이음으로 살미·수안보온천·연풍·문경 방면 약 28분 소요.',
+          en: 'Southbound KTX-Eum to Suanbo Hot Springs, Yeonpung & Mungyeong (~28 mins).',
+          zh: '乘坐中部内陆线KTX下行约28分钟直达水安堡温泉、延丰、闻庆。',
+          ja: '中部内陸線KTX下りで水安堡温泉・延豊・聞慶方面へ約28分。'
+        }
+      },
+      'rail_daejeon': {
+        line: { ko: '충북선 무궁화호 (오송·대전행)', en: 'Chungbuk Line (Osong / Daejeon)', zh: '忠北线 无穷花号 (五松·大田方向)', ja: '忠北線 ムグンファ号 (五松・大田方面)' },
+        dest: { ko: '청주 · 오송(KTX환승) · 조치원 · 대전역', en: 'Cheongju · Osong (KTX) · Daejeon Sta.', zh: '清州 · 五松(换乘KTX) · 鸟致院 · 大田站', ja: '清州・五松(KTX乗換)・鳥致院・大田駅' },
+        durationMin: 95,
+        trains: [
+          { train: '무궁화 1281', dep: '07:05', arr: '08:40' },
+          { train: '무궁화 1283', dep: '09:30', arr: '11:05' },
+          { train: '무궁화 1285', dep: '11:45', arr: '13:20' },
+          { train: '무궁화 1287', dep: '13:55', arr: '15:30' },
+          { train: '무궁화 1289', dep: '15:50', arr: '17:25' },
+          { train: '무궁화 1291', dep: '17:40', arr: '19:15' },
+          { train: '무궁화 1293', dep: '19:35', arr: '21:10' },
+          { train: '무궁화 1295', dep: '21:15', arr: '22:50' }
+        ],
+        tip: {
+          ko: '오송역에서 경부·호남 KTX/SRT(천안아산·익산·광주·부산 등)로 전국 환승 가능.',
+          en: 'Transfer at Osong Sta. to Gyeongbu/Honam KTX & SRT (Daejeon, Gwangju, Busan).',
+          zh: '可在五松站换乘京釜/湖南KTX或SRT前往大田、光州、釜山等全国主要城市。',
+          ja: '五松駅で京釜・湖南KTX/SRT（大田・光州・釜山方面）へ乗換可能です。'
+        }
+      },
+      'rail_jecheon': {
+        line: { ko: '충북선 무궁화호 (제천·원주행)', en: 'Chungbuk Line (Jecheon / Wonju)', zh: '忠北线 无穷花号 (堤川·原州方向)', ja: '忠北線 ムグンファ号 (堤川・原州方面)' },
+        dest: { ko: '제천역 (중앙선 KTX 원주·안동 환승)', en: 'Jecheon Sta. (Jungang KTX Transfer)', zh: '堤川站 (可换乘中央线KTX至原州/安东)', ja: '堤川駅 (中央線KTX 原州・安東乗換)' },
+        durationMin: 30,
+        trains: [
+          { train: '무궁화 1282', dep: '07:48', arr: '08:18' },
+          { train: '무궁화 1284', dep: '10:15', arr: '10:45' },
+          { train: '무궁화 1286', dep: '12:30', arr: '13:00' },
+          { train: '무궁화 1288', dep: '14:40', arr: '15:10' },
+          { train: '무궁화 1290', dep: '16:50', arr: '17:20' },
+          { train: '무궁화 1292', dep: '18:45', arr: '19:15' },
+          { train: '무궁화 1294', dep: '20:40', arr: '21:10' }
+        ],
+        tip: {
+          ko: '제천역에서 중앙선 KTX-이음(원주·강원, 영주·안동·경북)으로 연계 환승 가능.',
+          en: 'Transfer at Jecheon Sta. to Jungang Line KTX-Eum (Wonju, Yeongju, Andong).',
+          zh: '可在堤川站换乘中央线KTX-Eum前往原州、荣州、安东等方向。',
+          ja: '堤川駅で中央線KTX-イウム（原州・栄州・安東方面）へ乗換可能です。'
+        }
+      }
+    },
     // 충주공용버스터미널 주요 목적지별 배차 정보
     terminalBuses: {
       'dongseoul': {
@@ -673,36 +738,43 @@
     const nextShuttles = TRANSIT_DATA.shuttle.filter((s) => toMin(s.dep) >= arriveStopMin);
     const bestShuttle = nextShuttles[0] || null;
 
-    // 2. KTX 모드
-    if (dest === 'ktx') {
+    // 2. 철도(KTX-이음 판교/문경 & 충북선 오송·대전/제천) 모드
+    if (dest === 'ktx' || dest === 'ktx_pangyo' || TRANSIT_DATA.railRoutes[dest]) {
+      const isPangyo = (dest === 'ktx' || dest === 'ktx_pangyo');
+      const railMeta = isPangyo ? null : TRANSIT_DATA.railRoutes[dest];
+      const trainList = isPangyo ? TRANSIT_DATA.ktx : railMeta.trains;
       const recs = [];
       for (const sh of nextShuttles.slice(0, 3)) {
         const stationArriveMin = toMin(sh.station);
-        const ktxHits = TRANSIT_DATA.ktx.filter((k) => toMin(k.dep) >= stationArriveMin + 10);
-        if (ktxHits.length) {
-          const targetKtx = ktxHits[0];
-          const ktxDepMin = toMin(targetKtx.dep);
+        const hits = trainList.filter((k) => toMin(k.dep) >= stationArriveMin + 10);
+        if (hits.length) {
+          const targetTrain = hits[0];
+          const depMin = toMin(targetTrain.dep);
           recs.push({
             shuttleDep: sh.dep,
             waitMinAtStop: toMin(sh.dep) - arriveStopMin,
             stationArrive: sh.station,
-            ktx: targetKtx,
-            waitMinAtStation: ktxDepMin - stationArriveMin,
-            arrPangyo: targetKtx.arrPangyo
+            ktx: targetTrain,
+            waitMinAtStation: depMin - stationArriveMin,
+            arrPangyo: isPangyo ? targetTrain.arrPangyo : targetTrain.arr,
+            destLabel: isPangyo
+              ? (L === 'en' ? `Arrives Pangyo ${targetTrain.arrPangyo} (~50m)` : L === 'zh' ? `到达板桥站 ${targetTrain.arrPangyo} (约50分)` : L === 'ja' ? `板橋駅 ${targetTrain.arrPangyo} 到着 (約50分)` : `판교역 ${targetTrain.arrPangyo} 도착 (약 50분 소요)`)
+              : (L === 'en' ? `Arrives ${targetTrain.arr} (${railMeta.dest.en})` : L === 'zh' ? `${targetTrain.arr} 到达 (${railMeta.dest.zh})` : L === 'ja' ? `${targetTrain.arr} 到着 (${railMeta.dest.ja})` : `${targetTrain.arr} 도착 (${railMeta.dest.ko})`)
           });
         }
       }
 
-      const destTitle = L === 'en' ? '🚄 Chungju Sta. ➔ Pangyo/Suseo KTX-Eum'
-        : L === 'zh' ? '🚄 忠州站 ➔ 板桥/水西方向 KTX-EUM高铁连运'
-        : L === 'ja' ? '🚄 忠州駅 ➔ 板橋/水西方面 KTX-イウム連携'
-        : '🚄 충주역 ➔ 판교/수서 방면 KTX-이음 연계';
+      const destTitle = isPangyo
+        ? (L === 'en' ? '🚄 Chungju Sta. ➔ Pangyo/Suseo KTX-Eum' : L === 'zh' ? '🚄 忠州站 ➔ 板桥/水西方向 KTX-Eum' : L === 'ja' ? '🚄 忠州駅 ➔ 板橋/水西方面 KTX-イウム' : '🚄 충주역 ➔ 판교/수도권 KTX-이음')
+        : `🚆 ${(railMeta.line && railMeta.line[L]) || railMeta.line.ko}`;
 
       const roomLabel = formatRoom(lastClassRoom, L);
-      const tips = L === 'en' ? `Walk ~${walkMin}m from classroom (${roomLabel}) to main stadium shuttle stop. Matched with KTX at Chungju Station.`
-        : L === 'zh' ? `从教学楼(${roomLabel})步行至大运动场校车乘车点约需${walkMin}分钟。已智能匹配忠州站KTX高铁车次。`
-        : L === 'ja' ? `講義室(${roomLabel})から大運動場シャトル停留所まで徒歩約${walkMin}分。忠州駅KTX乗車まで連携マッチングしました。`
-        : `강의실(${roomLabel})에서 대운동장 셔틀 정류장까지 도보 약 ${walkMin}분 소요. 충주역 KTX 탑승까지 매칭되었습니다.`;
+      const tips = isPangyo
+        ? (L === 'en' ? `Walk ~${walkMin}m from classroom (${roomLabel}) to main stadium shuttle stop. Matched with Pangyo KTX-Eum at Chungju Station.`
+          : L === 'zh' ? `从教学楼(${roomLabel})步行至大运动场校车乘车点约需${walkMin}分钟。已智能匹配忠州站开往板桥的KTX高铁。`
+          : L === 'ja' ? `講義室(${roomLabel})から大運動場シャトル停留所まで徒歩約${walkMin}分。板橋方面KTX乗車まで連携マッチングしました。`
+          : `강의실(${roomLabel})에서 대운동장 셔틀 정류장까지 도보 약 ${walkMin}분 소요. 충주역 판교 방면 KTX 탑승까지 매칭되었습니다.`)
+        : `${(railMeta.tip && railMeta.tip[L]) || railMeta.tip.ko}`;
 
       return {
         type: 'ktx',
@@ -830,12 +902,107 @@
     };
   }
 
+  // 3. 공강 시간 맞춤형 캠퍼스 루틴 도우미 (30~120분 공강 시 가까운 학식·카페·열람실 및 다음 수업 도보 시간 계산)
+  function getFreeGapAdvice(prevRoomStr, nextRoomStr, prevEndTime, nextStartTime, gapMinutes, lang) {
+    const L = lang || 'ko';
+    const prev = parseRoom(prevRoomStr);
+    const next = parseRoom(nextRoomStr);
+    const endMin = toMin(prevEndTime);
+    const startMin = toMin(nextStartTime);
+    const overlapsLunch = endMin <= 13 * 60 + 10 && startMin >= 11 * 60 + 40;
+
+    // 다음 수업 건물까지의 도보 소요 시간 계산
+    const walkRoute = (prev.building && next.building)
+      ? calculateRoute(prevRoomStr, nextRoomStr, gapMinutes, L)
+      : { walkMin: 5 };
+    const walkToNext = Math.max(2, walkRoute.walkMin || 5);
+    const departMin = Math.max(endMin, startMin - walkToNext);
+    const departTime = toTimeStr(departMin);
+
+    const zPrev = (prev.buildingMeta && prev.buildingMeta.zone) || 'mid';
+    let spot = null;
+    if (overlapsLunch) {
+      spot = {
+        icon: '🍽️',
+        place: {
+          ko: '[K1] 학생회관 학생식당 · 편의점',
+          en: '[K1] Student Union Cafeteria & Cafe',
+          zh: '[K1] 学生会馆食堂 · 便利店',
+          ja: '[K1] 学生会館 学生食堂・カフェ'
+        },
+        desc: {
+          ko: `점심 공강 ${gapMinutes}분 · 식사 후 ${departTime}까지 출발하면 여유롭게 도착`,
+          en: `${gapMinutes}m lunch gap · Leave by ${departTime} (~${walkToNext}m walk to next class)`,
+          zh: `午餐空课${gapMinutes}分 · ${departTime}出发即可从容抵达下节课`,
+          ja: `昼休み空き${gapMinutes}分 · ${departTime}に出発すれば余裕で到着`
+        }
+      };
+    } else if (gapMinutes >= 50) {
+      const nearIeum = zPrev === 'mid' && (prev.building === '글로벌이음관' || prev.building === '인문학관');
+      spot = nearIeum ? {
+        icon: '☕',
+        place: {
+          ko: '[U11] 글로컬이음관 라운지 / [U7] 중원도서관',
+          en: '[U11] GLOCAL Ieum Lounge / [U7] Library',
+          zh: '[U11] GLOCAL连接馆休息区 / [U7] 中原图书馆',
+          ja: '[U11] イウム館ラウンジ / [U7] 中原図書館'
+        },
+        desc: {
+          ko: `공강 ${gapMinutes}분 · 과제·휴식 후 ${departTime} 출발 (다음 강의실 도보 ${walkToNext}분)`,
+          en: `${gapMinutes}m break · Study/rest then depart at ${departTime} (${walkToNext}m walk)`,
+          zh: `空课${gapMinutes}分 · 自习休息后${departTime}出发 (步行${walkToNext}分)`,
+          ja: `空き${gapMinutes}分 · 自習・休憩後 ${departTime}出発 (徒歩${walkToNext}分)`
+        }
+      } : {
+        icon: '📚',
+        place: {
+          ko: '[U7] 중원도서관 열람실 · 카페',
+          en: '[U7] Jungwon Library Study Room & Cafe',
+          zh: '[U7] 中原图书馆自习室 · 咖啡厅',
+          ja: '[U7] 中原図書館 閲覧室・カフェ'
+        },
+        desc: {
+          ko: `공강 ${gapMinutes}분 · 도서관에서 예습/휴식 후 ${departTime} 출발 (도보 ${walkToNext}분)`,
+          en: `${gapMinutes}m break · Prep at library then leave at ${departTime} (${walkToNext}m walk)`,
+          zh: `空课${gapMinutes}分 · 在图书馆自习后${departTime}出发 (步行${walkToNext}分)`,
+          ja: `空き${gapMinutes}分 · 図書館で予習後 ${departTime}出発 (徒歩${walkToNext}分)`
+        }
+      };
+    } else {
+      spot = {
+        icon: '☕',
+        place: {
+          ko: `[${(next.buildingMeta && next.buildingMeta.code) || 'U7'}] 다음 강의실 인근 휴게 공간`,
+          en: `[${(next.buildingMeta && next.buildingMeta.code) || 'U7'}] Lounge near next classroom`,
+          zh: `[${(next.buildingMeta && next.buildingMeta.code) || 'U7'}] 下节课教学楼附近休息区`,
+          ja: `[${(next.buildingMeta && next.buildingMeta.code) || 'U7'}] 次の講義室近くの休憩スペース`
+        },
+        desc: {
+          ko: `짧은 공강 ${gapMinutes}분 · 미리 이동해 ${departTime} 전 입실 추천 (도보 ${walkToNext}분)`,
+          en: `${gapMinutes}m short gap · Head over early & arrive before ${departTime} (${walkToNext}m walk)`,
+          zh: `短空课${gapMinutes}分 · 建议提前步行前往 (${walkToNext}分)`,
+          ja: `短い空き${gapMinutes}分 · 早めに移動推奨 (徒歩${walkToNext}分)`
+        }
+      };
+    }
+
+    return {
+      icon: spot.icon,
+      place: spot.place[L] || spot.place.ko,
+      desc: spot.desc[L] || spot.desc.ko,
+      walkToNext,
+      departTime,
+      overlapsLunch
+    };
+  }
+
   return {
     BUILDINGS,
     parseRoom,
     formatRoom,
     calculateRoute,
     TRANSIT_DATA,
-    getTransitRecommendation
+    getTransitRecommendation,
+    getFreeGapAdvice
   };
 }));

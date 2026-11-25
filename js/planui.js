@@ -1848,6 +1848,28 @@
           h('strong', null, `${r2.credits}${Tx.creditUnit}`, h('small', null, ` · ${Tx.altDays(wk)}`)),
           h('span', { class: 'alt-sub' }, sub));
       })) : null;
+      const lang = currentLang();
+      const simRoutes = (P.analyzeRoutes && P.analyzeRoutes(r.picks, lang)) || [];
+      const CR = window.GongjiCampusRoute;
+      const routeSummaryEl = simRoutes.length ? h('div', { class: 'plan-route-box' },
+        h('div', { class: 'prb-head' },
+          h('strong', null, lang === 'en' ? `🚶 Consecutive Class Walk Check (${simRoutes.length})`
+            : lang === 'zh' ? `🚶 连堂步行换教室模拟 (${simRoutes.length}处)`
+            : lang === 'ja' ? `🚶 連続授業の移動シミュレーション (${simRoutes.length}件)`
+            : `🚶 연강 이동 동선 시뮬레이션 (${simRoutes.length}건)`)
+        ),
+        h('div', { class: 'prb-list' }, simRoutes.map((sr) => {
+          const rA = (CR && CR.formatRoom) ? CR.formatRoom(sr.prev.room, lang) : sr.prev.room;
+          const rB = (CR && CR.formatRoom) ? CR.formatRoom(sr.next.room, lang) : sr.next.room;
+          const lvl = sr.route.level === 'danger' ? 'is-danger' : sr.route.level === 'warning' ? 'is-warn' : 'is-safe';
+          return h('div', { class: `prb-item ${lvl}` },
+            h('span', { class: 'prb-day' }, deps.dayName(sr.day)),
+            h('span', { class: 'prb-path' }, `${rA} ➔ ${rB}`),
+            h('span', { class: 'prb-status' }, `${sr.route.statusText} (${sr.route.walkMin}${lang === 'en' ? 'm' : '분'})`)
+          );
+        }))
+      ) : null;
+
       return h('div', { class: 'plan-result' },
         altTabs,
         h('div', { class: 'pr-summary' },
@@ -1855,6 +1877,7 @@
           h('p', { class: 'pr-by' }, Tx.planBy(r.byArea.major, r.byArea.general, r.byArea.free)),
           r.short ? h('p', { class: 'help warn-note' }, Tx.planShort(r.short)) : null),
         miniGrid(r.picks),
+        routeSummaryEl,
         elearn ? h('p', { class: 'fine' }, Tx.planElearnNote(elearn)) : null,
         h('ul', { class: 'pr-list' }, rows),
         h('div', { class: 'row pr-foot' },

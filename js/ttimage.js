@@ -186,9 +186,11 @@
     ctx.textAlign = 'right';
     ctx.fillStyle = C.text;
     const brandY = H - pad + 8;
-    ctx.fillText('공지 ', W - pad - ctx.measureText('줍줍').width, brandY);
+    const b1 = lang === 'en' ? 'Notice ' : lang === 'zh' ? '公告 ' : lang === 'ja' ? 'お知らせ' : '공지 ';
+    const b2 = lang === 'en' ? 'Grab' : lang === 'zh' ? '拾遗' : lang === 'ja' ? '拾い' : '줍줍';
+    ctx.fillText(b1, W - pad - ctx.measureText(b2).width, brandY);
     ctx.fillStyle = C.accent;
-    ctx.fillText('줍줍', W - pad, brandY);
+    ctx.fillText(b2, W - pad, brandY);
     ctx.textAlign = 'left';
     return cv;
   }
