@@ -461,26 +461,6 @@
               onclick: () => applyPreset(66, 51, 15, '')
             }, Tx.reqPreset51 || '⚡ 15학점 인정 (동일계 최대: 전공 51 + 자유 15)')
           )
-        ),
-        h('div', { class: 'req-preset-group' },
-          h('span', { class: 'req-preset-group-title' }, Tx.reqPresetMultiTitle || '🎓 다전공(복수전공)·융합전공·부전공 기준 (확장 학점)'),
-          h('div', { class: 'req-presets-bar' },
-            h('button', {
-              type: 'button',
-              class: 'req-preset-chip' + (req.total === 87 && req.major === 51 && req.general === 36 ? ' is-active' : ''),
-              onclick: () => applyPreset(87, 51, 36, 'double')
-            }, Tx.reqPresetDouble || '🎓 다전공(복수전공) 기준 (총 87: 주전공 51 + 제2전공 36)'),
-            h('button', {
-              type: 'button',
-              class: 'req-preset-chip' + (req.total === 75 && req.major === 51 && req.general === 24 ? ' is-active' : ''),
-              onclick: () => applyPreset(75, 51, 24, 'converge')
-            }, Tx.reqPresetConvergence || '🧬 융합·연계전공 기준 (총 75: 주전공 51 + 융합전공 24)'),
-            h('button', {
-              type: 'button',
-              class: 'req-preset-chip' + (req.total === 72 && req.major === 51 && req.general === 21 ? ' is-active' : ''),
-              onclick: () => applyPreset(72, 51, 21, 'minor')
-            }, Tx.reqPresetMinor || '📘 부전공 기준 (총 72: 주전공 51 + 부전공 21)')
-          )
         )
       ) : null;
 
