@@ -1789,9 +1789,11 @@
       const hours = [];
       for (let m = lo; m < hi; m += 60) hours.push(m / 60);
 
-      const freeLabel = currentLang() === 'en' ? 'Free' : currentLang() === 'zh' ? '空课' : currentLang() === 'ja' ? '空き' : '공강';
-      const elLabel = currentLang() === 'en' ? '💻 Unscheduled e-Learning:' : currentLang() === 'zh' ? '💻 课表外网络课程:' : currentLang() === 'ja' ? '💻 時間割外eラーニング:' : '💻 시간표 외 이러닝:';
-      const profTitle = (p) => (currentLang() === 'en' ? `Prof. ${p}` : currentLang() === 'zh' || currentLang() === 'ja' ? `${p} 教授` : `${p} 교수`);
+      const lang = currentLang();
+      const DI18n = window.GongjiDeptI18n;
+      const freeLabel = lang === 'en' ? '🏖️ Free' : lang === 'zh' ? '🏖️ 空课' : lang === 'ja' ? '🏖️ 空き' : '🏖️ 공강';
+      const elLabel = lang === 'en' ? '💻 Unscheduled e-Learning' : lang === 'zh' ? '💻 课表外网络课程' : lang === 'ja' ? '💻 時間割外eラーニング' : '💻 시간표 외 이러닝';
+      const profTitle = (p) => (lang === 'en' ? `Prof. ${p}` : lang === 'zh' || lang === 'ja' ? `${p} 教授` : `${p} 교수`);
 
       const gridEl = h('div', { class: 'mini-tt', style: `--cols:${days.length};--rows:${hours.length}` },
         h('div', { class: 'mini-head' }, h('span'), days.map((d) => h('span', null, deps.dayName(d)))),
@@ -1805,26 +1807,32 @@
                 const durMin = toMin(b) - toMin(a);
                 const isShort = durMin <= 60;
                 const isTiny = durMin <= 30;
+                const cName = (DI18n && DI18n.formatCourse) ? DI18n.formatCourse(p.group.name, lang) : p.group.name;
                 const profText = p.section.prof ? profTitle(p.section.prof) : '';
                 return h('div', {
                   class: 'mini-class' + (p.section.mode === 'live' ? ' live' : '') + (isShort ? ' is-short-slot' : ''),
                   style: `top:${((toMin(a) - lo) / span) * 100}%;height:${((toMin(b) - toMin(a)) / span) * 100}%;--c:${deps.classColor(p.group.name)}`,
-                  title: `${p.group.name} ${a}–${b}${profText ? ` (${profText})` : ''}`
+                  title: `${cName} ${a}–${b}${profText ? ` (${profText})` : ''}`
                 },
-                  h('b', null, p.group.name),
-                  (!isShort && p.section.prof) ? h('span', { class: 'mini-prof', style: 'font-size:10px;display:block;opacity:.85;font-weight:600;' }, p.section.prof) : null,
+                  h('b', null, cName),
+                  (!isShort && p.section.prof) ? h('span', { class: 'mini-prof' }, p.section.prof) : null,
                   !isTiny ? h('small', null, `${a}–${b}`) : null
                 );
               }));
           })));
 
       const elearnChips = elearns.length ? h('div', { class: 'mini-elearn-wrap' },
-        h('span', { class: 'mini-el-label' }, elLabel),
-        h('div', { class: 'mini-el-chips' }, elearns.map((p) =>
-          h('span', { class: 'mini-el-chip', style: `--c:${deps.classColor(p.group.name)}` },
-            `📖 ${p.group.name}`, p.section.prof ? ` (${profTitle(p.section.prof)})` : ''
-          )
-        ))
+        h('div', { class: 'mini-el-head' },
+          h('span', { class: 'mini-el-label' }, elLabel),
+          h('span', { class: 'mini-el-count' }, String(elearns.length))
+        ),
+        h('div', { class: 'mini-el-chips' }, elearns.map((p) => {
+          const cName = (DI18n && DI18n.formatCourse) ? DI18n.formatCourse(p.group.name, lang) : p.group.name;
+          return h('span', { class: 'mini-el-chip', style: `--c:${deps.classColor(p.group.name)}` },
+            h('span', { class: 'mini-el-name' }, cName),
+            p.section.prof ? h('span', { class: 'mini-el-prof' }, profTitle(p.section.prof)) : null
+          );
+        }))
       ) : null;
 
       return h('div', { class: 'mini-grid-container' }, gridEl, elearnChips);

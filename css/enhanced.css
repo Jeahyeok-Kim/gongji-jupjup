@@ -9309,6 +9309,111 @@ html, body {
   flex: 0 0 auto;
 }
 
+/* 14. Mini Timetable Free-Day Pill & Unscheduled e-Learning Cards */
+.mini-col.is-free-col {
+  background: rgba(12, 122, 69, 0.035);
+}
+[data-theme="dark"] .mini-col.is-free-col {
+  background: rgba(70, 196, 134, 0.04);
+}
+.mini-free-label {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  padding: 4px 9px;
+  border-radius: 9999px;
+  font-size: 11px;
+  font-weight: 700;
+  white-space: nowrap;
+  color: var(--accent, #0c7a45);
+  background: rgba(12, 122, 69, 0.09);
+  border: 1px dashed rgba(12, 122, 69, 0.3);
+  pointer-events: none;
+}
+[data-theme="dark"] .mini-free-label {
+  color: #46c486;
+  background: rgba(70, 196, 134, 0.12);
+  border-color: rgba(70, 196, 134, 0.28);
+}
+
+.mini-class .mini-prof {
+  display: block;
+  font-size: 10px;
+  font-weight: 600;
+  color: rgba(17, 24, 39, 0.78);
+  margin-top: 1px;
+}
+
+.mini-elearn-wrap {
+  margin-top: 12px;
+  padding: 12px 14px;
+  border-radius: 14px;
+  background: var(--surface-2, #f6f7f9);
+  border: 1px solid var(--border);
+}
+[data-theme="dark"] .mini-elearn-wrap {
+  background: rgba(255, 255, 255, 0.03);
+  border-color: rgba(255, 255, 255, 0.1);
+}
+.mini-el-head {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 8px;
+}
+.mini-el-label {
+  font-size: 12.5px;
+  font-weight: 800;
+  color: var(--text);
+}
+.mini-el-count {
+  display: inline-grid;
+  place-items: center;
+  min-width: 20px;
+  height: 18px;
+  padding: 0 6px;
+  border-radius: 9999px;
+  font-size: 11px;
+  font-weight: 800;
+  background: var(--accent-soft, #e9f4ee);
+  color: var(--accent, #0c7a45);
+}
+[data-theme="dark"] .mini-el-count {
+  background: rgba(70, 196, 134, 0.18);
+  color: #46c486;
+}
+.mini-el-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+}
+.mini-el-chip {
+  display: inline-flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 4px 6px;
+  padding: 6px 10px;
+  border-radius: 10px;
+  font-size: 12px;
+  background: var(--surface, #ffffff);
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--c, var(--accent, #0c7a45));
+  color: var(--text);
+}
+[data-theme="dark"] .mini-el-chip {
+  background: var(--surface-1, #182026);
+  border-color: rgba(255, 255, 255, 0.1);
+  border-left-color: var(--c, #46c486);
+}
+.mini-el-name {
+  font-weight: 700;
+}
+.mini-el-prof {
+  font-size: 11px;
+  color: var(--muted);
+}
+
 /* Keep old select fallback clean */
 :root,
 :root[data-theme="light"] {
@@ -9572,4 +9677,232 @@ body {
 }
 .bf:hover {
   transform: translateY(-2px) !important;
+}
+
+/* ==========================================================================
+   15. This Week Inline Planner (.sec-week: 7-day strip + inline day detail)
+   ========================================================================== */
+.sec-week .wk-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+.sec-week .wk-title-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  min-width: 0;
+}
+.sec-week .wk-title-row .w-label {
+  margin: 0 !important;
+}
+.sec-week .wk-summary {
+  display: inline-flex;
+  align-items: center;
+  padding: 2px 9px;
+  border-radius: 999px;
+  font-size: 11.5px;
+  font-weight: 600;
+  color: var(--muted);
+  background: var(--fill);
+  font-variant-numeric: tabular-nums;
+}
+[data-theme="dark"] .sec-week .wk-summary {
+  background: rgba(255, 255, 255, 0.06);
+  color: #9ca3af;
+}
+.sec-week .wk-jump {
+  flex: none;
+  border: 0;
+  background: transparent;
+  padding: 4px 8px;
+  border-radius: 8px;
+  font: inherit;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--accent);
+  cursor: pointer;
+  transition: background-color 0.15s ease;
+}
+.sec-week .wk-jump:hover {
+  background: color-mix(in srgb, var(--accent) 12%, transparent);
+}
+
+.sec-week .wk {
+  padding: 8px 2px 9px;
+  border: 1.5px solid transparent;
+  transition: background-color 0.16s ease, border-color 0.16s ease;
+}
+.sec-week .wk.is-selected {
+  background: color-mix(in srgb, var(--accent) 10%, transparent);
+  border-color: color-mix(in srgb, var(--accent) 45%, transparent);
+}
+[data-theme="dark"] .sec-week .wk.is-selected {
+  background: rgba(16, 185, 129, 0.12);
+  border-color: rgba(52, 211, 153, 0.42);
+}
+.sec-week .wk-cls {
+  margin-top: 1px;
+  padding: 1px 6px;
+  border-radius: 999px;
+  font-size: 10px;
+  font-weight: 700;
+  line-height: 1.35;
+  color: var(--text);
+  background: var(--fill);
+}
+.sec-week .wk-cls.is-free {
+  color: var(--accent);
+  background: color-mix(in srgb, var(--accent) 12%, transparent);
+}
+[data-theme="dark"] .sec-week .wk-cls {
+  background: rgba(255, 255, 255, 0.08);
+  color: #cbd5e1;
+}
+[data-theme="dark"] .sec-week .wk-cls.is-free {
+  background: rgba(16, 185, 129, 0.15);
+  color: #34d399;
+}
+
+.sec-week .wk-detail {
+  margin-top: 14px;
+  padding: 12px 14px;
+  border-radius: 14px;
+  background: var(--fill);
+  border: 1px solid var(--border-soft, rgba(15, 23, 42, 0.06));
+}
+[data-theme="dark"] .sec-week .wk-detail {
+  background: rgba(255, 255, 255, 0.035);
+  border-color: rgba(255, 255, 255, 0.07);
+}
+.sec-week .wk-detail-head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+.sec-week .wk-detail-head strong {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--text);
+}
+.sec-week .wk-today-pill {
+  display: inline-flex;
+  align-items: center;
+  padding: 1px 7px;
+  border-radius: 999px;
+  font-size: 10.5px;
+  font-weight: 700;
+  color: #fff;
+  background: var(--accent);
+}
+
+.sec-week .wk-classes {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 10px;
+}
+.sec-week .wk-cls-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 4px 9px;
+  border-radius: 8px;
+  font-size: 11.5px;
+  font-weight: 600;
+  color: var(--text);
+  background: var(--surface);
+  border: 1px solid var(--border-soft, rgba(15, 23, 42, 0.08));
+  max-width: 100%;
+}
+.sec-week .wk-cls-pill b {
+  font-weight: 700;
+  color: var(--accent);
+  font-variant-numeric: tabular-nums;
+}
+.sec-week .wk-cls-pill span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.sec-week .wk-cls-pill.is-free {
+  color: var(--accent);
+  background: color-mix(in srgb, var(--accent) 10%, transparent);
+  border-color: color-mix(in srgb, var(--accent) 26%, transparent);
+}
+[data-theme="dark"] .sec-week .wk-cls-pill {
+  background: rgba(15, 23, 42, 0.55);
+  border-color: rgba(255, 255, 255, 0.08);
+  color: #e2e8f0;
+}
+[data-theme="dark"] .sec-week .wk-cls-pill.is-free {
+  background: rgba(16, 185, 129, 0.14);
+  border-color: rgba(52, 211, 153, 0.3);
+  color: #34d399;
+}
+
+.sec-week .wk-ev-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 6px;
+}
+.sec-week .wk-ev-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+  font-size: 12.5px;
+}
+.sec-week .wk-ev-link,
+.sec-week .wk-ev-text {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  text-align: left;
+  color: var(--text);
+}
+.sec-week .wk-ev-link {
+  border: 0;
+  background: none;
+  padding: 0;
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+}
+.sec-week .wk-ev-link:hover {
+  color: var(--accent);
+  text-decoration: underline;
+}
+.sec-week .wk-ev-time {
+  flex: none;
+  font-size: 11px;
+  color: var(--muted);
+  font-variant-numeric: tabular-nums;
+}
+.sec-week .wk-ev-empty {
+  margin: 0;
+  font-size: 12px;
+  color: var(--muted);
+}
+.sec-week .wk-ev-more {
+  margin-top: 8px;
+  border: 0;
+  background: none;
+  padding: 2px 0;
+  font: inherit;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--accent);
+  cursor: pointer;
+}
+.sec-week .wk-ev-more:hover {
+  text-decoration: underline;
 }

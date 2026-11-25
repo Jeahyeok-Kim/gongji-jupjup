@@ -315,7 +315,7 @@
       }
     }
     const aboutVer = $('#about-ver') || document.querySelector('.settings-about-ver');
-    if (aboutVer) aboutVer.textContent = `${t().brandName || '공지 줍줍'} v89`;
+    if (aboutVer) aboutVer.textContent = `${t().brandName || '공지 줍줍'} v91`;
     document.querySelectorAll('.today-text').forEach((el) => { el.textContent = I.formatDate(now, state.lang); });
     const keep = DATA.meta.keep;
     const keepText = keep && keep.months && keep.since ? ' · ' + t().keepNote(keep.months, String(keep.since).replace(/-/g, '.')) : '';
@@ -4460,37 +4460,143 @@
           subText ? h('p', { class: 'grad-sub' }, subText) : null)));
   }
 
-  // 이번 주: 월~일 일곱 칸에 마감·행사·학사일정 점 (삼성 캘린더 주간 띠)
+  // 이번 주: 월~일 주간 수업·마감 인라인 플래너 (날짜 클릭 시 아래 달력으로 튕기지 않고 카드 내부에서 그날 수업+마감을 바로 미리보기)
+  function refreshWeek() {
+    const old = document.querySelector('.sec-week');
+    if (!old) return;
+    const nw = widgetWeek();
+    nw.className = 'sec sec-week';
+    old.replaceWith(nw);
+  }
   function widgetWeek() {
     const T = t();
+    const lang = state.lang;
     const entries = C.collect(activeNotices(), { titleOf, calendar: window.GONGJI_CALENDAR, academicTitle: (it) => tr(it.title) });
     const base = L.startOfDay(now);
     const monday = L.addDays(base, -((base.getDay() + 6) % 7));
+    const sunday = L.addDays(monday, 6);
     const todayKey = X.ymd(now);
     const days = Array.from({ length: 7 }, (_, i) => L.addDays(monday, i));
-    return h('section', { class: 'w w-week' },
-      h('p', { class: 'w-label' }, T.wWeek),
-      h('div', { class: 'week' }, days.map((d) => {
-        const key = X.ymd(d);
-        const es = entries.filter((e) => e.date === key);
-        const cnt = (type) => es.filter((e) => e.type === type).length;
-        const dl = cnt('deadline');
-        return h('button', {
-          type: 'button', class: 'wk' + (key === todayKey ? ' is-today' : '') + (d.getDay() === 0 ? ' sun' : d.getDay() === 6 ? ' sat' : ''),
-          'aria-label': T.calCellAria(I.formatDate(d, state.lang), es.length),
-          onclick: () => {
-            state.cal = { year: d.getFullYear(), month0: d.getMonth(), sel: key };
-            refreshCal();
-            const cc = document.querySelector('.cal-card');
-            if (cc) cc.scrollIntoView({ behavior: reduceMotion() ? 'auto' : 'smooth', block: 'start' });
-          }
-        },
-        h('span', { class: 'wk-dow' }, dayName(d.getDay())),
-        h('span', { class: 'wk-num' }, String(d.getDate())),
-        h('span', { class: 'wk-dots', 'aria-hidden': 'true' },
-          dl ? h('i', { class: 'dot deadline' }) : null, cnt('event') ? h('i', { class: 'dot event' }) : null, cnt('academic') ? h('i', { class: 'dot academic' }) : null),
-        dl ? h('span', { class: 'wk-count' }, String(dl)) : null);
-      })));
+    const dayKeys = new Set(days.map((d) => X.ymd(d)));
+    const selKey = (state.weekSel && dayKeys.has(state.weekSel)) ? state.weekSel : todayKey;
+    const selDate = L.parseLocal(selKey);
+    const hasTT = state.timetable && state.timetable.length > 0;
+    const DI18n = (typeof window !== 'undefined' && window.GongjiDeptI18n) || root.GongjiDeptI18n;
+    const byStart = (a, b) => toMin(a.start) - toMin(b.start);
+
+    const weekDeadlines = entries.filter((e) => dayKeys.has(e.date) && e.type === 'deadline').length;
+    const rangeText = `${monday.getMonth() + 1}.${monday.getDate()}–${sunday.getMonth() + 1}.${sunday.getDate()}`;
+    const summaryText = lang === 'en' ? `${rangeText} · ${weekDeadlines} due`
+      : lang === 'zh' ? `${rangeText} · 截止 ${weekDeadlines}项`
+      : lang === 'ja' ? `${rangeText} · 締切 ${weekDeadlines}件`
+      : `${rangeText} · 마감 ${weekDeadlines}건`;
+    const jumpCalLabel = lang === 'en' ? 'Month ↓' : lang === 'zh' ? '月历 ↓' : lang === 'ja' ? '月間 ↓' : '월간 달력 ↓';
+    const scrollToCal = () => {
+      const cc = document.querySelector('.cal-card');
+      if (cc) cc.scrollIntoView({ behavior: reduceMotion() ? 'auto' : 'smooth', block: 'start' });
+    };
+
+    const head = h('div', { class: 'wk-head' },
+      h('div', { class: 'wk-title-row' },
+        h('p', { class: 'w-label' }, T.wWeek),
+        h('span', { class: 'wk-summary' }, summaryText)
+      ),
+      h('button', { type: 'button', class: 'wk-jump', onclick: scrollToCal }, jumpCalLabel)
+    );
+
+    const strip = h('div', { class: 'week' }, days.map((d) => {
+      const key = X.ymd(d);
+      const dow = d.getDay();
+      const es = entries.filter((e) => e.date === key);
+      const cnt = (type) => es.filter((e) => e.type === type).length;
+      const dl = cnt('deadline');
+      const dayClsCount = hasTT && dow >= 1 && dow <= 5
+        ? state.timetable.filter((c) => c.day === dow && !c.elearn && c.start).length
+        : null;
+      const clsChipText = dayClsCount === null ? null
+        : dayClsCount === 0 ? (lang === 'en' ? 'Free' : lang === 'zh' ? '空' : lang === 'ja' ? '休' : '공강')
+        : (lang === 'en' ? `${dayClsCount}c` : `${dayClsCount}강`);
+
+      return h('button', {
+        type: 'button',
+        'aria-pressed': String(key === selKey),
+        class: 'wk'
+          + (key === todayKey ? ' is-today' : '')
+          + (key === selKey ? ' is-selected' : '')
+          + (dow === 0 ? ' sun' : dow === 6 ? ' sat' : ''),
+        'aria-label': T.calCellAria(I.formatDate(d, lang), es.length),
+        onclick: () => {
+          state.weekSel = key;
+          state.cal = { year: d.getFullYear(), month0: d.getMonth(), sel: key };
+          refreshWeek();
+          refreshCal();
+        }
+      },
+      h('span', { class: 'wk-dow' }, dayName(dow)),
+      h('span', { class: 'wk-num' }, String(d.getDate())),
+      h('span', { class: 'wk-dots', 'aria-hidden': 'true' },
+        dl ? h('i', { class: 'dot deadline' }) : null, cnt('event') ? h('i', { class: 'dot event' }) : null, cnt('academic') ? h('i', { class: 'dot academic' }) : null),
+      dl ? h('span', { class: 'wk-count' }, String(dl)) : null,
+      clsChipText ? h('span', { class: 'wk-cls' + (dayClsCount === 0 ? ' is-free' : '') }, clsChipText) : null);
+    }));
+
+    const selDow = selDate.getDay();
+    const selClasses = hasTT
+      ? state.timetable.filter((c) => c.day === selDow && !c.elearn && c.start).sort(byStart)
+      : [];
+    const ORDER = { deadline: 0, event: 1, academic: 2 };
+    const selEntries = entries.filter((e) => e.date === selKey)
+      .sort((a, b) => ORDER[a.type] - ORDER[b.type] || String(a.time).localeCompare(String(b.time)));
+    const MAX_SHOW = 4;
+    const shownEntries = selEntries.slice(0, MAX_SHOW);
+    const extraCount = selEntries.length - shownEntries.length;
+
+    const todayTag = selKey === todayKey
+      ? h('span', { class: 'wk-today-pill' }, lang === 'en' ? 'Today' : lang === 'zh' ? '今天' : lang === 'ja' ? '今日' : '오늘')
+      : null;
+
+    const classStrip = hasTT && selDow >= 1 && selDow <= 5 ? h('div', { class: 'wk-classes' },
+      selClasses.length
+        ? selClasses.map((c) => {
+            const cTitle = (DI18n && DI18n.formatCourse) ? DI18n.formatCourse(c.name, lang) : (c.name || T.classFallback);
+            return h('span', { class: 'wk-cls-pill' },
+              h('b', null, c.start),
+              h('span', null, cTitle)
+            );
+          })
+        : h('span', { class: 'wk-cls-pill is-free' },
+            lang === 'en' ? '🏖️ No classes (Free day)'
+            : lang === 'zh' ? '🏖️ 无课程 (空课)'
+            : lang === 'ja' ? '🏖️ 授業なし (空き)'
+            : '🏖️ 수업 없음 (공강)')
+    ) : null;
+
+    const eventList = selEntries.length
+      ? h('ul', { class: 'wk-ev-list' }, shownEntries.map((e) => h('li', { class: 'wk-ev-item' },
+          h('span', { class: 'mcal-kind ' + e.type }, T.calLegend[e.type]),
+          e.id
+            ? h('button', { type: 'button', class: 'wk-ev-link', onclick: () => openDetail(e.id) }, e.title)
+            : h('span', { class: 'wk-ev-text' }, e.title),
+          e.time ? h('span', { class: 'wk-ev-time' }, e.time) : null)))
+      : h('p', { class: 'wk-ev-empty' }, T.calDayEmpty);
+
+    const moreBtn = extraCount > 0 ? h('button', { type: 'button', class: 'wk-ev-more', onclick: scrollToCal },
+      lang === 'en' ? `+${extraCount} more in calendar ↓`
+      : lang === 'zh' ? `还有 ${extraCount} 项，查看月历 ↓`
+      : lang === 'ja' ? `他 ${extraCount}件を月間カレンダーで見る ↓`
+      : `+${extraCount}건 월간 달력에서 보기 ↓`) : null;
+
+    const detail = h('div', { class: 'wk-detail' },
+      h('div', { class: 'wk-detail-head' },
+        h('strong', null, I.formatDate(selDate, lang)),
+        todayTag
+      ),
+      classStrip,
+      eventList,
+      moreBtn
+    );
+
+    return h('section', { class: 'sec sec-week' }, head, strip, detail);
   }
 
   // 시작하기 스마트 팁: 처음 쓰는 사람에게 다음 맞춤 설정을 한 줄 카드로 안내 (✕ 닫기 가능)
@@ -5862,7 +5968,7 @@
       h('h3', null, `${T.calViewTitle} · ${T.calMonth(year, month0 + 1)}`),
       h('div', { class: 'mcal-nav' },
         h('button', { type: 'button', class: 'btn small', 'aria-label': T.calPrev, onclick: () => go(-1) }, '‹'),
-        h('button', { type: 'button', class: 'btn small', onclick: () => { state.cal = { year: now.getFullYear(), month0: now.getMonth(), sel: X.ymd(now) }; refreshCal(); } }, T.calToday),
+        h('button', { type: 'button', class: 'btn small', onclick: () => { const tk = X.ymd(now); state.cal = { year: now.getFullYear(), month0: now.getMonth(), sel: tk }; state.weekSel = tk; refreshCal(); refreshWeek(); } }, T.calToday),
         h('button', { type: 'button', class: 'btn small', 'aria-label': T.calNext, onclick: () => go(1) }, '›')));
     const cells = g.weeks.flat().map((c) => h('button', {
       type: 'button', 'aria-pressed': String(c.date === sel), 'data-date': c.date,
@@ -5870,8 +5976,10 @@
       'aria-label': T.calCellAria(I.formatDate(L.parseLocal(c.date), state.lang), c.entries.length),
       onclick: () => {
         state.cal.sel = c.date;
+        state.weekSel = c.date;
         if (!c.inMonth) { const d = L.parseLocal(c.date); state.cal.year = d.getFullYear(); state.cal.month0 = d.getMonth(); }
         refreshCal();
+        refreshWeek();
       }
     },
     h('span', { class: 'mcal-num' }, String(c.day)),
