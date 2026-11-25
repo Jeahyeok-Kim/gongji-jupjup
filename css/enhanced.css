@@ -5203,9 +5203,18 @@ mark.kw-hl {
 .sync-bar[hidden] {
   display: none !important;
 }
-[data-theme="dark"] body[data-tab="home"] .sync-bar {
-  background: #0e2618 !important;
+[data-theme="dark"] body[data-tab="home"] .sync-bar,
+body[data-tab="home"] .sync-bar {
+  position: absolute !important;
+  top: 64px !important;
+  right: 0 !important;
+  z-index: 5 !important;
+  background: transparent !important;
   border-bottom: none !important;
+  pointer-events: none !important;
+}
+body[data-tab="home"] .sync-bar #sync-btn {
+  pointer-events: auto !important;
 }
 #sync-text {
   display: inline-flex !important;
