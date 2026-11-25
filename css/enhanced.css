@@ -1648,6 +1648,10 @@ span.board::-webkit-scrollbar,
   letter-spacing: -0.01em;
 }
 
+[data-theme="dark"] .tt-prof {
+  color: rgba(255, 255, 255, 0.82) !important;
+}
+
 .tt-elearn-prof {
   display: inline-block;
   font-size: 11.5px;
@@ -2979,7 +2983,7 @@ span.board::-webkit-scrollbar,
 .gbc-item {
   padding: 10px 12px;
   border-radius: 10px;
-  background: var(--surface-1, #f9fafb);
+  background: var(--surface-2, #f6f7f9);
   border: 1px solid var(--border, #e5e7eb);
   display: flex;
   flex-direction: column;
@@ -7363,13 +7367,21 @@ body[data-tab="track"] .layout {
 .rd-banner.is-warn {
   background: rgba(245, 158, 11, 0.12);
   border-color: rgba(245, 158, 11, 0.35);
-  color: #f59e0b;
+  color: #b45309;
+}
+
+[data-theme="dark"] .rd-banner.is-warn {
+  color: #fbbf24;
 }
 
 .rd-banner.is-safe {
   background: rgba(16, 185, 129, 0.12);
   border-color: rgba(16, 185, 129, 0.35);
-  color: #10b981;
+  color: #059669;
+}
+
+[data-theme="dark"] .rd-banner.is-safe {
+  color: #34d399;
 }
 
 .rdb-icon {
@@ -7644,11 +7656,23 @@ body[data-tab="track"] .layout {
   background: rgba(239, 68, 68, 0.18);
   color: #dc2626;
 }
+[data-theme="dark"] .tt-route-pill.is-danger {
+  color: #fca5a5;
+}
 
 .tt-route-pill.is-warn {
   border-color: #f59e0b;
   background: rgba(245, 158, 11, 0.18);
-  color: #d97706;
+  color: #b45309;
+}
+[data-theme="dark"] .tt-route-pill.is-warn {
+  color: #fcd34d;
+}
+[data-theme="dark"] .tt-route-pill {
+  color: #34d399;
+}
+[data-theme="dark"] .tc-route-hill-warning {
+  color: #fca5a5;
 }
 
 .tt-route-pill:hover {
@@ -7686,6 +7710,25 @@ body[data-tab="track"] .layout {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.tct-walk-badge {
+  font-size: 11px;
+  font-weight: 600;
+  padding: 3px 9px;
+  border-radius: 9999px;
+  background: var(--surface, #ffffff);
+  border: 1px solid var(--border);
+  color: var(--muted);
+  white-space: nowrap;
+}
+
+[data-theme="dark"] .tct-walk-badge {
+  background: rgba(255, 255, 255, 0.06);
+  border-color: rgba(255, 255, 255, 0.12);
+  color: #cbd5e1;
 }
 
 .tct-title-group {
@@ -7725,10 +7768,15 @@ body[data-tab="track"] .layout {
   font-size: 12px;
   font-weight: 600;
   border: 1px solid var(--border);
-  background: var(--bg);
+  background: var(--surface, #ffffff);
   color: var(--muted);
   cursor: pointer;
   transition: all 0.15s ease;
+}
+
+[data-theme="dark"] .tc-transit-chip {
+  background: rgba(255, 255, 255, 0.05);
+  border-color: rgba(255, 255, 255, 0.1);
 }
 
 .tc-transit-chip:hover {
@@ -7737,10 +7785,10 @@ body[data-tab="track"] .layout {
 }
 
 .tc-transit-chip.is-active {
-  background: var(--brand, #10b981) !important;
-  color: #fff !important;
-  border-color: var(--brand, #10b981) !important;
-  box-shadow: 0 2px 6px rgba(16, 185, 129, 0.28);
+  background: var(--accent, #0c7a45) !important;
+  color: var(--on-accent, #ffffff) !important;
+  border-color: var(--accent, #0c7a45) !important;
+  box-shadow: 0 2px 6px rgba(12, 122, 69, 0.28);
 }
 
 .tc-transit-detail {
@@ -7749,8 +7797,13 @@ body[data-tab="track"] .layout {
   gap: 6px;
   padding: 10px 12px;
   border-radius: 10px;
-  background: var(--bg);
+  background: var(--surface, #ffffff);
   border: 1px solid var(--border);
+}
+
+[data-theme="dark"] .tc-transit-detail {
+  background: var(--surface-1, #182026);
+  border-color: rgba(255, 255, 255, 0.08);
 }
 
 .tct-step-row {
@@ -7774,9 +7827,10 @@ body[data-tab="track"] .layout {
   color: var(--text);
 }
 
-.tct-step-badge.shuttle { background: #3b82f6; color: #fff; }
-.tct-step-badge.ktx { background: #8b5cf6; color: #fff; }
-.tct-step-badge.bus { background: #f59e0b; color: #fff; }
+.tct-step-badge.shuttle { background: #2563eb; color: #fff; }
+.tct-step-badge.ktx { background: #7c3aed; color: #fff; }
+.tct-step-badge.bus { background: #d97706; color: #fff; }
+.tct-step-badge.commuter { background: var(--accent, #0c7a45); color: var(--on-accent, #fff); }
 
 .tct-sub {
   font-size: 11px;
@@ -7786,7 +7840,39 @@ body[data-tab="track"] .layout {
 .tct-highlight {
   font-size: 12px;
   font-weight: 700;
-  color: var(--brand, #10b981);
+  color: var(--accent, #0c7a45);
+}
+
+[data-theme="dark"] .tct-highlight {
+  color: #46c486;
+}
+
+.tct-upcoming-row {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 6px;
+  font-size: 11.5px;
+}
+
+.tct-up-label {
+  color: var(--muted);
+  font-weight: 600;
+}
+
+.tct-up-pill {
+  padding: 2px 8px;
+  border-radius: 6px;
+  background: var(--surface, #ffffff);
+  border: 1px solid var(--border);
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  color: var(--text);
+}
+
+[data-theme="dark"] .tct-up-pill {
+  background: rgba(255, 255, 255, 0.06);
+  border-color: rgba(255, 255, 255, 0.12);
 }
 
 .tct-route-flow {
@@ -8774,7 +8860,7 @@ html, body {
 
 /* 7. Class Modal Edit / Delete Action Styling */
 #class-dialog.editing #class-dialog-title {
-  color: var(--fg, #111827);
+  color: var(--text, #191f28);
 }
 #class-delete {
   background: var(--danger-soft, #fef2f2) !important;
@@ -8790,4 +8876,19 @@ html, body {
   background: var(--danger, #dc2626) !important;
   color: #ffffff !important;
   box-shadow: 0 4px 12px rgba(220, 38, 38, 0.25) !important;
+}
+[data-theme="dark"] #class-delete {
+  background: rgba(239, 68, 68, 0.15) !important;
+  color: #f87171 !important;
+  border-color: rgba(239, 68, 68, 0.35) !important;
+}
+[data-theme="dark"] #class-delete:hover {
+  background: #ef4444 !important;
+  color: #ffffff !important;
+}
+
+/* 8. Viewport Horizontal Overflow Guard */
+html, body {
+  overflow-x: hidden;
+  max-width: 100%;
 }

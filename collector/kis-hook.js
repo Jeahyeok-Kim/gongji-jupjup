@@ -82,7 +82,18 @@
     }
 
     // 2) KIS 강의 목록 키들 (종합강의시간표, 전체 개설 과목 또는 개인 수강신청 목록)
-    const rows = parsed.DS_SUSTTIMETABLE || parsed.DS_LECTUREINFO || parsed.DS_SUGANGINFO || parsed.DS_TIMETABLE || parsed.DS_COUR_APLY || parsed.DS_LIST;
+    // 하드코딩된 키 외에 응답 내 모든 배열 중 강의 필드를 가진 가장 큰 배열을 선택
+    const isLecRow = (r) => r && typeof r === 'object' && (r.CORS_KOR_NM || r.TYPL_KOR_NM || r.SBJT_NM || r.CORS_NM || r.HAKSU_ID || r.LT_DAY_TIME || r.ROOM_NM);
+    let rows = parsed.DS_SUSTTIMETABLE || parsed.DS_LECTUREINFO || parsed.DS_SUGANGINFO || parsed.DS_TIMETABLE || parsed.DS_COUR_APLY || parsed.DS_LIST;
+    let bestKey = '';
+    for (const [k, v] of Object.entries(parsed)) {
+      if (Array.isArray(v) && v.length > 0 && v.some(isLecRow)) {
+        if (!Array.isArray(rows) || v.length > rows.length) {
+          rows = v;
+          bestKey = k;
+        }
+      }
+    }
     if (!Array.isArray(rows) || rows.length === 0) return;
 
     let year = '';
@@ -102,12 +113,17 @@
     if (!year) year = String(rows[0].LT_YY || rows[0].OPEN_YY || rows[0].YY || '2026');
     if (!term) term = String(rows[0].LT_SHTM || rows[0].OPEN_SHTM || rows[0].SHTM || 'B01012');
 
+    const isPersonal = Boolean(
+      (bestKey ? /SUGANG|TIMETABLE|COUR_APLY/i.test(bestKey) && !/SUST/i.test(bestKey) : false) ||
+      (!bestKey && (parsed.DS_SUGANGINFO || parsed.DS_TIMETABLE || parsed.DS_COUR_APLY))
+    );
+
     post({
       type: 'lectures',
       year,
       term,
       rows,
-      isPersonal: Boolean(parsed.DS_SUGANGINFO || parsed.DS_TIMETABLE || parsed.DS_COUR_APLY)
+      isPersonal
     });
   }
 
@@ -170,15 +186,57 @@
     try {
       if (window.cpr && window.cpr.core && window.cpr.core.Platform) {
         const platform = window.cpr.core.Platform.INSTANCE;
-        const roots = platform._appInstances || (platform.getMountedAppInstances ? platform.getMountedAppInstances() : []);
-        if (Array.isArray(roots)) roots.forEach(traverseApp);
+        const collect = (list) => {
+          if (!list) return;
+          if (Array.isArray(list)) list.forEach(traverseApp);
+          else if (list instanceof Set || list instanceof Map) list.forEach((v) => traverseApp(v));
+          else if (typeof list === 'object') Object.values(list).forEach(traverseApp);
+        };
+        if (platform.getAllRunningAppInstances) collect(platform.getAllRunningAppInstances());
+        if (platform.getMountedAppInstances) collect(platform.getMountedAppInstances());
+        if (platform._appInstances) collect(platform._appInstances);
       }
     } catch {}
     return Array.from(res);
   }
 
-  // eXbuilder6 메모리 인스턴스에서 이미 로드된 DataSet 직접 조회
+  function extractDsRows(ds) {
+    if (!ds) return null;
+    try {
+      const cnt = typeof ds.getRowCount === 'function' ? ds.getRowCount() : 0;
+      if (cnt > 0) {
+        if (typeof ds.getRowDataRanged === 'function') {
+          const data = ds.getRowDataRanged(0, cnt - 1);
+          if (Array.isArray(data) && data.length > 0) return data;
+        }
+        if (typeof ds.getRowData === 'function') {
+          const out = [];
+          for (let i = 0; i < cnt; i++) {
+            const r = ds.getRowData(i);
+            if (r) out.push(r);
+          }
+          if (out.length > 0) return out;
+        }
+      }
+      if (typeof ds.getRowDataRanged === 'function') {
+        const data = ds.getRowDataRanged();
+        if (Array.isArray(data) && data.length > 0) return data;
+      }
+    } catch {}
+    return null;
+  }
+
+  // eXbuilder6 메모리 인스턴스에서 이미 로드된 DataSet 직접 조회 (가장 큰 전체 강의 목록 우선)
   function getInMemoryRows() {
+    let bestRows = null;
+    const isLecRow = (r) => r && (r.CORS_KOR_NM || r.TYPL_KOR_NM || r.SBJT_NM || r.HAKSU_ID || r.ROOM_NM || r.LT_DAY_TIME);
+    const consider = (data) => {
+      if (Array.isArray(data) && data.length > 0 && data.some(isLecRow)) {
+        if (!bestRows || data.length > bestRows.length) {
+          bestRows = data;
+        }
+      }
+    };
     try {
       const apps = getAllAppInstances();
       for (const app of apps) {
@@ -187,15 +245,8 @@
         if (app.getAllDataControls) {
           try {
             const controls = app.getAllDataControls();
-            for (const ctrl of controls) {
-              if (ctrl && ctrl.getRowDataRanged) {
-                const data = ctrl.getRowDataRanged();
-                if (Array.isArray(data) && data.length > 0) {
-                  if (data.some(r => r && (r.CORS_KOR_NM || r.TYPL_KOR_NM || r.SBJT_NM || r.HAKSU_ID || r.ROOM_NM || r.LT_DAY_TIME))) {
-                    return data;
-                  }
-                }
-              }
+            if (Array.isArray(controls)) {
+              for (const ctrl of controls) consider(extractDsRows(ctrl));
             }
           } catch {}
         }
@@ -207,16 +258,12 @@
         ];
         if (app.lookup) {
           for (const k of knownKeys) {
-            const ds = app.lookup(k);
-            if (ds && ds.getRowDataRanged) {
-              const data = ds.getRowDataRanged();
-              if (Array.isArray(data) && data.length > 0) return data;
-            }
+            consider(extractDsRows(app.lookup(k)));
           }
         }
       }
     } catch {}
-    return null;
+    return bestRows;
   }
 
   // eXbuilder6 화면 Grid DOM 파싱 (최후의 보루 폴백: KIS 종합강의시간표 및 개설과목 테이블 파싱)
@@ -257,21 +304,15 @@
   }
 
   async function fetchLectures(year, term) {
-    // 1. 이미 화면(종합강의시간표조회) 메모리에 로드된 데이터셋이 있으면 즉시 전달
+    // 1. 이미 화면(종합강의시간표조회) 메모리에 전체(50건 이상) 데이터셋이 로드돼 있으면 즉시 전달
     const inMem = getInMemoryRows();
-    if (inMem && inMem.length) {
+    if (inMem && inMem.length >= 50) {
       post({ type: 'lectures', year, term, rows: inMem, isPersonal: false });
       return;
     }
 
-    // 2. 화면 Grid DOM에 렌더링된 데이터가 있으면 즉시 추출
-    const domRows = getDomRows();
-    if (domRows && domRows.length) {
-      post({ type: 'lectures', year, term, rows: domRows, isPersonal: false });
-      return;
-    }
-
-    // 3. 화면에서 가로챈 템플릿 또는 종합강의시간표조회(CourTotalTimetableInq) 엔드포인트 직접 호출
+    // 2. 화면에서 가로챈 템플릿 또는 종합강의시간표조회(CourTotalTimetableInq) 엔드포인트 직접 호출
+    //    (주의: 가상 스크롤 DOM은 화면에 보이는 ~21개만 있으므로 API 조회를 먼저 시도한다)
     const endpoints = [];
     if (template) {
       endpoints.push({ url: template.url, body: template.body, headers: template.headers });
@@ -316,7 +357,7 @@
           body: ep.body
         });
         const text = await res.text();
-        if (text.includes('"DS_SUSTTIMETABLE"') || text.includes('"DS_LECTUREINFO"') || text.includes('"DS_SUGANGINFO"') || text.includes('"DS_TIMETABLE"') || text.includes('"DS_LIST"')) {
+        if (text && (text.includes('"DS_') || text.includes('"CORS_KOR_NM"') || text.includes('"TYPL_KOR_NM"') || text.includes('"HAKSU_ID"'))) {
           deliver(text, ep.body);
           success = true;
           break;
@@ -326,6 +367,11 @@
       }
     }
     if (!success) {
+      // 3. API 호출이 모두 실패했을 때만 소규모 메모리 DataSet 또는 화면 DOM 폴백 사용
+      if (inMem && inMem.length) {
+        post({ type: 'lectures', year, term, rows: inMem, isPersonal: false });
+        return;
+      }
       const lateDom = getDomRows();
       if (lateDom && lateDom.length) {
         post({ type: 'lectures', year, term, rows: lateDom, isPersonal: false });

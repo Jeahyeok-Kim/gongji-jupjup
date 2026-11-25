@@ -584,26 +584,105 @@
       if (img) img.src = dataUrl;
     };
 
+    const lang = o.lang || (typeof document !== 'undefined' && document.documentElement.lang) || 'ko';
+    const uiTxt = lang === 'en' ? {
+      studioTitle: '🖼️ Notice Card Studio',
+      studioSub: 'High-res summary card optimized for Instagram, KakaoTalk & social sharing',
+      close: 'Close',
+      ratioLabel: 'Ratio',
+      feed: '📱 Feed (4:5)',
+      square: '⬛ Square (1:1)',
+      themeLabel: 'Theme',
+      dark: '🌌 Dark Emerald',
+      white: '☀️ Clean White',
+      download: '💾 Save Image (.png)',
+      copy: '📋 Copy Image',
+      share: '📤 Share',
+      toastDownloaded: '🖼️ High-resolution card image downloaded!',
+      toastDownloadFail: 'Failed to save image. Please try again.',
+      toastCopied: '📋 Card image copied to clipboard! Paste (Ctrl+V) anywhere.',
+      toastCopyFallback: 'Clipboard copy not supported here; downloaded as PNG instead.',
+      toastShared: '📤 Card image shared!',
+      toastShareFail: 'Could not complete sharing.'
+    } : lang === 'zh' ? {
+      studioTitle: '🖼️ 公告卡片工作室',
+      studioSub: '专为朋友圈、KakaoTalk 及社交平台优化的高清公告卡片',
+      close: '关闭',
+      ratioLabel: '比例',
+      feed: '📱 竖版 (4:5)',
+      square: '⬛ 方形 (1:1)',
+      themeLabel: '主题',
+      dark: '🌌 暗夜翡翠',
+      white: '☀️ 纯净亮白',
+      download: '💾 保存图片 (.png)',
+      copy: '📋 复制图片',
+      share: '📤 立即分享',
+      toastDownloaded: '🖼️ 高清公告卡片图片已下载!',
+      toastDownloadFail: '图片保存失败，请重试。',
+      toastCopied: '📋 卡片图片已复制到剪贴板，可直接粘贴发送!',
+      toastCopyFallback: '当前环境不支持直接复制，已为您下载图片文件。',
+      toastShared: '📤 公告卡片已分享!',
+      toastShareFail: '未能完成分享。'
+    } : lang === 'ja' ? {
+      studioTitle: '🖼️ お知らせカードスタジオ',
+      studioSub: 'Instagram・SNS・メッセージ共有に最適化された高解像度カード',
+      close: '閉じる',
+      ratioLabel: '比率',
+      feed: '📱 フィード (4:5)',
+      square: '⬛ 正方形 (1:1)',
+      themeLabel: 'テーマ',
+      dark: '🌌 ダークエメラルド',
+      white: '☀️ クリーンホワイト',
+      download: '💾 画像を保存 (.png)',
+      copy: '📋 画像をコピー',
+      share: '📤 共有する',
+      toastDownloaded: '🖼️ 高解像度カード画像をダウンロードしました！',
+      toastDownloadFail: '画像の保存に失敗しました。もう一度お試しください。',
+      toastCopied: '📋 カード画像をクリップボードにコピーしました！',
+      toastCopyFallback: '直接コピーに対応していないため、画像ファイルとして保存しました。',
+      toastShared: '📤 カード画像を共有しました！',
+      toastShareFail: '共有を完了できませんでした。'
+    } : {
+      studioTitle: '🖼️ 공지 카드뉴스 스튜디오',
+      studioSub: '인스타 피드·에브리타임·카카오톡 공유에 최적화된 고해상도 카드뉴스',
+      close: '닫기',
+      ratioLabel: '비율',
+      feed: '📱 피드 (4:5)',
+      square: '⬛ 정방형 (1:1)',
+      themeLabel: '테마',
+      dark: '🌌 다크 에메랄드',
+      white: '☀️ 클린 화이트',
+      download: '💾 이미지 저장 (.png)',
+      copy: '📋 이미지 복사',
+      share: '📤 바로 공유',
+      toastDownloaded: '🖼️ 고해상도 카드뉴스 이미지가 다운로드되었습니다!',
+      toastDownloadFail: '이미지 저장에 실패했습니다. 다시 시도해 주세요.',
+      toastCopied: '📋 카드뉴스 이미지가 클립보드에 복사되었어요! 카톡이나 에브리타임에 바로 붙여넣기(Ctrl+V)하세요!',
+      toastCopyFallback: '클립보드 직접 복사를 지원하지 않는 환경이어서 이미지 파일로 다운로드되었습니다.',
+      toastShared: '📤 카드뉴스가 공유되었습니다!',
+      toastShareFail: '공유를 완료하지 못했습니다.'
+    };
+
     modal.innerHTML = `
       <div class="ncm-wrap">
         <div class="ncm-head">
           <div class="ncm-title-area">
-            <h3>🖼️ 공지 카드뉴스 스튜디오</h3>
-            <p class="ncm-sub">인스타 피드·에브리타임·카카오톡 공유에 최적화된 고해상도 카드뉴스</p>
+            <h3>${uiTxt.studioTitle}</h3>
+            <p class="ncm-sub">${uiTxt.studioSub}</p>
           </div>
-          <button type="button" class="ncm-close-btn" aria-label="닫기">✕</button>
+          <button type="button" class="ncm-close-btn" aria-label="${uiTxt.close}">✕</button>
         </div>
 
         <div class="ncm-toolbar">
-          <div class="ncm-seg-group" role="radiogroup" aria-label="카드뉴스 비율">
-            <span class="ncm-seg-label">비율</span>
-            <button type="button" class="ncm-seg-btn ${o.ratio === 'feed' ? 'is-active' : ''}" data-ratio="feed">📱 피드 (4:5)</button>
-            <button type="button" class="ncm-seg-btn ${o.ratio === 'square' ? 'is-active' : ''}" data-ratio="square">⬛ 정방형 (1:1)</button>
+          <div class="ncm-seg-group" role="radiogroup" aria-label="${uiTxt.ratioLabel}">
+            <span class="ncm-seg-label">${uiTxt.ratioLabel}</span>
+            <button type="button" class="ncm-seg-btn ${o.ratio === 'feed' ? 'is-active' : ''}" data-ratio="feed">${uiTxt.feed}</button>
+            <button type="button" class="ncm-seg-btn ${o.ratio === 'square' ? 'is-active' : ''}" data-ratio="square">${uiTxt.square}</button>
           </div>
-          <div class="ncm-seg-group" role="radiogroup" aria-label="카드뉴스 테마">
-            <span class="ncm-seg-label">테마</span>
-            <button type="button" class="ncm-seg-btn ${o.theme === 'dark' ? 'is-active' : ''}" data-theme="dark">🌌 다크 에메랄드</button>
-            <button type="button" class="ncm-seg-btn ${o.theme === 'white' ? 'is-active' : ''}" data-theme="white">☀️ 클린 화이트</button>
+          <div class="ncm-seg-group" role="radiogroup" aria-label="${uiTxt.themeLabel}">
+            <span class="ncm-seg-label">${uiTxt.themeLabel}</span>
+            <button type="button" class="ncm-seg-btn ${o.theme === 'dark' ? 'is-active' : ''}" data-theme="dark">${uiTxt.dark}</button>
+            <button type="button" class="ncm-seg-btn ${o.theme === 'white' ? 'is-active' : ''}" data-theme="white">${uiTxt.white}</button>
           </div>
         </div>
 
@@ -614,10 +693,10 @@
         </div>
 
         <div class="ncm-actions">
-          <button type="button" class="btn primary ncm-btn-download">💾 이미지 저장 (.png)</button>
-          <button type="button" class="btn ncm-btn-copy">📋 이미지 복사</button>
-          <button type="button" class="btn ncm-btn-share">📤 바로 공유</button>
-          <button type="button" class="btn ncm-btn-close">닫기</button>
+          <button type="button" class="btn primary ncm-btn-download">${uiTxt.download}</button>
+          <button type="button" class="btn ncm-btn-copy">${uiTxt.copy}</button>
+          <button type="button" class="btn ncm-btn-share">${uiTxt.share}</button>
+          <button type="button" class="btn ncm-btn-close">${uiTxt.close}</button>
         </div>
       </div>
     `;
@@ -664,9 +743,9 @@
     modal.querySelector('.ncm-btn-download').onclick = async () => {
       const ok = await downloadNoticeCard(n, o);
       if (ok) {
-        triggerToast('🖼️ 고해상도 카드뉴스 이미지가 다운로드되었습니다!');
+        triggerToast(uiTxt.toastDownloaded);
       } else {
-        triggerToast('이미지 저장에 실패했습니다. 다시 시도해 주세요.');
+        triggerToast(uiTxt.toastDownloadFail);
       }
     };
 
@@ -674,11 +753,11 @@
     modal.querySelector('.ncm-btn-copy').onclick = async () => {
       const res = await copyNoticeCardImage(n, o);
       if (res.success) {
-        triggerToast('📋 카드뉴스 이미지가 클립보드에 복사되었어요! 카톡이나 에브리타임에 바로 붙여넣기(Ctrl+V)하세요!');
+        triggerToast(uiTxt.toastCopied);
       } else {
         // 복사 실패 시 다운로드로 안내
         await downloadNoticeCard(n, o);
-        triggerToast('클립보드 직접 복사를 지원하지 않는 환경이어서 이미지 파일로 다운로드되었습니다.');
+        triggerToast(uiTxt.toastCopyFallback);
       }
     };
 
@@ -687,14 +766,14 @@
       const res = await shareNoticeCard(n, o);
       if (res.success) {
         if (res.method === 'clipboard') {
-          triggerToast('📋 카드뉴스 이미지가 클립보드에 복사되었습니다! 카톡이나 에타에 붙여넣으세요.');
+          triggerToast(uiTxt.toastCopied);
         } else if (res.method === 'download') {
-          triggerToast('🖼️ 카드뉴스 이미지가 다운로드되었습니다.');
+          triggerToast(uiTxt.toastDownloaded);
         } else {
-          triggerToast('📤 카드뉴스가 공유되었습니다!');
+          triggerToast(uiTxt.toastShared);
         }
       } else {
-        triggerToast('공유를 완료하지 못했습니다.');
+        triggerToast(uiTxt.toastShareFail);
       }
     };
 

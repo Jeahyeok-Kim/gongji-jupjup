@@ -948,11 +948,11 @@
     const isScholarship = primarySub === 'scholarship' || primarySub === 'support' || /장학|장학생|지원사업|지원금|수혜/.test(title);
     const isEdu = primarySub === 'edu' || primarySub === 'activity' || primarySub === 'event' || /교육|특강|워크숍|아카데미|이수|수료|봉사|캠프|세미나|포럼/.test(title);
     const isCareer = primarySub === 'career' || primarySub === 'jobinfo' || /인턴|채용|서포터즈|기자단|홍보대사|크루|동아리|모집/.test(title);
-    const L = state.lang || 'ko';
+    const lang = state.lang || 'ko';
 
     if (isContest) {
-      const hint = L === 'en' ? '🏆 Contest & Competition Results' : L === 'zh' ? '🏆 竞赛与大赛专属结果' : L === 'ja' ? '🏆 コンテスト・大会の結果' : '🏆 공모전·대회 맞춤 결과';
-      const presets = L === 'en' ? [
+      const hint = lang === 'en' ? '🏆 Contest & Competition Results' : lang === 'zh' ? '🏆 竞赛与大赛专属结果' : lang === 'ja' ? '🏆 コンテスト・大会の結果' : '🏆 공모전·대회 맞춤 결과';
+      const presets = lang === 'en' ? [
         { text: 'Grand Prize', badge: '🏆 Grand Prize', type: 'award' },
         { text: '1st Place', badge: '🥇 1st Place', type: 'award' },
         { text: 'Excellence Award', badge: '🥈 Excellence', type: 'award' },
@@ -961,7 +961,7 @@
         { text: 'Awarded', badge: '🏅 Awarded', type: 'award' },
         { text: 'Main Round', badge: '🎯 Main Round', type: 'milestone' },
         { text: 'Not Selected', badge: '❌ Not Selected', type: 'fail' }
-      ] : L === 'zh' ? [
+      ] : lang === 'zh' ? [
         { text: '特等奖', badge: '🏆 特等奖', type: 'award' },
         { text: '一等奖', badge: '🥇 一等奖', type: 'award' },
         { text: '二等奖', badge: '🥈 二等奖', type: 'award' },
@@ -970,7 +970,7 @@
         { text: '获奖', badge: '🏅 获奖', type: 'award' },
         { text: '晋级决赛', badge: '🎯 决赛', type: 'milestone' },
         { text: '未入选', badge: '❌ 未入选', type: 'fail' }
-      ] : L === 'ja' ? [
+      ] : lang === 'ja' ? [
         { text: '大賞', badge: '🏆 大賞', type: 'award' },
         { text: '最優秀賞', badge: '🥇 最優秀賞', type: 'award' },
         { text: '優秀賞', badge: '🥈 優秀賞', type: 'award' },
@@ -992,18 +992,18 @@
       return { theme: 'contest', hint, presets };
     }
     if (isScholarship) {
-      const hint = L === 'en' ? '💰 Scholarship & Grant Results' : L === 'zh' ? '💰 奖学金专属结果' : L === 'ja' ? '💰 奨学金・支援金の結果' : '💰 장학금·지원금 맞춤 결과';
-      const presets = L === 'en' ? [
+      const hint = lang === 'en' ? '💰 Scholarship & Grant Results' : lang === 'zh' ? '💰 奖学金专属结果' : lang === 'ja' ? '💰 奨学金・支援金の結果' : '💰 장학금·지원금 맞춤 결과';
+      const presets = lang === 'en' ? [
         { text: 'Awarded', badge: '🎉 Awarded', type: 'pass' },
         { text: 'Waitlist Passed', badge: '✨ Waitlist', type: 'pass' },
         { text: 'Pending Review', badge: '⏳ Pending', type: 'wait' },
         { text: 'Not Selected', badge: '❌ Not Selected', type: 'fail' }
-      ] : L === 'zh' ? [
+      ] : lang === 'zh' ? [
         { text: '获批/入选', badge: '🎉 获批', type: 'pass' },
         { text: '补录通过', badge: '✨ 补录', type: 'pass' },
         { text: '审核中', badge: '⏳ 审核中', type: 'wait' },
         { text: '未入选', badge: '❌ 未入选', type: 'fail' }
-      ] : L === 'ja' ? [
+      ] : lang === 'ja' ? [
         { text: '採用 (受給)', badge: '🎉 採用', type: 'pass' },
         { text: '追加合格', badge: '✨ 追加合格', type: 'pass' },
         { text: '審査待ち', badge: '⏳ 審査待ち', type: 'wait' },
@@ -1017,18 +1017,18 @@
       return { theme: 'scholarship', hint, presets };
     }
     if (isEdu) {
-      const hint = L === 'en' ? '📜 Education & Activity Results' : L === 'zh' ? '📜 培训与活动专属结果' : L === 'ja' ? '📜 教育・活動の結果' : '📜 교육·활동 맞춤 결과';
-      const presets = L === 'en' ? [
+      const hint = lang === 'en' ? '📜 Education & Activity Results' : lang === 'zh' ? '📜 培训与活动专属结果' : lang === 'ja' ? '📜 教育・活動の結果' : '📜 교육·활동 맞춤 결과';
+      const presets = lang === 'en' ? [
         { text: 'Completed', badge: '📜 Completed', type: 'pass' },
         { text: 'Participated', badge: '✨ Attended', type: 'pass' },
         { text: 'Graduated with Honors', badge: '🏆 Honors', type: 'award' },
         { text: 'Incomplete', badge: '❌ Incomplete', type: 'fail' }
-      ] : L === 'zh' ? [
+      ] : lang === 'zh' ? [
         { text: '结业/修完', badge: '📜 结业', type: 'pass' },
         { text: '完成参加', badge: '✨ 参加', type: 'pass' },
         { text: '优秀学员/结业', badge: '🏆 优秀结业', type: 'award' },
         { text: '未修完', badge: '❌ 未修完', type: 'fail' }
-      ] : L === 'ja' ? [
+      ] : lang === 'ja' ? [
         { text: '修了', badge: '📜 修了', type: 'pass' },
         { text: '参加完了', badge: '✨ 参加完了', type: 'pass' },
         { text: '優秀修了', badge: '🏆 優秀修了', type: 'award' },
@@ -1042,20 +1042,20 @@
       return { theme: 'edu', hint, presets };
     }
     if (isCareer) {
-      const hint = L === 'en' ? '💼 Recruitment & Activity Results' : L === 'zh' ? '💼 招聘与校外活动结果' : L === 'ja' ? '💼 採用・活動の結果' : '💼 채용·대외활동 맞춤 결과';
-      const presets = L === 'en' ? [
+      const hint = lang === 'en' ? '💼 Recruitment & Activity Results' : lang === 'zh' ? '💼 招聘与校外活动结果' : lang === 'ja' ? '💼 採用・活動の結果' : '💼 채용·대외활동 맞춤 결과';
+      const presets = lang === 'en' ? [
         { text: 'Final Offer', badge: '🎉 Final Offer', type: 'pass' },
         { text: 'Resume Passed', badge: '📄 Resume Ok', type: 'milestone' },
         { text: 'Interview Stage', badge: '💬 Interview', type: 'milestone' },
         { text: 'Alternate List', badge: '⏳ Alternate', type: 'wait' },
         { text: 'Not Accepted', badge: '❌ Not Accepted', type: 'fail' }
-      ] : L === 'zh' ? [
+      ] : lang === 'zh' ? [
         { text: '最终录取', badge: '🎉 最终录取', type: 'pass' },
         { text: '简历初审通过', badge: '📄 初审通过', type: 'milestone' },
         { text: '等待面试', badge: '💬 等待面试', type: 'milestone' },
         { text: '候补名单', badge: '⏳ 候补', type: 'wait' },
         { text: '未录取', badge: '❌ 未录取', type: 'fail' }
-      ] : L === 'ja' ? [
+      ] : lang === 'ja' ? [
         { text: '最終合格', badge: '🎉 最終合格', type: 'pass' },
         { text: '書類選考通過', badge: '📄 書類通過', type: 'milestone' },
         { text: '面接待ち', badge: '💬 面接待ち', type: 'milestone' },
@@ -1070,20 +1070,20 @@
       ];
       return { theme: 'career', hint, presets };
     }
-    const hint = L === 'en' ? '🎯 Select Outcome' : L === 'zh' ? '🎯 选择申请结果' : L === 'ja' ? '🎯 応募結果を選択' : '🎯 지원 결과 선택';
-    const presets = L === 'en' ? [
+    const hint = lang === 'en' ? '🎯 Select Outcome' : lang === 'zh' ? '🎯 选择申请结果' : lang === 'ja' ? '🎯 応募結果を選択' : '🎯 지원 결과 선택';
+    const presets = lang === 'en' ? [
       { text: 'Passed', badge: '🎉 Passed', type: 'pass' },
       { text: 'Awarded', badge: '🏆 Awarded', type: 'award' },
       { text: 'Selected', badge: '🌟 Selected', type: 'pass' },
       { text: 'Completed', badge: '📜 Completed', type: 'pass' },
       { text: 'Not Selected', badge: '❌ Not Selected', type: 'fail' }
-    ] : L === 'zh' ? [
+    ] : lang === 'zh' ? [
       { text: '通过/录取', badge: '🎉 通过', type: 'pass' },
       { text: '获奖', badge: '🏆 获奖', type: 'award' },
       { text: '入选', badge: '🌟 入选', type: 'pass' },
       { text: '结业', badge: '📜 结业', type: 'pass' },
       { text: '未录取', badge: '❌ 未录取', type: 'fail' }
-    ] : L === 'ja' ? [
+    ] : lang === 'ja' ? [
       { text: '合格', badge: '🎉 合格', type: 'pass' },
       { text: '受賞', badge: '🏆 受賞', type: 'award' },
       { text: '採用', badge: '🌟 採用', type: 'pass' },
@@ -1126,7 +1126,7 @@
           }, '✕')
         ) : h('span', { class: 'fine' }, t().resultPickOrType || '결과를 선택하거나 직접 입력하세요')
       ),
-      h('div', { class: 'result-presets-grid', role: 'group', 'aria-label': '추천 결과 목록' },
+      h('div', { class: 'result-presets-grid', role: 'group', 'aria-label': t().resultPresetAria || (state.lang === 'en' ? 'Outcome presets' : state.lang === 'zh' ? '推荐结果列表' : state.lang === 'ja' ? 'おすすめ結果一覧' : '추천 결과 목록') },
         cat.presets.map((p) => {
           const isSelected = curResult === p.badge || curResult === p.text;
           return h('button', {
@@ -1151,17 +1151,23 @@
           class: 'result-custom-input',
           maxlength: '40',
           value: curResult,
-          placeholder: '직접 결과 입력 (예: 대상, 상금 300만원, 우수상, 예비 2번...)',
-          'aria-label': '직접 결과 입력'
+          placeholder: state.lang === 'en' ? 'Enter custom outcome (e.g. Grand Prize, Waitlist #2...)'
+            : state.lang === 'zh' ? '直接输入结果 (例: 特等奖, 候补第2名...)'
+            : state.lang === 'ja' ? '結果を直接入力 (例: 大賞、補欠2番...)'
+            : '직접 결과 입력 (예: 대상, 상금 300만원, 우수상, 예비 2번...)',
+          'aria-label': state.lang === 'en' ? 'Custom outcome' : state.lang === 'zh' ? '直接输入结果' : state.lang === 'ja' ? '結果を直接入力' : '직접 결과 입력'
         }),
-        h('button', { type: 'submit', class: 'btn small primary result-custom-submit' }, '저장')
+        h('button', { type: 'submit', class: 'btn small primary result-custom-submit' }, t().save || '저장')
       ),
       h('textarea', {
         class: 'memo result-memo',
         rows: '2',
         maxlength: '500',
-        placeholder: '결과 상세 메모 (예: 상금 수령 계좌 제출 완료, 면접 피드백, 소감 등)',
-        'aria-label': '결과 상세 메모',
+        placeholder: state.lang === 'en' ? 'Detailed outcome memo (e.g. prize account submitted, interview notes)'
+          : state.lang === 'zh' ? '结果详细备忘 (例: 奖金收款账户已提交、面试反馈等)'
+          : state.lang === 'ja' ? '結果の詳細メモ (例: 賞金口座提出済み、面接メモなど)'
+          : '결과 상세 메모 (예: 상금 수령 계좌 제출 완료, 면접 피드백, 소감 등)',
+        'aria-label': state.lang === 'en' ? 'Outcome memo' : state.lang === 'zh' ? '结果详细备忘' : state.lang === 'ja' ? '結果の詳細メモ' : '결과 상세 메모',
         oninput: (ev) => {
           const v = ev.target.value;
           clearTimeout(memoTimer);
@@ -1169,7 +1175,13 @@
         }
       }, (e && e.memo) || ''),
       checks && checks.length ? h('details', { class: 'result-prev-checks' },
-        h('summary', null, `이전 준비물 체크리스트 (${checks.filter((c) => c.d).length}/${checks.length} 완료)`),
+        h('summary', null, state.lang === 'en'
+          ? `Checklist (${checks.filter((c) => c.d).length}/${checks.length} done)`
+          : state.lang === 'zh'
+          ? `准备清单 (${checks.filter((c) => c.d).length}/${checks.length} 已完成)`
+          : state.lang === 'ja'
+          ? `準備チェックリスト (${checks.filter((c) => c.d).length}/${checks.length} 完了)`
+          : `이전 준비물 체크리스트 (${checks.filter((c) => c.d).length}/${checks.length} 완료)`),
         h('ul', { class: 'checks' }, checks.map((c, i) => h('li', { class: c.d ? 'is-done' : '' },
           h('label', null,
             h('input', { type: 'checkbox', checked: c.d ? true : null, onchange: () => setTrack(K.toggleCheck(state.track, n.id, i), n.id) }),
@@ -1223,7 +1235,7 @@
     const items = [
       ['list', '📇 ' + T.nviewList, T.nviewListHint || '요약 카드 목록'],
       ['table', '📊 ' + T.nviewTable, T.nviewTableHint || '마감순 한눈에 비교하는 표'],
-      ['budget', '⚡ ' + T.nviewBudget, '내 시간표 공강에 맞는 공지']
+      ['budget', '⚡ ' + T.nviewBudget, state.lang === 'en' ? 'Notices matching free slots in my timetable' : state.lang === 'zh' ? '匹配课表空闲时间的公告' : state.lang === 'ja' ? '時間割の空きコマに合うお知らせ' : '내 시간표 공강에 맞는 공지']
     ];
     document.querySelectorAll('.view-switch').forEach((box) => {
       fill(box, ...items.map(([k, label, hint]) => h('button', {
@@ -3821,10 +3833,14 @@
         : state.lang === 'ja' ? '🚶 緩やかな歩道移動'
         : '🚶 완만 보도 이동');
 
-    const elevA = (route.fromBuilding === '국제교육관')
+    const bMetaA = CR && CR.BUILDINGS && CR.BUILDINGS[route.fromBuilding];
+    const bMetaB = CR && CR.BUILDINGS && CR.BUILDINGS[route.toBuilding];
+    const hasElevA = bMetaA ? bMetaA.hasElevator : (route.fromBuilding !== '국제교육관');
+    const hasElevB = bMetaB ? bMetaB.hasElevator : (route.toBuilding !== '국제교육관');
+    const elevA = !hasElevA
       ? (T.rdElevatorNone || '❌ 엘리베이터 없음 (전 층 계단 보행 필수)')
       : (T.rdElevatorOk || '⭕ 엘리베이터 운행 (쉬는시간 혼잡 가능)');
-    const elevB = (route.toBuilding === '국제교육관')
+    const elevB = !hasElevB
       ? (T.rdElevatorNone || '❌ 엘리베이터 없음 (전 층 계단 보행 필수)')
       : (T.rdElevatorOk || '⭕ 엘리베이터 운행 (쉬는시간 혼잡 가능)');
 
@@ -3976,7 +3992,7 @@
       scheduleContent = h('div', { class: 'tc-transit-detail' },
         h('div', { class: 'tct-step-row' },
           h('span', { class: 'tct-step-badge' }, T.ttStepShuttle || '1단계 셔틀'),
-          h('strong', null, `${bm.shuttleDep} ${T.ttStepShuttle || '대운동장 셔틀'}`),
+          h('strong', null, `${bm.shuttleDep} ${T.ttMainStadiumShuttle || '대운동장 셔틀'}`),
           h('span', { class: 'tct-sub' }, `(${T.ttWalkWait ? T.ttWalkWait(rec.walkMin, bm.waitMinAtStop) : `도보 ${rec.walkMin}분 · 정류장 ${bm.waitMinAtStop}분 대기`})`)
         ),
         h('div', { class: 'tct-step-row' },
@@ -4010,7 +4026,7 @@
       scheduleContent = h('div', { class: 'tc-transit-detail' },
         h('div', { class: 'tct-step-row' },
           h('span', { class: 'tct-step-badge' }, T.ttStepShuttle || '1단계 셔틀'),
-          h('strong', null, `${bm.shuttleDep} ${T.ttStepShuttle || '대운동장 셔틀'}`),
+          h('strong', null, `${bm.shuttleDep} ${T.ttMainStadiumShuttle || '대운동장 셔틀'}`),
           h('span', { class: 'tct-sub' }, `(${state.lang === 'en' ? `Arrives Terminal ${bm.termArrive}` : state.lang === 'zh' ? `${bm.termArrive} 到达客运站` : state.lang === 'ja' ? `ターミナル ${bm.termArrive} 到着` : `충주터미널 ${bm.termArrive} 도착`})`)
         ),
         h('div', { class: 'tct-step-row is-target' },
@@ -4035,6 +4051,17 @@
       scheduleContent = h('p', { class: 'muted fine' }, rec.tips || '오늘 남은 셔틀버스 운행이 종료되었습니다.');
     }
 
+    const upcomingList = (rec.upcoming && rec.upcoming.length > 1)
+      ? h('div', { class: 'tct-upcoming-row' },
+          h('span', { class: 'tct-up-label' }, (T.ttNextShuttlesLabel || '이후 셔틀') + ':'),
+          ...rec.upcoming.slice(1, 4).map((sh) => h('span', { class: 'tct-up-pill' }, sh.dep))
+        )
+      : null;
+
+    const walkBadge = rec.walkMin && rec.arriveStop && T.ttWalkToStopBadge
+      ? h('span', { class: 'tct-walk-badge' }, T.ttWalkToStopBadge(rec.walkMin, rec.arriveStop))
+      : null;
+
     return h('div', { class: 'tc-transit-box' },
       h('div', { class: 'tc-transit-header' },
         h('div', { class: 'tct-title-group' },
@@ -4043,10 +4070,12 @@
             h('strong', { class: 'tct-title' }, T.ttTransitTitle || '시간표 연동 하교 & 귀가 알리미'),
             h('span', { class: 'tct-subtitle' }, T.ttTransitSubtitle ? T.ttTransitSubtitle(localizedClassName, lastClass.end, localizedBldg) : `오늘 마지막 수업: ${localizedClassName} (${lastClass.end} 종료 · ${localizedBldg})`)
           )
-        )
+        ),
+        walkBadge
       ),
       h('div', { class: 'tc-transit-dest-chips' }, destChips),
       scheduleContent,
+      upcomingList,
       h('p', { class: 'tc-transit-tips' }, `💡 ${rec.tips}`)
     );
   }

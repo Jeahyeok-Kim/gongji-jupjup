@@ -312,7 +312,8 @@
 
         const head = document.createElement('h3');
         head.style.cssText = 'font-size:15px;font-weight:800;margin-bottom:12px;letter-spacing:-0.02em;';
-        head.textContent = '이번 주 혜택 금액 TOP';
+        const lang = document.documentElement.lang || 'ko';
+        head.textContent = lang === 'en' ? 'Top Benefits This Week' : lang === 'zh' ? '本周最高金额福利 TOP' : lang === 'ja' ? '今週の特典金額 TOP' : '이번 주 혜택 금액 TOP';
 
         wrap.append(head, chart);
 
@@ -326,8 +327,15 @@
 
   function formatWon(v) {
     if (!v) return '';
-    if (v >= 10000) return Math.floor(v / 10000) + '만원';
-    return v.toLocaleString() + '원';
+    const lang = document.documentElement.lang || 'ko';
+    if (v >= 10000) {
+      const m = Math.floor(v / 10000);
+      if (lang === 'en') return `${m}0K KRW`;
+      if (lang === 'zh') return `${m}万韩元`;
+      if (lang === 'ja') return `${m}万ウォン`;
+      return m + '만원';
+    }
+    return v.toLocaleString() + (lang === 'en' ? ' KRW' : lang === 'zh' ? '韩元' : lang === 'ja' ? 'ウォン' : '원');
   }
 
   /* ═══════════════════════════════════════════════════════
@@ -692,7 +700,7 @@
         if (!filtered.length) {
           const empty = document.createElement('div');
           empty.className = 'afm-empty';
-          empty.textContent = '조건에 일치하는 학사일정이 없습니다.';
+          empty.textContent = lang === 'en' ? 'No matching academic events.' : lang === 'zh' ? '没有符合条件的校历日程。' : lang === 'ja' ? '条件に一致する学事日程がありません。' : '조건에 일치하는 학사일정이 없습니다.';
           listContainer.appendChild(empty);
           return;
         }
@@ -746,18 +754,19 @@
           const badge = document.createElement('span');
           badge.className = 'afm-dday' + (isOngoing ? ' is-ongoing' : isPast ? ' is-past' : daysUntilStart <= 7 ? ' is-urgent' : '');
           if (isOngoing) badge.textContent = T.bfOngoing || '진행 중';
-          else if (isPast) badge.textContent = '종료';
-          else if (daysUntilStart === 0) badge.textContent = '오늘 시작';
+          else if (isPast) badge.textContent = lang === 'en' ? 'Ended' : lang === 'zh' ? '已结束' : lang === 'ja' ? '終了' : '종료';
+          else if (daysUntilStart === 0) badge.textContent = lang === 'en' ? 'Starts Today' : lang === 'zh' ? '今日开始' : lang === 'ja' ? '本日開始' : '오늘 시작';
           else badge.textContent = `D-${daysUntilStart}`;
 
           const gcalLink = document.createElement('a');
           const sClean = item.start.replace(/-/g, '');
           const eClean = item.end ? item.end.replace(/-/g, '') : sClean;
-          gcalLink.href = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(rawTitle)}&dates=${sClean}/${eClean}&details=${encodeURIComponent('건국대학교 GLOCAL캠퍼스 주요 학사일정')}`;
+          const calDesc = lang === 'en' ? 'Konkuk Univ. GLOCAL Academic Calendar' : lang === 'zh' ? '建国大学 GLOCAL 校区重要校历' : lang === 'ja' ? '建国大学 GLOCALキャンパス主要学事日程' : '건국대학교 GLOCAL캠퍼스 주요 학사일정';
+          gcalLink.href = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(rawTitle)}&dates=${sClean}/${eClean}&details=${encodeURIComponent(calDesc)}`;
           gcalLink.target = '_blank';
           gcalLink.rel = 'noopener noreferrer';
           gcalLink.className = 'afm-gcal-btn';
-          gcalLink.title = '구글 캘린더에 추가';
+          gcalLink.title = lang === 'en' ? 'Add to Google Calendar' : lang === 'zh' ? '添加到 Google 日历' : lang === 'ja' ? 'Googleカレンダーに追加' : '구글 캘린더에 추가';
           gcalLink.innerHTML = '📅';
 
           right.append(badge, gcalLink);
@@ -1027,7 +1036,8 @@
 
     const badge = document.createElement('span');
     badge.className = 'tc-badge' + (unappliedCount === 0 ? ' is-done' : '');
-    badge.textContent = unappliedCount > 0 ? i18n.pendingBadge : '100% 완료';
+    const done100 = lang === 'en' ? '100% Done' : lang === 'zh' ? '100% 完成' : lang === 'ja' ? '100% 完了' : '100% 완료';
+    badge.textContent = unappliedCount > 0 ? i18n.pendingBadge : done100;
 
     headLeft.append(h3, badge);
 

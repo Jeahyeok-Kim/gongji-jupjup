@@ -132,11 +132,18 @@
       ctx.fillStyle = '#3f4b44';
       const ty = y + 28 + lines.length * 25;
       if (ty + 4 < y + h) ctx.fillText(`${c.start}–${c.end}`, x + 14, ty);
+      const lang = (typeof document !== 'undefined' && document.documentElement.lang) || 'ko';
+      const DI18n = typeof window !== 'undefined' ? window.GongjiDeptI18n : null;
+      const CR = typeof window !== 'undefined' ? window.GongjiCampusRoute : null;
       const prof = c.prof || c.p || '';
-      const subInfo = [prof ? `${prof} 교수` : '', c.room].filter(Boolean).join(' · ');
+      const profStr = prof ? (lang === 'en' ? `Prof. ${prof}` : lang === 'zh' || lang === 'ja' ? `${prof} 教授` : `${prof} 교수`) : '';
+      const roomStr = (CR && CR.formatRoom && c.room) ? CR.formatRoom(c.room, lang) : c.room;
+      const subInfo = [profStr, roomStr].filter(Boolean).join(' · ');
       if (subInfo && ty + 22 < y + h) ctx.fillText(wrap(ctx, subInfo, w - 24, 1)[0] || '', x + 14, ty + 20);
     }
     // 아래: 이러닝 & 메모 & 이름표
+    const lang = (typeof document !== 'undefined' && document.documentElement.lang) || 'ko';
+    const DI18n = typeof window !== 'undefined' ? window.GongjiDeptI18n : null;
     let curY = gy + gh + 20;
     if (elearnList.length) {
       ctx.fillStyle = C.card;
@@ -148,7 +155,11 @@
 
       ctx.fillStyle = C.accent;
       ctx.font = `700 19px ${FONT}`;
-      ctx.fillText(`💻 이러닝 · 온라인 강좌 (${elearnList.length})`, gx + 24, curY + 34);
+      const elHeading = lang === 'en' ? `💻 E-Learning · Online (${elearnList.length})`
+        : lang === 'zh' ? `💻 网课 · 在线课程 (${elearnList.length})`
+        : lang === 'ja' ? `💻 eラーニング · オンライン (${elearnList.length})`
+        : `💻 이러닝 · 온라인 강좌 (${elearnList.length})`;
+      ctx.fillText(elHeading, gx + 24, curY + 34);
 
       const itemW = (gw - 48) / 2;
       elearnList.forEach((ec, idx) => {
@@ -156,10 +167,12 @@
         const row = Math.floor(idx / 2);
         const ix = gx + 24 + col * itemW;
         const iy = curY + 66 + row * 38;
-        const pStr = ec.prof || ec.p ? ` (${ec.prof || ec.p} 교수)` : '';
+        const ep = ec.prof || ec.p || '';
+        const pStr = ep ? (lang === 'en' ? ` (Prof. ${ep})` : lang === 'zh' || lang === 'ja' ? ` (${ep} 教授)` : ` (${ep} 교수)`) : '';
+        const ecName = (DI18n && DI18n.formatCourse) ? DI18n.formatCourse(ec.name, lang) : ec.name;
         ctx.fillStyle = C.text;
         ctx.font = `600 17px ${FONT}`;
-        ctx.fillText(wrap(ctx, `• ${ec.name}${pStr}`, itemW - 16, 1)[0] || '', ix, iy);
+        ctx.fillText(wrap(ctx, `• ${ecName}${pStr}`, itemW - 16, 1)[0] || '', ix, iy);
       });
       curY += elearnH + 20;
     }

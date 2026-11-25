@@ -332,17 +332,19 @@
           : `${floorDiff}개 층 계단 이동. 쉬는 시간 여유 있습니다.`;
       } else {
         walkMin = isElevatorFree ? 4 : 3;
+        const bldgLabel = formatRoom(from.building, curLang);
         tips = isElevatorFree
-          ? (curLang === 'en' ? `⚠️ No elevator in ${from.building}! ${floorDiff} floors stairs walk (+4m)`
-             : curLang === 'zh' ? `⚠️ ${from.building} 无电梯! 需爬 ${floorDiff} 层楼梯 (+4分钟)`
-             : curLang === 'ja' ? `⚠️ ${from.building}はエレベーターがありません! ${floorDiff}階分の階段移動 (+4分)`
-             : `⚠️ ${from.building}은 엘리베이터가 없습니다! ${floorDiff}개 층 계단 이동 필요 (+4분 소요)`)
+          ? (curLang === 'en' ? `⚠️ No elevator in ${bldgLabel}! ${floorDiff} floors stairs walk (+4m)`
+             : curLang === 'zh' ? `⚠️ ${bldgLabel} 无电梯! 需爬 ${floorDiff} 层楼梯 (+4分钟)`
+             : curLang === 'ja' ? `⚠️ ${bldgLabel}はエレベーターがありません! ${floorDiff}階分の階段移動 (+4分)`
+             : `⚠️ ${bldgLabel}은 엘리베이터가 없습니다! ${floorDiff}개 층 계단 이동 필요 (+4분 소요)`)
           : (curLang === 'en' ? `Stairs recommended if elevators are crowded between classes (${floorDiff} floors)`
              : curLang === 'zh' ? `课间电梯拥挤时建议使用楼梯 (${floorDiff} 层移动)`
              : curLang === 'ja' ? `混雑時は階段利用推奨 (${floorDiff}階移動)`
              : `쉬는 시간 엘리베이터 혼잡 시 비상계단 이용 권장 (${floorDiff}개 층 이동)`);
       }
 
+      const bldgLabel = formatRoom(from.building, curLang);
       return {
         level: 'safe',
         statusText: getStatusText('safe', false, true),
@@ -353,7 +355,9 @@
         breakMin: breakMin,
         remainMin: Math.max(0, breakMin - walkMin),
         tips: tips,
-        details: `${from.building} ${from.floor}F ➔ ${to.floor}F`
+        fromBuilding: from.building,
+        toBuilding: to.building,
+        details: `${bldgLabel} ${from.floor}F ➔ ${to.floor}F`
       };
     }
 
@@ -604,10 +608,42 @@
     },
     // 금요일 및 통학 정기 하교 버스
     commuter: [
-      { name: '서울/강남·잠실 노선', names: { ko: '서울/강남·잠실 노선', en: 'Seoul (Gangnam / Jamsil)', zh: '首尔/江南·蚕室专线', ja: 'ソウル/江南・蚕室路線' }, dep: '15:30', spot: '대운동장 앞', note: '금요일 운행' },
-      { name: '수원/안양 노선', names: { ko: '수원/안양 노선', en: 'Suwon / Anyang Route', zh: '水原/安养专线', ja: '水原/安養路線' }, dep: '15:30', spot: '대운동장 앞', note: '금요일 운행' },
-      { name: '서울/강남·잠실 2차', names: { ko: '서울/강남·잠실 2차', en: 'Seoul (Gangnam / Jamsil) #2', zh: '首尔/江南·蚕室第2班', ja: 'ソウル/江南・蚕室 2便' }, dep: '17:30', spot: '대운동장 앞', note: '금요일 운행' },
-      { name: '일산/부천 노선', names: { ko: '일산/부천 노선', en: 'Ilsan / Bucheon Route', zh: '一山/富川专线', ja: '一山/富川路線' }, dep: '17:30', spot: '대운동장 앞', note: '금요일 운행' }
+      {
+        name: '서울/강남·잠실 노선',
+        names: { ko: '서울/강남·잠실 노선', en: 'Seoul (Gangnam / Jamsil)', zh: '首尔/江南·蚕室专线', ja: 'ソウル/江南・蚕室路線' },
+        dep: '15:30',
+        spot: '대운동장 앞',
+        spots: { ko: '대운동장 앞', en: 'Main Stadium Front', zh: '大运动场前', ja: '大運動場前' },
+        note: '금요일 운행',
+        notes: { ko: '금요일 운행', en: 'Fridays only', zh: '每周五发车', ja: '金曜運行' }
+      },
+      {
+        name: '수원/안양 노선',
+        names: { ko: '수원/안양 노선', en: 'Suwon / Anyang Route', zh: '水原/安养专线', ja: '水原/安養路線' },
+        dep: '15:30',
+        spot: '대운동장 앞',
+        spots: { ko: '대운동장 앞', en: 'Main Stadium Front', zh: '大运动场前', ja: '大運動場前' },
+        note: '금요일 운행',
+        notes: { ko: '금요일 운행', en: 'Fridays only', zh: '每周五发车', ja: '金曜運行' }
+      },
+      {
+        name: '서울/강남·잠실 2차',
+        names: { ko: '서울/강남·잠실 2차', en: 'Seoul (Gangnam / Jamsil) #2', zh: '首尔/江南·蚕室第2班', ja: 'ソウル/江南・蚕室 2便' },
+        dep: '17:30',
+        spot: '대운동장 앞',
+        spots: { ko: '대운동장 앞', en: 'Main Stadium Front', zh: '大运动场前', ja: '大運動場前' },
+        note: '금요일 운행',
+        notes: { ko: '금요일 운행', en: 'Fridays only', zh: '每周五发车', ja: '金曜運行' }
+      },
+      {
+        name: '일산/부천 노선',
+        names: { ko: '일산/부천 노선', en: 'Ilsan / Bucheon Route', zh: '一山/富川专线', ja: '一山/富川路線' },
+        dep: '17:30',
+        spot: '대운동장 앞',
+        spots: { ko: '대운동장 앞', en: 'Main Stadium Front', zh: '大运动场前', ja: '大運動場前' },
+        note: '금요일 운행',
+        notes: { ko: '금요일 운행', en: 'Fridays only', zh: '每周五发车', ja: '金曜運行' }
+      }
     ]
   };
 
@@ -662,10 +698,11 @@
         : L === 'ja' ? '🚄 忠州駅 ➔ 板橋/水西方面 KTX-イウム連携'
         : '🚄 충주역 ➔ 판교/수서 방면 KTX-이음 연계';
 
-      const tips = L === 'en' ? `Walk ~${walkMin}m from classroom (${roomMeta.name}) to main stadium shuttle stop. Matched with KTX at Chungju Station.`
-        : L === 'zh' ? `从教学楼(${roomMeta.name})步行至大运动场校车乘车点约需${walkMin}分钟。已智能匹配忠州站KTX高铁车次。`
-        : L === 'ja' ? `講義室(${roomMeta.name})から大運動場シャトル停留所まで徒歩約${walkMin}分。忠州駅KTX乗車まで連携マッチングしました。`
-        : `강의실(${roomMeta.name})에서 대운동장 셔틀 정류장까지 도보 약 ${walkMin}분 소요. 충주역 KTX 탑승까지 매칭되었습니다.`;
+      const roomLabel = formatRoom(lastClassRoom, L);
+      const tips = L === 'en' ? `Walk ~${walkMin}m from classroom (${roomLabel}) to main stadium shuttle stop. Matched with KTX at Chungju Station.`
+        : L === 'zh' ? `从教学楼(${roomLabel})步行至大运动场校车乘车点约需${walkMin}分钟。已智能匹配忠州站KTX高铁车次。`
+        : L === 'ja' ? `講義室(${roomLabel})から大運動場シャトル停留所まで徒歩約${walkMin}分。忠州駅KTX乗車まで連携マッチングしました。`
+        : `강의실(${roomLabel})에서 대운동장 셔틀 정류장까지 도보 약 ${walkMin}분 소요. 충주역 KTX 탑승까지 매칭되었습니다.`;
 
       return {
         type: 'ktx',
@@ -675,6 +712,7 @@
         arriveStop: toTimeStr(arriveStopMin),
         bestMatch: recs[0] || null,
         alternatives: recs.slice(1),
+        upcoming: nextShuttles.slice(0, 4),
         tips
       };
     }
@@ -701,8 +739,8 @@
         bestMatch: bestCom ? {
           shuttleDep: bestCom.dep,
           destName: (bestCom.names && bestCom.names[L]) || bestCom.name,
-          spot: bestCom.spot,
-          note: bestCom.note
+          spot: (bestCom.spots && bestCom.spots[L]) || bestCom.spot,
+          note: (bestCom.notes && bestCom.notes[L]) || bestCom.note
         } : null,
         tips
       };
@@ -715,6 +753,11 @@
     if (dest !== 'shuttle') {
       const busMeta = TRANSIT_DATA.terminalBuses[busKey];
       const localizedDest = (busMeta.names && busMeta.names[L]) || busMeta.dest;
+      const fareNumStr = busMeta.fareNum ? busMeta.fareNum.toLocaleString() : busMeta.fare.replace(/원$/, '');
+      const localizedFare = L === 'en' ? `${fareNumStr} KRW`
+        : L === 'zh' ? `${fareNumStr}韩元`
+        : L === 'ja' ? `${fareNumStr}ウォン`
+        : busMeta.fare;
       const recs = nextShuttles.slice(0, 3).map((sh) => {
         const termArriveMin = toMin(sh.terminal);
         const nextBusMin = termArriveMin + 15;
@@ -725,7 +768,8 @@
           estBusTime: toTimeStr(nextBusMin),
           busInfo: {
             ...busMeta,
-            dest: localizedDest
+            dest: localizedDest,
+            fare: localizedFare
           }
         };
       });
@@ -747,7 +791,8 @@
         fromBuilding: roomMeta.building,
         arriveStop: toTimeStr(arriveStopMin),
         bestMatch: recs[0] || null,
-        busMeta: { ...busMeta, dest: localizedDest },
+        upcoming: nextShuttles.slice(0, 4),
+        busMeta: { ...busMeta, dest: localizedDest, fare: localizedFare },
         tips
       };
     }

@@ -143,7 +143,7 @@
             label: Tx.gbItemTrMajor || '전적대 전공 인정 (최대 15학점)',
             done: trMajorCredits,
             need: 15,
-            tag: trMajorCredits >= 15 ? `15${Tx.creditUnit || '학점'} ${Tx.gbTagDone || '완료 ✓'}` : trMajorCredits > 0 ? `${trMajorCredits}${Tx.creditUnit || '학점'} 인정` : (Tx.trNoCourses || '인정 과목 미등록'),
+            tag: trMajorCredits >= 15 ? `15${Tx.creditUnit || '학점'} ${Tx.gbTagDone || '완료 ✓'}` : trMajorCredits > 0 ? (Tx.gbTagRecognized ? Tx.gbTagRecognized(trMajorCredits) : `${trMajorCredits}${Tx.creditUnit || '학점'} 인정`) : (Tx.trNoCourses || '인정 과목 미등록'),
             ok: trMajorCredits > 0
           },
           {
@@ -255,8 +255,8 @@
               h('div', { class: 'gbc-bar-fill', style: `width:${pct}%;` })
             ),
             h('div', { class: 'gbc-item-nums' },
-              h('strong', null, `${it.done}학점`),
-              it.need ? h('span', null, ` / ${it.need}학점`) : null
+              h('strong', null, `${it.done}${Tx.creditUnit || '학점'}`),
+              it.need ? h('span', null, ` / ${it.need}${Tx.creditUnit || '학점'}`) : null
             )
           );
         }))
@@ -272,7 +272,7 @@
       const head = h('div', { class: 'plan-hero has-ring' },
         req.total ? ring(pct, `${pct}%`) : null,
         h('div', null,
-          h('p', { class: 'plan-kicker' }, [req.dept, req.mode === 'transfer' ? Tx.reqModeTransfer : ''].filter(Boolean).join(' · ') || Tx.histTitle),
+          h('p', { class: 'plan-kicker' }, [(window.GongjiDeptI18n && window.GongjiDeptI18n.formatDept) ? window.GongjiDeptI18n.formatDept(req.dept, currentLang()) : req.dept, req.mode === 'transfer' ? Tx.reqModeTransfer : ''].filter(Boolean).join(' · ') || Tx.histTitle),
           h('p', { class: 'plan-big' }, left.total !== null ? Tx.histLeft(left.total) : Tx.histLeftUnknown),
           h('p', { class: 'plan-side' }, [Tx.histDone(tot.total), (() => { const v = P.gpa(st.history); return v ? Tx.gpaHero(v.gpa.toFixed(2)) : ''; })()].filter(Boolean).join(' · '))));
 
@@ -1801,14 +1801,19 @@
         const g = x.group;
         const sec = x.section;
         const when = sec.mode === 'elearn' ? Tx.planModeElearn : slotText(sec.t);
-        const room = [...new Set(sec.t.map((y) => y[3]).filter(Boolean))].join(', ');
+        const CR = window.GongjiCampusRoute;
+        const DI18n = window.GongjiDeptI18n;
+        const lang = currentLang();
+        const room = [...new Set(sec.t.map((y) => y[3]).filter(Boolean))].map((rm) => (CR && CR.formatRoom) ? CR.formatRoom(rm, lang) : rm).join(', ');
+        const courseName = (DI18n && DI18n.formatCourse) ? DI18n.formatCourse(g.name, lang) : g.name;
+        const deptName = (g.area === 'major' && g.dept) ? ((DI18n && DI18n.formatDept) ? DI18n.formatDept(g.dept, lang) : g.dept) : '';
         const isLocked = p.locked.some((y) => y.key === x.key);
         return h('li', { class: 'pr' + (isLocked ? ' is-locked' : '') },
           h('div', { class: 'pr-main' },
-            h('p', { class: 'pr-name' }, g.name, isLocked ? h('span', { class: 'pr-lock' }, Tx.planLocked) : null),
-            h('p', { class: 'pr-meta' }, [kindLabel(g.kind), `${g.credit}${Tx.creditUnit}`, Tx.planGradeN(g.grade), g.area === 'major' ? g.dept : ''].filter(Boolean).join(' · ')),
+            h('p', { class: 'pr-name' }, courseName, isLocked ? h('span', { class: 'pr-lock' }, Tx.planLocked) : null),
+            h('p', { class: 'pr-meta' }, [kindLabel(g.kind), `${g.credit}${Tx.creditUnit}`, Tx.planGradeN(g.grade), deptName].filter(Boolean).join(' · ')),
             h('p', { class: 'pr-when' },
-              sec.prof ? h('span', { class: 'pr-prof', style: 'font-weight:600;margin-right:6px;color:var(--text);' }, `${sec.prof} 교수`) : null,
+              sec.prof ? h('span', { class: 'pr-prof', style: 'font-weight:600;margin-right:6px;color:var(--text);' }, profTitle(sec.prof)) : null,
               h('span', { class: 'pr-sec' }, Tx.planSection(sec.s)), ' ', when,
               sec.mode === 'live' ? h('span', { class: 'pr-mode' }, Tx.planModeLive) : null,
               room && sec.mode === '' ? h('span', { class: 'pr-room' }, room) : null)),
@@ -1833,9 +1838,9 @@
         } else if (a.key === 'lateStart') {
           sub = (a.ok === false) ? Tx.altShort : (a.start !== null ? Tx.altStart(`${String(Math.floor(a.start / 60)).padStart(2, '0')}:${String(a.start % 60).padStart(2, '0')}`) : Tx.planModeElearn);
         } else if (a.key === 'smartMix') {
-          sub = elearnCount ? `이러닝 ${elearnCount}과목` : Tx.altBalanced;
+          sub = elearnCount ? (Tx.altSmartMixSub ? Tx.altSmartMixSub(elearnCount) : `이러닝 ${elearnCount}과목`) : Tx.altBalanced;
         } else if (a.key === 'balanced') {
-          sub = (a.quality && a.quality.lunchBreak) ? '점심시간 확보' : Tx.altBalanced;
+          sub = (a.quality && a.quality.lunchBreak) ? (Tx.altLunchBreak || '점심시간 확보') : Tx.altBalanced;
         }
         return h('button', { type: 'button', role: 'tab', class: 'alt-tab', 'aria-selected': String(a.key === st.altKey),
           onclick: () => { st.altKey = a.key; st.result = a.result; renderPlan(); } },
