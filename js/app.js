@@ -4193,7 +4193,7 @@
             h('strong', null, T.setupTimetable || '이번 학기 시간표 넣기'),
             h('p', null, T.emptyTimetableHint || '시간표를 등록하면 오늘 수업 시간, 강의실, 공강 알림을 홈에서 바로 볼 수 있어요.')
           ),
-          h('button', { type: 'button', class: 'btn small primary', onclick: () => { location.hash = '#/timetable'; setTab('timetable', true); } }, T.addTimetable || '시간표 등록 ↗')
+          h('button', { type: 'button', class: 'btn small primary', onclick: () => { if (planUI) planUI.setSub('week'); location.hash = '#/timetable'; setTab('timetable', true); } }, T.addTimetable || '시간표 등록 ↗')
         )
       );
     }
@@ -4282,7 +4282,7 @@
         type: 'button',
         class: 'tc-elearn-bar',
         title: `${labelText}: ${names} (${T.seeTimetable || '시간표 보기'})`,
-        onclick: () => { location.hash = '#/timetable'; setTab('timetable', true); }
+        onclick: () => { if (planUI) planUI.setSub('week'); location.hash = '#/timetable'; setTab('timetable', true); }
       },
         h('span', { class: 'tc-elearn-label' }, labelText),
         h('span', { class: 'tc-elearn-names' }, names),
@@ -4357,7 +4357,7 @@
           type: 'button',
           class: 'link-btn tc-header-link',
           title: T.seeTimetable || '시간표 보기',
-          onclick: () => { location.hash = '#/timetable'; setTab('timetable', true); }
+          onclick: () => { if (planUI) planUI.setSub('week'); location.hash = '#/timetable'; setTab('timetable', true); }
         }, h('span', null, T.seeTimetable || '시간표 보기'), h('span', { class: 'tc-link-arrow' }, '↗'))
       )
     );
