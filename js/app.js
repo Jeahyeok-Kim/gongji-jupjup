@@ -315,7 +315,7 @@
       }
     }
     const aboutVer = $('#about-ver') || document.querySelector('.settings-about-ver');
-    if (aboutVer) aboutVer.textContent = `${t().brandName || '공지 줍줍'} v91`;
+    if (aboutVer) aboutVer.textContent = `${t().brandName || '공지 줍줍'} v92`;
     document.querySelectorAll('.today-text').forEach((el) => { el.textContent = I.formatDate(now, state.lang); });
     const keep = DATA.meta.keep;
     const keepText = keep && keep.months && keep.since ? ' · ' + t().keepNote(keep.months, String(keep.since).replace(/-/g, '.')) : '';
@@ -5107,8 +5107,8 @@
       briefingRow(s),
       setupStrip(),
       h('div', { class: 'home-cols' },
-        h('div', { class: 'home-col' }, classes, week),
-        h('div', { class: 'home-col' }, grad, boardMini())),
+        h('div', { class: 'home-col' }, classes),
+        h('div', { class: 'home-col' }, grad, boardMini(), week)),
       ticketStrip(),
       listContainer,
       calCard()

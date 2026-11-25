@@ -1,11 +1,11 @@
 // 공지 줍줍 서비스 워커: 한 번 열어 본 화면은 오프라인에서도 열리고, 새 데이터는 네트워크가 되면 받아 온다.
 // - 화면 파일(html·css·js·아이콘): 네트워크 먼저(새 버전이 바로 보임), 안 되면 저장된 것
 // - 공지 데이터(version·notices·calendar·overrides 의 json): 항상 네트워크 먼저, 안 되면 저장된 것
-const CACHE = 'gongji-v91';
-const CORE = ['./', 'index.html', 'css/style.css?v=91', 'css/enhanced.css?v=91', 'manifest.webmanifest', 'icons/icon-192.png',
+const CACHE = 'gongji-v92';
+const CORE = ['./', 'index.html', 'css/style.css?v=92', 'css/enhanced.css?v=92', 'manifest.webmanifest', 'icons/icon-192.png',
   'js/benefit.js', 'js/sync.js', 'js/logic.js', 'js/overrides.js', 'js/extras.js', 'js/summary.js', 'js/personal.js', 'js/eligibility.js', 'js/ask.js', 'js/cal.js',
-  'js/i18n.js?v=91', 'js/i18n2.js', 'js/i18n3.js', 'js/i18n4.js', 'js/i18n5.js?v=91', 'js/i18n_depts.js?v=91', 'js/theme.js', 'js/plan.js?v=91', 'js/planui.js?v=91', 'js/track.js?v=91', 'js/palette.js', 'js/ttimage.js', 'js/ttics.js', 'js/noticeimage.js?v=91', 'js/app.js?v=91', 'js/enhanced.js?v=91', 'icons/mark.svg',
-  'data/notices.js', 'data/glossary.js', 'data/calendar.js', 'data/config.js', 'data/courses.js', 'data/timetable.js', 'data/professors.js', 'data/gradreq.js', 'js/curriculum.js?v=91', 'js/campusroute.js?v=91'];
+  'js/i18n.js?v=92', 'js/i18n2.js', 'js/i18n3.js', 'js/i18n4.js', 'js/i18n5.js?v=92', 'js/i18n_depts.js?v=92', 'js/theme.js', 'js/plan.js?v=92', 'js/planui.js?v=92', 'js/track.js?v=92', 'js/palette.js', 'js/ttimage.js', 'js/ttics.js', 'js/noticeimage.js?v=92', 'js/app.js?v=92', 'js/enhanced.js?v=92', 'icons/mark.svg',
+  'data/notices.js', 'data/glossary.js', 'data/calendar.js', 'data/config.js', 'data/courses.js', 'data/timetable.js', 'data/professors.js', 'data/gradreq.js', 'js/curriculum.js?v=92', 'js/campusroute.js?v=92'];
 const DATA_JSON = /\/data\/(version|notices|calendar|glossary|overrides)\.json$|\/data\/gongji\.ics$/;
 
 self.addEventListener('install', (e) => {
