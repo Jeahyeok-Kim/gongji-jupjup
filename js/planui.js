@@ -203,38 +203,38 @@
 
       const items = [
         {
-          label: '전공필수',
+          label: Tx.kindLabel ? Tx.kindLabel.전필 : '전공필수',
           done: majorReqDone,
           need: reqMajorReq,
-          tag: majorReqDone >= reqMajorReq ? '완료 ✓' : `${reqMajorReq - majorReqDone}학점 부족`,
+          tag: majorReqDone >= reqMajorReq ? (Tx.gbTagDone || '완료 ✓') : (Tx.gbTagShort ? Tx.gbTagShort(reqMajorReq - majorReqDone) : `${reqMajorReq - majorReqDone}학점 부족`),
           ok: majorReqDone >= reqMajorReq
         },
         {
-          label: '전공선택',
+          label: Tx.kindLabel ? Tx.kindLabel.전선 : '전공선택',
           done: majorElectDone,
           need: req.major ? Math.max(0, req.major - reqMajorReq) : null,
-          tag: '전공선택',
+          tag: Tx.kindLabel ? Tx.kindLabel.전선 : '전공선택',
           ok: req.major ? majorElectDone >= Math.max(0, req.major - reqMajorReq) : true
         },
         {
-          label: '기초교양',
+          label: Tx.kindLabel ? Tx.kindLabel.기초 : '기초교양',
           done: tot.gen['기초'] || 0,
           need: req.gen ? req.gen['기초'] : 14,
-          tag: (tot.gen['기초'] || 0) >= (req.gen ? req.gen['기초'] : 14) ? '완료 ✓' : `${(req.gen ? req.gen['기초'] : 14) - (tot.gen['기초'] || 0)}학점 부족`,
+          tag: (tot.gen['기초'] || 0) >= (req.gen ? req.gen['기초'] : 14) ? (Tx.gbTagDone || '완료 ✓') : (Tx.gbTagShort ? Tx.gbTagShort((req.gen ? req.gen['기초'] : 14) - (tot.gen['기초'] || 0)) : `${(req.gen ? req.gen['기초'] : 14) - (tot.gen['기초'] || 0)}학점 부족`),
           ok: (tot.gen['기초'] || 0) >= (req.gen ? req.gen['기초'] : 14)
         },
         {
-          label: '심화교양',
+          label: Tx.kindLabel ? Tx.kindLabel.심화 : '심화교양',
           done: tot.gen['심화'] || 0,
           need: req.gen ? req.gen['심화'] : 8,
-          tag: (tot.gen['심화'] || 0) >= (req.gen ? req.gen['심화'] : 8) ? '완료 ✓' : `${(req.gen ? req.gen['심화'] : 8) - (tot.gen['심화'] || 0)}학점 부족`,
+          tag: (tot.gen['심화'] || 0) >= (req.gen ? req.gen['심화'] : 8) ? (Tx.gbTagDone || '완료 ✓') : (Tx.gbTagShort ? Tx.gbTagShort((req.gen ? req.gen['심화'] : 8) - (tot.gen['심화'] || 0)) : `${(req.gen ? req.gen['심화'] : 8) - (tot.gen['심화'] || 0)}학점 부족`),
           ok: (tot.gen['심화'] || 0) >= (req.gen ? req.gen['심화'] : 8)
         },
         {
-          label: 'KU소양',
+          label: Tx.kindLabel ? Tx.kindLabel.소양 : 'KU소양',
           done: tot.gen['소양'] || 0,
           need: req.gen ? req.gen['소양'] : 9,
-          tag: (tot.gen['소양'] || 0) >= (req.gen ? req.gen['소양'] : 9) ? '완료 ✓' : `${(req.gen ? req.gen['소양'] : 9) - (tot.gen['소양'] || 0)}학점 부족`,
+          tag: (tot.gen['소양'] || 0) >= (req.gen ? req.gen['소양'] : 9) ? (Tx.gbTagDone || '완료 ✓') : (Tx.gbTagShort ? Tx.gbTagShort((req.gen ? req.gen['소양'] : 9) - (tot.gen['소양'] || 0)) : `${(req.gen ? req.gen['소양'] : 9) - (tot.gen['소양'] || 0)}학점 부족`),
           ok: (tot.gen['소양'] || 0) >= (req.gen ? req.gen['소양'] : 9)
         }
       ];
@@ -282,16 +282,16 @@
         const freeDone = Math.max(0, tot.total - Math.min(tot.major, req.major || 0));
         const extraMajor = Math.max(0, tot.major - (req.major || 0));
         const freeBreakdown = [
-          tot.general ? `교양 ${tot.general}` : '',
-          tot.free ? `일선 ${tot.free}` : '',
-          extraMajor ? `초과전공 ${extraMajor}` : ''
+          tot.general ? `${Tx.areaGenLabel || '교양'} ${tot.general}` : '',
+          tot.free ? `${Tx.areaElectLabel || '일선'} ${tot.free}` : '',
+          extraMajor ? `${Tx.areaExtraMajor || '초과전공'} ${extraMajor}` : ''
         ].filter(Boolean).join(' · ');
 
         meters = h('div', { class: 'meters' },
           meter(Tx.areaTotal, tot.total, req.total),
-          meter('전공 최소', tot.major, req.major),
-          meter('자유(교양·일선)', freeDone, freeReq,
-            freeBreakdown ? h('p', { class: 'meter-sub' }, freeBreakdown + '학점') : null));
+          meter(Tx.areaMajorMin || '전공 최소', tot.major, req.major),
+          meter(Tx.areaFree || '자유(교양·일선)', freeDone, freeReq,
+            freeBreakdown ? h('p', { class: 'meter-sub' }, freeBreakdown + (Tx.creditUnit || '학점')) : null));
       } else {
         meters = h('div', { class: 'meters' },
           meter(Tx.areaTotal, tot.total, req.total),
@@ -684,7 +684,7 @@
                 type: 'text',
                 id: 'req-dept-input',
                 class: 'dept-input-name',
-                value: dept(),
+                value: (window.GongjiDeptI18n ? window.GongjiDeptI18n.formatDept(dept(), currentLang()) : dept()) || dept(),
                 placeholder: Tx.profileDeptPh || '학과명 입력 (예: 컴퓨터공학과, 컴공, Computer, CS)',
                 autocomplete: 'off',
                 oninput: (e) => onDeptInput(e.target),
@@ -1744,6 +1744,10 @@
       const hours = [];
       for (let m = lo; m < hi; m += 60) hours.push(m / 60);
 
+      const freeLabel = currentLang() === 'en' ? 'Free' : currentLang() === 'zh' ? '空课' : currentLang() === 'ja' ? '空き' : '공강';
+      const elLabel = currentLang() === 'en' ? '💻 Unscheduled e-Learning:' : currentLang() === 'zh' ? '💻 课表外网络课程:' : currentLang() === 'ja' ? '💻 時間割外eラーニング:' : '💻 시간표 외 이러닝:';
+      const profTitle = (p) => (currentLang() === 'en' ? `Prof. ${p}` : currentLang() === 'zh' || currentLang() === 'ja' ? `${p} 教授` : `${p} 교수`);
+
       const gridEl = h('div', { class: 'mini-tt', style: `--cols:${days.length};--rows:${hours.length}` },
         h('div', { class: 'mini-head' }, h('span'), days.map((d) => h('span', null, deps.dayName(d)))),
         h('div', { class: 'mini-body' },
@@ -1751,19 +1755,29 @@
           days.map((d) => {
             const dayClasses = timed.flatMap((p) => p.section.t.filter((x) => x[0] === d).map(([, a, b]) => ({ p, a, b })));
             return h('div', { class: 'mini-col' + (!dayClasses.length ? ' is-free-col' : '') },
-              !dayClasses.length ? h('span', { class: 'mini-free-label' }, '공강') : null,
-              dayClasses.map(({ p, a, b }) => h('div', {
-                class: 'mini-class' + (p.section.mode === 'live' ? ' live' : ''),
-                style: `top:${((toMin(a) - lo) / span) * 100}%;height:${((toMin(b) - toMin(a)) / span) * 100}%;--c:${deps.classColor(p.group.name)}`,
-                title: `${p.group.name} ${a}–${b}${p.section.prof ? ` (${p.section.prof} 교수)` : ''}`
-              }, h('b', null, p.group.name), p.section.prof ? h('span', { class: 'mini-prof', style: 'font-size:10px;display:block;opacity:.85;font-weight:600;' }, p.section.prof) : null, h('small', null, `${a}–${b}`))));
+              !dayClasses.length ? h('span', { class: 'mini-free-label' }, freeLabel) : null,
+              dayClasses.map(({ p, a, b }) => {
+                const durMin = toMin(b) - toMin(a);
+                const isShort = durMin <= 60;
+                const isTiny = durMin <= 30;
+                const profText = p.section.prof ? profTitle(p.section.prof) : '';
+                return h('div', {
+                  class: 'mini-class' + (p.section.mode === 'live' ? ' live' : '') + (isShort ? ' is-short-slot' : ''),
+                  style: `top:${((toMin(a) - lo) / span) * 100}%;height:${((toMin(b) - toMin(a)) / span) * 100}%;--c:${deps.classColor(p.group.name)}`,
+                  title: `${p.group.name} ${a}–${b}${profText ? ` (${profText})` : ''}`
+                },
+                  h('b', null, p.group.name),
+                  (!isShort && p.section.prof) ? h('span', { class: 'mini-prof', style: 'font-size:10px;display:block;opacity:.85;font-weight:600;' }, p.section.prof) : null,
+                  !isTiny ? h('small', null, `${a}–${b}`) : null
+                );
+              }));
           })));
 
       const elearnChips = elearns.length ? h('div', { class: 'mini-elearn-wrap' },
-        h('span', { class: 'mini-el-label' }, '💻 시간표 외 이러닝:'),
+        h('span', { class: 'mini-el-label' }, elLabel),
         h('div', { class: 'mini-el-chips' }, elearns.map((p) =>
           h('span', { class: 'mini-el-chip', style: `--c:${deps.classColor(p.group.name)}` },
-            `📖 ${p.group.name}`, p.section.prof ? ` (${p.section.prof})` : ''
+            `📖 ${p.group.name}`, p.section.prof ? ` (${profTitle(p.section.prof)})` : ''
           )
         ))
       ) : null;

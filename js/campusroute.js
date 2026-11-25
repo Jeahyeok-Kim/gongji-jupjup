@@ -254,25 +254,60 @@
     return `${localized} (${original})`;
   }
 
-  // 두 강의실 간 이동 동선, 소요 시간, 헐떡고개 경보 계산
-  function calculateRoute(fromRoomStr, toRoomStr, breakMinutes) {
+  // 두 강의실 간 이동 동선, 소요 시간, 헐떡고개 경보 계산 (다국어 지원)
+  function calculateRoute(fromRoomStr, toRoomStr, breakMinutes, lang = 'ko') {
     const from = parseRoom(fromRoomStr);
     const to = parseRoom(toRoomStr);
     const breakMin = typeof breakMinutes === 'number' ? breakMinutes : 15;
+    const curLang = lang || 'ko';
+
+    const getStatusText = (lvl, isOnline = false, isSameBldg = false) => {
+      if (isOnline) {
+        if (curLang === 'en') return '🟢 Online Class (No Travel)';
+        if (curLang === 'zh') return '🟢 网课 (无需移动)';
+        if (curLang === 'ja') return '🟢 オンライン授業 (移動なし)';
+        return '🟢 이동 여유 (온라인 연강)';
+      }
+      if (isSameBldg) {
+        if (curLang === 'en') return '🟢 Same Building (Easy)';
+        if (curLang === 'zh') return '🟢 同楼层移动 (充裕)';
+        if (curLang === 'ja') return '🟢 同一建物 (余裕)';
+        return '🟢 10분 컷 여유 (동일 건물)';
+      }
+      if (lvl === 'danger') {
+        if (curLang === 'en') return '🚨 High Rush Risk! (Steep Hill Alert)';
+        if (curLang === 'zh') return '🚨 10分钟极度紧张! (急陡坡警报)';
+        if (curLang === 'ja') return '🚨 10分移動超危険! (急坂警報)';
+        return '🚨 10분 컷 초위험! (헐떡고개 경보)';
+      }
+      if (lvl === 'warning') {
+        if (curLang === 'en') return '🟡 Tight 10m Window (Brisk Walk)';
+        if (curLang === 'zh') return '🟡 10分钟较紧 (建议快走)';
+        if (curLang === 'ja') return '🟡 10分カツカツ (早歩き推奨)';
+        return '🟡 10분 컷 빠듯 (빠른 걸음 권장)';
+      }
+      if (curLang === 'en') return '🟢 10m Walk Safe';
+      if (curLang === 'zh') return '🟢 10分钟充裕';
+      if (curLang === 'ja') return '🟢 10分余裕';
+      return '🟢 10분 컷 여유';
+    };
 
     // 온라인 수업이 포함된 경우 이동 불필요
     if (from.isOnline || to.isOnline || !from.building || !to.building) {
       return {
         level: 'safe',
-        statusText: '🟢 이동 여유 (온라인 연강)',
+        statusText: getStatusText('safe', true),
         walkMin: 0,
         distM: 0,
         elevationDiff: 0,
         hasHillAlert: false,
         breakMin: breakMin,
         remainMin: breakMin,
-        tips: '장소 이동이 필요 없는 온라인/이러닝 수업입니다.',
-        details: '온라인 수업'
+        tips: curLang === 'en' ? 'Online or e-learning course with no physical classroom change required.'
+          : curLang === 'zh' ? '无需更换地点的在线/网络课程。'
+          : curLang === 'ja' ? '場所移動の必要がないオンライン/eラーニング授業です。'
+          : '장소 이동이 필요 없는 온라인/이러닝 수업입니다.',
+        details: curLang === 'en' ? 'Online' : curLang === 'zh' ? '网课' : curLang === 'ja' ? 'オンライン' : '온라인 수업'
       };
     }
 
@@ -280,25 +315,37 @@
     if (from.building === to.building) {
       const floorDiff = Math.abs((to.floor || 1) - (from.floor || 1));
       let walkMin = 1;
-      let tips = '동일 건물 내 강의실 이동입니다.';
+      let tips = '';
       const isElevatorFree = from.buildingMeta && !from.buildingMeta.hasElevator;
 
       if (floorDiff === 0) {
         walkMin = 1;
-        tips = '동일 층 인접 강의실입니다. 1분 이내 여유로운 이동 가능!';
+        tips = curLang === 'en' ? 'Adjacent rooms on the same floor. Under 1 min easy walk!'
+          : curLang === 'zh' ? '同楼层相邻教室。1分钟内即可轻松到达!'
+          : curLang === 'ja' ? '同フロアの隣接教室です。1分以内の快適移動!'
+          : '동일 층 인접 강의실입니다. 1분 이내 여유로운 이동 가능!';
       } else if (floorDiff <= 2) {
         walkMin = 2;
-        tips = `${floorDiff}개 층 계단 이동. 쉬는 시간 여유 있습니다.`;
+        tips = curLang === 'en' ? `Take stairs for ${floorDiff} floor(s). Plenty of break time.`
+          : curLang === 'zh' ? `步行爬楼梯 ${floorDiff} 层。课间时间充裕。`
+          : curLang === 'ja' ? `階段で ${floorDiff} 階移動。休憩時間に余裕があります。`
+          : `${floorDiff}개 층 계단 이동. 쉬는 시간 여유 있습니다.`;
       } else {
         walkMin = isElevatorFree ? 4 : 3;
         tips = isElevatorFree
-          ? `⚠️ ${from.building}은 엘리베이터가 없습니다! ${floorDiff}개 층 계단 이동 필요 (+4분 소요)`
-          : `쉬는 시간 엘리베이터 혼잡 시 비상계단 이용 권장 (${floorDiff}개 층 이동)`;
+          ? (curLang === 'en' ? `⚠️ No elevator in ${from.building}! ${floorDiff} floors stairs walk (+4m)`
+             : curLang === 'zh' ? `⚠️ ${from.building} 无电梯! 需爬 ${floorDiff} 层楼梯 (+4分钟)`
+             : curLang === 'ja' ? `⚠️ ${from.building}はエレベーターがありません! ${floorDiff}階分の階段移動 (+4分)`
+             : `⚠️ ${from.building}은 엘리베이터가 없습니다! ${floorDiff}개 층 계단 이동 필요 (+4분 소요)`)
+          : (curLang === 'en' ? `Stairs recommended if elevators are crowded between classes (${floorDiff} floors)`
+             : curLang === 'zh' ? `课间电梯拥挤时建议使用楼梯 (${floorDiff} 层移动)`
+             : curLang === 'ja' ? `混雑時は階段利用推奨 (${floorDiff}階移動)`
+             : `쉬는 시간 엘리베이터 혼잡 시 비상계단 이용 권장 (${floorDiff}개 층 이동)`);
       }
 
       return {
         level: 'safe',
-        statusText: '🟢 10분 컷 여유 (동일 건물)',
+        statusText: getStatusText('safe', false, true),
         walkMin: walkMin,
         distM: floorDiff * 20,
         elevationDiff: floorDiff * 3.5,
@@ -306,7 +353,7 @@
         breakMin: breakMin,
         remainMin: Math.max(0, breakMin - walkMin),
         tips: tips,
-        details: `${from.building} ${from.floor}층 ➔ ${to.floor}층`
+        details: `${from.building} ${from.floor}F ➔ ${to.floor}F`
       };
     }
 
@@ -329,20 +376,38 @@
         (from.building === '종합강의동' && to.building === '국제교육관')) {
       baseDist = 450;
       hasHillAlert = true;
-      hillReason = '국제교육관 ↔ 종합강의동 급경사로(헐떡고개) 등판 코스';
-      shortcut = '중원도서관 측면 계단 샛길 이용 시 약 1.5분 단축 가능!';
+      hillReason = curLang === 'en' ? 'Steep hill section between Int\'l Education Hall and General Lecture Hall'
+        : curLang === 'zh' ? '国际教育馆与综合教学楼之间急陡坡路段'
+        : curLang === 'ja' ? '国際教育館と総合講義棟間の急坂区間'
+        : '국제교육관 ↔ 종합강의동 급경사로(헐떡고개) 등판 코스';
+      shortcut = curLang === 'en' ? 'Take the library side stairs to save ~1.5 mins!'
+        : curLang === 'zh' ? '走图书馆侧面楼梯近道可节省约1.5分钟!'
+        : curLang === 'ja' ? '図書館脇の階段ショートカットで約1.5分短縮!'
+        : '중원도서관 측면 계단 샛길 이용 시 약 1.5분 단축 가능!';
     } else if ((from.building === '국제교육관' && (to.building === '공학관' || to.building === '모빌리티융합관')) ||
                ((from.building === '공학관' || from.building === '모빌리티융합관') && to.building === '국제교육관')) {
       baseDist = 520;
       hasHillAlert = true;
-      hillReason = '헐떡고개 최대 고저차(+34m) 급경사 코스';
-      shortcut = '중원도서관 1층 로비 관통 통로를 이용하면 경사를 피해 이동 가능!';
+      hillReason = curLang === 'en' ? 'Max elevation change (+34m) steep slope hill'
+        : curLang === 'zh' ? '最大高差(+34米)急陡坡路段'
+        : curLang === 'ja' ? '最大標高差(+34m)の急坂コース'
+        : '헐떡고개 최대 고저차(+34m) 급경사 코스';
+      shortcut = curLang === 'en' ? 'Passing through Jungwon Library 1F lobby avoids the slope!'
+        : curLang === 'zh' ? '穿过中原图书馆1楼大堂可避开陡坡!'
+        : curLang === 'ja' ? '中原図書館1Fロビー通過ルートで坂を回避可能!'
+        : '중원도서관 1층 로비 관통 통로를 이용하면 경사를 피해 이동 가능!';
     } else if ((from.building === '국제교육관' && (to.building === '의생명과학관' || to.building === '간호대학')) ||
                ((from.building === '의생명과학관' || to.building === '간호대학') && to.building === '국제교육관')) {
       baseDist = 650;
       hasHillAlert = true;
-      hillReason = '캠퍼스 최저 지대 ↔ 최고 지대(+48m) 장거리 고난도 등판 코스';
-      shortcut = '수업 종료 즉시 빠른 걸음 이동 필수 (자전거/킥보드 우회 권장)';
+      hillReason = curLang === 'en' ? 'Long-distance high elevation climb (+48m)'
+        : curLang === 'zh' ? '校园最低处至最高处(+48米)长距离爬坡路线'
+        : curLang === 'ja' ? 'キャンパス最低部から最高部(+48m)への長距離急登コース'
+        : '캠퍼스 최저 지대 ↔ 최고 지대(+48m) 장거리 고난도 등판 코스';
+      shortcut = curLang === 'en' ? 'Immediate departure required upon class dismissal!'
+        : curLang === 'zh' ? '下课后必须立刻快速步行出发!'
+        : curLang === 'ja' ? '授業終了直後の早歩き必須!'
+        : '수업 종료 즉시 빠른 걸음 이동 필수 (자전거/킥보드 우회 권장)';
     } else if (z1 === z2) {
       baseDist = 180; // 인접 구역
     } else if ((z1.includes('central') && z2.includes('central'))) {
@@ -365,23 +430,30 @@
 
     // 판정 등급 (10분 쉬는 시간 기준)
     let level = 'safe';
-    let statusText = '🟢 10분 컷 여유';
     if (walkMin >= 9 || (walkMin >= 8 && hasHillAlert)) {
       level = 'danger';
-      statusText = '🚨 10분 컷 초위험! (헐떡고개 경보)';
     } else if (walkMin >= 6 || hasHillAlert) {
       level = 'warning';
-      statusText = '🟡 10분 컷 빠듯 (빠른 걸음 권장)';
     }
 
+    const statusText = getStatusText(level);
     const remainMin = breakMin - walkMin;
     let tips = '';
     if (level === 'danger') {
-      tips = `⚠️ 예상 도보 소요 ${walkMin}분! 쉬는 시간(${breakMin}분) 대비 아슬아슬합니다. 수업 끝나자마자 바로 출발하세요. ${shortcut || hillReason}`;
+      tips = curLang === 'en' ? `⚠️ Est. walk ${walkMin}m! Very tight against ${breakMin}m break. Head out as soon as class ends. ${shortcut || hillReason}`
+        : curLang === 'zh' ? `⚠️ 预计步行约${walkMin}分钟! 相比课间(${breakMin}分钟)极为紧迫,请下课后立即出发。${shortcut || hillReason}`
+        : curLang === 'ja' ? `⚠️ 予想徒歩${walkMin}分! 休憩時間(${breakMin}分)に対してギリギリです。授業終了後すぐに出発してください。${shortcut || hillReason}`
+        : `⚠️ 예상 도보 소요 ${walkMin}분! 쉬는 시간(${breakMin}분) 대비 아슬아슬합니다. 수업 끝나자마자 바로 출발하세요. ${shortcut || hillReason}`;
     } else if (level === 'warning') {
-      tips = `예상 소요 ${walkMin}분. ${hasHillAlert ? '언덕 경사로가 포함되어 있습니다. ' : ''}${shortcut || '여유 시간이 많지 않으니 서두르세요.'}`;
+      tips = curLang === 'en' ? `Est. walk ${walkMin}m. Time is limited, please walk briskly.`
+        : curLang === 'zh' ? `预计步行约${walkMin}分钟。富余时间有限,建议保持较快步伐。`
+        : curLang === 'ja' ? `予想徒歩${walkMin}分。余裕があまりないため、早歩きをおすすめします。`
+        : `예상 소요 ${walkMin}분. ${hasHillAlert ? '언덕 경사로가 포함되어 있습니다. ' : ''}${shortcut || '여유 시간이 많지 않으니 서두르세요.'}`;
     } else {
-      tips = `예상 소요 ${walkMin}분 (잔여 여유 ${remainMin}분). 완만하고 편안하게 이동할 수 있습니다.`;
+      tips = curLang === 'en' ? `Est. walk ${walkMin}m (${remainMin}m buffer). Gentle and comfortable walk.`
+        : curLang === 'zh' ? `预计步行约${walkMin}分钟 (富余约${remainMin}分钟)。地势平缓,可从容移动。`
+        : curLang === 'ja' ? `予想徒歩${walkMin}分 (残り余裕${remainMin}分)。緩やかで快適に移動できます。`
+        : `예상 소요 ${walkMin}분 (잔여 여유 ${remainMin}분). 완만하고 편안하게 이동할 수 있습니다.`;
     }
 
     return {
@@ -441,43 +513,101 @@
     terminalBuses: {
       'dongseoul': {
         dest: '동서울터미널 (강변역 2호선)',
+        names: { ko: '동서울터미널 (강변역 2호선)', en: 'East Seoul Terminal (Gangbyeon Sta.)', zh: '东首尔客运站 (江边站 2号线)', ja: '東ソウルターミナル (江辺駅 2号線)' },
         intervalMin: 25,
         firstBus: '06:00',
         lastBus: '21:30',
         durationMin: 100,
-        fare: '9,200원'
+        fare: '9,200원',
+        fareNum: 9200
       },
       'gangnam': {
         dest: '서울 강남 센트럴시티 (고속터미널)',
+        names: { ko: '서울 강남 센트럴시티 (고속터미널)', en: 'Seoul Gangnam Central City', zh: '首尔江南中心城客运站', ja: 'ソウル江南セントラルシティ' },
         intervalMin: 35,
         firstBus: '06:00',
         lastBus: '21:00',
         durationMin: 105,
-        fare: '10,000원'
+        fare: '10,000원',
+        fareNum: 10000
       },
       'suwon': {
         dest: '수원버스터미널 / 경기남부',
+        names: { ko: '수원버스터미널 / 경기남부', en: 'Suwon Terminal / S. Gyeonggi', zh: '水原客运站 / 京畿南部', ja: '水原ターミナル / 京畿南部' },
         intervalMin: 50,
         firstBus: '07:00',
         lastBus: '20:30',
         durationMin: 90,
-        fare: '8,500원'
+        fare: '8,500원',
+        fareNum: 8500
+      },
+      'cheongju': {
+        dest: '청주 시외버스터미널 (북부/사창)',
+        names: { ko: '청주 시외버스터미널 (북부/사창)', en: 'Cheongju Intercity Terminal', zh: '清州长途汽车站', ja: '清州市外バスターミナル' },
+        intervalMin: 30,
+        firstBus: '06:40',
+        lastBus: '21:10',
+        durationMin: 60,
+        fare: '5,900원',
+        fareNum: 5900
+      },
+      'daejeon': {
+        dest: '대전 복합터미널 / 유성',
+        names: { ko: '대전 복합터미널 / 유성', en: 'Daejeon Complex Terminal', zh: '大田综合客运站', ja: '大田複合ターミナル' },
+        intervalMin: 40,
+        firstBus: '06:50',
+        lastBus: '20:20',
+        durationMin: 90,
+        fare: '8,800원',
+        fareNum: 8800
+      },
+      'incheon': {
+        dest: '인천 / 안산 / 부천 터미널',
+        names: { ko: '인천 / 안산 / 부천 터미널', en: 'Incheon / Ansan / Bucheon Terminal', zh: '仁川 / 安山 / 富川客运站', ja: '仁川 / 安山 / 富川ターミナル' },
+        intervalMin: 50,
+        firstBus: '07:10',
+        lastBus: '20:10',
+        durationMin: 100,
+        fare: '10,500원',
+        fareNum: 10500
+      },
+      'wonju': {
+        dest: '원주 시외버스터미널 (강원)',
+        names: { ko: '원주 시외버스터미널 (강원)', en: 'Wonju Intercity Terminal', zh: '原州长途汽车站', ja: '原州市外バスターミナル' },
+        intervalMin: 50,
+        firstBus: '07:30',
+        lastBus: '20:30',
+        durationMin: 50,
+        fare: '6,200원',
+        fareNum: 6200
+      },
+      'downtown': {
+        dest: '충주 시내 (성서동 / 상권·영화관)',
+        names: { ko: '충주 시내 (성서동 / 상권)', en: 'Chungju Downtown (Seongseo-dong)', zh: '忠州市区 (城西洞 / 商业街)', ja: '忠州市内 (城西洞 / 繁華街)' },
+        intervalMin: 15,
+        firstBus: '06:30',
+        lastBus: '22:00',
+        durationMin: 15,
+        fare: '1,500원',
+        fareNum: 1500
       },
       'seongnam': {
         dest: '성남(야탑) 터미널',
+        names: { ko: '성남(야탑) 터미널', en: 'Seongnam (Yatap) Terminal', zh: '城南(野塔)客运站', ja: '城南(野塔)ターミナル' },
         intervalMin: 60,
         firstBus: '07:20',
         lastBus: '20:00',
         durationMin: 85,
-        fare: '8,300원'
+        fare: '8,300원',
+        fareNum: 8300
       }
     },
     // 금요일 및 통학 정기 하교 버스
     commuter: [
-      { name: '서울/강남·잠실 노선', dep: '15:30', spot: '대운동장 앞', note: '금요일 운행' },
-      { name: '수원/안양 노선', dep: '15:30', spot: '대운동장 앞', note: '금요일 운행' },
-      { name: '서울/강남·잠실 2차', dep: '17:30', spot: '대운동장 앞', note: '금요일 운행' },
-      { name: '일산/부천 노선', dep: '17:30', spot: '대운동장 앞', note: '금요일 운행' }
+      { name: '서울/강남·잠실 노선', names: { ko: '서울/강남·잠실 노선', en: 'Seoul (Gangnam / Jamsil)', zh: '首尔/江南·蚕室专线', ja: 'ソウル/江南・蚕室路線' }, dep: '15:30', spot: '대운동장 앞', note: '금요일 운행' },
+      { name: '수원/안양 노선', names: { ko: '수원/안양 노선', en: 'Suwon / Anyang Route', zh: '水原/安养专线', ja: '水原/安養路線' }, dep: '15:30', spot: '대운동장 앞', note: '금요일 운행' },
+      { name: '서울/강남·잠실 2차', names: { ko: '서울/강남·잠실 2차', en: 'Seoul (Gangnam / Jamsil) #2', zh: '首尔/江南·蚕室第2班', ja: 'ソウル/江南・蚕室 2便' }, dep: '17:30', spot: '대운동장 앞', note: '금요일 운행' },
+      { name: '일산/부천 노선', names: { ko: '일산/부천 노선', en: 'Ilsan / Bucheon Route', zh: '一山/富川专线', ja: '一山/富川路線' }, dep: '17:30', spot: '대운동장 앞', note: '금요일 운행' }
     ]
   };
 
@@ -494,8 +624,9 @@
   }
 
   // 오늘 수업 종료 시간 및 강의실 기준 가장 빠른 교통편(셔틀, KTX, 터미널 버스) 추천
-  function getTransitRecommendation(lastClassEndTime, lastClassRoom, destination) {
-    const dest = destination || 'shuttle'; // 'shuttle', 'ktx', 'seoul', 'suwon', 'commuter'
+  function getTransitRecommendation(lastClassEndTime, lastClassRoom, destination, lang) {
+    const L = lang || 'ko';
+    const dest = destination || 'shuttle';
     const endMin = toMin(lastClassEndTime || '15:00');
     const roomMeta = parseRoom(lastClassRoom);
     const bMeta = roomMeta.buildingMeta || { shuttleWalkMin: 6 };
@@ -506,13 +637,11 @@
     const nextShuttles = TRANSIT_DATA.shuttle.filter((s) => toMin(s.dep) >= arriveStopMin);
     const bestShuttle = nextShuttles[0] || null;
 
-    // 2. 목적지별 특화 정보 조합
+    // 2. KTX 모드
     if (dest === 'ktx') {
-      // 충주역 도착 후 탈 수 있는 KTX 찾기
       const recs = [];
       for (const sh of nextShuttles.slice(0, 3)) {
         const stationArriveMin = toMin(sh.station);
-        // 환승 여유 10분 이상인 KTX 검색
         const ktxHits = TRANSIT_DATA.ktx.filter((k) => toMin(k.dep) >= stationArriveMin + 10);
         if (ktxHits.length) {
           const targetKtx = ktxHits[0];
@@ -523,55 +652,125 @@
             stationArrive: sh.station,
             ktx: targetKtx,
             waitMinAtStation: ktxDepMin - stationArriveMin,
-            arrPangyo: targetKtx.arrPangyo,
-            summary: `${sh.dep} 셔틀 탑승 ➔ 충주역 ${sh.station} 도착 ➔ ${targetKtx.dep} ${targetKtx.train} (판교 ${targetKtx.arrPangyo} 도착)`
+            arrPangyo: targetKtx.arrPangyo
           });
         }
       }
 
+      const destTitle = L === 'en' ? '🚄 Chungju Sta. ➔ Pangyo/Suseo KTX-Eum'
+        : L === 'zh' ? '🚄 忠州站 ➔ 板桥/水西方向 KTX-EUM高铁连运'
+        : L === 'ja' ? '🚄 忠州駅 ➔ 板橋/水西方面 KTX-イウム連携'
+        : '🚄 충주역 ➔ 판교/수서 방면 KTX-이음 연계';
+
+      const tips = L === 'en' ? `Walk ~${walkMin}m from classroom (${roomMeta.name}) to main stadium shuttle stop. Matched with KTX at Chungju Station.`
+        : L === 'zh' ? `从教学楼(${roomMeta.name})步行至大运动场校车乘车点约需${walkMin}分钟。已智能匹配忠州站KTX高铁车次。`
+        : L === 'ja' ? `講義室(${roomMeta.name})から大運動場シャトル停留所まで徒歩約${walkMin}分。忠州駅KTX乗車まで連携マッチングしました。`
+        : `강의실(${roomMeta.name})에서 대운동장 셔틀 정류장까지 도보 약 ${walkMin}분 소요. 충주역 KTX 탑승까지 매칭되었습니다.`;
+
       return {
         type: 'ktx',
-        destTitle: '🚄 충주역 ➔ 판교/수서 방면 KTX-이음 연계',
+        destTitle,
         walkMin,
         fromBuilding: roomMeta.building,
         arriveStop: toTimeStr(arriveStopMin),
         bestMatch: recs[0] || null,
         alternatives: recs.slice(1),
-        tips: `강의실(${roomMeta.name})에서 대운동장 셔틀 정류장까지 도보 약 ${walkMin}분 소요. 충주역 KTX 탑승까지 매칭되었습니다.`
+        tips
       };
     }
 
-    if (dest === 'seoul' || dest === 'suwon') {
-      const busKey = dest === 'seoul' ? 'dongseoul' : 'suwon';
+    // 3. 금요 통학버스 (commuter)
+    if (dest === 'commuter') {
+      const bestCom = TRANSIT_DATA.commuter.find((c) => toMin(c.dep) >= arriveStopMin) || TRANSIT_DATA.commuter[0];
+      const destTitle = L === 'en' ? '🚌 Friday Direct Commuter Bus (Main Stadium Front)'
+        : L === 'zh' ? '🚌 周五通学专线直达巴士 (大运动场前)'
+        : L === 'ja' ? '🚌 金曜通学直通バス (大運動場前)'
+        : '🚌 금요일 수도권 직통 통학버스 (대운동장 앞)';
+
+      const tips = L === 'en' ? `Departs directly from Main Stadium stop without transfer. Runs on Fridays to Seoul/Suwon/Ilsan.`
+        : L === 'zh' ? `从大运动场前直发，无需换乘校车。每周五下午运行开往首尔、水原、一山等地。`
+        : L === 'ja' ? `大運動場前から直行発車（シャトル乗換不要）。金曜午後にソウル・水原・一山方面へ運行。`
+        : `대운동장 앞에서 셔틀 환승 없이 직통 출발합니다. 금요일 오후 서울·수원·일산 방면 운행.`;
+
+      return {
+        type: 'commuter',
+        destTitle,
+        walkMin,
+        fromBuilding: roomMeta.building,
+        arriveStop: toTimeStr(arriveStopMin),
+        bestMatch: bestCom ? {
+          shuttleDep: bestCom.dep,
+          destName: (bestCom.names && bestCom.names[L]) || bestCom.name,
+          spot: bestCom.spot,
+          note: bestCom.note
+        } : null,
+        tips
+      };
+    }
+
+    // 4. 시외버스 및 시내 (terminal buses / downtown)
+    const busKey = dest === 'seoul' ? 'dongseoul'
+      : (TRANSIT_DATA.terminalBuses[dest] ? dest : 'dongseoul');
+
+    if (dest !== 'shuttle') {
       const busMeta = TRANSIT_DATA.terminalBuses[busKey];
+      const localizedDest = (busMeta.names && busMeta.names[L]) || busMeta.dest;
       const recs = nextShuttles.slice(0, 3).map((sh) => {
         const termArriveMin = toMin(sh.terminal);
-        const nextBusMin = termArriveMin + 15; // 터미널 도착 후 예매/탑승 여유 15분
+        const nextBusMin = termArriveMin + 15;
         return {
           shuttleDep: sh.dep,
           termArrive: sh.terminal,
           waitMinAtStop: toMin(sh.dep) - arriveStopMin,
           estBusTime: toTimeStr(nextBusMin),
-          busInfo: busMeta
+          busInfo: {
+            ...busMeta,
+            dest: localizedDest
+          }
         };
       });
 
+      const destTitle = L === 'en' ? `🚌 Chungju Terminal ➔ ${localizedDest}`
+        : L === 'zh' ? `🚌 忠州客运站 ➔ ${localizedDest}`
+        : L === 'ja' ? `🚌 忠州ターミナル ➔ ${localizedDest}`
+        : `🚌 충주터미널 ➔ ${localizedDest}`;
+
+      const tips = L === 'en' ? `Take shuttle to Chungju Terminal (~15 mins), then connect with direct buses every ${busMeta.intervalMin}m.`
+        : L === 'zh' ? `乘坐大运动场校车前往忠州客运站(约15分钟)，之后换乘发车间隔约${busMeta.intervalMin}分钟的直达巴士。`
+        : L === 'ja' ? `大運動場シャトルで忠州ターミナルへ移動(約15分)後、約${busMeta.intervalMin}分間隔の直行バスへ乗継可能です。`
+        : `대운동장 셔틀로 충주터미널 이동(약 15분 소요) 후 ${busMeta.intervalMin}분 간격의 직통 버스 연계 탑승 가능.`;
+
       return {
         type: 'terminal',
-        destTitle: `🚌 충주터미널 ➔ ${busMeta.dest}`,
+        destTitle,
         walkMin,
         fromBuilding: roomMeta.building,
         arriveStop: toTimeStr(arriveStopMin),
         bestMatch: recs[0] || null,
-        busMeta,
-        tips: `대운동장 셔틀로 충주터미널 이동(약 15분 소요) 후 ${busMeta.intervalMin}분 간격의 직통 버스 연계 탑승 가능.`
+        busMeta: { ...busMeta, dest: localizedDest },
+        tips
       };
     }
 
-    // 기본: 교내 셔틀버스 순환
+    // 5. 기본: 교내 무료 셔틀버스 순환
+    const destTitle = L === 'en' ? '🚌 Free Campus Shuttle (Campus ➔ Terminal ➔ Station)'
+      : L === 'zh' ? '🚌 校内免费校车 (校园 ➔ 客运站 ➔ 忠州站)'
+      : L === 'ja' ? '🚌 校内無料シャトルバス (キャンパス ➔ ターミナル ➔ 忠州駅)'
+      : '🚌 교내 무료 셔틀버스 (캠퍼스 ➔ 충주터미널 ➔ 충주역)';
+
+    const tips = bestShuttle
+      ? (L === 'en' ? `Walk ${walkMin}m to stadium stop after last class. Board ${bestShuttle.dep} shuttle to Terminal ${bestShuttle.terminal}, Station ${bestShuttle.station}.`
+        : L === 'zh' ? `今日最后一节课结束后步行约${walkMin}分钟至大运动场乘车点。搭乘${bestShuttle.dep}校车可于${bestShuttle.terminal}到达客运站，${bestShuttle.station}到达忠州站。`
+        : L === 'ja' ? `授業終了後、大運動場停留所まで徒歩約${walkMin}分。${bestShuttle.dep}発シャトル乗車でターミナル${bestShuttle.terminal}、忠州駅${bestShuttle.station}着。`
+        : `오늘 마지막 수업 종료 후 대운동장 정류장까지 ${walkMin}분 도보. ${bestShuttle.dep} 셔틀 탑승 시 터미널 ${bestShuttle.terminal}, 충주역 ${bestShuttle.station} 도착.`)
+      : (L === 'en' ? 'No more shuttle buses running today.'
+        : L === 'zh' ? '今日校车运行已全部结束。'
+        : L === 'ja' ? '本日のシャトルバス運行は終了しました。'
+        : '오늘 남은 셔틀버스 운행이 종료되었습니다.');
+
     return {
       type: 'shuttle',
-      destTitle: '🚌 교내 무료 셔틀버스 (캠퍼스 ➔ 충주터미널 ➔ 충주역)',
+      destTitle,
       walkMin,
       fromBuilding: roomMeta.building,
       arriveStop: toTimeStr(arriveStopMin),
@@ -582,9 +781,7 @@
         stationArrive: bestShuttle.station
       } : null,
       upcoming: nextShuttles.slice(0, 4),
-      tips: bestShuttle
-        ? `오늘 마지막 수업 종료 후 대운동장 정류장까지 ${walkMin}분 도보. ${bestShuttle.dep} 셔틀 탑승 시 터미널 ${bestShuttle.terminal}, 충주역 ${bestShuttle.station} 도착.`
-        : '오늘 운행 가능한 남은 셔틀버스가 없습니다.'
+      tips
     };
   }
 

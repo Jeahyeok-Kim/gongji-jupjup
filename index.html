@@ -34,8 +34,8 @@
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
   <!-- 제목·숫자용 글꼴: 원티드 산스 (기업 브랜드 서체, OFL). 받지 못하면 Pretendard 로 보임 -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/wanteddev/wanted-sans@v1.0.3/packages/wanted-sans/fonts/webfonts/variable/split/WantedSansVariable.min.css">
-  <link rel="stylesheet" href="css/style.css?v=71">
-  <link rel="stylesheet" href="css/enhanced.css?v=71">
+  <link rel="stylesheet" href="css/style.css?v=75">
+  <link rel="stylesheet" href="css/enhanced.css?v=75">
 </head>
 <body data-tab="notices">
   <header class="topbar">
@@ -203,6 +203,7 @@
         <p class="view-sub"><span data-i18n="boardHelp"></span> <strong id="board-sum"></strong></p>
       </div>
       <div class="board-pipeline-guide" id="board-pipeline-guide" hidden></div>
+      <div class="board-stage-nav" id="board-stage-nav" role="tablist" aria-label="지원 단계"></div>
       <div class="board" id="kanban"></div>
     </section>
 
@@ -236,11 +237,11 @@
         <div class="tt-interaction-bar" id="tt-interaction-bar">
           <div class="tti-hint">
             <span class="tti-icon">👆</span>
-            <span class="tti-text">수업을 <strong>길게 누르거나 드래그</strong>하여 시간·요일 이동</span>
+            <span class="tti-text" data-i18n="ttDragHint">수업을 <strong>길게 누르거나 드래그</strong>하여 시간·요일 이동</span>
           </div>
           <div class="tti-snap-pills" role="radiogroup" aria-label="이동 단위">
-            <button type="button" class="tti-snap-pill is-active" id="btn-snap-30" role="radio" aria-checked="true" title="대학 표준 30분 단위 스냅">⚡ 30분 스냅 (표준)</button>
-            <button type="button" class="tti-snap-pill" id="btn-snap-10" role="radio" aria-checked="false" title="10분 미세 조정 단위 스냅">⏱️ 10분 미세조정</button>
+            <button type="button" class="tti-snap-pill is-active" id="btn-snap-30" role="radio" aria-checked="true" title="대학 표준 30분 단위 스냅" data-i18n="ttSnap30">⚡ 30분 스냅 (표준)</button>
+            <button type="button" class="tti-snap-pill" id="btn-snap-10" role="radio" aria-checked="false" title="10분 미세 조정 단위 스냅" data-i18n="ttSnap10">⏱️ 10분 미세조정</button>
           </div>
         </div>
         <!-- 에브리타임처럼 요일×시간 격자. 빈 칸을 누르면 그 시간으로 수업 추가, 수업을 누르면 수정 -->
@@ -327,7 +328,7 @@
         <p class="fine setting-row" id="ov-status" hidden></p>
         <div class="settings-about-card">
           <div class="settings-about-header">
-            <span class="settings-about-badge">ℹ️ 서비스 소개</span>
+            <span class="settings-about-badge" data-i18n="aboutBadge">ℹ️ 서비스 소개</span>
             <span class="settings-about-ver" id="about-ver">공지 줍줍 v67</span>
           </div>
           <p class="help settings-about-desc" data-i18n="about"></p>
@@ -404,23 +405,23 @@
         <input type="text" name="name" id="class-name" maxlength="30" autocomplete="off" role="combobox" aria-expanded="false" aria-controls="course-suggest" data-i18n-placeholder="classPlaceholder">
       </label>
       <label class="wide class-prof-field">
-        <span>담당 교수 (선택)</span>
-        <input type="text" name="prof" id="class-prof" maxlength="30" autocomplete="off" placeholder="예: 이철원 교수">
+        <span data-i18n="classProf">담당 교수 (선택)</span>
+        <input type="text" name="prof" id="class-prof" maxlength="30" autocomplete="off" data-i18n-placeholder="classProfPh" placeholder="예: 이철원 교수">
       </label>
       <div class="wide class-quick-suggest" id="class-quick-suggest" hidden>
-        <span class="cqs-label">⚡ 이 시간대 추천 개설 과목</span>
+        <span class="cqs-label" data-i18n="classQuickSuggest">⚡ 이 시간대 추천 개설 과목</span>
         <div class="cqs-chips" id="cqs-chips"></div>
       </div>
       <ul class="wide course-suggest" id="course-suggest" role="listbox" hidden></ul>
       <div class="wide warn-note class-transferred-warn" id="class-transferred-warn" hidden></div>
       <p class="wide fine class-extra" id="class-extra" hidden></p>
       <div class="wide class-alt-sec" id="class-alt-sec" hidden></div>
-      <div class="wide class-mode-row" role="radiogroup" aria-label="수업 방식">
-        <button type="button" class="btn-mode is-active" id="btn-mode-regular" role="radio" aria-checked="true">시간표 수업 (요일·시간)</button>
-        <button type="button" class="btn-mode" id="btn-mode-elearn" role="radio" aria-checked="false">이러닝 (온라인 / 시간 없음)</button>
+      <div class="wide class-mode-row" role="radiogroup" aria-label="수업 방식" data-i18n-aria="classModeAria">
+        <button type="button" class="btn-mode is-active" id="btn-mode-regular" role="radio" aria-checked="true" data-i18n="classModeRegular">시간표 수업 (요일·시간)</button>
+        <button type="button" class="btn-mode" id="btn-mode-elearn" role="radio" aria-checked="false" data-i18n="classModeElearn">이러닝 (온라인 / 시간 없음)</button>
       </div>
       <div class="wide class-elearn-note" id="class-elearn-note" hidden>
-        <p class="elearn-desc">정해진 수업 시간 없이 온라인으로 수강하는 이러닝·원격 과목입니다.<br>시간표 격자 아래 <strong>이러닝 과목</strong> 목록에 등록됩니다.</p>
+        <p class="elearn-desc" data-i18n-html="classElearnDesc">정해진 수업 시간 없이 온라인으로 수강하는 이러닝·원격 과목입니다.<br>시간표 격자 아래 <strong>이러닝 과목</strong> 목록에 등록됩니다.</p>
       </div>
       <fieldset class="wide day-field">
         <legend><span data-i18n="day"></span> <span class="day-hint" data-i18n="daysHint"></span></legend>
@@ -439,12 +440,12 @@
         <div class="duration-picks" id="durations"></div>
       </div>
       <div class="wide class-quick-shifts" id="class-quick-shifts">
-        <span class="time-label">시간 빠른 이동 (30분 단위)</span>
+        <span class="time-label" data-i18n="classQuickShifts">시간 빠른 이동 (30분 단위)</span>
         <div class="cqs-shift-btns">
-          <button type="button" class="btn-shift" id="btn-shift-prev30" title="수업 시간을 30분 앞으로 당깁니다">◀ 30분 앞</button>
-          <button type="button" class="btn-shift" id="btn-shift-next30" title="수업 시간을 30분 뒤로 미룹니다">30분 뒤 ▶</button>
-          <button type="button" class="btn-shift" id="btn-shift-add30" title="수업 길이를 30분 늘립니다">+30분 연장</button>
-          <button type="button" class="btn-shift" id="btn-shift-sub30" title="수업 길이를 30분 줄입니다">-30분 단축</button>
+          <button type="button" class="btn-shift" id="btn-shift-prev30" title="수업 시간을 30분 앞으로 당깁니다" data-i18n="shiftPrev30">◀ 30분 앞</button>
+          <button type="button" class="btn-shift" id="btn-shift-next30" title="수업 시간을 30분 뒤로 미룹니다" data-i18n="shiftNext30">30분 뒤 ▶</button>
+          <button type="button" class="btn-shift" id="btn-shift-add30" title="수업 길이를 30분 늘립니다" data-i18n="shiftAdd30">+30분 연장</button>
+          <button type="button" class="btn-shift" id="btn-shift-sub30" title="수업 길이를 30분 줄입니다" data-i18n="shiftSub30">-30분 단축</button>
         </div>
       </div>
       <p id="class-error" class="error-msg wide" role="alert"></p>
@@ -478,7 +479,7 @@
   <dialog id="route-dialog" aria-labelledby="route-dialog-title" closedby="any">
     <div class="dialog-body" id="route-dialog-body"></div>
     <form method="dialog" class="dialog-actions">
-      <button class="btn primary" value="close">닫기</button>
+      <button class="btn primary" value="close" data-i18n="close">닫기</button>
     </form>
   </dialog>
 
@@ -526,23 +527,23 @@
   <script src="js/eligibility.js"></script>
   <script src="js/ask.js"></script>
   <script src="js/cal.js"></script>
-  <script src="js/i18n.js?v=71"></script>
+  <script src="js/i18n.js?v=75"></script>
   <script src="js/i18n2.js"></script>
   <script src="js/i18n3.js"></script>
   <script src="js/i18n4.js"></script>
-  <script src="js/i18n5.js?v=71"></script>
-  <script src="js/i18n_depts.js?v=71"></script>
-  <script src="js/curriculum.js?v=71"></script>
-  <script src="js/campusroute.js?v=71"></script>
-  <script src="js/plan.js?v=71"></script>
-  <script src="js/planui.js?v=71"></script>
-  <script src="js/track.js?v=71"></script>
+  <script src="js/i18n5.js?v=75"></script>
+  <script src="js/i18n_depts.js?v=75"></script>
+  <script src="js/curriculum.js?v=75"></script>
+  <script src="js/campusroute.js?v=75"></script>
+  <script src="js/plan.js?v=75"></script>
+  <script src="js/planui.js?v=75"></script>
+  <script src="js/track.js?v=75"></script>
   <script src="js/palette.js"></script>
   <script src="js/ttimage.js"></script>
   <script src="js/ttics.js"></script>
-  <script src="js/noticeimage.js?v=71"></script>
+  <script src="js/noticeimage.js?v=75"></script>
   <script src="js/theme.js"></script>
-  <script src="js/app.js?v=71"></script>
-  <script src="js/enhanced.js?v=71"></script>
+  <script src="js/app.js?v=75"></script>
+  <script src="js/enhanced.js?v=75"></script>
 </body>
 </html>

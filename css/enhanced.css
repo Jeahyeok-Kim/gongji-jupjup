@@ -6828,7 +6828,10 @@ dialog[open]::backdrop {
 
 /* ---- 57. 지원 보드 (트렐로·노션형 칸반) 칼럼 겹침 완전 방지 & 대기업(Apple/Toss) UI 고도화 ---- */
 body[data-tab="track"] .layout {
-  max-width: 1320px !important;
+  max-width: min(96vw, 1520px) !important;
+  width: 100% !important;
+  padding-inline: clamp(16px, 2.4vw, 32px) !important;
+  box-sizing: border-box !important;
   transition: max-width 0.25s ease;
 }
 
@@ -6838,10 +6841,11 @@ body[data-tab="track"] .layout {
   box-sizing: border-box !important;
 }
 
+/* PC 기본: 4개 컬럼이 뷰포트에 100% 한눈에 들어오는 유동적 4열 그리드 (가로 스크롤 없음) */
 .board {
   display: grid !important;
   grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
-  gap: 14px !important;
+  gap: clamp(10px, 1.2vw, 16px) !important;
   align-items: stretch !important;
   overflow-x: visible !important;
   width: 100% !important;
@@ -6851,13 +6855,13 @@ body[data-tab="track"] .layout {
 
 .bcol {
   min-width: 0 !important;
-  width: auto !important;
+  width: 100% !important;
   box-sizing: border-box !important;
   overflow: visible !important;
   background: var(--surface) !important;
   border: 1px solid var(--border-soft, rgba(0, 0, 0, 0.08)) !important;
   border-radius: 18px !important;
-  padding: 14px !important;
+  padding: clamp(10px, 1vw, 16px) !important;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.03) !important;
   transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease !important;
 }
@@ -6971,27 +6975,68 @@ body[data-tab="track"] .layout {
   white-space: nowrap !important;
 }
 
+/* 900px ~ 1199px (1024px 등 중소형 PC / 랩톱 환경): 4컬럼이 절대 짤리지 않도록 버튼 및 패딩 컴팩트 정렬 */
+@media (min-width: 900px) and (max-width: 1199px) {
+  body[data-tab="track"] .layout {
+    padding-inline: 12px !important;
+  }
+  .board {
+    gap: 8px !important;
+    overflow-x: visible !important;
+  }
+  .bcol {
+    padding: 10px 8px !important;
+    border-radius: 14px !important;
+  }
+  .bcol-head {
+    padding: 2px 2px 6px !important;
+    margin-bottom: 6px !important;
+    gap: 4px !important;
+  }
+  .bcol-head h3 {
+    font-size: 13px !important;
+  }
+  .bcol-count {
+    min-width: 20px !important;
+    height: 19px !important;
+    padding: 0 5px !important;
+    font-size: 11px !important;
+  }
+  .bcard {
+    padding: 10px 8px !important;
+    border-radius: 11px !important;
+    gap: 6px !important;
+  }
+  .bcard-title {
+    font-size: 13px !important;
+    line-height: 1.35 !important;
+  }
+  .bcard-foot {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: stretch !important;
+    gap: 4px !important;
+  }
+  .bcard-move {
+    width: 100% !important;
+    max-width: 100% !important;
+    height: 28px !important;
+    font-size: 11px !important;
+    padding: 0 4px !important;
+  }
+  .bcard-next {
+    width: 100% !important;
+    height: 28px !important;
+    justify-content: center !important;
+    text-align: center !important;
+    font-size: 11px !important;
+    padding: 0 4px !important;
+  }
+}
+
 @media (max-width: 899px) {
   body[data-tab="track"] .layout {
     max-width: 100% !important;
-  }
-  .board {
-    display: grid !important;
-    grid-template-columns: none !important;
-    grid-auto-flow: column !important;
-    grid-auto-columns: min(84vw, 320px) !important;
-    scroll-snap-type: x mandatory !important;
-    margin-inline: -16px !important;
-    padding: 0 16px 16px !important;
-    scroll-padding-inline: 16px !important;
-    overflow-x: auto !important;
-    -webkit-overflow-scrolling: touch !important;
-  }
-  .bcol {
-    scroll-snap-align: start !important;
-    min-height: 360px !important;
-    min-width: unset !important;
-    overflow: hidden !important;
   }
 }
 
@@ -8350,4 +8395,399 @@ html, body {
     min-width: 0 !important;
     box-sizing: border-box !important;
   }
+}
+
+/* ==========================================================================
+   Big-Tech (Apple / Samsung One UI / Toss) Design System & Mobile UX Elevation
+   ========================================================================== */
+
+/* 1. Mobile Bottom Tabbar & Badge Perfection */
+@media (max-width: 899px) {
+  .tabbar {
+    height: calc(60px + env(safe-area-inset-bottom, 0px)) !important;
+    padding: 0 4px env(safe-area-inset-bottom, 0px) !important;
+    background: rgba(255, 255, 255, 0.88) !important;
+    -webkit-backdrop-filter: blur(20px) saturate(180%) !important;
+    backdrop-filter: blur(20px) saturate(180%) !important;
+    border-top: 1px solid rgba(0, 0, 0, 0.08) !important;
+    box-shadow: 0 -2px 12px rgba(0, 0, 0, 0.03) !important;
+    z-index: 99 !important;
+  }
+  [data-theme="dark"] .tabbar {
+    background: rgba(22, 27, 34, 0.88) !important;
+    border-top-color: rgba(255, 255, 255, 0.08) !important;
+  }
+  .tabbar a {
+    position: relative !important;
+    min-height: 54px !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 2px !important;
+    color: var(--faint, #8e8e93) !important;
+    text-decoration: none !important;
+    -webkit-tap-highlight-color: transparent !important;
+    transition: transform 0.12s cubic-bezier(0.175, 0.885, 0.32, 1.275), color 0.12s ease !important;
+  }
+  .tabbar a:active {
+    transform: scale(0.92) !important;
+  }
+  .tabbar a.active,
+  .tabbar a[aria-current="page"] {
+    color: var(--accent, #008a4b) !important;
+  }
+  .tabbar a.active svg,
+  .tabbar a[aria-current="page"] svg {
+    color: var(--accent, #008a4b) !important;
+    stroke-width: 2.2 !important;
+  }
+  .tabbar .tab-badge {
+    position: absolute !important;
+    top: 3px !important;
+    left: calc(50% + 5px) !important;
+    right: auto !important;
+    min-width: 15px !important;
+    height: 15px !important;
+    line-height: 13px !important;
+    padding: 0 3px !important;
+    border-radius: 9999px !important;
+    background: #ff3b30 !important;
+    color: #ffffff !important;
+    font-size: 9.5px !important;
+    font-weight: 800 !important;
+    text-align: center !important;
+    border: 1.5px solid var(--surface, #ffffff) !important;
+    box-shadow: 0 1px 4px rgba(255, 59, 48, 0.35) !important;
+    z-index: 10 !important;
+    pointer-events: none !important;
+  }
+  [data-theme="dark"] .tabbar .tab-badge {
+    border-color: #1a202c !important;
+  }
+
+  /* 2. Compact Top Bar Language Selector */
+  .lang-select {
+    display: inline-flex !important;
+    align-items: center !important;
+    margin-right: 2px !important;
+  }
+  .lang-select select {
+    max-width: 86px !important;
+    height: 32px !important;
+    padding: 0 6px 0 20px !important;
+    font-size: 11.5px !important;
+    font-weight: 700 !important;
+    border-radius: 9999px !important;
+    background-size: 12px !important;
+    background-position: 5px center !important;
+    border: 1px solid var(--border-soft, #e2e8f0) !important;
+    color: var(--text) !important;
+    background-color: var(--surface) !important;
+    text-overflow: ellipsis !important;
+    white-space: nowrap !important;
+    overflow: hidden !important;
+  }
+  [data-theme="dark"] .lang-select select {
+    background-color: var(--surface-1, #1e242b) !important;
+    border-color: rgba(255, 255, 255, 0.12) !important;
+  }
+
+  /* 3. Mobile Timetable Header Streamlining */
+  #timetable-panel .panel-head,
+  #tt-pane .panel-head {
+    margin-bottom: 4px !important;
+  }
+  #timetable-panel p.help,
+  #tt-pane p.help {
+    display: none !important;
+  }
+  .tt-mgr-bar {
+    padding: 6px 10px !important;
+    margin-bottom: 6px !important;
+    border-radius: 14px !important;
+    gap: 6px !important;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.03) !important;
+  }
+  .tt-select-wrap {
+    flex: 1 1 auto !important;
+    min-width: 0 !important;
+  }
+  .tt-selector {
+    height: 30px !important;
+    font-size: 12.5px !important;
+    font-weight: 700 !important;
+  }
+  .tt-mgr-actions {
+    display: flex !important;
+    gap: 4px !important;
+  }
+  .tt-btn-action {
+    height: 28px !important;
+    padding: 0 8px !important;
+    font-size: 11px !important;
+    border-radius: 8px !important;
+  }
+  .tt-stats-bar {
+    margin-bottom: 6px !important;
+    padding: 2px 0 !important;
+    gap: 4px !important;
+    overflow-x: auto !important;
+    flex-wrap: nowrap !important;
+    scrollbar-width: none !important;
+    -webkit-overflow-scrolling: touch !important;
+  }
+  .tt-stats-bar::-webkit-scrollbar {
+    display: none !important;
+  }
+  .tt-stats-bar .tt-stat-chip {
+    padding: 3px 8px !important;
+    font-size: 11px !important;
+    border-radius: 9999px !important;
+    flex-shrink: 0 !important;
+  }
+  .tt-interaction-bar {
+    margin: 2px 0 6px 0 !important;
+    padding: 0 !important;
+    background: transparent !important;
+    border: none !important;
+    justify-content: flex-end !important;
+  }
+  .tt-interaction-bar .tti-hint {
+    display: none !important;
+  }
+  .tti-snap-pills {
+    margin-left: auto !important;
+    gap: 4px !important;
+  }
+  .tti-snap-pill {
+    padding: 3px 8px !important;
+    font-size: 11px !important;
+    border-radius: 9999px !important;
+  }
+  .tt {
+    min-height: 480px !important;
+    border-radius: 16px !important;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.04) !important;
+  }
+}
+
+/* 4. Application Board Mobile Segmented Switcher & Touch Snap */
+.board-stage-nav {
+  display: none;
+}
+@media (max-width: 899px) {
+  .board-stage-nav {
+    display: flex !important;
+    gap: 6px !important;
+    padding: 4px 2px 8px 2px !important;
+    margin-bottom: 8px !important;
+    overflow-x: auto !important;
+    flex-wrap: nowrap !important;
+    scrollbar-width: none !important;
+    -webkit-overflow-scrolling: touch !important;
+    position: sticky !important;
+    top: var(--topbar, 56px) !important;
+    background: var(--bg, #f8fafc) !important;
+    z-index: 20 !important;
+  }
+  [data-theme="dark"] .board-stage-nav {
+    background: var(--bg, #0f141a) !important;
+  }
+  .board-stage-nav::-webkit-scrollbar {
+    display: none !important;
+  }
+  .bsn-pill {
+    flex: 1 1 0 !important;
+    min-width: 68px !important;
+    height: 34px !important;
+    padding: 0 8px !important;
+    border-radius: 9999px !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 5px !important;
+    border: 1px solid var(--border-soft, #e2e8f0) !important;
+    background: var(--surface, #ffffff) !important;
+    color: var(--muted, #64748b) !important;
+    font-size: 11.5px !important;
+    font-weight: 700 !important;
+    cursor: pointer !important;
+    transition: all 0.14s ease !important;
+    -webkit-tap-highlight-color: transparent !important;
+  }
+  [data-theme="dark"] .bsn-pill {
+    background: var(--surface-1, #1e242b) !important;
+    border-color: rgba(255, 255, 255, 0.1) !important;
+    color: #94a3b8 !important;
+  }
+  .bsn-pill:active {
+    transform: scale(0.94) !important;
+  }
+  .bsn-pill.is-active {
+    background: var(--text, #0f172a) !important;
+    color: var(--surface, #ffffff) !important;
+    border-color: var(--text, #0f172a) !important;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12) !important;
+  }
+  [data-theme="dark"] .bsn-pill.is-active {
+    background: #ffffff !important;
+    color: #0f172a !important;
+    border-color: #ffffff !important;
+  }
+  .bsn-badge {
+    font-size: 10px !important;
+    padding: 1px 5px !important;
+    border-radius: 9999px !important;
+    background: rgba(0, 0, 0, 0.08) !important;
+    font-variant-numeric: tabular-nums !important;
+  }
+  .bsn-pill.is-active .bsn-badge {
+    background: rgba(255, 255, 255, 0.25) !important;
+    color: inherit !important;
+  }
+  [data-theme="dark"] .bsn-pill.is-active .bsn-badge {
+    background: rgba(0, 0, 0, 0.15) !important;
+    color: #0f172a !important;
+  }
+
+  .board {
+    display: flex !important;
+    flex-direction: row !important;
+    gap: 12px !important;
+    overflow-x: auto !important;
+    scroll-snap-type: x mandatory !important;
+    -webkit-overflow-scrolling: touch !important;
+    scroll-behavior: smooth !important;
+    padding: 0 16px 20px !important;
+    margin-inline: -16px !important;
+    scrollbar-width: none !important;
+    -ms-overflow-style: none !important;
+  }
+  .board::-webkit-scrollbar {
+    display: none !important;
+  }
+  .bcol {
+    flex: 0 0 calc(100vw - 44px) !important;
+    max-width: 360px !important;
+    min-width: 270px !important;
+    scroll-snap-align: center !important;
+    scroll-snap-stop: always !important;
+    box-sizing: border-box !important;
+    border-radius: 18px !important;
+    min-height: 360px !important;
+    touch-action: pan-y pinch-zoom !important;
+  }
+}
+
+/* 4-1. Universal Touch Drag & Drop (iOS Safari & Android Chrome/Samsung) */
+.bcard {
+  touch-action: pan-y pinch-zoom !important;
+  -webkit-user-select: none !important;
+  user-select: none !important;
+}
+.bcard.is-touch-dragging {
+  opacity: 0.3 !important;
+  border-style: dashed !important;
+  transform: scale(0.96) !important;
+  transition: transform 0.15s ease, opacity 0.15s ease !important;
+}
+.bcard-touch-ghost {
+  position: fixed !important;
+  top: 0 !important;
+  left: 0 !important;
+  z-index: 10000 !important;
+  pointer-events: none !important;
+  margin: 0 !important;
+  box-sizing: border-box !important;
+  border: 2px solid var(--accent, #008a4b) !important;
+  border-radius: 14px !important;
+  box-shadow: 0 18px 48px rgba(0, 0, 0, 0.3), 0 4px 14px rgba(0, 0, 0, 0.12) !important;
+  background: var(--surface, #ffffff) !important;
+  -webkit-backdrop-filter: blur(16px) !important;
+  backdrop-filter: blur(16px) !important;
+  transform-origin: center center !important;
+  will-change: transform !important;
+}
+[data-theme="dark"] .bcard-touch-ghost {
+  background: #1c2228 !important;
+  border-color: #00a85c !important;
+  box-shadow: 0 20px 52px rgba(0, 0, 0, 0.6) !important;
+}
+.bcol.is-over {
+  border-color: var(--stage-c, #008a4b) !important;
+  background: color-mix(in srgb, var(--stage-c, #008a4b) 12%, var(--surface)) !important;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1) !important;
+  transform: scale(1.01) !important;
+  transition: all 0.18s ease !important;
+}
+
+/* 5. Department Autocomplete Suggestion Dropdown Apple Squircle Elegance */
+.dept-suggest-box {
+  border-radius: 16px !important;
+  box-shadow: 0 12px 32px -4px rgba(0, 0, 0, 0.14), 0 4px 12px rgba(0, 0, 0, 0.06) !important;
+  border: 1px solid var(--border-soft, #e2e8f0) !important;
+  padding: 6px !important;
+  backdrop-filter: blur(20px) !important;
+  -webkit-backdrop-filter: blur(20px) !important;
+}
+.dept-suggest-item {
+  padding: 10px 14px !important;
+  border-radius: 10px !important;
+}
+.dept-suggest-item.is-active,
+.dept-suggest-item:hover {
+  background: var(--fill, rgba(0, 138, 75, 0.08)) !important;
+}
+
+/* 6. Mini Timetable Recommendation Grid Safe Course Cell Layout */
+.mini-class {
+  min-height: 0 !important;
+  box-sizing: border-box !important;
+  overflow: hidden !important;
+  justify-content: flex-start !important;
+}
+.mini-class b {
+  font-weight: 700 !important;
+  display: block !important;
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  word-break: break-all !important;
+  line-height: 1.2 !important;
+}
+.mini-class.is-short-slot {
+  padding: 2px 4px !important;
+  justify-content: center !important;
+}
+.mini-class.is-short-slot b {
+  font-size: 11px !important;
+  line-height: 1.15 !important;
+}
+.mini-class.is-short-slot small {
+  font-size: 9.5px !important;
+  line-height: 1.1 !important;
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+}
+
+/* 7. Class Modal Edit / Delete Action Styling */
+#class-dialog.editing #class-dialog-title {
+  color: var(--fg, #111827);
+}
+#class-delete {
+  background: var(--danger-soft, #fef2f2) !important;
+  color: var(--danger, #dc2626) !important;
+  border: 1px solid color-mix(in srgb, var(--danger, #dc2626) 35%, transparent) !important;
+  font-weight: 600 !important;
+  border-radius: 12px !important;
+  padding: 8px 16px !important;
+  cursor: pointer !important;
+  transition: all 0.18s var(--ease-spring, ease) !important;
+}
+#class-delete:hover {
+  background: var(--danger, #dc2626) !important;
+  color: #ffffff !important;
+  box-shadow: 0 4px 12px rgba(220, 38, 38, 0.25) !important;
 }

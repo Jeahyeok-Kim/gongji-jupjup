@@ -638,6 +638,119 @@
     const cols = K.columns(DATA.notices, { track: state.track, saved: state.saved, applied: state.applied }, now);
     return K.STAGES.flatMap((s) => cols[s].map((n) => n.id));
   }
+
+  // 모바일 & 터치 디바이스 (iOS Safari / Android Chrome·삼성인터넷) 터치 드래그 앤 드롭 제어
+  let touchHoldTimer = null;
+  let isTouchDragging = false;
+  let touchStartX = 0;
+  let touchStartY = 0;
+  let touchCardEl = null;
+  let touchGhostEl = null;
+  let touchHoverCol = null;
+  let suppressDetailClickUntil = 0;
+
+  function handleBoardTouchStart(ev, nId, stage) {
+    if (ev.touches.length !== 1) return;
+    if (ev.target.closest('select, button, a, input, textarea')) return;
+    const t0 = ev.touches[0];
+    touchStartX = t0.clientX;
+    touchStartY = t0.clientY;
+    isTouchDragging = false;
+    touchCardEl = ev.currentTarget;
+    touchHoverCol = null;
+
+    clearTimeout(touchHoldTimer);
+    touchHoldTimer = setTimeout(() => {
+      isTouchDragging = true;
+      if (navigator.vibrate) navigator.vibrate(25);
+      if (touchCardEl) touchCardEl.classList.add('is-touch-dragging');
+      document.body.classList.add('is-dragging');
+
+      touchGhostEl = touchCardEl.cloneNode(true);
+      touchGhostEl.classList.add('bcard-touch-ghost');
+      const rect = touchCardEl.getBoundingClientRect();
+      touchGhostEl.style.width = `${rect.width}px`;
+      touchGhostEl.style.transform = `translate3d(${rect.left}px, ${rect.top}px, 0) scale(1.03)`;
+      document.body.appendChild(touchGhostEl);
+    }, 180);
+  }
+
+  function handleBoardTouchMove(ev, box) {
+    if (ev.touches.length !== 1) return;
+    const t0 = ev.touches[0];
+    const dx = t0.clientX - touchStartX;
+    const dy = t0.clientY - touchStartY;
+
+    if (!isTouchDragging) {
+      if (Math.hypot(dx, dy) > 8) {
+        clearTimeout(touchHoldTimer);
+      }
+      return;
+    }
+
+    // 터치 드래그 중 화면 스크롤 방지
+    if (ev.cancelable) ev.preventDefault();
+
+    if (touchGhostEl) {
+      const gw = touchGhostEl.offsetWidth || 280;
+      touchGhostEl.style.transform = `translate3d(${t0.clientX - gw / 2}px, ${t0.clientY - 30}px, 0) scale(1.04)`;
+    }
+
+    // 엣지 오토스크롤: 보드 좌우 끝에 닿으면 가로 스크롤 이동
+    if (box) {
+      const edge = 44;
+      if (t0.clientX < edge) {
+        box.scrollLeft -= 10;
+      } else if (t0.clientX > window.innerWidth - edge) {
+        box.scrollLeft += 10;
+      }
+    }
+
+    // 드롭 대상 컬럼 실시간 탐지
+    if (touchGhostEl) touchGhostEl.style.display = 'none';
+    const elUnder = document.elementFromPoint(t0.clientX, t0.clientY);
+    if (touchGhostEl) touchGhostEl.style.display = '';
+
+    const col = elUnder ? elUnder.closest('.bcol') : null;
+    if (box) {
+      box.querySelectorAll('.bcol').forEach((c) => {
+        if (c !== col) c.classList.remove('is-over');
+      });
+    }
+    if (col) {
+      col.classList.add('is-over');
+      touchHoverCol = col;
+    } else {
+      touchHoverCol = null;
+    }
+  }
+
+  function handleBoardTouchEnd(ev, nId, curStage, box) {
+    clearTimeout(touchHoldTimer);
+    if (!isTouchDragging) return;
+
+    isTouchDragging = false;
+    document.body.classList.remove('is-dragging');
+    if (touchCardEl) touchCardEl.classList.remove('is-touch-dragging');
+    if (touchGhostEl) {
+      touchGhostEl.remove();
+      touchGhostEl = null;
+    }
+    if (box) {
+      box.querySelectorAll('.bcol').forEach((c) => c.classList.remove('is-over'));
+    }
+
+    if (touchHoverCol) {
+      const destStage = touchHoverCol.getAttribute('data-stage');
+      if (destStage && destStage !== curStage) {
+        if (navigator.vibrate) navigator.vibrate([15, 30, 15]);
+        moveStage(nId, destStage);
+      }
+    }
+
+    suppressDetailClickUntil = Date.now() + 350;
+  }
+
   function boardCard(n, stage, ids) {
     const T = t();
     const e = state.track[n.id];
@@ -647,11 +760,25 @@
     return h('li', {
       class: 'bcard' + (L.isExpired(n, now) ? ' is-expired' : ''), draggable: 'true', 'data-id': n.id,
       ondragstart: (ev) => { ev.dataTransfer.setData('text/plain', n.id); ev.dataTransfer.effectAllowed = 'move'; ev.currentTarget.classList.add('is-drag'); document.body.classList.add('is-dragging'); },
-      ondragend: (ev) => { ev.currentTarget.classList.remove('is-drag'); document.body.classList.remove('is-dragging'); }
+      ondragend: (ev) => { ev.currentTarget.classList.remove('is-drag'); document.body.classList.remove('is-dragging'); },
+      ontouchstart: (ev) => handleBoardTouchStart(ev, n.id, stage),
+      ontouchmove: (ev) => handleBoardTouchMove(ev, $('#kanban')),
+      ontouchend: (ev) => handleBoardTouchEnd(ev, n.id, stage, $('#kanban')),
+      ontouchcancel: (ev) => handleBoardTouchEnd(ev, n.id, stage, $('#kanban'))
     },
     h('div', { class: 'bcard-top' }, ddayBadge(n), sub ? subTag(n, sub) : null,
       e && e.result ? h('span', { class: 'bres ' + resultTypeClass(e.result) }, (T.result && T.result[e.result]) || e.result) : null),
-    h('button', { type: 'button', class: 'bcard-title', 'aria-haspopup': 'dialog', onclick: () => openDetail(n.id, false, ids) }, titleOf(n)),
+    h('button', {
+      type: 'button', class: 'bcard-title', 'aria-haspopup': 'dialog',
+      onclick: (ev) => {
+        if (Date.now() < suppressDetailClickUntil) {
+          ev.preventDefault();
+          ev.stopPropagation();
+          return;
+        }
+        openDetail(n.id, false, ids);
+      }
+    }, titleOf(n)),
     pg.total ? h('div', { class: 'bcard-prog' },
       h('span', { class: 'bbar', 'aria-hidden': 'true' }, h('i', { style: `width:${(pg.done / pg.total) * 100}%` })),
       h('small', null, T.checksDone(pg.done, pg.total))) : null,
@@ -692,15 +819,46 @@
           ),
           h('div', { class: 'bpg-chips' },
             h('span', { class: 'bpg-chip-label' }, T.bpgLabel || (state.lang === 'en' ? 'Explore:' : state.lang === 'ja' ? 'おすすめクイック追加:' : state.lang === 'zh' ? '推荐快捷添加:' : '추천 바로담기:')),
-            h('button', { type: 'button', class: 'chip small bpg-chip', onclick: () => goList({ due: 'soon', sort: 'deadline' }) }, T.bpgChipSoon || '🔥 마감 임박'),
-            h('button', { type: 'button', class: 'chip small bpg-chip', onclick: () => goList({ category: '장학', sort: 'deadline' }) }, T.bpgChipScholar || '💰 장학금'),
-            h('button', { type: 'button', class: 'chip small bpg-chip', onclick: () => goList({ category: '공모전', sort: 'deadline' }) }, T.bpgChipContest || '🏆 공모전')
+            h('button', { type: 'button', class: 'chip small bpg-chip', onclick: () => goList({ due: 'soon', sort: 'deadline' }) }, T.bpgChipSoon || (state.lang === 'en' ? '🔥 Closing Soon' : state.lang === 'ja' ? '🔥 締切間近' : state.lang === 'zh' ? '🔥 即将截止' : '🔥 마감 임박')),
+            h('button', { type: 'button', class: 'chip small bpg-chip', onclick: () => goList({ category: '장학', sort: 'deadline' }) }, T.bpgChipScholar || (state.lang === 'en' ? '💰 Scholarships' : state.lang === 'ja' ? '💰 奨学金' : state.lang === 'zh' ? '💰 奖学金' : '💰 장학금')),
+            h('button', { type: 'button', class: 'chip small bpg-chip', onclick: () => goList({ category: '공모전', sort: 'deadline' }) }, T.bpgChipContest || (state.lang === 'en' ? '🏆 Contests' : state.lang === 'ja' ? '🏆 コンテスト' : state.lang === 'zh' ? '🏆 竞赛' : '🏆 공모전'))
           )
         );
       } else {
         guideEl.hidden = true;
         guideEl.replaceChildren();
       }
+    }
+
+    const stageNavEl = $('#board-stage-nav');
+    if (stageNavEl) {
+      const activeStage = stageNavEl.getAttribute('data-active-stage') || 'interest';
+      fill(stageNavEl, ...K.STAGES.map((stage) => {
+        const stageCards = cols[stage];
+        const isActive = stage === activeStage;
+        return h('button', {
+          type: 'button',
+          class: 'bsn-pill' + (isActive ? ' is-active' : ''),
+          role: 'tab',
+          'aria-selected': String(isActive),
+          onclick: () => {
+            stageNavEl.setAttribute('data-active-stage', stage);
+            stageNavEl.querySelectorAll('.bsn-pill').forEach((p, idx) => {
+              const matched = K.STAGES[idx] === stage;
+              p.classList.toggle('is-active', matched);
+              p.setAttribute('aria-selected', String(matched));
+            });
+            const targetCol = box.querySelector(`.bcol[data-stage="${stage}"]`);
+            if (targetCol) {
+              targetCol.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
+            }
+          }
+        },
+          h('span', { class: 'bcol-dot ' + stage, 'aria-hidden': 'true' }),
+          h('span', { class: 'bsn-label' }, T.stage[stage]),
+          h('span', { class: 'bsn-badge' }, String(stageCards.length))
+        );
+      }));
     }
 
     box.classList.remove('is-empty');
@@ -733,6 +891,42 @@
       ),
       bodyContent);
     }));
+
+    if (!box._hasScrollSync) {
+      box._hasScrollSync = true;
+      let syncTid = null;
+      box.addEventListener('scroll', () => {
+        if (syncTid) cancelAnimationFrame(syncTid);
+        syncTid = requestAnimationFrame(() => {
+          const center = box.scrollLeft + box.clientWidth / 2;
+          const cols = Array.from(box.querySelectorAll('.bcol'));
+          if (!cols.length) return;
+          let closestStage = 'interest';
+          let minDiff = Infinity;
+          cols.forEach((col) => {
+            const colCenter = col.offsetLeft + col.offsetWidth / 2;
+            const diff = Math.abs(center - colCenter);
+            if (diff < minDiff) {
+              minDiff = diff;
+              closestStage = col.getAttribute('data-stage') || 'interest';
+            }
+          });
+          const stageNavEl = $('#board-stage-nav');
+          if (stageNavEl && stageNavEl.getAttribute('data-active-stage') !== closestStage) {
+            stageNavEl.setAttribute('data-active-stage', closestStage);
+            const pills = stageNavEl.querySelectorAll('.bsn-pill');
+            pills.forEach((p, idx) => {
+              const matched = K.STAGES[idx] === closestStage;
+              p.classList.toggle('is-active', matched);
+              p.setAttribute('aria-selected', String(matched));
+              if (matched) {
+                p.scrollIntoView({ behavior: 'smooth', inline: 'nearest', block: 'nearest' });
+              }
+            });
+          }
+        });
+      }, { passive: true });
+    }
   }
 
   function resultTypeClass(res) {
@@ -754,71 +948,155 @@
     const isScholarship = primarySub === 'scholarship' || primarySub === 'support' || /장학|장학생|지원사업|지원금|수혜/.test(title);
     const isEdu = primarySub === 'edu' || primarySub === 'activity' || primarySub === 'event' || /교육|특강|워크숍|아카데미|이수|수료|봉사|캠프|세미나|포럼/.test(title);
     const isCareer = primarySub === 'career' || primarySub === 'jobinfo' || /인턴|채용|서포터즈|기자단|홍보대사|크루|동아리|모집/.test(title);
+    const L = state.lang || 'ko';
 
     if (isContest) {
-      return {
-        theme: 'contest',
-        hint: '🏆 공모전·대회 맞춤 결과',
-        presets: [
-          { text: '대상', badge: '🏆 대상', type: 'award' },
-          { text: '최우수상', badge: '🥇 최우수상', type: 'award' },
-          { text: '우수상', badge: '🥈 우수상', type: 'award' },
-          { text: '장려상', badge: '🥉 장려상', type: 'award' },
-          { text: '입선', badge: '🎖️ 입선', type: 'award' },
-          { text: '수상(입상)', badge: '🏅 수상', type: 'award' },
-          { text: '본선 진출', badge: '🎯 본선진출', type: 'milestone' },
-          { text: '미선정/탈락', badge: '❌ 미선정', type: 'fail' }
-        ]
-      };
+      const hint = L === 'en' ? '🏆 Contest & Competition Results' : L === 'zh' ? '🏆 竞赛与大赛专属结果' : L === 'ja' ? '🏆 コンテスト・大会の結果' : '🏆 공모전·대회 맞춤 결과';
+      const presets = L === 'en' ? [
+        { text: 'Grand Prize', badge: '🏆 Grand Prize', type: 'award' },
+        { text: '1st Place', badge: '🥇 1st Place', type: 'award' },
+        { text: 'Excellence Award', badge: '🥈 Excellence', type: 'award' },
+        { text: 'Honorable Mention', badge: '🥉 Honorable', type: 'award' },
+        { text: 'Selected / Finalist', badge: '🎖️ Finalist', type: 'award' },
+        { text: 'Awarded', badge: '🏅 Awarded', type: 'award' },
+        { text: 'Main Round', badge: '🎯 Main Round', type: 'milestone' },
+        { text: 'Not Selected', badge: '❌ Not Selected', type: 'fail' }
+      ] : L === 'zh' ? [
+        { text: '特等奖', badge: '🏆 特等奖', type: 'award' },
+        { text: '一等奖', badge: '🥇 一等奖', type: 'award' },
+        { text: '二等奖', badge: '🥈 二等奖', type: 'award' },
+        { text: '三等奖/鼓励奖', badge: '🥉 鼓励奖', type: 'award' },
+        { text: '入选/入围', badge: '🎖️ 入选', type: 'award' },
+        { text: '获奖', badge: '🏅 获奖', type: 'award' },
+        { text: '晋级决赛', badge: '🎯 决赛', type: 'milestone' },
+        { text: '未入选', badge: '❌ 未入选', type: 'fail' }
+      ] : L === 'ja' ? [
+        { text: '大賞', badge: '🏆 大賞', type: 'award' },
+        { text: '最優秀賞', badge: '🥇 最優秀賞', type: 'award' },
+        { text: '優秀賞', badge: '🥈 優秀賞', type: 'award' },
+        { text: '奨励賞', badge: '🥉 奨励賞', type: 'award' },
+        { text: '入選', badge: '🎖️ 入選', type: 'award' },
+        { text: '受賞', badge: '🏅 受賞', type: 'award' },
+        { text: '本選進出', badge: '🎯 本選', type: 'milestone' },
+        { text: '不採択', badge: '❌ 不採択', type: 'fail' }
+      ] : [
+        { text: '대상', badge: '🏆 대상', type: 'award' },
+        { text: '최우수상', badge: '🥇 최우수상', type: 'award' },
+        { text: '우수상', badge: '🥈 우수상', type: 'award' },
+        { text: '장려상', badge: '🥉 장려상', type: 'award' },
+        { text: '입선', badge: '🎖️ 입선', type: 'award' },
+        { text: '수상(입상)', badge: '🏅 수상', type: 'award' },
+        { text: '본선 진출', badge: '🎯 본선진출', type: 'milestone' },
+        { text: '미선정/탈락', badge: '❌ 미선정', type: 'fail' }
+      ];
+      return { theme: 'contest', hint, presets };
     }
     if (isScholarship) {
-      return {
-        theme: 'scholarship',
-        hint: '💰 장학금·지원금 맞춤 결과',
-        presets: [
-          { text: '선정 (수혜)', badge: '🎉 선정', type: 'pass' },
-          { text: '추가 합격', badge: '✨ 추가합격', type: 'pass' },
-          { text: '심사 대기', badge: '⏳ 심사대기', type: 'wait' },
-          { text: '미선정/탈락', badge: '❌ 미선정', type: 'fail' }
-        ]
-      };
+      const hint = L === 'en' ? '💰 Scholarship & Grant Results' : L === 'zh' ? '💰 奖学金专属结果' : L === 'ja' ? '💰 奨学金・支援金の結果' : '💰 장학금·지원금 맞춤 결과';
+      const presets = L === 'en' ? [
+        { text: 'Awarded', badge: '🎉 Awarded', type: 'pass' },
+        { text: 'Waitlist Passed', badge: '✨ Waitlist', type: 'pass' },
+        { text: 'Pending Review', badge: '⏳ Pending', type: 'wait' },
+        { text: 'Not Selected', badge: '❌ Not Selected', type: 'fail' }
+      ] : L === 'zh' ? [
+        { text: '获批/入选', badge: '🎉 获批', type: 'pass' },
+        { text: '补录通过', badge: '✨ 补录', type: 'pass' },
+        { text: '审核中', badge: '⏳ 审核中', type: 'wait' },
+        { text: '未入选', badge: '❌ 未入选', type: 'fail' }
+      ] : L === 'ja' ? [
+        { text: '採用 (受給)', badge: '🎉 採用', type: 'pass' },
+        { text: '追加合格', badge: '✨ 追加合格', type: 'pass' },
+        { text: '審査待ち', badge: '⏳ 審査待ち', type: 'wait' },
+        { text: '不採択', badge: '❌ 不採択', type: 'fail' }
+      ] : [
+        { text: '선정 (수혜)', badge: '🎉 선정', type: 'pass' },
+        { text: '추가 합격', badge: '✨ 추가합격', type: 'pass' },
+        { text: '심사 대기', badge: '⏳ 심사대기', type: 'wait' },
+        { text: '미선정/탈락', badge: '❌ 미선정', type: 'fail' }
+      ];
+      return { theme: 'scholarship', hint, presets };
     }
     if (isEdu) {
-      return {
-        theme: 'edu',
-        hint: '📜 교육·활동 맞춤 결과',
-        presets: [
-          { text: '이수/수료', badge: '📜 수료', type: 'pass' },
-          { text: '참가 완료', badge: '✨ 참가완료', type: 'pass' },
-          { text: '우수 수료', badge: '🏆 우수수료', type: 'award' },
-          { text: '미이수', badge: '❌ 미이수', type: 'fail' }
-        ]
-      };
+      const hint = L === 'en' ? '📜 Education & Activity Results' : L === 'zh' ? '📜 培训与活动专属结果' : L === 'ja' ? '📜 教育・活動の結果' : '📜 교육·활동 맞춤 결과';
+      const presets = L === 'en' ? [
+        { text: 'Completed', badge: '📜 Completed', type: 'pass' },
+        { text: 'Participated', badge: '✨ Attended', type: 'pass' },
+        { text: 'Graduated with Honors', badge: '🏆 Honors', type: 'award' },
+        { text: 'Incomplete', badge: '❌ Incomplete', type: 'fail' }
+      ] : L === 'zh' ? [
+        { text: '结业/修完', badge: '📜 结业', type: 'pass' },
+        { text: '完成参加', badge: '✨ 参加', type: 'pass' },
+        { text: '优秀学员/结业', badge: '🏆 优秀结业', type: 'award' },
+        { text: '未修完', badge: '❌ 未修完', type: 'fail' }
+      ] : L === 'ja' ? [
+        { text: '修了', badge: '📜 修了', type: 'pass' },
+        { text: '参加完了', badge: '✨ 参加完了', type: 'pass' },
+        { text: '優秀修了', badge: '🏆 優秀修了', type: 'award' },
+        { text: '未修了', badge: '❌ 未修了', type: 'fail' }
+      ] : [
+        { text: '이수/수료', badge: '📜 수료', type: 'pass' },
+        { text: '참가 완료', badge: '✨ 참가완료', type: 'pass' },
+        { text: '우수 수료', badge: '🏆 우수수료', type: 'award' },
+        { text: '미이수', badge: '❌ 미이수', type: 'fail' }
+      ];
+      return { theme: 'edu', hint, presets };
     }
     if (isCareer) {
-      return {
-        theme: 'career',
-        hint: '💼 채용·대외활동 맞춤 결과',
-        presets: [
-          { text: '최종 합격', badge: '🎉 최종합격', type: 'pass' },
-          { text: '서류 합격', badge: '📄 서류합격', type: 'milestone' },
-          { text: '면접 대기', badge: '💬 면접대기', type: 'milestone' },
-          { text: '예비 번호', badge: '⏳ 예비', type: 'wait' },
-          { text: '불합격', badge: '❌ 불합격', type: 'fail' }
-        ]
-      };
-    }
-    return {
-      theme: 'general',
-      hint: '🎯 지원 결과 선택',
-      presets: [
-        { text: '합격', badge: '🎉 합격', type: 'pass' },
-        { text: '수상', badge: '🏆 수상', type: 'award' },
-        { text: '선정', badge: '🌟 선정', type: 'pass' },
-        { text: '수료', badge: '📜 수료', type: 'pass' },
+      const hint = L === 'en' ? '💼 Recruitment & Activity Results' : L === 'zh' ? '💼 招聘与校外活动结果' : L === 'ja' ? '💼 採用・活動の結果' : '💼 채용·대외활동 맞춤 결과';
+      const presets = L === 'en' ? [
+        { text: 'Final Offer', badge: '🎉 Final Offer', type: 'pass' },
+        { text: 'Resume Passed', badge: '📄 Resume Ok', type: 'milestone' },
+        { text: 'Interview Stage', badge: '💬 Interview', type: 'milestone' },
+        { text: 'Alternate List', badge: '⏳ Alternate', type: 'wait' },
+        { text: 'Not Accepted', badge: '❌ Not Accepted', type: 'fail' }
+      ] : L === 'zh' ? [
+        { text: '最终录取', badge: '🎉 最终录取', type: 'pass' },
+        { text: '简历初审通过', badge: '📄 初审通过', type: 'milestone' },
+        { text: '等待面试', badge: '💬 等待面试', type: 'milestone' },
+        { text: '候补名单', badge: '⏳ 候补', type: 'wait' },
+        { text: '未录取', badge: '❌ 未录取', type: 'fail' }
+      ] : L === 'ja' ? [
+        { text: '最終合格', badge: '🎉 最終合格', type: 'pass' },
+        { text: '書類選考通過', badge: '📄 書類通過', type: 'milestone' },
+        { text: '面接待ち', badge: '💬 面接待ち', type: 'milestone' },
+        { text: '補欠番号', badge: '⏳ 補欠', type: 'wait' },
+        { text: '不合格', badge: '❌ 不合格', type: 'fail' }
+      ] : [
+        { text: '최종 합격', badge: '🎉 최종합격', type: 'pass' },
+        { text: '서류 합격', badge: '📄 서류합격', type: 'milestone' },
+        { text: '면접 대기', badge: '💬 면접대기', type: 'milestone' },
+        { text: '예비 번호', badge: '⏳ 예비', type: 'wait' },
         { text: '불합격', badge: '❌ 불합격', type: 'fail' }
-      ]
-    };
+      ];
+      return { theme: 'career', hint, presets };
+    }
+    const hint = L === 'en' ? '🎯 Select Outcome' : L === 'zh' ? '🎯 选择申请结果' : L === 'ja' ? '🎯 応募結果を選択' : '🎯 지원 결과 선택';
+    const presets = L === 'en' ? [
+      { text: 'Passed', badge: '🎉 Passed', type: 'pass' },
+      { text: 'Awarded', badge: '🏆 Awarded', type: 'award' },
+      { text: 'Selected', badge: '🌟 Selected', type: 'pass' },
+      { text: 'Completed', badge: '📜 Completed', type: 'pass' },
+      { text: 'Not Selected', badge: '❌ Not Selected', type: 'fail' }
+    ] : L === 'zh' ? [
+      { text: '通过/录取', badge: '🎉 通过', type: 'pass' },
+      { text: '获奖', badge: '🏆 获奖', type: 'award' },
+      { text: '入选', badge: '🌟 入选', type: 'pass' },
+      { text: '结业', badge: '📜 结业', type: 'pass' },
+      { text: '未录取', badge: '❌ 未录取', type: 'fail' }
+    ] : L === 'ja' ? [
+      { text: '合格', badge: '🎉 合格', type: 'pass' },
+      { text: '受賞', badge: '🏆 受賞', type: 'award' },
+      { text: '採用', badge: '🌟 採用', type: 'pass' },
+      { text: '修了', badge: '📜 修了', type: 'pass' },
+      { text: '不合格', badge: '❌ 不合格', type: 'fail' }
+    ] : [
+      { text: '합격', badge: '🎉 합격', type: 'pass' },
+      { text: '수상', badge: '🏆 수상', type: 'award' },
+      { text: '선정', badge: '🌟 선정', type: 'pass' },
+      { text: '수료', badge: '📜 수료', type: 'pass' },
+      { text: '불합격', badge: '❌ 불합격', type: 'fail' }
+    ];
+    return { theme: 'general', hint, presets };
   }
 
   function renderResultSection(n, e, checks) {
@@ -2433,6 +2711,7 @@
     let timer = null;
     let isDragging = false;
     let hasMoved = false;
+    let justDragged = false;
     let startX = 0;
     let startY = 0;
     let ghostEl = null;
@@ -2585,12 +2864,13 @@
         }
         isDragging = false;
         hasMoved = false;
+        justDragged = true;
+        setTimeout(() => { justDragged = false; }, 300);
       } else {
-        // 드래그가 아니거나 이동량이 없는 단순 탭/클릭 -> 수업 수정 모달 오픈
+        // 드래그가 아니거나 이동량이 없는 단순 탭/클릭
         cleanupGhostAndTip();
         isDragging = false;
         hasMoved = false;
-        openClassDialog({ cls: c });
       }
     }
 
@@ -2617,6 +2897,16 @@
       window.addEventListener('pointermove', onPointerMove, { passive: false });
       window.addEventListener('pointerup', onPointerUp, { once: true });
       window.addEventListener('pointercancel', onPointerUp, { once: true });
+    });
+
+    btn.addEventListener('click', (ev) => {
+      ev.stopPropagation();
+      ev.preventDefault();
+      if (justDragged) {
+        justDragged = false;
+        return;
+      }
+      openClassDialog({ cls: c });
     });
   }
 
@@ -2661,17 +2951,31 @@
           const curr = dayTimed[i];
           const gap = L.toMinutes(curr.start) - L.toMinutes(prev.end);
           if (gap > 0 && gap <= 20) {
-            const route = CR.calculateRoute(prev.room, curr.room, gap);
+            const route = CR.calculateRoute(prev.room, curr.room, gap, state.lang);
             const prevEnd = L.toMinutes(prev.end);
             const isDanger = route.level === 'danger';
             const isWarn = route.level === 'warning';
             const badgeClass = isDanger ? 'is-danger' : isWarn ? 'is-warn' : 'is-safe';
             const icon = isDanger ? '🚨' : isWarn ? '⚠️' : '🚶';
+            const pillTitle = state.lang === 'en'
+              ? `${prev.room || 'Prev'} ➔ ${curr.room || 'Next'}: Walk ~${route.walkMin}m (${route.statusText}) - Click for 10-Min Hill Route Reader`
+              : state.lang === 'zh'
+              ? `${prev.room || '前节'} ➔ ${curr.room || '下节'}: 步行约${route.walkMin}分 (${route.statusText}) - 点击打开10分钟换教室路线判读`
+              : state.lang === 'ja'
+              ? `${prev.room || '前'} ➔ ${curr.room || '次'}: 徒歩約${route.walkMin}分 (${route.statusText}) - クリックして10分移動ルート確認`
+              : `${prev.room || '이전'} ➔ ${curr.room || '다음'}: 도보 ${route.walkMin}분 (${route.statusText}) - 클릭하여 10분 컷 판독기 열기`;
+            const walkText = state.lang === 'en'
+              ? `${route.walkMin}m${route.hasHillAlert ? ' Steep Hill' : ''}`
+              : state.lang === 'zh'
+              ? `${route.walkMin}分${route.hasHillAlert ? ' 陡坡' : ''}`
+              : state.lang === 'ja'
+              ? `${route.walkMin}分${route.hasHillAlert ? ' 急坂' : ''}`
+              : `${route.walkMin}분${route.hasHillAlert ? ' 헐떡고개' : ''}`;
             routePills.push(h('button', {
               type: 'button',
               class: 'tt-route-pill ' + badgeClass,
               style: `top:${pct(prevEnd)};height:${pct(gap + base)};`,
-              title: `${prev.room || '이전'} ➔ ${curr.room || '다음'}: 도보 ${route.walkMin}분 (${route.statusText}) - 클릭하여 10분 컷 판독기 열기`,
+              title: pillTitle,
               onclick: (ev) => {
                 ev.stopPropagation();
                 openRouteDialog(prev, curr, route);
@@ -2679,7 +2983,7 @@
             },
               h('span', { class: 'ttrp-inner' },
                 h('span', { class: 'ttrp-icon' }, icon),
-                h('span', { class: 'ttrp-text' }, `${route.walkMin}분${route.hasHillAlert ? ' 헐떡고개' : ''}`)
+                h('span', { class: 'ttrp-text' }, walkText)
               )
             ));
           }
@@ -2689,25 +2993,37 @@
       const blocks = dayTimed.map((c) => {
         const s = L.toMinutes(c.start);
         const e = L.toMinutes(c.end);
-        const name = c.name || t().classFallback;
+        const DI18n = (typeof window !== 'undefined' && window.GongjiDeptI18n) || root.GongjiDeptI18n;
+        const CR = (typeof window !== 'undefined' && window.GongjiCampusRoute) || root.GongjiCampusRoute;
+        const courseTitle = (DI18n && DI18n.formatCourse) ? DI18n.formatCourse(c.name, state.lang) : (c.name || t().classFallback);
+        const roomFormatted = (CR && CR.formatRoom) ? CR.formatRoom(c.room, state.lang) : (c.room || '');
         const prof = c.prof || c.p || '';
-        const profText = prof ? (prof.endsWith('교수') ? prof : `${prof} 교수`) : '';
+        const profText = prof ? (state.lang === 'en' ? `Prof. ${prof}` : state.lang === 'ja' || state.lang === 'zh' ? `${prof} 教授` : (prof.endsWith('교수') ? prof : `${prof} 교수`)) : '';
         const isClash = clashIds.has(c.id);
+        const dragTitle = state.lang === 'en' ? 'Press and hold or drag to move 30 mins'
+          : state.lang === 'zh' ? '长按或拖拽可按30分钟移动'
+          : state.lang === 'ja' ? '長押しまたはドラッグで30分移動'
+          : '길게 누르거나 드래그하여 이동';
+        const clashText = state.lang === 'en' ? '⚠️ Clash'
+          : state.lang === 'zh' ? '⚠️ 冲突'
+          : state.lang === 'ja' ? '⚠️ 重複'
+          : '⚠️ 겹침';
+        const clashAriaPrefix = isClash ? (state.lang === 'en' ? '[Clash] ' : state.lang === 'zh' ? '[时间冲突] ' : state.lang === 'ja' ? '[重複] ' : '[시간 겹침] ') : '';
         const btn = h('button', {
           type: 'button', class: 'tt-class' + (isClash ? ' has-clash' : ''),
           style: `top:${pct(s)};height:${pct(e - s + base)};--c:${classColor(c.name)}`,
-          'aria-label': `${isClash ? '[시간 겹침] ' : ''}${dayName(d)} ${c.start}~${c.end} ${name}${profText ? ` (${profText})` : ''}`,
+          'aria-label': `${clashAriaPrefix}${dayName(d)} ${c.start}~${c.end} ${courseTitle}${profText ? ` (${profText})` : ''}`,
           'data-class-id': c.id,
           'data-day': String(d),
           'data-start': String(s),
           'data-end': String(e)
         },
-          h('span', { class: 'tt-drag-handle', title: '길게 누르거나 드래그하여 이동', 'aria-hidden': 'true' }, '⋮⋮'),
-          isClash ? h('span', { class: 'tt-clash-badge' }, '⚠️ 겹침') : null,
-          h('span', { class: 'tt-name' }, name),
+          h('span', { class: 'tt-drag-handle', title: dragTitle, 'aria-hidden': 'true' }, '⋮⋮'),
+          isClash ? h('span', { class: 'tt-clash-badge' }, clashText) : null,
+          h('span', { class: 'tt-name' }, courseTitle),
           profText ? h('span', { class: 'tt-prof' }, profText) : null,
           h('span', { class: 'tt-time' }, `${c.start}~\u200b${c.end}`),
-          c.room ? h('span', { class: 'tt-room' }, c.room) : null);
+          roomFormatted ? h('span', { class: 'tt-room' }, roomFormatted) : null);
 
         attachClassDragHandler(btn, c, d, s, e, from, to, base, span, pct);
         return btn;
@@ -2718,6 +3034,7 @@
         class: 'tt-col' + (d === today ? ' is-today' : ''), 'data-day': String(d),
         // 빈 칸을 누르면 그 요일·그 시각(정각)으로 새 수업 넣기
         onclick: (ev) => {
+          if (ev.target.closest('.tt-class, .tt-route-pill, .tt-now')) return;
           const r = ev.currentTarget.getBoundingClientRect();
           const m = base + Math.floor(((ev.clientY - r.top) / r.height) * (to - from)) * 60;
           openClassDialog({ day: d, start: Math.max(TT_HOURS.first * 60, Math.min(m, TT_HOURS.last * 60 - 60)) });
@@ -2748,27 +3065,35 @@
       return;
     }
 
+    const T = t();
+    const CR = (typeof window !== 'undefined' && window.GongjiCampusRoute) || root.GongjiCampusRoute;
+    const elearnBadgeText = state.lang === 'en' ? 'Online' : state.lang === 'zh' ? '网课' : state.lang === 'ja' ? 'eラーニング' : '이러닝';
+
     const heading = h('div', { class: 'tt-elearn-head' },
       h('h3', { class: 'tt-elearn-title' },
-        '이러닝 · 시간 미지정 과목',
+        T.ttElearnTitle || '이러닝 · 시간 미지정 과목',
         h('span', { class: 'tt-elearn-count' }, `${elearn.length}`)
       ),
       h('button', {
         type: 'button',
         class: 'btn-add-elearn-icon',
-        title: '이러닝 과목 추가',
+        title: T.ttElearnAdd || '+ 추가',
         onclick: () => openClassDialog({ elearn: true })
-      }, '+ 추가')
+      }, T.ttElearnAdd || '+ 추가')
     );
 
     const items = elearn.map((c) => {
       const color = classColor(c.name);
+      const profText = (c.prof || c.p) ? (T.ttProfTitle ? T.ttProfTitle(c.prof || c.p) : `${c.prof || c.p} 교수`) : '';
+      const roomText = c.room && c.room !== '이러닝'
+        ? ((CR && CR.formatRoom) ? CR.formatRoom(c.room, state.lang) : c.room)
+        : (T.ttElearnRemote || '원격 · 정해진 수업 시간 없음');
       return h('div', {
         class: 'tt-elearn-card',
         style: `--c:${color}`,
         tabindex: 0,
         role: 'button',
-        'aria-label': `${c.name} 이러닝 수업 수정`,
+        'aria-label': `${c.name} ${elearnBadgeText}`,
         onclick: () => openClassDialog({ cls: c }),
         onkeydown: (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); openClassDialog({ cls: c }); } }
       },
@@ -2776,18 +3101,16 @@
         h('div', { class: 'tt-elearn-info' },
           h('div', { class: 'tt-elearn-name-row' },
             h('strong', { class: 'tt-elearn-name' }, c.name || t().classFallback),
-            (c.prof || c.p) ? h('span', { class: 'tt-elearn-prof' }, `${c.prof || c.p} 교수`) : null,
-            h('span', { class: 'tt-elearn-badge' }, '이러닝')
+            profText ? h('span', { class: 'tt-elearn-prof' }, profText) : null,
+            h('span', { class: 'tt-elearn-badge' }, elearnBadgeText)
           ),
-          c.room && c.room !== '이러닝'
-            ? h('span', { class: 'tt-elearn-room' }, c.room)
-            : h('span', { class: 'tt-elearn-sub' }, '원격 · 정해진 수업 시간 없음')
+          h('span', { class: c.room && c.room !== '이러닝' ? 'tt-elearn-room' : 'tt-elearn-sub' }, roomText)
         ),
         h('button', {
           type: 'button',
           class: 'tt-elearn-del',
-          title: `${c.name} 삭제`,
-          'aria-label': `${c.name} 삭제`,
+          title: `${c.name} ×`,
+          'aria-label': `${c.name} ×`,
           onclick: (e) => {
             e.stopPropagation();
             const before = state.timetable;
@@ -2821,8 +3144,7 @@
     fill(box, h('h3', null, t().calendarTitle), h('ul', { class: 'cal-list' }, items.map((x) =>
       h('li', null,
         h('span', { class: 'cal-when' }, x.start === x.end ? fmt(x.start) : `${fmt(x.start)} ~ ${fmt(x.end)}`),
-        h('span', { class: 'cal-what' }, tr(x.title)))),
-      h('p', { class: 'fine' }, t().calendarSource(cal.generatedAt))));
+        h('span', { class: 'cal-what' }, tr(x.title))))));
   }
 
   function timetableChanged() {
@@ -3140,12 +3462,23 @@
     }
 
     box.hidden = false;
+    const DI18n = (typeof window !== 'undefined' && window.GongjiDeptI18n) || root.GongjiDeptI18n;
     chipsBox.replaceChildren(...top.map(({ c, slot }) => {
-      const meta = [c.k, c.c ? `${c.c}학점` : '', c.p ? `${c.p} 교수` : ''].filter(Boolean).join(' · ');
+      const localizedName = (DI18n && DI18n.formatCourse) ? DI18n.formatCourse(c.n, state.lang) : c.n;
+      const kindLocalized = state.lang === 'en'
+        ? (c.k === '전필' ? 'Major Req' : c.k === '전선' ? 'Major Elect' : c.k === '기초' ? 'Basic' : c.k === '심화' ? 'Advanced' : c.k === '소양' ? 'Gen Ed' : c.k)
+        : state.lang === 'zh'
+        ? (c.k === '전필' ? '专业必修' : c.k === '전선' ? '专业选修' : c.k === '기초' ? '基础' : c.k === '심화' ? '深化' : c.k === '소양' ? '通识' : c.k)
+        : state.lang === 'ja'
+        ? (c.k === '전필' ? '専攻必修' : c.k === '전선' ? '専攻選択' : c.k === '기초' ? '基礎' : c.k === '심화' ? '深化' : c.k === '소양' ? '教養' : c.k)
+        : c.k;
+      const creditUnit = state.lang === 'en' ? ' cr' : state.lang === 'zh' ? '学分' : state.lang === 'ja' ? '単位' : '학점';
+      const profText = c.p ? (state.lang === 'en' ? `Prof. ${c.p}` : state.lang === 'ja' || state.lang === 'zh' ? `${c.p} 教授` : `${c.p} 교수`) : '';
+      const meta = [kindLocalized, c.c ? `${c.c}${creditUnit}` : '', profText].filter(Boolean).join(' · ');
       return h('button', {
         type: 'button',
         class: 'cqs-chip' + (c.k === '전필' ? ' is-major-req' : ''),
-        title: `${c.n} (${c.d || ''} · ${meta})`,
+        title: `${localizedName} (${c.d || ''} · ${meta})`,
         onclick: () => {
           $('#class-name').value = c.n;
           checkTransferredCourseWarning(c.n);
@@ -3159,7 +3492,7 @@
           box.hidden = true;
         }
       },
-        h('span', { class: 'cqs-name' }, c.n),
+        h('span', { class: 'cqs-name' }, localizedName),
         h('span', { class: 'cqs-meta' }, meta)
       );
     }));
@@ -3457,11 +3790,47 @@
     if (!dlg) return;
     const body = $('#route-dialog-body');
     if (!body) return;
+    const T = t();
 
     const isDanger = route.level === 'danger';
     const isWarn = route.level === 'warning';
     const levelClass = isDanger ? 'is-danger' : isWarn ? 'is-warn' : 'is-safe';
     const levelIcon = isDanger ? '🚨' : isWarn ? '⚠️' : '🟢';
+
+    const DI18n = (typeof window !== 'undefined' && window.GongjiDeptI18n) || root.GongjiDeptI18n;
+    const CR = (typeof window !== 'undefined' && window.GongjiCampusRoute) || root.GongjiCampusRoute;
+    const nameA = (DI18n && DI18n.formatCourse) ? DI18n.formatCourse(clsA.name, state.lang) : (clsA.name || (state.lang === 'en' ? 'Course A' : state.lang === 'zh' ? '课程A' : state.lang === 'ja' ? '授業A' : '과목A'));
+    const roomA = (CR && CR.formatRoom) ? CR.formatRoom(clsA.room, state.lang) : (clsA.room || (state.lang === 'en' ? 'Classroom TBA' : state.lang === 'zh' ? '教室待定' : state.lang === 'ja' ? '教室未定' : '강의실 미지정'));
+    const nameB = (DI18n && DI18n.formatCourse) ? DI18n.formatCourse(clsB.name, state.lang) : (clsB.name || (state.lang === 'en' ? 'Course B' : state.lang === 'zh' ? '课程B' : state.lang === 'ja' ? '授業B' : '과목B'));
+    const roomB = (CR && CR.formatRoom) ? CR.formatRoom(clsB.room, state.lang) : (clsB.room || (state.lang === 'en' ? 'Classroom TBA' : state.lang === 'zh' ? '教室待定' : state.lang === 'ja' ? '教室未定' : '강의실 미지정'));
+
+    const bldgA = (CR && CR.formatRoom) ? CR.formatRoom(route.fromBuilding, state.lang) : route.fromBuilding;
+    const bldgB = (CR && CR.formatRoom) ? CR.formatRoom(route.toBuilding, state.lang) : route.toBuilding;
+
+    const elevDiffText = route.elevationDiff > 0
+      ? (T.rdClimbUp ? T.rdClimbUp(route.elevationDiff) : `+${route.elevationDiff}m 등판`)
+      : (T.rdFlatDown || '평지/내리막');
+
+    const pathDesc = route.hasHillAlert
+      ? (state.lang === 'en' ? '⚠️ Steep Hill Course (Heavy Incline)'
+        : state.lang === 'zh' ? '⚠️ 陡坡爬坡路线 (喘息坡警报)'
+        : state.lang === 'ja' ? '⚠️ 息切れ坂・急勾配コース'
+        : '⚠️ 헐떡고개 급경사로 코스')
+      : (state.lang === 'en' ? '🚶 Gentle Footpath Walk'
+        : state.lang === 'zh' ? '🚶 平缓步道通行'
+        : state.lang === 'ja' ? '🚶 緩やかな歩道移動'
+        : '🚶 완만 보도 이동');
+
+    const elevA = (route.fromBuilding === '국제교육관')
+      ? (T.rdElevatorNone || '❌ 엘리베이터 없음 (전 층 계단 보행 필수)')
+      : (T.rdElevatorOk || '⭕ 엘리베이터 운행 (쉬는시간 혼잡 가능)');
+    const elevB = (route.toBuilding === '국제교육관')
+      ? (T.rdElevatorNone || '❌ 엘리베이터 없음 (전 층 계단 보행 필수)')
+      : (T.rdElevatorOk || '⭕ 엘리베이터 운행 (쉬는시간 혼잡 가능)');
+
+    const endStr = state.lang === 'en' ? `${clsA.end} End` : state.lang === 'zh' ? `${clsA.end} 下课` : state.lang === 'ja' ? `${clsA.end} 終了` : `${clsA.end} 종료`;
+    const startStr = state.lang === 'en' ? `${clsB.start} Start` : state.lang === 'zh' ? `${clsB.start} 上课` : state.lang === 'ja' ? `${clsB.start} 開始` : `${clsB.start} 시작`;
+    const shortcutPrefix = state.lang === 'en' ? '💡 Shortcut Tip: ' : state.lang === 'zh' ? '💡 捷径提示: ' : state.lang === 'ja' ? '💡 近道ヒント: ' : '💡 지름길 팁: ';
 
     fill(body,
       h('div', { class: 'rd-banner ' + levelClass },
@@ -3473,51 +3842,51 @@
       ),
       h('div', { class: 'rd-metrics-grid' },
         h('div', { class: 'rd-metric-card' },
-          h('span', { class: 'rdm-label' }, '쉬는 시간'),
-          h('strong', { class: 'rdm-val' }, `${route.breakMin}분`)
+          h('span', { class: 'rdm-label' }, T.rdBreakTime || '쉬는 시간'),
+          h('strong', { class: 'rdm-val' }, `${route.breakMin}${state.lang === 'en' ? 'm' : '분'}`)
         ),
         h('div', { class: 'rd-metric-card' },
-          h('span', { class: 'rdm-label' }, '예상 도보 소요'),
-          h('strong', { class: 'rdm-val' + (isDanger ? ' text-red' : isWarn ? ' text-amber' : ' text-green') }, `${route.walkMin}분`)
+          h('span', { class: 'rdm-label' }, T.rdEstWalk || '예상 도보 소요'),
+          h('strong', { class: 'rdm-val' + (isDanger ? ' text-red' : isWarn ? ' text-amber' : ' text-green') }, `${route.walkMin}${state.lang === 'en' ? 'm' : '분'}`)
         ),
         h('div', { class: 'rd-metric-card' },
-          h('span', { class: 'rdm-label' }, '이동 거리 / 고저차'),
-          h('strong', { class: 'rdm-val' }, `${route.distM}m · ${route.elevationDiff > 0 ? '+' + route.elevationDiff + 'm 등판' : '평지/내리막'}`)
+          h('span', { class: 'rdm-label' }, T.rdDistElev || '이동 거리 / 고저차'),
+          h('strong', { class: 'rdm-val' }, `${route.distM}m · ${elevDiffText}`)
         ),
         h('div', { class: 'rd-metric-card' },
-          h('span', { class: 'rdm-label' }, '10분 컷 잔여 여유'),
-          h('strong', { class: 'rdm-val' + (route.remainMin <= 1 ? ' text-red' : ' text-green') }, `${route.remainMin}분`)
+          h('span', { class: 'rdm-label' }, T.rdBuffer || '10분 컷 잔여 여유'),
+          h('strong', { class: 'rdm-val' + (route.remainMin <= 1 ? ' text-red' : ' text-green') }, `${route.remainMin}${state.lang === 'en' ? 'm' : '분'}`)
         )
       ),
       h('div', { class: 'rd-timeline' },
         h('div', { class: 'rdt-step start' },
-          h('span', { class: 'rdt-badge' }, '이전 수업'),
+          h('span', { class: 'rdt-badge' }, T.rdPrevClass || '이전 수업'),
           h('div', { class: 'rdt-info' },
-            h('strong', null, `${clsA.name || '과목A'} (${clsA.room || '강의실 미지정'})`),
-            h('span', { class: 'fine muted' }, `${route.fromBuilding} · ${clsA.end} 종료`)
+            h('strong', null, `${nameA} (${roomA})`),
+            h('span', { class: 'fine muted' }, `${bldgA} · ${endStr}`)
           )
         ),
         h('div', { class: 'rdt-step path ' + levelClass },
-          h('span', { class: 'rdt-badge path' }, '이동 동선'),
+          h('span', { class: 'rdt-badge path' }, T.rdRoutePath || '이동 동선'),
           h('div', { class: 'rdt-info' },
-            h('strong', null, route.hasHillAlert ? '⚠️ 헐떡고개 급경사로 코스' : '🚶 완만 보도 이동'),
+            h('strong', null, pathDesc),
             route.hillReason ? h('p', { class: 'rdt-hill-reason' }, route.hillReason) : null,
-            route.shortcut ? h('p', { class: 'rdt-shortcut-box' }, `💡 지름길 팁: ${route.shortcut}`) : null
+            route.shortcut ? h('p', { class: 'rdt-shortcut-box' }, `${shortcutPrefix}${route.shortcut}`) : null
           )
         ),
         h('div', { class: 'rdt-step dest' },
-          h('span', { class: 'rdt-badge' }, '다음 수업'),
+          h('span', { class: 'rdt-badge' }, T.rdNextClass || '다음 수업'),
           h('div', { class: 'rdt-info' },
-            h('strong', null, `${clsB.name || '과목B'} (${clsB.room || '강의실 미지정'})`),
-            h('span', { class: 'fine muted' }, `${route.toBuilding} · ${clsB.start} 시작`)
+            h('strong', null, `${nameB} (${roomB})`),
+            h('span', { class: 'fine muted' }, `${bldgB} · ${startStr}`)
           )
         )
       ),
       h('div', { class: 'rd-building-notes' },
-        h('h4', { class: 'rdn-title' }, '🏢 건물별 계단 & 엘리베이터 특성'),
+        h('h4', { class: 'rdn-title' }, T.rdBuildingNotes || '🏢 건물별 계단 & 엘리베이터 특성'),
         h('ul', { class: 'rdn-list' },
-          h('li', null, `📍 ${route.fromBuilding}: ${route.fromBuilding === '국제교육관' ? '❌ 엘리베이터 없음 (전 층 계단 보행 필수)' : '⭕ 엘리베이터 운행 (쉬는시간 혼잡 가능)'}`),
-          h('li', null, `📍 ${route.toBuilding}: ${route.toBuilding === '국제교육관' ? '❌ 엘리베이터 없음 (전 층 계단 보행 필수)' : '⭕ 엘리베이터 운행 (쉬는시간 혼잡 가능)'}`)
+          h('li', null, `📍 ${bldgA}: ${elevA}`),
+          h('li', null, `📍 ${bldgB}: ${elevB}`)
         )
       )
     );
@@ -3531,23 +3900,33 @@
     const isWarn = route.level === 'warning';
     const badgeClass = isDanger ? 'is-danger' : isWarn ? 'is-warn' : 'is-safe';
     const icon = isDanger ? '🚨' : isWarn ? '⚠️' : '🟢';
+    const T = t();
+    const DI18n = (typeof window !== 'undefined' && window.GongjiDeptI18n) || root.GongjiDeptI18n;
+    const CR = (typeof window !== 'undefined' && window.GongjiCampusRoute) || root.GongjiCampusRoute;
+    const roomA = (CR && CR.formatRoom) ? CR.formatRoom(prev.room, state.lang) : (prev.room || (state.lang === 'en' ? 'Classroom A' : '강의실A'));
+    const roomB = (CR && CR.formatRoom) ? CR.formatRoom(next.room, state.lang) : (next.room || (state.lang === 'en' ? 'Classroom B' : '강의실B'));
+    const timeMeta = T.rdBreakWalkMeta ? T.rdBreakWalkMeta(gap, route.walkMin) : `쉬는시간 ${gap}분 · 도보 ${route.walkMin}분`;
+    const btnTitle = state.lang === 'en' ? 'Click to inspect consecutive route and steep hill advice'
+      : state.lang === 'zh' ? '点击查看连堂移动路线及爬坡建议'
+      : state.lang === 'ja' ? 'クリックして連講移動ルートと息切れ坂のアドバイスを確認'
+      : '클릭하여 연강 이동 동선 및 헐떡고개 상세 보기';
 
     return h('li', {
       class: 'home-row tc-route-item ' + badgeClass,
       role: 'button',
       tabindex: 0,
-      title: '클릭하여 연강 이동 동선 및 헐떡고개 상세 보기',
+      title: btnTitle,
       onclick: () => openRouteDialog(prev, next, route),
       onkeydown: (ev) => { if (ev.key === 'Enter' || ev.key === ' ') { ev.preventDefault(); openRouteDialog(prev, next, route); } }
     },
       h('div', { class: 'tc-route-head' },
         h('span', { class: 'tc-route-badge ' + badgeClass }, `${icon} ${route.statusText}`),
-        h('span', { class: 'tc-route-time-pill' }, `쉬는시간 ${gap}분 · 도보 ${route.walkMin}분`)
+        h('span', { class: 'tc-route-time-pill' }, timeMeta)
       ),
       h('div', { class: 'tc-route-body' },
-        h('span', { class: 'tc-route-path' }, `${prev.room || '강의실A'} ➔ ${next.room || '강의실B'}`),
-        route.hasHillAlert ? h('span', { class: 'tc-route-hill-warning' }, '⚠️ 헐떡고개') : null,
-        h('span', { class: 'tc-route-arrow' }, '동선 판독 ↗')
+        h('span', { class: 'tc-route-path' }, `${roomA} ➔ ${roomB}`),
+        route.hasHillAlert ? h('span', { class: 'tc-route-hill-warning' }, T.rdHillWarningBadge || '⚠️ 헐떡고개') : null,
+        h('span', { class: 'tc-route-arrow' }, T.rdRouteCheckBtn || '동선 판독 ↗')
       )
     );
   }
@@ -3557,17 +3936,28 @@
     const CR = (typeof window !== 'undefined' && window.GongjiCampusRoute) || root.GongjiCampusRoute;
     if (!CR || !CR.getTransitRecommendation || !today || !today.length) return null;
 
+    const T = t();
     const lastClass = today[today.length - 1];
     let selectedDest = 'shuttle';
     try { selectedDest = localStorage.getItem('gongji:transitDest') || 'shuttle'; } catch {}
-    const rec = CR.getTransitRecommendation(lastClass.end, lastClass.room, selectedDest);
+    const rec = CR.getTransitRecommendation(lastClass.end, lastClass.room, selectedDest, state.lang);
     if (!rec) return null;
 
+    const DI18n = (typeof window !== 'undefined' && window.GongjiDeptI18n) || root.GongjiDeptI18n;
+    const localizedClassName = (DI18n && DI18n.formatCourse) ? DI18n.formatCourse(lastClass.name, state.lang) : lastClass.name;
+    const localizedBldg = (CR && CR.formatRoom) ? CR.formatRoom(rec.fromBuilding || lastClass.room, state.lang) : (rec.fromBuilding || '교내');
+
     const destinations = [
-      { id: 'shuttle', label: '🚌 교내 셔틀' },
-      { id: 'ktx', label: '🚄 충주역 KTX' },
-      { id: 'seoul', label: '🏙️ 동서울/강남' },
-      { id: 'suwon', label: '🚌 수원/경기' }
+      { id: 'shuttle', icon: '🚌', names: { ko: '교내 셔틀', en: 'Shuttle', zh: '校内校车', ja: '校内シャトル' } },
+      { id: 'ktx', icon: '🚅', names: { ko: '충주역 KTX', en: 'KTX Train', zh: '忠州站KTX', ja: '忠州駅KTX' } },
+      { id: 'downtown', icon: '🛍️', names: { ko: '충주 시내', en: 'Downtown', zh: '忠州市区', ja: '忠州市内' } },
+      { id: 'seoul', icon: '🏙️', names: { ko: '동서울/강남', en: 'Seoul', zh: '首尔', ja: '東ソウル/江南' } },
+      { id: 'suwon', icon: '🛣️', names: { ko: '수원/경기', en: 'Suwon', zh: '水原/京畿', ja: '水原/京畿' } },
+      { id: 'cheongju', icon: '🏬', names: { ko: '청주/충청', en: 'Cheongju', zh: '清州', ja: '清州' } },
+      { id: 'daejeon', icon: '🏢', names: { ko: '대전', en: 'Daejeon', zh: '大田', ja: '大田' } },
+      { id: 'incheon', icon: '🌊', names: { ko: '인천/안산', en: 'Incheon', zh: '仁川/安山', ja: '仁川/安山' } },
+      { id: 'wonju', icon: '⛰️', names: { ko: '원주/강원', en: 'Wonju', zh: '原州', ja: '原州' } },
+      { id: 'commuter', icon: '🚌', names: { ko: '금요 통학버스', en: 'Friday Bus', zh: '周五专车', ja: '金曜通学バス' } }
     ];
 
     const destChips = destinations.map((d) => h('button', {
@@ -3578,56 +3968,71 @@
         try { localStorage.setItem('gongji:transitDest', d.id); } catch {}
         renderHome();
       }
-    }, d.label));
+    }, `${d.icon} ${(d.names && d.names[state.lang]) || d.names.ko}`));
 
     let scheduleContent = null;
     if (selectedDest === 'ktx' && rec.bestMatch) {
       const bm = rec.bestMatch;
       scheduleContent = h('div', { class: 'tc-transit-detail' },
         h('div', { class: 'tct-step-row' },
-          h('span', { class: 'tct-step-badge' }, '1단계 셔틀'),
-          h('strong', null, `${bm.shuttleDep} 대운동장 셔틀`),
-          h('span', { class: 'tct-sub' }, `(도보 ${rec.walkMin}분 · 정류장 ${bm.waitMinAtStop}분 대기)`)
+          h('span', { class: 'tct-step-badge' }, T.ttStepShuttle || '1단계 셔틀'),
+          h('strong', null, `${bm.shuttleDep} ${T.ttStepShuttle || '대운동장 셔틀'}`),
+          h('span', { class: 'tct-sub' }, `(${T.ttWalkWait ? T.ttWalkWait(rec.walkMin, bm.waitMinAtStop) : `도보 ${rec.walkMin}분 · 정류장 ${bm.waitMinAtStop}분 대기`})`)
         ),
         h('div', { class: 'tct-step-row' },
-          h('span', { class: 'tct-step-badge' }, '2단계 환승'),
-          h('strong', null, `${bm.stationArrive} 충주역 도착`),
-          h('span', { class: 'tct-sub' }, `(환승 여유 ${bm.waitMinAtStation}분)`)
+          h('span', { class: 'tct-step-badge' }, T.ttStepTransfer || '2단계 환승'),
+          h('strong', null, `${bm.stationArrive} ${state.lang === 'en' ? 'Arrives Chungju Sta.' : state.lang === 'zh' ? '到达忠州站' : state.lang === 'ja' ? '忠州駅到着' : '충주역 도착'}`),
+          h('span', { class: 'tct-sub' }, `(${T.ttTransferWait ? T.ttTransferWait(bm.waitMinAtStation) : `환승 여유 ${bm.waitMinAtStation}분`})`)
         ),
         h('div', { class: 'tct-step-row is-target' },
-          h('span', { class: 'tct-step-badge ktx' }, '3단계 KTX'),
-          h('strong', null, `${bm.ktx.dep} ${bm.ktx.train} 탑승`),
-          h('span', { class: 'tct-highlight' }, `판교역 ${bm.arrPangyo} 도착 (약 50분 소요)`)
+          h('span', { class: 'tct-step-badge ktx' }, T.ttStepKtx || '3단계 KTX'),
+          h('strong', null, `${bm.ktx.dep} ${bm.ktx.train}`),
+          h('span', { class: 'tct-highlight' }, `${state.lang === 'en' ? `Arrives Pangyo ${bm.arrPangyo} (~50m)` : state.lang === 'zh' ? `到达板桥站 ${bm.arrPangyo} (约50分)` : state.lang === 'ja' ? `板橋駅 ${bm.arrPangyo} 到着 (約50分)` : `판교역 ${bm.arrPangyo} 도착 (약 50분 소요)`}`)
         )
       );
-    } else if ((selectedDest === 'seoul' || selectedDest === 'suwon') && rec.bestMatch) {
+    } else if (selectedDest === 'commuter' && rec.bestMatch) {
+      const bm = rec.bestMatch;
+      scheduleContent = h('div', { class: 'tc-transit-detail' },
+        h('div', { class: 'tct-step-row is-target' },
+          h('span', { class: 'tct-step-badge commuter' }, T.ttStepRide || '직통 탑승'),
+          h('strong', null, `${bm.shuttleDep} ${bm.destName}`),
+          h('span', { class: 'tct-sub' }, `(${bm.spot} · ${bm.note})`)
+        ),
+        h('div', { class: 'tct-route-flow' },
+          state.lang === 'en' ? 'Main Stadium ➔ Direct to Seoul / Suwon / Ilsan / Bucheon'
+            : state.lang === 'zh' ? '大运动场前 ➔ 直达 首尔 / 水原 / 一山 / 富川'
+            : state.lang === 'ja' ? '大運動場前 ➔ ソウル / 水原 / 一山 / 富川 直通'
+            : '대운동장 앞 ➔ 서울 / 수원 / 일산 / 부천 직통 운행'
+        )
+      );
+    } else if (rec.type === 'terminal' && rec.bestMatch) {
       const bm = rec.bestMatch;
       scheduleContent = h('div', { class: 'tc-transit-detail' },
         h('div', { class: 'tct-step-row' },
-          h('span', { class: 'tct-step-badge' }, '1단계 셔틀'),
-          h('strong', null, `${bm.shuttleDep} 대운동장 셔틀`),
-          h('span', { class: 'tct-sub' }, `(충주터미널 ${bm.termArrive} 도착)`)
+          h('span', { class: 'tct-step-badge' }, T.ttStepShuttle || '1단계 셔틀'),
+          h('strong', null, `${bm.shuttleDep} ${T.ttStepShuttle || '대운동장 셔틀'}`),
+          h('span', { class: 'tct-sub' }, `(${state.lang === 'en' ? `Arrives Terminal ${bm.termArrive}` : state.lang === 'zh' ? `${bm.termArrive} 到达客运站` : state.lang === 'ja' ? `ターミナル ${bm.termArrive} 到着` : `충주터미널 ${bm.termArrive} 도착`})`)
         ),
         h('div', { class: 'tct-step-row is-target' },
-          h('span', { class: 'tct-step-badge bus' }, '2단계 시외버스'),
-          h('strong', null, `${bm.estBusTime} ${bm.busInfo.dest}행 직통`),
-          h('span', { class: 'tct-highlight' }, `배차 ${bm.busInfo.intervalMin}분 간격 · 요금 ${bm.busInfo.fare}`)
+          h('span', { class: 'tct-step-badge bus' }, T.ttStepBus || '2단계 시외버스'),
+          h('strong', null, `${bm.estBusTime} ${bm.busInfo.dest}`),
+          h('span', { class: 'tct-highlight' }, T.ttBusMetaFmt ? T.ttBusMetaFmt(bm.busInfo.intervalMin, bm.busInfo.fare) : `배차 ${bm.busInfo.intervalMin}분 간격 · 요금 ${bm.busInfo.fare}`)
         )
       );
     } else if (rec.bestMatch) {
       const bm = rec.bestMatch;
       scheduleContent = h('div', { class: 'tc-transit-detail' },
         h('div', { class: 'tct-step-row is-target' },
-          h('span', { class: 'tct-step-badge shuttle' }, '탑승 추천'),
-          h('strong', null, `${bm.shuttleDep} 셔틀버스 출발 (대운동장)`),
-          h('span', { class: 'tct-sub' }, `도보 ${rec.walkMin}분 소요`)
+          h('span', { class: 'tct-step-badge shuttle' }, T.ttStepRide || '탑승 추천'),
+          h('strong', null, `${bm.shuttleDep} ${state.lang === 'en' ? 'Shuttle Bus Departs' : state.lang === 'zh' ? '校车发车 (大运动场)' : state.lang === 'ja' ? 'シャトルバス出発 (大運動場)' : '셔틀버스 출발 (대운동장)'}`),
+          h('span', { class: 'tct-sub' }, `${state.lang === 'en' ? `Walk ${rec.walkMin}m` : state.lang === 'zh' ? `步行约${rec.walkMin}分钟` : state.lang === 'ja' ? `徒歩約${rec.walkMin}分` : `도보 ${rec.walkMin}분 소요`}`)
         ),
         h('div', { class: 'tct-route-flow' },
-          `대운동장(${bm.shuttleDep}) ➔ 충주터미널(${bm.termArrive}) ➔ 충주역(${bm.stationArrive})`
+          `${state.lang === 'en' ? 'Main Stadium' : state.lang === 'zh' ? '大运动场' : state.lang === 'ja' ? '大運動場' : '대운동장'}(${bm.shuttleDep}) ➔ ${state.lang === 'en' ? 'Terminal' : state.lang === 'zh' ? '客运站' : state.lang === 'ja' ? 'ターミナル' : '충주터미널'}(${bm.termArrive}) ➔ ${state.lang === 'en' ? 'Chungju Sta.' : state.lang === 'zh' ? '忠州站' : state.lang === 'ja' ? '忠州駅' : '충주역'}(${bm.stationArrive})`
         )
       );
     } else {
-      scheduleContent = h('p', { class: 'muted fine' }, '오늘 남은 셔틀버스 운행이 종료되었습니다.');
+      scheduleContent = h('p', { class: 'muted fine' }, rec.tips || '오늘 남은 셔틀버스 운행이 종료되었습니다.');
     }
 
     return h('div', { class: 'tc-transit-box' },
@@ -3635,8 +4040,8 @@
         h('div', { class: 'tct-title-group' },
           h('span', { class: 'tct-icon' }, '🚌'),
           h('div', null,
-            h('strong', { class: 'tct-title' }, '시간표 연동 하교 & 귀가 알리미'),
-            h('span', { class: 'tct-subtitle' }, `오늘 마지막 수업: ${lastClass.name} (${lastClass.end} 종료 · ${rec.fromBuilding || '교내'})`)
+            h('strong', { class: 'tct-title' }, T.ttTransitTitle || '시간표 연동 하교 & 귀가 알리미'),
+            h('span', { class: 'tct-subtitle' }, T.ttTransitSubtitle ? T.ttTransitSubtitle(localizedClassName, lastClass.end, localizedBldg) : `오늘 마지막 수업: ${localizedClassName} (${lastClass.end} 종료 · ${localizedBldg})`)
           )
         )
       ),
@@ -3680,7 +4085,7 @@
           // [1순위: 연강 이동 동선 & 헐떡고개 10분 컷 판독기]
           const CR = (typeof window !== 'undefined' && window.GongjiCampusRoute) || root.GongjiCampusRoute;
           if (CR && CR.calculateRoute) {
-            const route = CR.calculateRoute(prev.room, c.room, gap);
+            const route = CR.calculateRoute(prev.room, c.room, gap, state.lang);
             rows.push(renderConsecutiveRouteItem(prev, c, route, gap));
           }
         }
@@ -3692,7 +4097,8 @@
       const CR = (typeof window !== 'undefined' && window.GongjiCampusRoute) || root.GongjiCampusRoute;
       const courseTitle = (DI18n && DI18n.formatCourse) ? DI18n.formatCourse(c.name, state.lang) : (c.name || T.classFallback);
       const roomFormatted = (CR && CR.formatRoom) ? CR.formatRoom(c.room, state.lang) : (c.room || '');
-      const meta = [prof ? `${prof} 교수` : '', roomFormatted].filter(Boolean).join(' · ');
+      const profText = prof ? (state.lang === 'en' ? `Prof. ${prof}` : state.lang === 'ja' || state.lang === 'zh' ? `${prof} 教授` : `${prof} 교수`) : '';
+      const meta = [profText, roomFormatted].filter(Boolean).join(' · ');
       rows.push(h('li', { class: 'home-row tc-row' + (st ? ' ' + st : '') },
         h('span', { class: 'tc-time' }, `${c.start}–${c.end}`),
         h('span', { class: 'tc-name' }, courseTitle, meta ? h('small', null, meta) : null),
@@ -3746,25 +4152,38 @@
       const remMin = toMin(ongoing.end) - cur;
       const op = ongoing.prof || ongoing.p || '';
       const onName = (DI18n && DI18n.formatCourse) ? DI18n.formatCourse(ongoing.name, state.lang) : ongoing.name;
-      const onRoom = (CR && CR.formatRoom) ? CR.formatRoom(ongoing.room, state.lang) : (ongoing.room || '강의실 미지정');
+      const onRoom = (CR && CR.formatRoom) ? CR.formatRoom(ongoing.room, state.lang) : (ongoing.room || (state.lang === 'en' ? 'Classroom TBA' : state.lang === 'zh' ? '教室待定' : state.lang === 'ja' ? '教室未定' : '강의실 미지정'));
+      const remStr = state.lang === 'en' ? `${remMin}m left`
+        : state.lang === 'zh' ? `剩余 ${remMin}分钟`
+        : state.lang === 'ja' ? `残り ${remMin}分`
+        : `${remMin}분 남음`;
+      const curClassTitle = state.lang === 'en' ? `In Class (${remStr})`
+        : state.lang === 'zh' ? `正在上课 (${remStr})`
+        : state.lang === 'ja' ? `授業中 (${remStr})`
+        : `지금 수업 중 (${remStr})`;
+      const profOpText = op ? ` (${T.ttProfTitle ? T.ttProfTitle(op) : `${op} 교수`})` : '';
       liveBanner = h('div', { class: 'tc-live-banner is-ongoing' },
         h('span', { class: 'tcl-pulse-dot red' }),
         h('div', { class: 'tcl-info' },
-          h('strong', { class: 'tcl-title' }, `지금 수업 중 (${remMin}분 남음)`),
-          h('span', { class: 'tcl-sub' }, `${onName} · ${onRoom}${op ? ` (${op} 교수)` : ''}`)
+          h('strong', { class: 'tcl-title' }, curClassTitle),
+          h('span', { class: 'tcl-sub' }, `${onName} · ${onRoom}${profOpText}`)
         )
       );
     } else if (upcoming) {
       const waitMin = toMin(upcoming.start) - cur;
       const up = upcoming.prof || upcoming.p || '';
-      const waitStr = waitMin >= 60 ? `${Math.floor(waitMin / 60)}시간 ${waitMin % 60}분 전` : `${waitMin}분 전`;
+      const hWait = Math.floor(waitMin / 60);
+      const mWait = waitMin % 60;
+      const waitStr = T.ttWaitTime ? T.ttWaitTime(hWait, mWait) : (hWait > 0 ? `${hWait}시간 ${mWait}분 전` : `${mWait}분 전`);
+      const nextTitle = T.ttNextClassLive ? T.ttNextClassLive(waitStr) : `다음 수업 (시작 ${waitStr})`;
       const upName = (DI18n && DI18n.formatCourse) ? DI18n.formatCourse(upcoming.name, state.lang) : upcoming.name;
-      const upRoom = (CR && CR.formatRoom) ? CR.formatRoom(upcoming.room, state.lang) : (upcoming.room || '강의실 미지정');
+      const upRoom = (CR && CR.formatRoom) ? CR.formatRoom(upcoming.room, state.lang) : (upcoming.room || (state.lang === 'en' ? 'Classroom TBA' : state.lang === 'zh' ? '教室待定' : state.lang === 'ja' ? '教室未定' : '강의실 미지정'));
+      const profUpText = up ? ` (${T.ttProfTitle ? T.ttProfTitle(up) : `${up} 교수`})` : '';
       liveBanner = h('div', { class: 'tc-live-banner is-upcoming' },
         h('span', { class: 'tcl-pulse-dot green' }),
         h('div', { class: 'tcl-info' },
-          h('strong', { class: 'tcl-title' }, `다음 수업 (시작 ${waitStr})`),
-          h('span', { class: 'tcl-sub' }, `${upName} (${upcoming.start}) · ${upRoom}${up ? ` (${up} 교수)` : ''}`)
+          h('strong', { class: 'tcl-title' }, nextTitle),
+          h('span', { class: 'tcl-sub' }, `${upName} (${upcoming.start}) · ${upRoom}${profUpText}`)
         )
       );
     }
@@ -3866,7 +4285,17 @@
       } else if (g.mode === 'transfer') {
         const majLeft = g.left.major || 0;
         const freeLeft = Math.max(0, g.left.total - majLeft);
-        subText = T.wGradTransferSub ? T.wGradTransferSub(majLeft, freeLeft) : (majLeft > 0 && freeLeft > 0 ? `전공 ${majLeft} · 자유 ${freeLeft}학점` : majLeft > 0 ? `전공 ${majLeft}학점` : `자유(교양·일선) ${freeLeft}학점`);
+        if (T.wGradTransferSub) {
+          subText = T.wGradTransferSub(majLeft, freeLeft);
+        } else if (state.lang === 'ja') {
+          subText = majLeft > 0 && freeLeft > 0 ? `専攻 ${majLeft} · 自由 ${freeLeft}単位` : majLeft > 0 ? `専攻 ${majLeft}単位` : `自由 ${freeLeft}単位`;
+        } else if (state.lang === 'en') {
+          subText = majLeft > 0 && freeLeft > 0 ? `Major ${majLeft} · Free ${freeLeft} cr` : majLeft > 0 ? `Major ${majLeft} cr` : `Free ${freeLeft} cr`;
+        } else if (state.lang === 'zh') {
+          subText = majLeft > 0 && freeLeft > 0 ? `专业 ${majLeft} · 选修 ${freeLeft}学分` : majLeft > 0 ? `专业 ${majLeft}学分` : `选修 ${freeLeft}学分`;
+        } else {
+          subText = majLeft > 0 && freeLeft > 0 ? `전공 ${majLeft} · 자유 ${freeLeft}학점` : majLeft > 0 ? `전공 ${majLeft}학점` : `자유(교양·일선) ${freeLeft}학점`;
+        }
       } else {
         subText = T.wGradSub(g.left.major || 0, g.left.general || 0);
       }
@@ -5604,6 +6033,9 @@
       timetableChanged();
       if (gone.length > 1) {
         toast(({ ko: `'${me.name}' ${gone.length}칸을 모두 지웠어요`, en: `Removed all ${gone.length} slots of '${me.name}'`, zh: `已删除“${me.name}”的全部 ${gone.length} 个时段`, ja: `「${me.name}」の${gone.length}コマをすべて削除しました` })[state.lang] || `'${me.name}' ×${gone.length}`,
+          { label: t().undo, run: () => { state.timetable = before; saveTimetable(); timetableChanged(); } });
+      } else if (me) {
+        toast(({ ko: `'${me.name}' 수업을 삭제했어요`, en: `Removed '${me.name}'`, zh: `已删除“${me.name}”课程`, ja: `「${me.name}」を削除しました` })[state.lang] || `'${me.name}' 삭제`,
           { label: t().undo, run: () => { state.timetable = before; saveTimetable(); timetableChanged(); } });
       }
     });

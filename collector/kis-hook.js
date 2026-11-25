@@ -219,31 +219,39 @@
     return null;
   }
 
-  // eXbuilder6 화면 Grid DOM 파싱 (최후의 보루 폴백)
+  // eXbuilder6 화면 Grid DOM 파싱 (최후의 보루 폴백: KIS 종합강의시간표 및 개설과목 테이블 파싱)
   function getDomRows() {
     try {
-      const rows = document.querySelectorAll('.cl-grid-row, .cl-grid-body tr, table.grid-table tr');
-      if (!rows || rows.length < 5) return null;
+      const rows = document.querySelectorAll('.cl-grid-row, .cl-row, .cl-grid-detail-row, div[class*="grid-row"], .cl-grid-body tr, table.grid-table tr, .cl-grid tr, table tr');
+      if (!rows || rows.length < 3) return null;
       const parsed = [];
       rows.forEach(tr => {
-        const cells = Array.from(tr.querySelectorAll('.cl-grid-cell, td')).map(td => td.textContent.trim());
-        if (cells.length >= 8) {
-          // No, 학년, 학수번호, 이수구분, 과목번호, 교과목명, 비고, 학점, 시간, 개설학과...
+        const cells = Array.from(tr.querySelectorAll('.cl-grid-cell, .cl-cell, td, th, div[class*="cell"]')).map(td => td.textContent.trim()).filter(Boolean);
+        if (cells.length >= 6) {
+          // 학수번호 (예: BKSA01709, NDGE14570)
           const haksu = cells.find(c => /^[A-Z0-9]{7,10}$/.test(c)) || '';
-          const name = cells.find(c => c.length >= 2 && !/^\d+$/.test(c) && !/^[A-Z0-9]{7,10}$/.test(c) && !/^(전선|전필|일선|교양|기초|심화|소양)/.test(c)) || '';
-          if (name) {
+          // 교과목명 (숫자나 이수구분, 학수번호가 아닌 2자 이상 명칭)
+          const name = cells.find((c, idx) => idx >= 2 && c.length >= 2 && !/^\d+(\.\d+)?$/.test(c) && !/^[A-Z0-9]{7,10}$/.test(c) && !/^(전선|전필|일선|교양|기초|심화|소양|자선|교직)/.test(c)) || '';
+          if (name && name !== '교과목명' && name !== '과목명') {
+            const roomCandidate = cells.find(c => /(관|호|실|연구동|학군단|스타디움|체육관|\d{3,4})/.test(c)) || '';
+            const timeCandidate = cells.find(c => /(월|화|수|목|금|토)\d{4}/.test(c)) || '';
+            const profCandidate = cells.find((c, idx) => idx >= 5 && /^[가-힣]{2,4}$/.test(c) && !/^(전선|전필|일선|기초|심화|소양|학부|전공|교양)/.test(c)) || '';
+            const deptCandidate = cells.find(c => /(과|학부|전공|GLOCAL)/.test(c)) || '';
+            const creditCandidate = cells.find(c => /^\d(\.0)?$/.test(c)) || '2';
             parsed.push({
               TYPL_KOR_NM: name,
               CORS_KOR_NM: name,
               HAKSU_ID: haksu,
-              ROOM_NM: cells.find(c => /(관|호|실|\d{3,4})/.test(c)) || '',
-              LT_DAY_TIME: cells.find(c => /(월|화|수|목|금|토)\d{4}/.test(c)) || '',
-              KOR_NM: cells.find(c => /^[가-힣]{2,4}$/.test(c)) || ''
+              ROOM_NM: roomCandidate,
+              LT_DAY_TIME: timeCandidate,
+              KOR_NM: profCandidate,
+              OPEN_SUST_NM: deptCandidate,
+              PNT: Number(creditCandidate) || 2
             });
           }
         }
       });
-      return parsed.length > 5 ? parsed : null;
+      return parsed.length >= 2 ? parsed : null;
     } catch {}
     return null;
   }
@@ -317,7 +325,14 @@
         // try next endpoint
       }
     }
-    if (!success) throw new Error('강의 목록이 비어 있습니다. (KIS 종합강의시간표 메뉴에서 [조회]를 눌러주세요)');
+    if (!success) {
+      const lateDom = getDomRows();
+      if (lateDom && lateDom.length) {
+        post({ type: 'lectures', year, term, rows: lateDom, isPersonal: false });
+        return;
+      }
+      throw new Error('강의 목록이 비어 있습니다. KIS 종합강의시간표 화면에서 [조회] 버튼을 한 번 눌러주시면 자동으로 감지되어 수집됩니다.');
+    }
   }
 
   async function fetchSyllabus(year, term, sbjtId) {

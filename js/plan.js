@@ -291,6 +291,11 @@
   function resolveDept(input, req) {
     const raw = String(input || '').trim();
     if (!raw) return '';
+    const DI18n = (typeof window !== 'undefined' && window.GongjiDeptI18n) || (typeof root !== 'undefined' && root.GongjiDeptI18n);
+    if (DI18n && DI18n.resolveDept) {
+      const dHit = DI18n.resolveDept(raw);
+      if (dHit && dHit !== raw) return dHit;
+    }
     const gradreq = req || (typeof window !== 'undefined' && window.GONGJI_GRADREQ) || null;
     const depts = (gradreq && gradreq.depts) || {};
     const officialNames = Object.keys(depts).length ? Object.keys(depts) : Object.keys(DEPT_MAP);
@@ -379,6 +384,20 @@
   }
 
   function searchDepts(query, req, lang) {
+    const rawQ = String(query || '').trim();
+    const curLang = lang || (typeof window !== 'undefined' && window.GongjiState ? window.GongjiState.lang : 'ko');
+    const DI18n = (typeof window !== 'undefined' && window.GongjiDeptI18n) || (typeof root !== 'undefined' && root.GongjiDeptI18n);
+    if (DI18n && DI18n.search && rawQ) {
+      const hits = DI18n.search(rawQ, curLang);
+      if (hits && hits.length) {
+        return hits.map((h) => ({
+          name: h.ko || h.value,
+          displayName: h.displayName || (h.ko ? DI18n.formatDept(h.ko, curLang) : h.value),
+          subText: [h.en, ...(h.aliases || []).slice(0, 2)].filter(Boolean).join(' · '),
+          score: h.score || 100
+        }));
+      }
+    }
     const q = normDeptStr(query);
     const gradreq = req || (typeof window !== 'undefined' && window.GONGJI_GRADREQ) || null;
     const depts = (gradreq && gradreq.depts) || {};

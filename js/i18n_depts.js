@@ -193,18 +193,64 @@
     return localized + ' (' + item.ko + ')';
   }
 
-  // 입력된 다양한 학과명/약어/오타를 공식 한국어 학과명으로 변환
+  // 입력된 다양한 학과명/약어/오타/다국어(영·중·일)를 공식 한국어 학과명으로 변환
   function resolveDept(rawName) {
-    const q = String(rawName || '').trim().toLowerCase();
-    if (!q) return '';
-    const item = DEPARTMENTS.find((d) =>
-      d.ko.toLowerCase() === q ||
-      d.en.toLowerCase() === q ||
-      d.ja.toLowerCase() === q ||
-      d.zh.toLowerCase() === q ||
-      d.aliases.some((a) => a.toLowerCase() === q || (q.length >= 4 && editDistance(a.toLowerCase(), q) <= 2))
+    const raw = String(rawName || '').trim();
+    if (!raw) return '';
+    const q = raw.toLowerCase();
+
+    // 0. 괄호 포함된 경우 내부 또는 외부 추출 (예: "コンピュータ工学科 (컴퓨터공학과)" -> "컴퓨터공학과")
+    const parenInner = (raw.match(/\(([^)]+)\)/) || [])[1];
+    if (parenInner) {
+      const innerHit = DEPARTMENTS.find((d) => d.ko === parenInner.trim());
+      if (innerHit) return innerHit.ko;
+    }
+    const cleanQ = q.replace(/\s*\(.*?\)\s*/g, '').trim();
+
+    // 1. 정확 일치 (한국어, 영어, 일본어, 중국어)
+    const exact = DEPARTMENTS.find((d) =>
+      d.ko.toLowerCase() === q || d.ko.toLowerCase() === cleanQ ||
+      d.en.toLowerCase() === q || d.en.toLowerCase() === cleanQ ||
+      d.ja.toLowerCase() === q || d.ja.toLowerCase() === cleanQ ||
+      d.zh.toLowerCase() === q || d.zh.toLowerCase() === cleanQ
     );
-    return item ? item.ko : rawName;
+    if (exact) return exact.ko;
+
+    // 2. 약어 및 별칭 정확 일치
+    const aliasHit = DEPARTMENTS.find((d) =>
+      d.aliases.some((a) => a.toLowerCase() === q || a.toLowerCase() === cleanQ)
+    );
+    if (aliasHit) return aliasHit.ko;
+
+    // 3. 접두어/부분 문자열 일치 (최소 2글자 이상)
+    if (cleanQ.length >= 2) {
+      const subHit = DEPARTMENTS.find((d) =>
+        d.ko.toLowerCase().startsWith(cleanQ) ||
+        d.ko.toLowerCase().includes(cleanQ) ||
+        d.aliases.some((a) => a.toLowerCase().startsWith(cleanQ) || a.toLowerCase().includes(cleanQ)) ||
+        d.en.toLowerCase().startsWith(cleanQ) ||
+        d.ja.toLowerCase().startsWith(cleanQ) ||
+        d.zh.toLowerCase().startsWith(cleanQ)
+      );
+      if (subHit) return subHit.ko;
+    }
+
+    // 4. 오타 허용 (편집 거리 <= 2, 길이 4자 이상) (예: coomputer, computor)
+    if (cleanQ.length >= 4) {
+      for (const d of DEPARTMENTS) {
+        if (d.aliases.some((a) => a.length >= 4 && editDistance(a.toLowerCase(), cleanQ) <= 2)) {
+          return d.ko;
+        }
+        if (d.en.length >= 4) {
+          const words = d.en.toLowerCase().split(/[\s&/·,-]+/);
+          if (words.some((w) => w.length >= 4 && editDistance(w, cleanQ) <= 2)) {
+            return d.ko;
+          }
+        }
+      }
+    }
+
+    return raw;
   }
 
   // 교과목명 4개국어 번역 및 한글 병기
