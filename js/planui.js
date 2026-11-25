@@ -1038,32 +1038,68 @@
       // 3. 전체 요람 과목 (타과 전공, 교양 등 전체)
       for (const c of allCatalog) addCourse(c.name);
 
-      const names = h('datalist', { id: 'hist-names' });
-      // 초기 전체 과목 datalist 등록
-      names.replaceChildren(...allCourseNames.map((n) => h('option', { value: n })));
+      const suggestBox = h('ul', { id: 'hist-name-suggest', class: 'pf-dept-suggest', role: 'listbox', hidden: true });
+      const applyHistSelection = (itemName, inputEl) => {
+        if (!inputEl) return;
+        inputEl.value = itemName;
+        suggestBox.hidden = true;
+        const hit = cat().byName.get(P.normName(itemName));
+        if (!hit) return;
+        const f = inputEl.form;
+        if (hit.credit && f && f.elements.credit) f.elements.credit.value = String(hit.credit);
+        const k = P.cleanKind(hit.kind);
+        if (KINDS.includes(k) && f && f.elements.kind) f.elements.kind.value = k;
+        if (f && f.elements.kind) f.elements.kind.dispatchEvent(new Event('change', { bubbles: true }));
+      };
 
-      function updateSuggestions(query) {
+      function updateSuggestions(query, inputEl) {
         const q = P.normName(query || '');
+        const items = [];
         if (!q) {
-          names.replaceChildren(...allCourseNames.slice(0, 500).map((n) => h('option', { value: n })));
+          for (const n of allCourseNames.slice(0, 12)) {
+            const hit = cat().byName.get(P.normName(n));
+            items.push({ name: n, meta: hit ? `${kindLabel(P.cleanKind(hit.kind))} · ${hit.credit}${Tx.creditUnit || ''}` : '' });
+          }
+        } else {
+          const candidates = [];
+          for (const item of allCatalog) {
+            let score = CU && CU.matchCourseName ? CU.matchCourseName(query, item.name) : 0;
+            if (score <= 0) {
+              const norm = P.normName(item.name);
+              if (norm.startsWith(q)) score = 80;
+              else if (norm.includes(q)) score = 60;
+            }
+            if (score > 0) {
+              if (item.dept && dept() && (item.dept.includes(dept()) || dept().includes(item.dept))) score += 40;
+              candidates.push({ name: item.name, score, item });
+            }
+          }
+          candidates.sort((a, b) => b.score - a.score || a.name.localeCompare(b.name, 'ko'));
+          const seenN = new Set();
+          for (const c of candidates) {
+            if (seenN.has(c.name)) continue;
+            seenN.add(c.name);
+            items.push({ name: c.name, meta: `${kindLabel(P.cleanKind(c.item.kind))} · ${c.item.credit}${Tx.creditUnit || ''}` });
+            if (items.length >= 12) break;
+          }
+        }
+        if (!items.length) {
+          suggestBox.hidden = true;
+          suggestBox.replaceChildren();
           return;
         }
-        const candidates = [];
-        for (const item of allCatalog) {
-          let score = CU && CU.matchCourseName ? CU.matchCourseName(query, item.name) : 0;
-          if (score <= 0) {
-            const norm = P.normName(item.name);
-            if (norm.startsWith(q)) score = 80;
-            else if (norm.includes(q)) score = 60;
+        suggestBox.replaceChildren(...items.map((it) => h('li', {
+          role: 'option',
+          class: 'pf-dept-opt',
+          onmousedown: (ev) => {
+            ev.preventDefault();
+            applyHistSelection(it.name, inputEl);
           }
-          if (score > 0) {
-            if (item.dept && dept() && (item.dept.includes(dept()) || dept().includes(item.dept))) score += 40;
-            candidates.push({ name: item.name, score });
-          }
-        }
-        candidates.sort((a, b) => b.score - a.score || a.name.localeCompare(b.name, 'ko'));
-        const matched = [...new Set(candidates.map((x) => x.name))].slice(0, 150);
-        names.replaceChildren(...matched.map((n) => h('option', { value: n })));
+        },
+          h('div', { style: 'font-weight:700;' }, it.name),
+          it.meta ? h('div', { style: 'font-size:11.5px;color:var(--muted);margin-top:2px;' }, it.meta) : null
+        )));
+        suggestBox.hidden = false;
       }
 
       const form = h('form', { class: 'hist-form', onsubmit: (e) => {
@@ -1083,18 +1119,25 @@
         const again = $('#hist-name'); if (again) again.focus();
       } },
         h('label', { class: 'wide' }, h('span', null, Tx.histName),
-          h('input', { type: 'text', name: 'name', id: 'hist-name', list: 'hist-names', autocomplete: 'off', maxlength: '60', required: true,
-            oninput: (e) => {
-              const val = e.target.value;
-              updateSuggestions(val);
-              const hit = cat().byName.get(P.normName(val));
-              if (!hit) return;
-              const f = e.target.form;
-              if (hit.credit && f.elements.credit) f.elements.credit.value = String(hit.credit);
-              const k = P.cleanKind(hit.kind);
-              if (KINDS.includes(k) && f.elements.kind) f.elements.kind.value = k;
-            },
-            onfocus: (e) => updateSuggestions(e.target.value) })),
+          h('div', { class: 'pf-dept-wrap' },
+            h('input', { type: 'text', name: 'name', id: 'hist-name', autocomplete: 'off', maxlength: '60', required: true,
+              oninput: (e) => {
+                const val = e.target.value;
+                updateSuggestions(val, e.target);
+                const hit = cat().byName.get(P.normName(val));
+                if (!hit) return;
+                const f = e.target.form;
+                if (hit.credit && f.elements.credit) f.elements.credit.value = String(hit.credit);
+                const k = P.cleanKind(hit.kind);
+                if (KINDS.includes(k) && f.elements.kind) {
+                  f.elements.kind.value = k;
+                  f.elements.kind.dispatchEvent(new Event('change', { bubbles: true }));
+                }
+              },
+              onfocus: (e) => updateSuggestions(e.target.value, e.target),
+              onkeydown: (e) => { if (e.key === 'Escape') suggestBox.hidden = true; },
+              onblur: () => { setTimeout(() => { suggestBox.hidden = true; }, 180); } }),
+            suggestBox)),
         h('label', null, h('span', null, Tx.histKind),
           h('select', { name: 'kind' }, KINDS.map((k) => h('option', { value: k }, kindLabel(k))))),
         h('label', null, h('span', null, Tx.histCredit),
@@ -1113,7 +1156,7 @@
           h('select', { name: 'grade' }, h('option', { value: '' }, Tx.gradeNone), P.GRADES.map((g) => h('option', { value: g }, g)))),
         h('button', { type: 'submit', class: 'btn primary' }, Tx.histAdd));
 
-      return [form, names];
+      return [form];
     }
 
     function fromTimetable() {

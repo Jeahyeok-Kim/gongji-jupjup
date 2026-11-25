@@ -9115,7 +9115,307 @@ html, body {
   max-width: 100%;
 }
 
-/* 12. Apple Liquid Glass & Samsung One UI 7 Topbar, Nav Pills & Language Capsule */
+/* 13. Universal Custom Liquid Glass Dropdowns (.cg-select-btn & .cg-select-menu) */
+.cg-native-select {
+  position: absolute !important;
+  width: 1px !important;
+  height: 1px !important;
+  padding: 0 !important;
+  margin: -1px !important;
+  overflow: hidden !important;
+  clip: rect(0, 0, 0, 0) !important;
+  white-space: nowrap !important;
+  border: 0 !important;
+  pointer-events: none !important;
+}
+
+.cg-select-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  height: 44px;
+  width: 100%;
+  min-width: 0;
+  padding: 0 12px;
+  border: 1px solid var(--border-strong, #d1d6db);
+  border-radius: var(--r, 12px);
+  background: var(--surface, #ffffff);
+  color: var(--text, #191f28);
+  font: inherit;
+  font-size: 14px;
+  font-weight: 600;
+  text-align: left;
+  cursor: pointer;
+  transition: border-color 0.16s ease, box-shadow 0.16s ease, background-color 0.16s ease;
+}
+[data-theme="dark"] .cg-select-btn {
+  background: var(--surface, #161b21);
+  border-color: rgba(255, 255, 255, 0.14);
+  color: var(--text, #eef2f6);
+}
+.cg-select-btn:hover {
+  border-color: var(--faint, #8b95a1);
+}
+.cg-select-btn.is-open,
+.cg-select-btn:focus-visible {
+  border-color: var(--accent, #0c7a45) !important;
+  box-shadow: 0 0 0 3px rgba(12, 122, 69, 0.18) !important;
+  outline: none;
+}
+[data-theme="dark"] .cg-select-btn.is-open,
+[data-theme="dark"] .cg-select-btn:focus-visible {
+  border-color: #46c486 !important;
+  box-shadow: 0 0 0 3px rgba(70, 196, 134, 0.22) !important;
+}
+
+.cg-sel-text {
+  flex: 1 1 auto;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.cg-sel-chevron {
+  flex: 0 0 auto;
+  width: 14px;
+  height: 14px;
+  stroke: var(--muted, #64748b);
+  fill: none;
+  stroke-width: 2.2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  transition: transform 0.18s ease;
+}
+.cg-select-btn.is-open .cg-sel-chevron {
+  transform: rotate(180deg);
+}
+
+/* Compact overrides for .lang-select, .bcard-move, .tc-transit-select, .tt-selector */
+.lang-select .cg-select-btn {
+  height: 30px !important;
+  width: auto !important;
+  padding: 0 6px 0 2px !important;
+  border: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  font-size: 12.5px !important;
+  font-weight: 700 !important;
+  gap: 5px !important;
+}
+@media (max-width: 899px) {
+  .lang-select .cg-select-btn {
+    height: 28px !important;
+    font-size: 11.5px !important;
+    padding: 0 2px 0 0 !important;
+  }
+}
+.bcard-move.cg-select-btn {
+  height: 32px !important;
+  font-size: 11.5px !important;
+  border-radius: 8px !important;
+  padding: 0 8px !important;
+}
+.tc-transit-select.cg-select-btn {
+  flex: 1 !important;
+  height: 34px !important;
+  padding: 0 10px !important;
+  border-radius: 10px !important;
+  font-size: 12.5px !important;
+}
+.tt-selector.cg-select-btn {
+  height: 38px !important;
+  border-radius: 10px !important;
+  font-size: 13px !important;
+}
+.time-field .cg-select-btn {
+  width: auto !important;
+  min-width: 68px !important;
+  height: 40px !important;
+}
+
+/* Floating Liquid Glass Menu (matches #dept-suggest-box aesthetic) */
+.cg-select-menu {
+  position: fixed;
+  z-index: 99999;
+  list-style: none;
+  margin: 0;
+  padding: 6px;
+  overflow-y: auto;
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.94);
+  -webkit-backdrop-filter: blur(24px) saturate(190%);
+  backdrop-filter: blur(24px) saturate(190%);
+  border: 1px solid rgba(15, 23, 42, 0.1);
+  box-shadow: 0 14px 36px rgba(15, 23, 42, 0.16);
+  animation: cgMenuIn 0.14s ease-out;
+}
+[data-theme="dark"] .cg-select-menu {
+  background: rgba(22, 29, 36, 0.94);
+  border-color: rgba(255, 255, 255, 0.13);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08), 0 16px 42px rgba(0, 0, 0, 0.55);
+}
+@keyframes cgMenuIn {
+  from { opacity: 0; transform: translateY(-4px) scale(0.98); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.cg-select-group {
+  padding: 6px 10px 3px;
+  font-size: 11px;
+  font-weight: 800;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+}
+.cg-select-opt {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 9px 12px;
+  border-radius: 9px;
+  font-size: 13.5px;
+  font-weight: 600;
+  color: var(--text, #191f28);
+  cursor: pointer;
+  transition: background-color 0.14s ease, color 0.14s ease;
+}
+[data-theme="dark"] .cg-select-opt {
+  color: #eef2f6;
+}
+.cg-select-opt:hover {
+  background: rgba(15, 23, 42, 0.06);
+}
+[data-theme="dark"] .cg-select-opt:hover {
+  background: rgba(255, 255, 255, 0.08);
+}
+.cg-select-opt.is-selected {
+  background: rgba(12, 122, 69, 0.12);
+  color: var(--accent, #0c7a45);
+  font-weight: 700;
+}
+[data-theme="dark"] .cg-select-opt.is-selected {
+  background: rgba(70, 196, 134, 0.18);
+  color: #46c486;
+}
+.cg-select-opt.is-disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+.cg-opt-check {
+  font-size: 12px;
+  font-weight: 800;
+  flex: 0 0 auto;
+}
+
+/* Keep old select fallback clean */
+:root,
+:root[data-theme="light"] {
+  color-scheme: light;
+}
+:root[data-theme="dark"] {
+  color-scheme: dark;
+}
+
+select {
+  -webkit-appearance: none;
+  appearance: none;
+  background-repeat: no-repeat !important;
+  background-position: right 10px center !important;
+  background-size: 13px 13px !important;
+  padding-right: 28px !important;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%234e5968' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E") !important;
+  border-radius: 10px;
+  transition: border-color 0.16s ease, box-shadow 0.16s ease, background-color 0.16s ease;
+}
+[data-theme="dark"] select {
+  color-scheme: dark;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2394a3b8' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E") !important;
+}
+select:focus-visible {
+  border-color: var(--accent, #0c7a45) !important;
+  box-shadow: 0 0 0 3px rgba(12, 122, 69, 0.18) !important;
+}
+[data-theme="dark"] select:focus-visible {
+  border-color: #46c486 !important;
+  box-shadow: 0 0 0 3px rgba(70, 196, 134, 0.22) !important;
+}
+
+select option,
+select optgroup {
+  background-color: #ffffff;
+  color: #191f28;
+}
+[data-theme="dark"] select option,
+[data-theme="dark"] select optgroup {
+  background-color: #182026;
+  color: #eef2f6;
+}
+select option:checked {
+  background-color: #0c7a45;
+  color: #ffffff;
+}
+[data-theme="dark"] select option:checked {
+  background-color: #1f7a4c;
+  color: #ffffff;
+}
+
+/* Keep .lang-select compact inside its Liquid Glass pill */
+.lang-select select {
+  padding-right: 22px !important;
+  background-position: right 4px center !important;
+  background-size: 12px 12px !important;
+}
+
+/* Custom Theme-Matched Profile Department Autocomplete */
+.pf-dept-wrap {
+  position: relative;
+  width: 100%;
+  min-width: 0;
+}
+.pf-dept-suggest {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: calc(100% + 6px);
+  z-index: 60;
+  list-style: none;
+  margin: 0;
+  padding: 6px;
+  max-height: 220px;
+  overflow-y: auto;
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.94);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  backdrop-filter: blur(20px) saturate(180%);
+  border: 1px solid rgba(15, 23, 42, 0.1);
+  box-shadow: 0 12px 32px rgba(15, 23, 42, 0.14);
+}
+[data-theme="dark"] .pf-dept-suggest {
+  background: rgba(22, 29, 36, 0.94);
+  border-color: rgba(255, 255, 255, 0.12);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08), 0 14px 36px rgba(0, 0, 0, 0.5);
+}
+.pf-dept-opt {
+  padding: 9px 12px;
+  border-radius: 9px;
+  font-size: 13.5px;
+  font-weight: 600;
+  color: var(--text);
+  cursor: pointer;
+  transition: background-color 0.14s ease, color 0.14s ease;
+}
+.pf-dept-opt:hover,
+.pf-dept-opt.is-selected {
+  background: rgba(12, 122, 69, 0.12);
+  color: var(--accent, #0c7a45);
+}
+[data-theme="dark"] .pf-dept-opt:hover,
+[data-theme="dark"] .pf-dept-opt.is-selected {
+  background: rgba(70, 196, 134, 0.18);
+  color: #46c486;
+}
 .lang-select {
   display: inline-flex !important;
   align-items: center !important;

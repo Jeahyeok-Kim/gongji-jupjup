@@ -1262,7 +1262,236 @@
   /* ═══════════════════════════════════════════════════════
      초기화
      ═══════════════════════════════════════════════════════ */
+  /* ═══════════════════════════════════════════════════════
+     14. 커스텀 리퀴드 글래스 드롭다운 (<select> -> .cg-select-btn + .cg-select-menu)
+     ═══════════════════════════════════════════════════════ */
+  function initCustomSelects() {
+    let activeMenu = null;
+    let activeBtn = null;
+    let activeSel = null;
+
+    function closeMenu() {
+      if (activeMenu) {
+        activeMenu.remove();
+        activeMenu = null;
+      }
+      if (activeBtn) {
+        activeBtn.setAttribute('aria-expanded', 'false');
+        activeBtn.classList.remove('is-open');
+        activeBtn = null;
+      }
+      activeSel = null;
+    }
+
+    function syncButtonText(sel, btn) {
+      if (!sel || !btn) return;
+      const opt = sel.options[sel.selectedIndex] || sel.options[0];
+      const txt = opt ? opt.textContent.trim() : '';
+      const span = btn.querySelector('.cg-sel-text');
+      if (span) span.textContent = txt;
+      btn.disabled = !!sel.disabled;
+      btn.classList.toggle('is-compact', sel.classList.contains('lang-control') || sel.closest('.lang-select') !== null);
+    }
+
+    // Programmatic sel.value = ... sync
+    if (!window.__gongjiSelectHooked) {
+      window.__gongjiSelectHooked = true;
+      const desc = Object.getOwnPropertyDescriptor(HTMLSelectElement.prototype, 'value');
+      if (desc && desc.set && desc.get) {
+        Object.defineProperty(HTMLSelectElement.prototype, 'value', {
+          configurable: true,
+          enumerable: desc.enumerable,
+          get: function () { return desc.get.call(this); },
+          set: function (v) {
+            desc.set.call(this, v);
+            if (this.__cgBtn) syncButtonText(this, this.__cgBtn);
+          }
+        });
+      }
+    }
+
+    function openMenu(sel, btn) {
+      if (activeSel === sel) {
+        closeMenu();
+        return;
+      }
+      closeMenu();
+
+      const menu = document.createElement('ul');
+      menu.className = 'cg-select-menu';
+      menu.setAttribute('role', 'listbox');
+      if (sel.getAttribute('aria-label')) menu.setAttribute('aria-label', sel.getAttribute('aria-label'));
+
+      const appendOption = (opt) => {
+        if (opt.hidden) return;
+        const li = document.createElement('li');
+        li.className = 'cg-select-opt' + (opt.selected ? ' is-selected' : '') + (opt.disabled ? ' is-disabled' : '');
+        li.setAttribute('role', 'option');
+        li.setAttribute('aria-selected', String(!!opt.selected));
+        li.dataset.value = opt.value;
+
+        const lbl = document.createElement('span');
+        lbl.className = 'cg-opt-label';
+        lbl.textContent = opt.textContent;
+        li.appendChild(lbl);
+
+        if (opt.selected) {
+          const chk = document.createElement('span');
+          chk.className = 'cg-opt-check';
+          chk.textContent = '✓';
+          li.appendChild(chk);
+        }
+
+        if (!opt.disabled) {
+          li.addEventListener('click', (ev) => {
+            ev.stopPropagation();
+            const changed = sel.value !== opt.value;
+            sel.value = opt.value;
+            syncButtonText(sel, btn);
+            closeMenu();
+            if (changed) {
+              sel.dispatchEvent(new Event('change', { bubbles: true }));
+            }
+          });
+        }
+        menu.appendChild(li);
+      };
+
+      Array.from(sel.children).forEach((child) => {
+        if (child.tagName === 'OPTGROUP') {
+          const grp = document.createElement('li');
+          grp.className = 'cg-select-group';
+          grp.setAttribute('role', 'presentation');
+          grp.textContent = child.label || '';
+          menu.appendChild(grp);
+          Array.from(child.children).forEach((o) => { if (o.tagName === 'OPTION') appendOption(o); });
+        } else if (child.tagName === 'OPTION') {
+          appendOption(child);
+        }
+      });
+
+      const hostDialog = sel.closest('dialog[open]');
+      (hostDialog || document.body).appendChild(menu);
+
+      // Position menu smartly around trigger button
+      const rect = btn.getBoundingClientRect();
+      const vw = window.innerWidth;
+      const vh = window.innerHeight;
+      const minW = Math.max(rect.width, sel.closest('.lang-select') ? 132 : 150);
+      menu.style.minWidth = `${Math.min(vw - 24, minW)}px`;
+      menu.style.maxWidth = `${Math.min(vw - 24, 340)}px`;
+
+      const menuH = Math.min(280, menu.scrollHeight || 220);
+      const spaceBelow = vh - rect.bottom - 12;
+      const spaceAbove = rect.top - 12;
+      const openUp = spaceBelow < Math.min(menuH, 190) && spaceAbove > spaceBelow;
+
+      if (openUp) {
+        menu.style.top = 'auto';
+        menu.style.bottom = `${vh - rect.top + 6}px`;
+        menu.style.maxHeight = `${Math.min(280, spaceAbove)}px`;
+      } else {
+        menu.style.top = `${rect.bottom + 6}px`;
+        menu.style.bottom = 'auto';
+        menu.style.maxHeight = `${Math.min(280, Math.max(120, spaceBelow))}px`;
+      }
+
+      const menuW = Math.max(minW, menu.offsetWidth || minW);
+      let left = rect.left;
+      if (left + menuW > vw - 12) left = Math.max(12, rect.right - menuW);
+      menu.style.left = `${left}px`;
+
+      // Scroll selected item into view
+      const selectedEl = menu.querySelector('.cg-select-opt.is-selected');
+      if (selectedEl) {
+        setTimeout(() => { try { selectedEl.scrollIntoView({ block: 'nearest' }); } catch {} }, 0);
+      }
+
+      btn.setAttribute('aria-expanded', 'true');
+      btn.classList.add('is-open');
+      activeMenu = menu;
+      activeBtn = btn;
+      activeSel = sel;
+    }
+
+    function enhanceOne(sel) {
+      if (!sel || sel.dataset.cgSelect === '1' || sel.multiple || Number(sel.size) > 1) return;
+      sel.dataset.cgSelect = '1';
+      sel.classList.add('cg-native-select');
+      sel.tabIndex = -1;
+
+      const btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'cg-select-btn';
+      if (sel.className) {
+        sel.className.split(/\s+/).forEach((cls) => {
+          if (cls && cls !== 'cg-native-select') btn.classList.add(cls);
+        });
+      }
+      btn.setAttribute('aria-haspopup', 'listbox');
+      btn.setAttribute('aria-expanded', 'false');
+      if (sel.getAttribute('aria-label')) btn.setAttribute('aria-label', sel.getAttribute('aria-label'));
+
+      const span = document.createElement('span');
+      span.className = 'cg-sel-text';
+      const arrow = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+      arrow.setAttribute('viewBox', '0 0 24 24');
+      arrow.setAttribute('aria-hidden', 'true');
+      arrow.setAttribute('class', 'cg-sel-chevron');
+      arrow.innerHTML = '<path d="m6 9 6 6 6-6"/>';
+      btn.append(span, arrow);
+
+      sel.__cgBtn = btn;
+      sel.insertAdjacentElement('afterend', btn);
+      syncButtonText(sel, btn);
+
+      btn.addEventListener('click', (ev) => {
+        ev.preventDefault();
+        ev.stopPropagation();
+        openMenu(sel, btn);
+      });
+
+      sel.addEventListener('change', () => syncButtonText(sel, btn));
+
+      // Watch dynamic option updates (e.g. #board, #tc-transit-dest-select)
+      new MutationObserver(() => syncButtonText(sel, btn))
+        .observe(sel, { childList: true, subtree: true, characterData: true, attributes: true });
+    }
+
+    function scanAll() {
+      document.querySelectorAll('select').forEach(enhanceOne);
+    }
+
+    scanAll();
+    new MutationObserver((muts) => {
+      for (const m of muts) {
+        if (m.addedNodes && m.addedNodes.length) {
+          m.addedNodes.forEach((n) => {
+            if (n.nodeType !== 1) return;
+            if (n.tagName === 'SELECT') enhanceOne(n);
+            else if (n.querySelectorAll) n.querySelectorAll('select').forEach(enhanceOne);
+          });
+        }
+      }
+    }).observe(document.body, { childList: true, subtree: true });
+
+    document.addEventListener('click', (ev) => {
+      if (activeMenu && !activeMenu.contains(ev.target) && activeBtn && !activeBtn.contains(ev.target)) {
+        closeMenu();
+      }
+    });
+    document.addEventListener('keydown', (ev) => {
+      if (ev.key === 'Escape' && activeMenu) {
+        const b = activeBtn;
+        closeMenu();
+        if (b) b.focus();
+      }
+    });
+    window.addEventListener('resize', closeMenu, { passive: true });
+  }
+
   function init() {
+    try { initCustomSelects(); } catch (e) {}
     try { initSkipLink(); } catch (e) {}
     try { initMastheadCollapse(); } catch (e) {}
     try { initChipClear(); } catch (e) {}

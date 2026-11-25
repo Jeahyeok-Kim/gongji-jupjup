@@ -99,7 +99,7 @@
   --stage-prep: #3b82f6;
   --stage-done: #10b981;
   --stage-result: #a78bfa;
-  --color-scheme: dark;
+  color-scheme: dark;
 }
 
 /* ============ 2. 바탕 ============ */

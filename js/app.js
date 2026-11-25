@@ -315,7 +315,7 @@
       }
     }
     const aboutVer = $('#about-ver') || document.querySelector('.settings-about-ver');
-    if (aboutVer) aboutVer.textContent = `${t().brandName || '공지 줍줍'} v67`;
+    if (aboutVer) aboutVer.textContent = `${t().brandName || '공지 줍줍'} v88`;
     document.querySelectorAll('.today-text').forEach((el) => { el.textContent = I.formatDate(now, state.lang); });
     const keep = DATA.meta.keep;
     const keepText = keep && keep.months && keep.since ? ' · ' + t().keepNote(keep.months, String(keep.since).replace(/-/g, '.')) : '';
@@ -5477,21 +5477,74 @@
     const DI18n = (typeof window !== 'undefined' && window.GongjiDeptI18n) || root.GongjiDeptI18n;
     const curDept = p.dept || state.dept || '';
     const displayDept = (DI18n && DI18n.formatDept) ? DI18n.formatDept(curDept, state.lang) : curDept;
-    const dept = h('input', {
-      type: 'text', id: pre + '-dept', maxlength: '60', value: displayDept, placeholder: T.profileDeptPh,
-      list: pre + '-dept-list', autocomplete: 'off', 'aria-label': T.profileDept,
-      onchange: (e) => {
-        const raw = e.target.value.trim();
-        const P = window.GongjiPlan;
-        const resolved = (DI18n && DI18n.resolveDept) ? DI18n.resolveDept(raw) : ((P && P.resolveDept) ? P.resolveDept(raw, DATA.gradreq) : raw);
-        const val = resolved || raw;
-        set({ dept: val });
-        e.target.value = (DI18n && DI18n.formatDept) ? DI18n.formatDept(val, state.lang) : val;
-        if (resolved && resolved !== raw) {
-          toast(`'${raw}' → [${(DI18n && DI18n.formatDept) ? DI18n.formatDept(resolved, state.lang) : resolved}] 학과로 자동 인식되었습니다.`);
+    const suggestBox = h('ul', { id: pre + '-dept-suggest', class: 'pf-dept-suggest', role: 'listbox', hidden: true });
+    const commitDept = (rawInput, inputEl) => {
+      const raw = String(rawInput || '').trim();
+      const P = window.GongjiPlan;
+      const resolved = (DI18n && DI18n.resolveDept) ? DI18n.resolveDept(raw) : ((P && P.resolveDept) ? P.resolveDept(raw, DATA.gradreq) : raw);
+      const val = resolved || raw;
+      set({ dept: val });
+      const formatted = (DI18n && DI18n.formatDept) ? DI18n.formatDept(val, state.lang) : val;
+      if (inputEl) inputEl.value = formatted;
+      if (resolved && resolved !== raw && raw !== formatted) {
+        const msg = state.lang === 'en' ? `'${raw}' → recognized as [${formatted}]`
+          : state.lang === 'zh' ? `'${raw}' → 已自动识别为 [${formatted}]`
+          : state.lang === 'ja' ? `「${raw}」→ [${formatted}] と自動認識しました`
+          : `'${raw}' → [${formatted}] 학과로 자동 인식되었습니다.`;
+        toast(msg);
+      }
+    };
+    const updateDeptSuggest = (q, inputEl) => {
+      const query = String(q || '').trim().toLowerCase();
+      let hits = [];
+      if (DI18n && DI18n.search) {
+        hits = DI18n.search(query, state.lang).slice(0, 8).map((x) => ({ ko: x.value || x.ko, label: x.displayName || x.ko }));
+      }
+      const seen = new Set(hits.map((x) => x.ko));
+      for (const d of deptList()) {
+        if (hits.length >= 8) break;
+        if (seen.has(d)) continue;
+        const lbl = (DI18n && DI18n.formatDept) ? DI18n.formatDept(d, state.lang) : d;
+        if (!query || d.toLowerCase().includes(query) || lbl.toLowerCase().includes(query)) {
+          hits.push({ ko: d, label: lbl });
+          seen.add(d);
         }
       }
+      if (!hits.length) {
+        suggestBox.hidden = true;
+        suggestBox.replaceChildren();
+        return;
+      }
+      suggestBox.replaceChildren(...hits.map((it) => h('li', {
+        role: 'option',
+        class: 'pf-dept-opt' + (curDept === it.ko ? ' is-selected' : ''),
+        onmousedown: (ev) => {
+          ev.preventDefault();
+          suggestBox.hidden = true;
+          commitDept(it.ko, inputEl);
+        }
+      }, it.label)));
+      suggestBox.hidden = false;
+    };
+    const deptInput = h('input', {
+      type: 'text', id: pre + '-dept', maxlength: '60', value: displayDept, placeholder: T.profileDeptPh,
+      autocomplete: 'off', 'aria-label': T.profileDept, 'aria-autocomplete': 'list',
+      oninput: (e) => updateDeptSuggest(e.target.value, e.target),
+      onfocus: (e) => updateDeptSuggest(e.target.value, e.target),
+      onkeydown: (e) => {
+        if (e.key === 'Escape') suggestBox.hidden = true;
+        else if (e.key === 'Enter') {
+          const first = suggestBox.querySelector('.pf-dept-opt');
+          if (!suggestBox.hidden && first) {
+            e.preventDefault();
+            first.dispatchEvent(new MouseEvent('mousedown', { bubbles: true }));
+          }
+        }
+      },
+      onblur: () => { setTimeout(() => { suggestBox.hidden = true; }, 180); },
+      onchange: (e) => commitDept(e.target.value, e.target)
     });
+    const dept = h('div', { class: 'pf-dept-wrap' }, deptInput, suggestBox);
     return h('div', { class: 'my-section profile-section', id: pre + '-section' },
       opts && opts.compact ? null : h('h3', null, T.profileTitle),
       opts && opts.compact ? null : h('p', { class: 'help' }, T.profileHelp),
@@ -5505,7 +5558,6 @@
         h('span', { class: 'pf-label' }, T.profileDept), dept),
       h('label', { class: 'toggle pf-intl' },
         h('input', { type: 'checkbox', checked: p.intl, onchange: (e) => set({ intl: e.target.checked }) }), h('span', null, T.profileIntl)),
-      h('datalist', { id: pre + '-dept-list' }, deptList().map((d) => h('option', { value: (DI18n && DI18n.formatDept) ? DI18n.formatDept(d, state.lang) : d }))),
       p.set ? h('div', { class: 'profile-save-status' },
         h('span', { class: 'ok-note' }, '✓ ' + T.profileSaved),
         h('button', { type: 'button', class: 'link-btn pf-clear-btn', onclick: () => { state.profile = cleanProfile(null); store.set('profile', null); profileChanged(); } }, T.profileClear)) : null);
